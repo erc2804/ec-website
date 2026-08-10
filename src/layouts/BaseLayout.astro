@@ -1,0 +1,50 @@
+---
+import Seo from "../components/Seo.astro"
+import { siteConfig } from "../config/site"
+import type { RouteKey } from "../i18n"
+import "../styles/global.css"
+
+interface Props {
+  title: string
+  description: string
+  shareImage?: string
+  isNoindex?: boolean
+  hasStructuredData?: boolean
+  routeKey?: RouteKey
+  /** --- Applied to <body> --- */
+  class?: string
+}
+
+const {
+  title,
+  description,
+  shareImage,
+  isNoindex,
+  hasStructuredData,
+  routeKey,
+  class: additionalClasses,
+} = Astro.props
+
+const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
+---
+
+<!doctype html>
+<html lang={currentLocale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo
+      title={title}
+      description={description}
+      shareImage={shareImage}
+      isNoindex={isNoindex}
+      hasStructuredData={hasStructuredData}
+      routeKey={routeKey}
+    />
+    <slot name="head" />
+  </head>
+  <body class:list={[additionalClasses]}>
+    <slot />
+  </body>
+</html>

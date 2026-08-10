@@ -1,0 +1,111 @@
+---
+import Button from "../../components/ui/Button.astro"
+import ScreenReaderComparison from "./ScreenReaderComparison.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).accessibility
+---
+
+<main>
+  <section class="ec-layout-visual-content pt-20 pb-20 sm:pt-28">
+    <p class="flex items-center gap-2.5 text-label text-brand-green-high uppercase">
+      <span class="h-0.5 w-8 bg-brand-green-medium" aria-hidden="true"></span>
+      {t.eyebrow}
+    </p>
+
+    <h1 class="mt-7 max-w-[24ch] text-display text-balance">
+      {t.title}
+    </h1>
+
+    <p class="mt-8 max-w-[52ch] text-lead text-typo-medium">
+      {t.lead}
+    </p>
+
+    <div class="mt-10">
+      <Button href="#">{t.cta}</Button>
+    </div>
+  </section>
+
+  <section class="ec-layout-visual-content pb-12">
+    <h2 class="max-w-[32ch] text-heading-1 text-balance">
+      {t.problem.title}
+    </h2>
+
+    <p class="mt-6 max-w-[58ch] text-body text-typo-medium">
+      {t.problem.body}
+    </p>
+  </section>
+
+  <ScreenReaderComparison />
+
+  <section class="ec-layout-visual-content py-20">
+    <h2 class="max-w-[32ch] text-heading-1 text-balance">
+      {t.invisible.title}
+    </h2>
+
+    <div class="mt-6 flex max-w-[62ch] flex-col gap-5">
+      {t.invisible.body.map((paragraph) => <p class="text-body text-typo-medium">{paragraph}</p>)}
+    </div>
+  </section>
+
+  <section class="ec-layout-visual-content py-20">
+    <h2 class="max-w-[32ch] text-heading-1 text-balance">
+      {t.services.title}
+    </h2>
+    <p class="mt-6 max-w-[58ch] text-body text-typo-medium">
+      {t.services.lead}
+    </p>
+
+    <ul class="mt-12 grid gap-6 lg:grid-cols-3">
+      {
+        t.services.items.map((service) => (
+          <li class="flex flex-col rounded-3xl border border-gray-low bg-gray-min p-8 shadow-sm">
+            <p class="text-label text-brand-green-medium tabular-nums" aria-hidden="true">
+              {service.step}
+            </p>
+
+            <h3 class="mt-3 text-heading-2 text-brand-green-high">{service.title}</h3>
+
+            <p class="mt-4 text-typo-high">{service.lead}</p>
+
+            <ul class="mt-6 flex flex-col gap-3 border-t border-gray-low pt-6 text-typo-medium">
+              {service.items.map((item) => (
+                <li class="flex gap-3">
+                  <span
+                    class="mt-2.5 size-1.5 shrink-0 rounded-full bg-brand-green-medium"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="ec-layout-visual-content py-20">
+    <h2 class="max-w-[32ch] text-heading-1 text-balance">
+      {t.why.title}
+    </h2>
+
+    <div class="mt-6 flex max-w-[62ch] flex-col gap-5">
+      {t.why.body.map((paragraph) => <p class="text-body text-typo-medium">{paragraph}</p>)}
+    </div>
+  </section>
+
+  <section class="ec-layout-visual-content pb-24">
+    <div class="flex flex-col gap-7 rounded-3xl bg-brand-blue px-8 py-12 sm:px-14 sm:py-14">
+      <h2 class="max-w-[30ch] text-heading-1 text-balance text-typo-min">
+        {t.contact.title}
+      </h2>
+      <p class="max-w-[54ch] text-body text-typo-min/85">
+        {t.contact.body}
+      </p>
+      <div>
+        <Button href="#">{t.cta}</Button>
+      </div>
+    </div>
+  </section>
+</main>

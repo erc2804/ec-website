@@ -1,0 +1,142 @@
+---
+import { siteConfig } from "../config/site"
+import { routes, type RouteKey } from "../i18n"
+
+interface Props {
+  title: string
+  description: string
+  /** --- Absolute path, e.g. "/og-accessibility.png" --- */
+  shareImage?: string
+  isNoindex?: boolean
+  /** --- Person and ProfessionalService JSON-LD. Landing and service pages only. --- */
+  hasStructuredData?: boolean
+  /** --- Key in the route table. Required for hreflang, since slugs are localised. --- */
+  routeKey?: RouteKey
+}
+
+const {
+  title,
+  description,
+  shareImage = siteConfig.defaultShareImage,
+  isNoindex = false,
+  hasStructuredData = false,
+  routeKey,
+} = Astro.props
+
+const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
+
+const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href
+const shareImageUrl = new URL(shareImage, siteConfig.url).href
+
+// --- Slugs differ per language, so alternates come from the route table.
+// No key means no reliable counterpart, and hreflang is left out entirely.
+const alternates = routeKey ? routes[routeKey] : undefined
+const germanUrl = alternates ? new URL(alternates.de, siteConfig.url).href : undefined
+const englishUrl = alternates ? new URL(alternates.en, siteConfig.url).href : undefined
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  image: new URL("/logo.png", siteConfig.url).href,
+  email: siteConfig.contact.email,
+  telephone: siteConfig.contact.phone,
+  jobTitle:
+    currentLocale === "en"
+      ? "Accessibility specialist, frontend developer and product designer"
+      : "Spezialist für Barrierefreiheit, Frontend-Entwickler und Product Designer",
+  knowsAbout: [
+    "Web Content Accessibility Guidelines",
+    "WCAG 2.2",
+    "EN 301 549",
+    "Barrierefreiheitsstärkungsgesetz",
+    "Frontend development",
+    "Design systems",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: siteConfig.address.street,
+    postalCode: siteConfig.address.postalCode,
+    addressLocality: siteConfig.address.city,
+    addressRegion: siteConfig.address.region,
+    addressCountry: siteConfig.address.country,
+  },
+  sameAs: siteConfig.profiles,
+}
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: `${siteConfig.name} — Barrierefreiheit, Entwicklung, Product Design`,
+  description,
+  url: siteConfig.url,
+  image: new URL("/logo.png", siteConfig.url).href,
+  email: siteConfig.contact.email,
+  telephone: siteConfig.contact.phone,
+  founder: { "@type": "Person", name: siteConfig.name },
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: siteConfig.address.street,
+    postalCode: siteConfig.address.postalCode,
+    addressLocality: siteConfig.address.city,
+    addressRegion: siteConfig.address.region,
+    addressCountry: siteConfig.address.country,
+  },
+  areaServed: siteConfig.areaServed.map((name) => ({ "@type": "AdministrativeArea", name })),
+  sameAs: siteConfig.profiles,
+}
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+
+{
+  isNoindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <>
+      <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+      />
+      <link rel="canonical" href={canonicalUrl} />
+    </>
+  )
+}
+
+{
+  germanUrl && englishUrl && (
+    <>
+      <link rel="alternate" hreflang="de" href={germanUrl} />
+      <link rel="alternate" hreflang="en" href={englishUrl} />
+      <link rel="alternate" hreflang="x-default" href={germanUrl} />
+    </>
+  )
+}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={shareImageUrl} />
+<meta property="og:locale" content={currentLocale === "en" ? "en_US" : "de_DE"} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={shareImageUrl} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="apple-touch-icon" href="/logo.png" />
+
+{
+  hasStructuredData && !isNoindex && (
+    <>
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(serviceSchema)} />
+    </>
+  )
+}

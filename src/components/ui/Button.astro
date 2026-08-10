@@ -1,0 +1,45 @@
+---
+// --- Renders <a> when href is set, <button> otherwise.
+
+interface Props {
+  href?: string
+  variant?: "primary" | "secondary"
+  /** --- Ignored when href is set --- */
+  type?: "button" | "submit" | "reset"
+  isExternal?: boolean
+  class?: string
+}
+
+const {
+  href,
+  variant = "primary",
+  type = "button",
+  isExternal = false,
+  class: additionalClasses,
+} = Astro.props
+
+const baseClasses =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-center font-bold transition-colors hyphens-auto"
+
+const variantClasses = {
+  primary: "bg-brand-green-medium text-brand-blue hover:bg-brand-green-low",
+  secondary: "border-2 border-brand-green-high text-brand-green-high hover:bg-brand-green-low/25",
+}
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class:list={[baseClasses, variantClasses[variant], additionalClasses]}
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      <slot />
+      {isExternal && <span class="sr-only">(öffnet in neuem Tab)</span>}
+    </a>
+  ) : (
+    <button type={type} class:list={[baseClasses, variantClasses[variant], additionalClasses]}>
+      <slot />
+    </button>
+  )
+}

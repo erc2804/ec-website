@@ -1,0 +1,5 @@
+# pnpm 11 liest Einstellungen nicht mehr aus package.json, sondern von hier.
+# Build-Skripte sind seit pnpm 10 standardmäßig gesperrt und werden einzeln
+# freigegeben. esbuild gehört zur Astro/Vite-Toolchain und braucht seines.
+allowBuilds:
+  esbuild: true

@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import AccessibilityPage from "../../views/accessibility/AccessibilityPage.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).accessibility
+---
+
+<BaseLayout
+  title={t.meta.title}
+  description={t.meta.description}
+  routeKey="accessibility"
+  hasStructuredData
+>
+  <AccessibilityPage />
+</BaseLayout>

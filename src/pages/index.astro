@@ -1,0 +1,41 @@
+---
+// --- Toolchain check, not a draft. Verifies that fonts, design tokens, the
+// focus style and the layout utilities are wired up correctly. Gets replaced
+// once the real page structure is in place.
+import BaseLayout from "../layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+  title="Toolchain check — ec-website"
+  description="Temporary page verifying fonts, tokens, focus styles and layout utilities."
+>
+  <main class="ec-layout-text-content py-16">
+    <p class="text-label text-brand-green-high uppercase">Toolchain check</p>
+
+    <h1 class="mt-4 text-heading-1">
+      If this line is set in <em class="text-brand-green-high not-italic">an-regular</em>{" "}
+      the typeface and the design tokens are wired up.
+    </h1>
+
+    <ul class="mt-8 flex flex-wrap gap-2" aria-label="Brand colours">
+      <li class="rounded-full bg-brand-green-high px-3 py-1 text-sm text-gray-min">green-high</li>
+      <li class="rounded-full bg-brand-green-medium px-3 py-1 text-sm text-typo-high">
+        green-medium
+      </li>
+      <li class="rounded-full bg-brand-green-low px-3 py-1 text-sm text-typo-high">green-low</li>
+      <li class="rounded-full bg-brand-blue px-3 py-1 text-sm text-gray-min">blue</li>
+      <li class="rounded-full bg-brand-purple px-3 py-1 text-sm text-gray-min">purple</li>
+      <li class="rounded-full bg-brand-sand px-3 py-1 text-sm text-typo-high">sand</li>
+    </ul>
+
+    <p class="mt-8 text-typo-medium">
+      Tab to this control to check the focus style:{" "}
+      <button
+        type="button"
+        class="rounded-lg bg-gray-min px-4 py-2 font-bold text-typo-high shadow-sm"
+      >
+        Focus check
+      </button>
+    </p>
+  </main>
+</BaseLayout>

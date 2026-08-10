@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "an-regular";
+  src:
+    url("/fonts/an-regular.woff2") format("woff2"),
+    url("/fonts/an-regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-brand-green-high: #379683;
+  --color-brand-green-medium: #5cdb95;
+  --color-brand-green-low: #aeebc1;
+  --color-brand-blue: #05386b;
+  --color-brand-purple: #46237a;
+  --color-brand-sand: #edf5e1;
+
+  --color-gray-max: #000000;
+  --color-gray-high: #374151;
+  --color-gray-low: #d1d5db;
+  --color-gray-subtle: #f3f4f6;
+  --color-gray-min: #ffffff;
+
+  --color-typo-high: #332a2a;
+  --color-typo-medium: #645454;
+  --color-typo-low: #b6a0a0;
+  --color-typo-min: #f3f4f6;
+
+  --color-status-error-text: #b3261e;
+  --color-status-error-bg: #fdecea;
+
+  --font-sans: "an-regular", system-ui, sans-serif;
+  --tracking-ec: 0.04375rem;
+  --tracking-ec-tight: 0.0375rem;
+
+  --container-visual-content: 1200px;
+  --container-text-content: 800px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-gray-subtle);
+    color: var(--color-typo-high);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    letter-spacing: var(--tracking-ec);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    border-radius: 0.5rem;
+    outline: 4px solid var(--color-brand-green-high);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* --- Text styles. One class per role, carrying size, line height, tracking and
+   weight. Sizes step once at md instead of scaling with the viewport, so every
+   rendered size is one that was actually looked at. --- */
+@utility text-display {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-ec);
+  font-weight: 700;
+
+  @variant md {
+    font-size: 4rem;
+  }
+}
+
+@utility text-heading-1 {
+  font-size: 1.875rem;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-ec);
+  font-weight: 700;
+
+  @variant md {
+    font-size: 2.25rem;
+  }
+}
+
+@utility text-heading-2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: var(--tracking-ec);
+  font-weight: 700;
+}
+
+@utility text-lead {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: var(--tracking-ec-tight);
+
+  @variant md {
+    font-size: 1.5rem;
+  }
+}
+
+@utility text-body {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: var(--tracking-ec);
+}
+
+/* --- Eyebrows and column titles. Uppercase stays a utility in the markup. --- */
+@utility text-label {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+@utility ec-layout-visual-content {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-visual-content);
+  padding-inline: 1rem;
+
+  @variant md {
+    padding-inline: 1.5rem;
+  }
+}
+
+@utility ec-layout-text-content {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-text-content);
+  padding-inline: 1rem;
+
+  @variant md {
+    padding-inline: 1.5rem;
+  }
+}
