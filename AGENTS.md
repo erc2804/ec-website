@@ -148,6 +148,53 @@ block therefore wins over `w-auto` in the markup and the override fails silently
 layout properties out of scoped blocks and set them with utilities; use the scoped block
 for what utilities cannot express.
 
+**Scoped styles outrank the browser's own rules too.** Author declarations beat the
+UA stylesheet regardless of specificity, which is what lets the desktop navigation
+override `[popover]:not(:popover-open) { display: none }`. The same mechanism silently
+disables that UA rule wherever else it is needed: a `display` in the base rule of a
+popover leaves the closed panel rendered, focusable and hit-testable at `opacity: 0`.
+Where an element's visibility is a browser-managed state, `display` belongs in the
+state's rule, never in the base rule. See [ADR 0008](docs/adr/0008-navigation-without-javascript.md).
+
+**Never let an `ec-` utility and a Tailwind utility fight over the same shorthand.**
+Both live in the same layer, so the winner is whichever the generated stylesheet emits
+last — which is not something the markup shows. `ec-reveal` originally set `transition`,
+lost it to the `transition-colors` a `Button` carries, and the reveal jumped instead of
+fading. The fix was an animation, a property no utility competes for. Check for a
+collision whenever an own utility sets `transition`, `transform`, `display` or
+`background`, and reach for a non-competing property or a custom property instead. See
+[ADR 0009](docs/adr/0009-scroll-reveal.md).
+
+**One link treatment for the whole site.** `a` carries the underline in the base layer:
+quiet at rest, thicker and closer to the text on hover, built from `currentColor` so it
+needs no variant on the dark sections. It is `text-decoration`, not a background, so it
+survives a line break. Controls that are not running text — buttons, the wordmark, icon
+links — opt out with `no-underline`. Do not write a second link hover into a component.
+
+**German compounds need soft hyphens at display sizes.** A word like
+`Barrierefreiheitserklärung` has no break opportunity and runs straight out of a 320px
+viewport. Put `\u00AD` at the compound seams — plural, one seam is rarely enough at
+`text-display` — and never in a `meta.title`, where the character reaches the browser tab
+and search results.
+
+## Design language
+
+**Each page quotes the tool of its subject.** The accessibility page quotes the macOS
+VoiceOver caption panel: `ScreenReaderCaption` shows what a screen reader says about the
+h1, and the demo uses the same form for its comparison. A design page would quote a
+selection frame with measurements, a code page a diff line. The motif carries an argument,
+so it belongs where it proves something — not as a badge at the top of a section.
+
+**The page shows its own semantics.** `SectionHeading` prints the level a screen reader
+announces next to the heading, and unfolds the full sentence for the section holding the
+viewport. The heading list is how blind users skim a page; making it visible is the
+argument of the site, applied to the site. Legal texts are exempt: there it would be
+decoration.
+
+**Section labels have to say something new.** An eyebrow reading `RECHTSLAGE` above
+"Was gilt, und wonach ich prüfe." says the same thing twice. If a label only restates its
+heading, drop it rather than restyle it.
+
 ## Icons
 
 Tabler icons through `@tabler/icons-astro`, imported individually:
@@ -178,6 +225,12 @@ Accessibility is the work sample here, so every mistake counts double.
   and Space, so mouse, touch and keyboard share one code path
 - A decorative element must not carry information that is missing from the text.
   When that holds, `inert` plus `aria-hidden` is always correct
+- Interactive targets are at least 44px, well past the 24px of WCAG 2.2 SC 2.5.8.
+  An icon-only control needs the target size even though the mark itself is smaller
+- One focus indicator, never two. The screen reader demo replaces the base ring on
+  its targets rather than adding to it: the black cursor frame already marks the
+  element, and near black on white clears the 3:1 a focus indicator needs. Anything
+  that suppresses the base `outline` has to put an indicator of its own in its place
 
 ## Working method
 

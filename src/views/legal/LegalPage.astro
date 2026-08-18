@@ -1,0 +1,56 @@
+---
+// --- No heading level badge on a legal text: there it would be decoration.
+import { siteConfig } from "../../config/site"
+
+interface Props {
+  title: string
+  lead: string
+  sections: readonly { heading: string; body: readonly string[] }[]
+  status?: { heading: string; date: string }
+}
+
+const { title, lead, sections, status } = Astro.props
+
+// --- {email} in a paragraph becomes a mailto link, so the address lives in
+// siteConfig alone and a translation never carries a stale copy of it.
+const contactEmail = siteConfig.contact.email
+---
+
+<main id="main" class="ec-layout-text-content py-20 md:py-28">
+  <section>
+    <h1 class="ec-reveal text-display text-balance">{title}</h1>
+
+    <p class="mt-8 ec-reveal text-lead text-typo-medium ec-reveal-late">{lead}</p>
+  </section>
+
+  {
+    sections.map((entry) => (
+      <section class="mt-14 ec-reveal">
+        <h2 class="text-heading-2">{entry.heading}</h2>
+
+        <div class="mt-4 flex flex-col gap-4">
+          {entry.body.map((paragraph) => {
+            const [beforeEmail, afterEmail] = paragraph.split("{email}")
+
+            return (
+              <p class="text-body text-typo-medium">
+                {beforeEmail}
+                {afterEmail !== undefined && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
+                {afterEmail}
+              </p>
+            )
+          })}
+        </div>
+      </section>
+    ))
+  }
+
+  {
+    status && (
+      <section class="mt-14 ec-reveal">
+        <h2 class="text-heading-2">{status.heading}</h2>
+        <p class="mt-4 text-body text-typo-medium">{status.date}</p>
+      </section>
+    )
+  }
+</main>

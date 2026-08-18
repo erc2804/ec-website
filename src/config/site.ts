@@ -2,6 +2,9 @@ export const siteConfig = {
   // --- Without www: the server 301s www to the bare domain
   url: "https://ercancicek.com",
   name: "Ercan Cicek",
+  // --- Trading name for the legal notice; name stays the wordmark in the header
+  legalName: "nextstepweb, Inh. Ercan Cicek",
+  vatId: "DE329893573",
   defaultLocale: "de",
   locales: ["de", "en"] as const,
 
@@ -22,7 +25,11 @@ export const siteConfig = {
     country: "DE",
   },
 
-  profiles: ["https://www.linkedin.com/in/ercancicek"],
+  // --- Platform drives which icon and which label the footer uses
+  profiles: [
+    { platform: "linkedin", url: "https://www.linkedin.com/in/ercancicek" },
+    { platform: "xing", url: "https://www.xing.com/profile/Ercan_Cicek10" },
+  ],
 
   areaServed: ["Düsseldorf", "Ratingen", "Köln", "Nordrhein-Westfalen"],
 } as const

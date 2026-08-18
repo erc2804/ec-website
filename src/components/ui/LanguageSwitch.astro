@@ -1,0 +1,71 @@
+---
+// --- Each language names itself and carries lang, so a screen reader announces
+// "English" in an English voice rather than reading it with a German one.
+import { localeNames, localisedPath, useTranslations, type Locale, type RouteKey } from "../../i18n"
+import { siteConfig } from "../../config/site"
+
+interface Props {
+  routeKey: RouteKey
+  currentLocale: Locale
+  class?: string
+}
+
+const { routeKey, currentLocale, class: additionalClasses } = Astro.props
+
+const t = useTranslations(currentLocale).nav
+---
+
+<div
+  class:list={["flex items-center gap-1", additionalClasses]}
+  role="group"
+  aria-label={t.languageLabel}
+>
+  {
+    siteConfig.locales.map((locale) =>
+      locale === currentLocale ? (
+        <span class="ec-language-option" aria-current="true">
+          {localeNames[locale].short}
+        </span>
+      ) : (
+        <a
+          class="ec-language-option no-underline"
+          href={localisedPath(routeKey, locale)}
+          lang={locale}
+          hreflang={locale}
+        >
+          <span aria-hidden="true">{localeNames[locale].short}</span>
+          <span class="sr-only">{localeNames[locale].full}</span>
+        </a>
+      )
+    )
+  }
+</div>
+
+<style>
+  /* --- 2.75rem square keeps every option past the 24px target size WCAG 2.2
+     asks for, without making the pair look like two buttons. --- */
+  .ec-language-option {
+    display: grid;
+    place-items: center;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: currentColor;
+    opacity: 0.55;
+    transition:
+      opacity 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .ec-language-option[aria-current="true"] {
+    opacity: 1;
+  }
+
+  a.ec-language-option:hover {
+    opacity: 1;
+    background-color: rgb(from currentColor r g b / 0.1);
+  }
+</style>

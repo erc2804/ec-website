@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import LegalPage from "../../views/legal/LegalPage.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).legal.accessibilityStatement
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} routeKey="accessibilityStatement">
+  <LegalPage
+    title={t.title}
+    lead={t.lead}
+    sections={t.sections}
+    status={{ heading: t.statusHeading, date: t.statusDate }}
+  />
+</BaseLayout>

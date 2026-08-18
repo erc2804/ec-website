@@ -62,7 +62,7 @@ const personSchema = {
     addressRegion: siteConfig.address.region,
     addressCountry: siteConfig.address.country,
   },
-  sameAs: siteConfig.profiles,
+  sameAs: siteConfig.profiles.map((profile) => profile.url),
 }
 
 const serviceSchema = {
@@ -84,7 +84,7 @@ const serviceSchema = {
     addressCountry: siteConfig.address.country,
   },
   areaServed: siteConfig.areaServed.map((name) => ({ "@type": "AdministrativeArea", name })),
-  sameAs: siteConfig.profiles,
+  sameAs: siteConfig.profiles.map((profile) => profile.url),
 }
 ---
 

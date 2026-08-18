@@ -37,7 +37,7 @@
   --tracking-ec-tight: 0.0375rem;
 
   --container-visual-content: 1200px;
-  --container-text-content: 800px;
+  --container-text-content: 48rem;
 }
 
 @layer base {
@@ -52,6 +52,29 @@
     line-height: 1.6;
     letter-spacing: var(--tracking-ec);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- One underline for every link on the site: quiet at rest, then it thickens
+     and steps closer to the text on hover. Built from currentColor, so it works
+     on the light sections and the blue ones without a variant, and from
+     text-decoration rather than a background, so it survives a line break.
+     Controls that are not running text (buttons, the wordmark, icon links) opt
+     out with no-underline. --- */
+  a {
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in oklab, currentColor 28%, transparent);
+    text-decoration-thickness: 0.075em;
+    text-underline-offset: 0.28em;
+    transition:
+      text-decoration-color 220ms ease,
+      text-decoration-thickness 220ms ease,
+      text-underline-offset 220ms ease;
+  }
+
+  a:hover {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 0.14em;
+    text-underline-offset: 0.16em;
   }
 
   :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
@@ -148,4 +171,48 @@
   @variant md {
     padding-inline: 1.5rem;
   }
+}
+
+/* --- Scroll reveal. A section arrives in the order a screen reader walks it:
+   heading first, content behind it. The hidden start state only exists when
+   scripting is on, so without JavaScript nothing is ever stuck invisible.
+
+   An animation rather than a transition on purpose: any element carrying a
+   transition utility (a Button brings transition-colors) would otherwise have
+   the transition property overwritten and would jump instead of fade. --- */
+@keyframes ec-reveal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.625rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility ec-reveal {
+  @media (scripting: enabled) {
+    opacity: 0;
+
+    &[data-is-revealed="true"] {
+      opacity: 1;
+      /* --- backwards holds the start frame through the delay; no forwards, so
+         the element keeps whatever transform its own utilities set --- */
+      animation: ec-reveal-enter 620ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-reveal-delay, 0ms)
+        backwards;
+    }
+  }
+
+  /* --- No entrance at all rather than an instant one: the content is simply
+     there from the start. --- */
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+@utility ec-reveal-late {
+  --ec-reveal-delay: 110ms;
 }

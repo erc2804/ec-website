@@ -1,0 +1,242 @@
+---
+// --- One navigation in the DOM for both breakpoints. Below md the same element
+// is a popover panel; from md a plain author rule overrides the popover's
+// display:none and it sits inline. That keeps a single set of links, a single
+// landmark, and no JavaScript: top layer, light dismiss, focus return and the
+// invoker relationship are all the browser's job. See ADR 0002.
+import { IconArrowRight, IconMenu2, IconX } from "@tabler/icons-astro"
+import Button from "./ui/Button.astro"
+import LanguageSwitch from "./ui/LanguageSwitch.astro"
+import { siteConfig } from "../config/site"
+import { localisedPath, mainNavRoutes, useTranslations, type Locale, type RouteKey } from "../i18n"
+
+interface Props {
+  routeKey?: RouteKey
+}
+
+const { routeKey } = Astro.props
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale)
+
+const contactHref = `mailto:${siteConfig.contact.email}`
+
+const navItems = mainNavRoutes.map((key) => ({
+  key,
+  href: localisedPath(key, currentLocale),
+  label: t.routeLabels[key],
+}))
+
+// --- trailingSlash is "never", so a bare comparison is enough
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
+---
+
+<header class="ec-layout-visual-content flex items-center justify-between gap-6 py-5">
+  <a href="/" class="flex items-center gap-3 font-bold text-typo-high no-underline">
+    <img src="/logo.png" alt="" width="26" height="26" class="size-6.5" />
+    <span class="translate-y-px transform leading-none text-gray-high">
+      {siteConfig.name}
+    </span>
+    {currentLocale !== siteConfig.defaultLocale && <span class="sr-only">(Deutsch)</span>}
+  </a>
+
+  <button
+    type="button"
+    class="ec-menu-toggle flex min-h-11 items-center gap-2 md:hidden"
+    popovertarget="siteNav"
+  >
+    <IconMenu2 class="ec-menu-icon-open size-5" aria-hidden="true" />
+    <IconX class="ec-menu-icon-close size-5" aria-hidden="true" />
+    {t.nav.openMenu}
+  </button>
+
+  <nav id="siteNav" popover class="ec-site-nav" aria-label={t.nav.label}>
+    <ul role="list" class="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="ec-nav-link"
+              aria-current={currentPath === item.href ? "page" : undefined}
+            >
+              <span class="ec-nav-dot" aria-hidden="true" />
+              <span class="translate-y-px transform leading-none">{item.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-4 flex flex-col gap-5 md:mt-0 md:flex-row md:items-center md:gap-4">
+      {routeKey && <LanguageSwitch routeKey={routeKey} currentLocale={currentLocale} />}
+
+      <Button href={contactHref} size="compact">
+        {t.common.contactCta}
+        <IconArrowRight slot="icon-end" class="size-5" />
+      </Button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // --- Light dismiss covers a click outside and Escape, but not a Tab past the
+  // last link: the panel would stay open behind the focus. Closing rather than
+  // trapping focus, because this is a disclosure menu and not a dialog. It
+  // covers no page content and seals nothing off, so holding focus inside would
+  // promise a modality that is not there. Progressive enhancement: without this
+  // script the menu still opens, and Escape and an outside click still close it.
+  //
+  // Watching focusin on the document rather than focusout on the panel: it
+  // covers leaving the toggle as well, and a window switch leaves focus where it
+  // was instead of reading as a departure.
+  const siteNav = document.querySelector<HTMLElement>("#siteNav")
+  const menuToggle = document.querySelector("[popovertarget='siteNav']")
+
+  if (siteNav) {
+    document.addEventListener("focusin", (event) => {
+      // --- From md the same element is the inline header nav, never a panel
+      if (!siteNav.matches(":popover-open")) return
+
+      const target = event.target
+      if (!(target instanceof Node)) return
+      if (siteNav.contains(target) || target === menuToggle) return
+
+      siteNav.hidePopover()
+    })
+  }
+</script>
+
+<style>
+  /* --- Below md: a panel in the top layer. No display here: the popover is
+     display:none while closed, and any author declaration in the base rule
+     would beat that UA style and leave the closed panel rendered, focusable
+     and swallowing clicks. Only the open state and the desktop rule set it. --- */
+  .ec-site-nav {
+    position: fixed;
+    inset: 4.75rem 0.75rem auto 0.75rem;
+    flex-direction: column;
+    margin: 0;
+    border: none;
+    border-radius: 1.5rem;
+    background: var(--color-gray-min);
+    padding: 1.25rem 1.5rem 1.75rem;
+    width: auto;
+    max-width: none;
+    border: 1px solid var(--color-gray-low);
+    box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.55);
+    overflow: visible;
+    transition:
+      opacity 240ms ease,
+      transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      overlay 240ms allow-discrete,
+      display 240ms allow-discrete;
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+
+  .ec-site-nav:popover-open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-0.75rem);
+    }
+  }
+
+  /* --- Deliberately no dimming here. A darkened backdrop promises that the rest
+     of the page is sealed off, and a popover seals nothing: focus still moves
+     through the page behind it. This is a disclosure menu, not a dialog, so it
+     is drawn as one and lifted by its shadow instead. Making it truly modal
+     would mean a <dialog>, which would leave the desktop navigation reporting
+     itself as a dialog. --- */
+  .ec-site-nav::backdrop {
+    background: none;
+  }
+
+  /* --- From md: an author rule beats the popover's UA display:none, so the same
+     element sits in the header row --- */
+  @media (width >= 48rem) {
+    .ec-site-nav {
+      display: flex;
+      position: static;
+      inset: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+      opacity: 1;
+      transform: none;
+      border: none;
+      border-radius: 0;
+      background: none;
+      padding: 0;
+      box-shadow: none;
+      transition: none;
+    }
+  }
+
+  .ec-menu-toggle {
+    color: var(--color-typo-high);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* --- The name stays "Menü" in both states; aria-expanded carries the state,
+     which is what a toggle should do. Only the icon follows. --- */
+  .ec-menu-icon-close,
+  :global(header:has(.ec-site-nav:popover-open)) .ec-menu-icon-open {
+    display: none;
+  }
+
+  :global(header:has(.ec-site-nav:popover-open)) .ec-menu-icon-close {
+    display: block;
+  }
+
+  /* --- The dot keeps its space at all times, so the current page is marked
+     without the row shifting --- */
+  .ec-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+    min-height: 2.75rem;
+    font-size: 1.25rem;
+
+    @media (width >= 48rem) {
+      font-size: 1rem;
+    }
+
+    color: var(--color-typo-medium);
+    transition: color 180ms ease;
+  }
+
+  .ec-nav-link:hover {
+    color: var(--color-typo-high);
+  }
+
+  .ec-nav-link[aria-current="page"] {
+    color: var(--color-typo-high);
+    font-weight: 700;
+  }
+
+  /* --- Taken out of the inline flow: otherwise the link's underline would run
+     underneath the dot as well --- */
+  .ec-nav-dot {
+    position: absolute;
+    top: 50%;
+    left: 0.625rem;
+    translate: 0 -50%;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background: transparent;
+    transition: background-color 180ms ease;
+  }
+
+  .ec-nav-link[aria-current="page"] .ec-nav-dot {
+    background: var(--color-brand-green-high);
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import ImprintPage from "../../views/legal/ImprintPage.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).legal.imprint
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} routeKey="imprint">
+  <ImprintPage />
+</BaseLayout>

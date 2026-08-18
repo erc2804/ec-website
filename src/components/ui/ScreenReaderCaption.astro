@@ -1,0 +1,79 @@
+---
+// --- The caption panel macOS VoiceOver shows while it speaks. Quoted, not
+// rebuilt pixel for pixel: the white frame of the original only works on a dark
+// screenshot, and this panel has to sit on light backgrounds too.
+import { IconVolume, IconVolumeOff } from "@tabler/icons-astro"
+
+interface Props {
+  /** --- Nothing is announced: the element is skipped entirely --- */
+  isSilent?: boolean
+  /** --- Set when the text is replaced at runtime --- */
+  textId?: string
+  class?: string
+}
+
+const { isSilent = false, textId, class: additionalClasses } = Astro.props
+---
+
+<div class:list={["ec-caption", "max-w-xl", additionalClasses]} data-is-silent={String(isSilent)}>
+  <span class="ec-caption-icon" aria-hidden="true">
+    <IconVolume class="ec-caption-icon-loud size-5.5" />
+    <IconVolumeOff class="ec-caption-icon-silent size-5.5" />
+  </span>
+
+  <p class="ec-caption-text" id={textId}><slot /></p>
+</div>
+
+<style>
+  .ec-caption {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    border-radius: 1.25rem;
+    /* --- Near black rather than a token: this quotes macOS, not the brand --- */
+    background: rgb(28 28 30 / 0.97);
+    padding: 1.125rem 1.375rem;
+    color: #ffffff;
+    box-shadow: 0 14px 36px -14px rgb(0 0 0 / 0.5);
+  }
+
+  .ec-caption-icon {
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .ec-caption[data-is-silent="false"] .ec-caption-icon-silent,
+  .ec-caption[data-is-silent="true"] .ec-caption-icon-loud {
+    display: none;
+  }
+
+  /* --- System font on purpose: quoting macOS, not our brand --- */
+  .ec-caption-text {
+    margin: 0;
+    font-family:
+      ui-sans-serif,
+      -apple-system,
+      "SF Pro Text",
+      system-ui,
+      sans-serif;
+    /* --- 17px is the macOS system size this panel is quoted from --- */
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-wrap: pretty;
+
+    @media (width >= 48rem) {
+      font-size: 1.25rem;
+    }
+  }
+
+  .ec-caption[data-is-silent="true"] .ec-caption-icon {
+    color: #8e9199;
+  }
+
+  .ec-caption[data-is-silent="true"] .ec-caption-text {
+    color: #9ba3ae;
+    font-style: italic;
+  }
+</style>

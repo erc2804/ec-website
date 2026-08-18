@@ -16,9 +16,32 @@ export function useTranslations(locale: string | undefined) {
 // --- Localised slugs: the alternate URL cannot be derived from the current path.
 export const routes = {
   accessibility: { de: "/barrierefreiheit", en: "/en/accessibility" },
+  imprint: { de: "/impressum", en: "/en/legal-notice" },
+  privacy: { de: "/datenschutz", en: "/en/privacy" },
+  accessibilityStatement: {
+    de: "/barrierefreiheitserklaerung",
+    en: "/en/accessibility-statement",
+  },
 } as const
 
 export type RouteKey = keyof typeof routes
+
+// --- Which routes appear where. Not every route belongs in the header, and the
+// legal pages belong only in the footer.
+export const mainNavRoutes = ["accessibility"] as const satisfies readonly RouteKey[]
+
+export const footerRoutes = [
+  "imprint",
+  "privacy",
+  "accessibilityStatement",
+] as const satisfies readonly RouteKey[]
+
+// --- Each language names itself, so the switch can carry lang and be spoken in
+// the voice of the language it leads to.
+export const localeNames = {
+  de: { short: "DE", full: "Deutsch" },
+  en: { short: "EN", full: "English" },
+} as const satisfies Record<Locale, { short: string; full: string }>
 
 export function localisedPath(route: RouteKey, locale: Locale) {
   return routes[route][locale]

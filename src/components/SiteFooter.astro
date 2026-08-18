@@ -1,0 +1,108 @@
+---
+// --- Kept to one quiet row: the contact section above it is the close of the
+// page, and a heavy footer would compete with it.
+import { IconBrandLinkedin, IconBrandXing } from "@tabler/icons-astro"
+import { siteConfig } from "../config/site"
+import { footerRoutes, localisedPath, useTranslations, type Locale } from "../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale)
+
+// --- Frozen at build time, which is what a static site can honestly claim
+const year = new Date().getFullYear()
+
+const links = footerRoutes.map((key) => ({
+  key,
+  href: localisedPath(key, currentLocale),
+  label: t.routeLabels[key],
+}))
+
+// --- Platform picks the mark; the link carries the name, the icon is decoration
+const profileIcons = {
+  linkedin: IconBrandLinkedin,
+  xing: IconBrandXing,
+}
+
+// --- trailingSlash is "never", so a bare comparison is enough
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
+---
+
+<footer
+  class="ec-layout-visual-content flex flex-col gap-6 py-10 text-typo-medium md:flex-row md:items-center md:justify-between"
+>
+  <p>© {year} {siteConfig.name}. {t.footer.rights}</p>
+
+  <nav aria-label={t.footer.label}>
+    <ul role="list" class="flex flex-wrap items-center gap-x-6 gap-y-2">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              class="ec-footer-link"
+              href={link.href}
+              aria-current={currentPath === link.href ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <ul role="list" class="flex items-center gap-1">
+    {
+      siteConfig.profiles.map((profile) => {
+        const Icon = profileIcons[profile.platform]
+
+        return (
+          <li>
+            <a
+              class="ec-profile-link no-underline"
+              href={profile.url}
+              aria-label={t.footer.profiles[profile.platform]}
+            >
+              <Icon class="size-5" aria-hidden="true" />
+            </a>
+          </li>
+        )
+      })
+    }
+  </ul>
+</footer>
+
+<style>
+  /* --- 2.75rem of height keeps every link past the target size WCAG 2.2 asks
+     for, without the row looking like a list of buttons --- */
+  /* --- 2.75rem of height keeps every link past the target size WCAG 2.2 asks
+     for; the underline itself comes from the base layer --- */
+  .ec-footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .ec-footer-link[aria-current="page"] {
+    text-decoration-color: currentColor;
+    color: var(--color-typo-high);
+    font-weight: 700;
+  }
+
+  /* --- 2.75rem square: an icon-only control needs the target size even though
+     the mark itself is smaller --- */
+  .ec-profile-link {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    transition:
+      color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .ec-profile-link:hover {
+    background-color: rgb(from currentColor r g b / 0.1);
+    color: var(--color-typo-high);
+  }
+</style>

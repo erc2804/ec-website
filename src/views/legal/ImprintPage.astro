@@ -1,0 +1,68 @@
+---
+// --- Trading name, address and contact come from siteConfig, so they are stated
+// once and the structured data in Seo.astro cannot drift away from the page.
+// No heading level badge here: on a legal text it would be decoration.
+import { siteConfig } from "../../config/site"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).legal.imprint
+const { address, contact, legalName, vatId } = siteConfig
+---
+
+<main id="main" class="ec-layout-text-content py-20 md:py-28">
+  <h1 class="ec-reveal text-display text-balance">{t.title}</h1>
+
+  <section class="mt-14 ec-reveal ec-reveal-late">
+    <h2 class="text-heading-2">{t.providerHeading}</h2>
+
+    <address class="mt-4 text-body text-typo-medium not-italic">
+      {legalName}<br />
+      {address.street}<br />
+      {address.postalCode}{" "}{address.city}
+    </address>
+  </section>
+
+  <section class="mt-14 ec-reveal">
+    <h2 class="text-heading-2">{t.contactHeading}</h2>
+
+    <dl class="mt-4 flex flex-col gap-2 text-body text-typo-medium">
+      <div class="flex gap-2">
+        <dt>{t.phoneLabel}:</dt>
+        <dd>
+          <a href={`tel:${contact.phone}`}>
+            {contact.phoneDisplay}
+          </a>
+        </dd>
+      </div>
+
+      <div class="flex gap-2">
+        <dt>{t.emailLabel}:</dt>
+        <dd>
+          <a href={`mailto:${contact.email}`}>
+            {contact.email}
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="mt-14 ec-reveal">
+    <h2 class="text-heading-2">{t.vatHeading}</h2>
+
+    <p class="mt-4 text-body text-typo-medium">{vatId}</p>
+  </section>
+
+  {
+    t.sections.map((entry) => (
+      <section class="mt-14 ec-reveal">
+        <h2 class="text-heading-2">{entry.heading}</h2>
+
+        <div class="mt-4 flex flex-col gap-4">
+          {entry.body.map((paragraph) => (
+            <p class="text-body text-typo-medium">{paragraph}</p>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</main>

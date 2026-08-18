@@ -1,5 +1,8 @@
 ---
 import Seo from "../components/Seo.astro"
+import SiteFooter from "../components/SiteFooter.astro"
+import SiteHeader from "../components/SiteHeader.astro"
+import SkipLink from "../components/ui/SkipLink.astro"
 import { siteConfig } from "../config/site"
 import type { RouteKey } from "../i18n"
 import "../styles/global.css"
@@ -26,6 +29,9 @@ const {
 } = Astro.props
 
 const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
+
+// --- Target of the skip link. Every page renders exactly one <main> with it.
+const mainId = "main"
 ---
 
 <!doctype html>
@@ -45,6 +51,29 @@ const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
     <slot name="head" />
   </head>
   <body class:list={[additionalClasses]}>
+    <SkipLink targetId={mainId} />
+
+    <SiteHeader routeKey={routeKey} />
+
     <slot />
+
+    <SiteFooter />
   </body>
 </html>
+
+<script>
+  // --- Reveal once and stop watching: a block that fades back out on the way up
+  // reads as a glitch, not as an entrance.
+  const observer = new IntersectionObserver(
+    (entries, self) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        ;(entry.target as HTMLElement).dataset.isRevealed = "true"
+        self.unobserve(entry.target)
+      }
+    },
+    { rootMargin: "0px 0px -10% 0px" }
+  )
+
+  for (const target of document.querySelectorAll(".ec-reveal")) observer.observe(target)
+</script>

@@ -1,0 +1,321 @@
+---
+// --- One form step with five marked defects. The markers sit in a gutter column
+// so every target gets its own row; each button spans both columns via subgrid.
+// Form on the left, readout on the right, so a selection and its result are
+// visible at the same time without scrolling.
+import {
+  IconAlertCircle,
+  IconArrowRight,
+  IconPointerFilled,
+  IconShieldLock,
+} from "@tabler/icons-astro"
+import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
+import SectionHeading from "../../components/ui/SectionHeading.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).accessibility.demo
+
+// --- The required marker sits mid-sentence in German and at the end in English,
+// so the sentence is one string with a placeholder rather than glued fragments.
+const [legendBeforeMark, legendAfterMark] = t.requiredLegend.split("{mark}")
+
+const targetLabel = (index: number) =>
+  t.markerLabel.replace("{number}", String(index + 1)).replace("{name}", t.cases[index].name)
+---
+
+<section class="bg-gray-min py-20 md:py-28">
+  <div class="ec-layout-visual-content">
+    <SectionHeading level={2}>{t.title}</SectionHeading>
+
+    <p class="mt-6 max-w-[54ch] ec-reveal text-body text-typo-medium ec-reveal-late">{t.lead}</p>
+
+    <div
+      class="mt-12 grid ec-reveal gap-10 ec-reveal-late lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] lg:gap-14"
+    >
+      <div
+        class="ec-demo-form grid h-fit grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-x-4 gap-y-5 rounded-3xl border border-gray-low bg-gray-min p-6 sm:p-7"
+      >
+        <button
+          type="button"
+          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
+          data-case="0"
+          aria-current="false"
+        >
+          <span class="ec-marker" aria-hidden="true">1</span>
+          <span class="ec-sr-frame justify-self-start">
+            <span class="grid size-11 place-items-center rounded-xl bg-brand-green-medium/20">
+              <IconShieldLock class="size-6 text-brand-green-high" aria-hidden="true" />
+            </span>
+            <span class="sr-only">{targetLabel(0)}</span>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
+          data-case="1"
+          aria-current="false"
+        >
+          <span class="ec-marker" aria-hidden="true">2</span>
+          <span class="ec-sr-frame justify-self-start">
+            <span class="text-heading-2">{t.formTitle}</span>
+            <span class="sr-only">{targetLabel(1)}</span>
+          </span>
+        </button>
+
+        <p class="col-start-2 -mt-2 text-typo-medium">
+          {legendBeforeMark}<span class="font-bold text-status-error-text">*</span>{legendAfterMark}
+        </p>
+
+        <p class="col-start-2 mb-[-0.75rem] text-typo-medium">
+          {t.nameLabel}<span class="font-bold text-status-error-text">*</span>
+        </p>
+
+        <button
+          type="button"
+          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
+          data-case="2"
+          aria-current="false"
+        >
+          <span class="ec-marker" aria-hidden="true">3</span>
+          <span class="ec-sr-frame w-full">
+            <span
+              class="flex min-h-13 items-center rounded-xl border-2 border-gray-low px-4 py-3 text-body"
+            >
+              {t.nameValue}
+            </span>
+            <span class="sr-only">{targetLabel(2)}</span>
+          </span>
+        </button>
+
+        <p class="col-start-2 mb-[-0.75rem] text-typo-medium">
+          {t.emailLabel}<span class="font-bold text-status-error-text">*</span>
+        </p>
+
+        <button
+          type="button"
+          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
+          data-case="3"
+          aria-current="false"
+        >
+          <span class="ec-marker" aria-hidden="true">4</span>
+          <span class="ec-sr-frame w-full">
+            <span
+              class="flex min-h-13 items-center rounded-xl border-2 border-status-error-text bg-status-error-bg px-4 py-3 text-body"
+            >
+              {t.emailValue}
+            </span>
+            <span class="sr-only">{targetLabel(3)}</span>
+          </span>
+        </button>
+
+        <p class="col-start-2 -mt-2 flex items-center gap-2 text-status-error-text">
+          <IconAlertCircle class="size-5 shrink-0" aria-hidden="true" />
+          <span>{t.emailError}</span>
+        </p>
+
+        <button
+          type="button"
+          class="ec-sr-target col-span-full mt-1 grid grid-cols-subgrid items-center"
+          data-case="4"
+          aria-current="false"
+        >
+          <span class="ec-marker" aria-hidden="true">5</span>
+          <span class="ec-sr-frame justify-self-start">
+            <span class="grid size-13 place-items-center rounded-full bg-brand-green-medium">
+              <IconArrowRight class="size-6 text-brand-blue" aria-hidden="true" />
+            </span>
+            <span class="sr-only">{targetLabel(4)}</span>
+          </span>
+        </button>
+      </div>
+
+      <div
+        class="ec-readout"
+        id="demoReadout"
+        data-has-selection="false"
+        data-silent-text={t.silent}
+        data-live-template={t.liveTemplate}
+        data-cases={JSON.stringify(t.cases)}
+      >
+        <div class="ec-readout-empty flex items-start gap-4 lg:pt-4">
+          <span
+            class="grid size-9 shrink-0 place-items-center rounded-full bg-brand-green-medium"
+            aria-hidden="true"
+          >
+            <IconPointerFilled class="size-5 text-brand-blue" />
+          </span>
+
+          <p class="max-w-[38ch] text-lead text-typo-medium">{t.placeholderBody}</p>
+        </div>
+
+        <!-- --- Announced through the live region below instead: letting a real
+             screen reader read transcripts of a screen reader gets confusing. -->
+        <div class="ec-readout-result flex flex-col gap-6" aria-hidden="true">
+          <p class="flex items-center gap-3.5">
+            <span class="ec-marker" data-is-active="true" id="demoCaseNumber">1</span>
+            <span class="text-heading-2" id="demoCaseName"></span>
+          </p>
+
+          <div class="flex flex-col gap-2.5">
+            <p class="text-label text-typo-medium uppercase">{t.columnCommon}</p>
+            <ScreenReaderCaption textId="demoCaseCommon" />
+          </div>
+
+          <div class="flex flex-col gap-2.5">
+            <p class="text-label text-brand-blue uppercase">{t.columnCorrect}</p>
+            <ScreenReaderCaption textId="demoCaseCorrect" />
+          </div>
+
+          <p class="max-w-[62ch] text-body text-typo-medium" id="demoCaseExplanation"></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="sr-only" id="demoAnnouncement" aria-live="polite"></p>
+
+    <p class="mt-14 max-w-[62ch] ec-reveal text-body text-typo-medium">{t.closing}</p>
+  </div>
+</section>
+
+<style>
+  /* --- Numbered marker, the way a defect is called out on an annotated drawing --- */
+  .ec-marker {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 9999px;
+    background: var(--color-brand-green-low);
+    color: var(--color-brand-blue);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .ec-sr-target[aria-current="true"] .ec-marker,
+  .ec-marker[data-is-active="true"] {
+    background: #0b0c0e;
+    color: #ffffff;
+  }
+
+  .ec-sr-target {
+    cursor: pointer;
+    text-align: left;
+  }
+
+  /* --- Ring imitates the screen reader cursor. It doubles as the focus
+     indicator, so a keyboard user sees one frame instead of two competing ones;
+     near black on white clears the 3:1 that a focus indicator needs. --- */
+  .ec-sr-frame {
+    position: relative;
+    display: block;
+  }
+
+  .ec-sr-frame::after {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    border: 3px solid #0b0c0e;
+    border-radius: 0.875rem;
+    opacity: 0;
+    transition: opacity 160ms ease;
+    pointer-events: none;
+  }
+
+  .ec-sr-target[aria-current="true"] .ec-sr-frame::after,
+  .ec-sr-target:focus-visible .ec-sr-frame::after {
+    opacity: 1;
+  }
+
+  .ec-sr-target:focus-visible {
+    outline: none;
+  }
+
+  .ec-sr-target:hover:not([aria-current="true"]) .ec-sr-frame::after {
+    opacity: 0.25;
+  }
+
+  .ec-readout[data-has-selection="false"] .ec-readout-result,
+  .ec-readout[data-has-selection="true"] .ec-readout-empty {
+    display: none;
+  }
+</style>
+
+<script>
+  import type { DemoCase } from "../../i18n/types"
+
+  const readout = document.getElementById("demoReadout")
+  const targets = Array.from(document.querySelectorAll<HTMLButtonElement>(".ec-sr-target"))
+  const caseNumber = document.getElementById("demoCaseNumber")
+  const caseName = document.getElementById("demoCaseName")
+  const caseExplanation = document.getElementById("demoCaseExplanation")
+  const commonOutput = document.getElementById("demoCaseCommon")
+  const correctOutput = document.getElementById("demoCaseCorrect")
+  const liveRegion = document.getElementById("demoAnnouncement")
+
+  const cases: DemoCase[] = JSON.parse(readout?.dataset.cases ?? "[]")
+  const silentText = readout?.dataset.silentText ?? ""
+  const liveTemplate = readout?.dataset.liveTemplate ?? ""
+
+  function renderCaption(element: HTMLElement | null, text: string, isSilent: boolean) {
+    if (!element) return
+    element.textContent = isSilent ? silentText : text
+    // --- The caption swaps its icon and its tone off this attribute
+    element.closest(".ec-caption")?.setAttribute("data-is-silent", String(isSilent))
+  }
+
+  function revealReadout() {
+    if (!readout) return
+    const rect = readout.getBoundingClientRect()
+    // --- Only below lg, where the readout sits under the form instead of beside it
+    const isFullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
+    if (isFullyVisible) return
+    readout.scrollIntoView({ block: "end", behavior: "smooth" })
+  }
+
+  function selectCase(index: number) {
+    const demoCase = cases[index]
+    if (!demoCase || !readout) return
+
+    targets.forEach((target, targetIndex) => {
+      target.setAttribute("aria-current", targetIndex === index ? "true" : "false")
+    })
+
+    const isCommonSilent = demoCase.isCommonSilent === true
+    const isCorrectSilent = demoCase.isCorrectSilent === true
+
+    readout.dataset.hasSelection = "true"
+    if (caseNumber) caseNumber.textContent = String(index + 1)
+    if (caseName) caseName.textContent = demoCase.name
+    if (caseExplanation) caseExplanation.textContent = demoCase.explanation
+    renderCaption(commonOutput, demoCase.common, isCommonSilent)
+    renderCaption(correctOutput, demoCase.correct, isCorrectSilent)
+
+    if (liveRegion) {
+      liveRegion.textContent = liveTemplate
+        .replace("{name}", demoCase.name)
+        .replace("{common}", isCommonSilent ? silentText : demoCase.common)
+        .replace("{correct}", isCorrectSilent ? silentText : demoCase.correct)
+        .replace("{explanation}", demoCase.explanation)
+    }
+  }
+
+  targets.forEach((target, index) => {
+    target.addEventListener("click", (event) => {
+      selectCase(index)
+      // --- detail is 0 for Enter and Space; scrolling on keyboard activation
+      // would move the page out from under the user.
+      if (event.detail > 0) revealReadout()
+    })
+
+    // --- Keyboard focus selects too, the way a screen reader cursor would
+    target.addEventListener("focus", () => {
+      if (target.matches(":focus-visible")) selectCase(index)
+    })
+  })
+</script>
