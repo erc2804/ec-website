@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 03 — Segment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      :root {
+        --board: #04192b;
+        --off: #0e3350;
+        --on: #5cdb95;
+        --on-soft: #aeebc1;
+        --text: #dfe9d6;
+        --text-dim: #7d94a6;
+
+        /* --- Die einzige erlaubte Dauer: ein Schalten kennt keine Kurve --- */
+        --tick: 1ms;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--board);
+        color: var(--text);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .inner {
+        margin: 0 auto;
+        padding-inline: clamp(1.5rem, 5vw, 4rem);
+        width: min(100%, 78rem);
+      }
+
+      /* ---------- Kopf ---------- */
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 2rem;
+        border-bottom: 2px solid var(--off);
+        padding: 1.75rem 0 1rem;
+      }
+
+      header a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wordmark {
+        font-size: 1.0625rem;
+        font-weight: 700;
+      }
+
+      nav {
+        display: flex;
+        gap: 1.75rem;
+      }
+
+      /* --- Ein Link hat keine wachsende Linie, sondern vier Segmente --- */
+      nav a {
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      nav a::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--seg, var(--off)) 0 12px,
+          transparent 12px 16px
+        );
+        content: "";
+      }
+
+      nav a:hover,
+      nav a:focus-visible {
+        --seg: var(--on);
+        color: var(--on);
+      }
+
+      /* ---------- Die Anzeige ---------- */
+
+      .display {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 0.35rem;
+      }
+
+      .display svg {
+        display: block;
+        width: auto;
+        height: var(--digit, 4.5rem);
+      }
+
+      .display polygon {
+        fill: var(--off);
+        /* --- An oder aus. Kein Übergang, nur der Wechsel. --- */
+        transition: fill var(--tick) linear;
+      }
+
+      .display polygon[data-lit="true"] {
+        fill: var(--on);
+      }
+
+      .display .dot {
+        margin-bottom: 0.35rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        background: var(--off);
+      }
+
+      .display .dot[data-lit="true"] {
+        background: var(--on);
+      }
+
+      .display-unit {
+        align-self: flex-end;
+        margin-bottom: 0.5rem;
+        margin-left: 0.5rem;
+        color: var(--text-dim);
+      }
+
+      /* ---------- Segmentierte Schrift ---------- */
+      /* Wörter erscheinen einzeln und hart. Nichts fährt ein, nichts blendet auf. */
+
+      .segmented span {
+        opacity: 0;
+        transition: opacity var(--tick) linear;
+      }
+
+      [data-lit-block="true"] .segmented span {
+        opacity: 1;
+      }
+
+      /* ---------- Inhalt ---------- */
+
+      section {
+        border-bottom: 2px solid var(--off);
+        padding: clamp(3rem, 8vh, 5rem) 0;
+      }
+
+      .head-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem 2rem;
+        margin-bottom: 1.75rem;
+        color: var(--text-dim);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 16ch;
+        font-size: clamp(2.25rem, 6.2vw, 4.5rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+
+      h2 {
+        margin: 0;
+        max-width: 20ch;
+        font-size: clamp(1.75rem, 4vw, 2.875rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+      }
+
+      .lead {
+        margin: 1.75rem 0 0;
+        max-width: 42ch;
+        font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+        color: var(--text);
+        opacity: 0.8;
+      }
+
+      p.body {
+        margin: 1.25rem 0 0;
+        max-width: 44ch;
+        opacity: 0.8;
+      }
+
+      .accent {
+        color: var(--on);
+      }
+
+      /* ---------- Segmentleiste ---------- */
+
+      .bar {
+        display: flex;
+        gap: 4px;
+        margin-top: 2rem;
+        height: 1.1rem;
+      }
+
+      .bar i {
+        flex: 1;
+        background: var(--off);
+        transition: background-color var(--tick) linear;
+      }
+
+      .bar i[data-lit="true"] {
+        background: var(--on);
+      }
+
+      .bar-label {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.6rem;
+        color: var(--text-dim);
+      }
+
+      /* ---------- Werte ---------- */
+
+      .readouts {
+        display: grid;
+        gap: 2.5rem 3rem;
+        margin: 2.5rem 0 0;
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      }
+
+      .readout dt {
+        margin-bottom: 0.75rem;
+        color: var(--text-dim);
+      }
+
+      .readout dd {
+        margin: 0;
+      }
+
+      .readout .caption {
+        display: block;
+        margin-top: 0.75rem;
+        font-weight: 700;
+      }
+
+      /* ---------- Bedienelemente ---------- */
+      /* Der Rahmen ist aus vier Segmenten gebaut. Beim Zeigen schalten sie
+         nacheinander, danach die Fläche. Verschoben wird nie etwas. */
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+      }
+
+      .seg-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        border: 0;
+        background: transparent;
+        padding: 0 1.6rem;
+        min-height: 3.25rem;
+        color: var(--text);
+        font: inherit;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color var(--tick) linear 180ms, color var(--tick) linear 180ms;
+      }
+
+      .seg-button span[data-edge] {
+        position: absolute;
+        background: var(--off);
+        transition: background-color var(--tick) linear;
+      }
+
+      .seg-button span[data-edge="top"] {
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 3px;
+      }
+
+      .seg-button span[data-edge="right"] {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 3px;
+        transition-delay: 60ms;
+      }
+
+      .seg-button span[data-edge="bottom"] {
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        transition-delay: 120ms;
+      }
+
+      .seg-button span[data-edge="left"] {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 3px;
+        transition-delay: 180ms;
+      }
+
+      .seg-button:hover span[data-edge],
+      .seg-button:focus-visible span[data-edge] {
+        background: var(--on);
+      }
+
+      .seg-button:hover,
+      .seg-button:focus-visible {
+        background: var(--on);
+        color: var(--board);
+        outline: none;
+      }
+
+      .seg-button.lit {
+        background: var(--on);
+        color: var(--board);
+      }
+
+      .seg-button.lit span[data-edge] {
+        background: var(--on);
+      }
+
+      .seg-button.lit:hover,
+      .seg-button.lit:focus-visible {
+        background: transparent;
+        color: var(--on);
+      }
+
+      .field {
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+        min-width: 17rem;
+        background: repeating-linear-gradient(
+            90deg,
+            var(--field-seg, var(--off)) 0 12px,
+            transparent 12px 16px
+          )
+          bottom / 100% 3px no-repeat;
+        padding-bottom: 0.5rem;
+      }
+
+      .field:focus-within {
+        --field-seg: var(--on);
+      }
+
+      .field label {
+        white-space: nowrap;
+        color: var(--text-dim);
+      }
+
+      .field input {
+        border: 0;
+        background: transparent;
+        width: 100%;
+        color: var(--text);
+        font: inherit;
+        font-size: 1.0625rem;
+      }
+
+      .field input:focus {
+        outline: none;
+      }
+
+      .field input::placeholder {
+        color: var(--text-dim);
+      }
+
+      footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem 0 3.5rem;
+        color: var(--text-dim);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .segmented span,
+        .display polygon,
+        .bar i {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="inner">
+      <header class="mono">
+        <a class="wordmark" href="#top">Ercan Cicek</a>
+        <nav>
+          <a href="#top">Leistungen</a>
+          <a href="#top">Rechtslage</a>
+          <a href="#kit">Kontakt</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section data-block>
+          <p class="head-row mono">
+            <span>Anzeige 01 — Titel</span>
+            <span>Alle Segmente sichtbar, nur die gültigen leuchten</span>
+          </p>
+
+          <h1 class="segmented" data-segment>Ich mache deine Anwendung barrierefrei.</h1>
+
+          <p class="lead">
+            Auf einer Anzeigetafel bewegt sich nichts. Es gibt nur Segmente, die an sind, und
+            solche, die aus sind. Diese Seite kennt keine andere Bewegung.
+          </p>
+
+          <div class="bar" data-bar="6" aria-hidden="true"></div>
+          <p class="bar-label mono">
+            <span>Fortschritt</span>
+            <span><span id="progress">0</span> von 6</span>
+          </p>
+        </section>
+
+        <section data-block>
+          <p class="head-row mono">
+            <span>Anzeige 02 — Der Kern</span>
+            <span>Zwei Zustände, kein dritter</span>
+          </p>
+
+          <h2 class="segmented" data-segment>
+            Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.
+          </h2>
+
+          <p class="body accent" style="font-size: 1.25rem; font-weight: 700">
+            Er liest vor, was im Code steht.
+          </p>
+
+          <p class="body">
+            Ein Element ist benannt oder es ist es nicht. Es ist erreichbar oder nicht. Dazwischen
+            gibt es nichts — deshalb passt eine Anzeigetafel zu dieser Sache.
+          </p>
+        </section>
+
+        <section data-block>
+          <p class="head-row mono">
+            <span>Anzeige 03 — Werte</span>
+            <span>Die Ziffern schalten, während du scrollst</span>
+          </p>
+
+          <h2 class="segmented" data-segment>Was gilt, und wonach ich prüfe.</h2>
+
+          <dl class="readouts">
+            <div class="readout">
+              <dt class="mono">Zielgröße, Pixel</dt>
+              <dd>
+                <span class="display" data-value="44" data-count="true"></span>
+                <span class="caption">Mindestmaß für ein Bedienelement</span>
+              </dd>
+            </div>
+
+            <div class="readout">
+              <dt class="mono">Kontrast, Verhältnis</dt>
+              <dd>
+                <span class="display" data-value="4.5" data-count="true"></span>
+                <span class="caption">Untergrenze für Fließtext</span>
+              </dd>
+            </div>
+
+            <div class="readout">
+              <dt class="mono">Fassung</dt>
+              <dd>
+                <span class="display" data-value="2.2" data-count="true"></span>
+                <span class="caption">WCAG, Stufe AA</span>
+              </dd>
+            </div>
+          </dl>
+
+          <p class="body">
+            Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz. Der technische Maßstab
+            dahinter ist die EN 301 549.
+          </p>
+        </section>
+
+        <section id="kit" data-block>
+          <p class="head-row mono">
+            <span>Anzeige 04 — Bedienelemente</span>
+            <span>Vier Kanten, vier Segmente</span>
+          </p>
+
+          <h2 class="segmented" data-segment>Der Rahmen schaltet, bevor die Fläche kommt.</h2>
+
+          <p class="body">
+            Fahr über die Knöpfe: oben, rechts, unten, links — dann die Füllung. Keine Kante gleitet,
+            keine Farbe blendet über.
+          </p>
+
+          <div class="row">
+            <button class="seg-button lit" type="button">
+              <span data-edge="top"></span><span data-edge="right"></span
+              ><span data-edge="bottom"></span><span data-edge="left"></span>
+              Projekt anfragen <span aria-hidden="true">→</span>
+            </button>
+
+            <a class="seg-button" href="#top">
+              <span data-edge="top"></span><span data-edge="right"></span
+              ><span data-edge="bottom"></span><span data-edge="left"></span>
+              Alle Leistungen <span aria-hidden="true">→</span>
+            </a>
+
+            <div class="field">
+              <label class="mono" for="mail">E-Mail</label>
+              <input id="mail" type="email" placeholder="name@firma.de" />
+            </div>
+          </div>
+        </section>
+
+        <footer class="mono">
+          <span>Richtung 03 — Segment · Prototyp</span>
+          <span>Nichts bewegt sich. Es schaltet.</span>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      // ---------- Sieben-Segment-Ziffern ----------
+
+      const SHAPES = {
+        a: "9,2 31,2 34,5 31,8 9,8 6,5",
+        b: "35,6 38,9 38,31 35,34 32,31 32,9",
+        g: "9,35 31,35 34,38 31,41 9,41 6,38",
+        c: "35,42 38,45 38,67 35,70 32,67 32,45",
+        d: "9,68 31,68 34,71 31,74 9,74 6,71",
+        e: "5,42 8,45 8,67 5,70 2,67 2,45",
+        f: "5,6 8,9 8,31 5,34 2,31 2,9",
+      }
+
+      const DIGITS = {
+        0: "abcdef",
+        1: "bc",
+        2: "abged",
+        3: "abgcd",
+        4: "fgbc",
+        5: "afgcd",
+        6: "afgedc",
+        7: "abc",
+        8: "abcdefg",
+        9: "abcdfg",
+      }
+
+      function buildDigit() {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        svg.setAttribute("viewBox", "0 0 40 76")
+        svg.setAttribute("aria-hidden", "true")
+
+        for (const [name, points] of Object.entries(SHAPES)) {
+          const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon")
+          polygon.setAttribute("points", points)
+          polygon.dataset.seg = name
+          svg.append(polygon)
+        }
+
+        return svg
+      }
+
+      function showDigit(svg, character) {
+        const lit = DIGITS[character] ?? ""
+        for (const polygon of svg.children) {
+          polygon.dataset.lit = String(lit.includes(polygon.dataset.seg))
+        }
+      }
+
+      const displays = [...document.querySelectorAll(".display")].map((host) => {
+        const value = host.dataset.value
+        const cells = []
+
+        for (const character of value) {
+          if (character === ".") {
+            const dot = document.createElement("span")
+            dot.className = "dot"
+            host.append(dot)
+            cells.push({ kind: "dot", node: dot })
+            continue
+          }
+
+          const svg = buildDigit()
+          host.append(svg)
+          cells.push({ kind: "digit", node: svg })
+        }
+
+        return { host, value, cells, done: false }
+      })
+
+      // --- Beim Zählen schaltet jede Ziffer durch alle Stufen bis zum Zielwert.
+      // Man sieht die Segmente arbeiten, statt eine Zahl einzublenden.
+      function runDisplay(display) {
+        if (display.done) return
+        display.done = true
+
+        display.cells.forEach((cell, index) => {
+          const character = display.value[index]
+
+          if (cell.kind === "dot") {
+            window.setTimeout(() => (cell.node.dataset.lit = "true"), 120 * index)
+            return
+          }
+
+          const target = Number(character)
+          let step = 0
+
+          const timer = window.setInterval(() => {
+            showDigit(cell.node, String(step % 10))
+            if (step >= target + 7) {
+              window.clearInterval(timer)
+              showDigit(cell.node, character)
+            }
+            step += 1
+          }, 42)
+
+          window.setTimeout(() => {}, 0)
+        })
+      }
+
+      // ---------- Wörter schalten einzeln, nicht als Block ----------
+
+      for (const line of document.querySelectorAll("[data-segment]")) {
+        const words = line.textContent.trim().split(/\s+/)
+        line.textContent = ""
+
+        words.forEach((word, index) => {
+          const span = document.createElement("span")
+          span.textContent = word
+          span.style.transitionDelay = index * 45 + "ms"
+          line.append(span)
+          if (index < words.length - 1) line.append(document.createTextNode(" "))
+        })
+      }
+
+      // ---------- Fortschrittsleiste ----------
+
+      const barHost = document.querySelector("[data-bar]")
+      const barCount = Number(barHost.dataset.bar)
+      const bars = []
+
+      for (let i = 0; i < barCount; i++) {
+        const cell = document.createElement("i")
+        barHost.append(cell)
+        bars.push(cell)
+      }
+
+      const progressOut = document.getElementById("progress")
+
+      // ---------- Blöcke schalten an, sobald sie im Bild stehen ----------
+
+      const blocks = [...document.querySelectorAll("[data-block]")]
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue
+            entry.target.dataset.litBlock = "true"
+            entry.target.querySelectorAll(".display").forEach((host) => {
+              const display = displays.find((item) => item.host === host)
+              if (display) runDisplay(display)
+            })
+            observer.unobserve(entry.target)
+          }
+        },
+        { rootMargin: "0px 0px -20% 0px" }
+      )
+
+      blocks.forEach((block) => observer.observe(block))
+
+      // --- Die Leiste zählt in ganzen Segmenten mit der Scrollstrecke
+      let queued = false
+
+      function update() {
+        queued = false
+        const total = document.body.scrollHeight - window.innerHeight
+        const ratio = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0
+        const lit = Math.round(ratio * barCount)
+
+        bars.forEach((cell, index) => (cell.dataset.lit = String(index < lit)))
+        progressOut.textContent = String(lit)
+      }
+
+      function queue() {
+        if (queued) return
+        queued = true
+        window.requestAnimationFrame(update)
+      }
+
+      window.addEventListener("scroll", queue)
+      window.addEventListener("resize", queue)
+      update()
+    </script>
+  </body>
+</html>

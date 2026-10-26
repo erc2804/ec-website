@@ -1,25 +1,29 @@
 ---
-// --- One navigation in the DOM for both breakpoints. Below md the same element
-// is a popover panel; from md a plain author rule overrides the popover's
-// display:none and it sits inline. That keeps a single set of links, a single
-// landmark, and no JavaScript: top layer, light dismiss, focus return and the
-// invoker relationship are all the browser's job. See ADR 0002.
-import { IconArrowRight, IconMenu2, IconX } from "@tabler/icons-astro"
-import Button from "./ui/Button.astro"
+// --- Fixed header. At the top of a page: transparent, with the mark on the left
+// and, from the nav breakpoint (72rem), links and language in one row. After
+// 24px of scrolling everything moves onto white islands with a soft shadow: the
+// mark on a round one, the links and language on a capsule (or, below the
+// breakpoint, a "Menü" capsule that opens a card). Nothing spans the full
+// width, so no block covers the content.
+//
+// One navigation element serves both shapes: below the breakpoint it is a
+// popover card, from it an author rule overrides the popover's display:none and
+// it sits inline. See ADR 0008.
+import { IconMenu2, IconX } from "@tabler/icons-astro"
+import EcLogo from "./ui/EcLogo.astro"
 import LanguageSwitch from "./ui/LanguageSwitch.astro"
 import { siteConfig } from "../config/site"
 import { localisedPath, mainNavRoutes, useTranslations, type Locale, type RouteKey } from "../i18n"
 
 interface Props {
   routeKey?: RouteKey
+  isOnDark?: boolean
 }
 
-const { routeKey } = Astro.props
+const { routeKey, isOnDark = false } = Astro.props
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
-
-const contactHref = `mailto:${siteConfig.contact.email}`
 
 const navItems = mainNavRoutes.map((key) => ({
   key,
@@ -29,73 +33,114 @@ const navItems = mainNavRoutes.map((key) => ({
 
 // --- trailingSlash is "never", so a bare comparison is enough
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
+
+const islandClasses = "group-data-[is-scrolled=true]:ec-island"
 ---
 
-<header class="ec-layout-visual-content flex items-center justify-between gap-6 py-5">
-  <a href="/" class="flex items-center gap-3 font-bold text-typo-high no-underline">
-    <img src="/logo.png" alt="" width="26" height="26" class="size-6.5" />
-    <span class="translate-y-px transform leading-none text-gray-high">
-      {siteConfig.name}
-    </span>
-    {currentLocale !== siteConfig.defaultLocale && <span class="sr-only">(Deutsch)</span>}
-  </a>
-
-  <button
-    type="button"
-    class="ec-menu-toggle flex min-h-11 items-center gap-2 md:hidden"
-    popovertarget="siteNav"
+<header
+  class="ec-site-header group pointer-events-none fixed top-0 left-0 z-50 w-full text-typo-high transition-colors duration-300 data-[is-on-dark=true]:data-[is-scrolled=false]:ec-on-dark data-[is-on-dark=true]:data-[is-scrolled=false]:text-brand-sand"
+  data-is-on-dark={isOnDark ? "true" : "false"}
+  data-is-scrolled="false"
+>
+  <div
+    class="flex h-header items-center justify-between gap-6 px-4 nav:gap-8 nav:px-6"
   >
-    <IconMenu2 class="ec-menu-icon-open size-5" aria-hidden="true" />
-    <IconX class="ec-menu-icon-close size-5" aria-hidden="true" />
-    {t.nav.openMenu}
-  </button>
+    <a
+      href={localisedPath("home", currentLocale)}
+      class:list={[
+        "pointer-events-auto grid size-13 shrink-0 place-items-center rounded-full no-underline transition-[background-color,box-shadow,width,height] duration-300 group-data-[is-scrolled=true]:size-island",
+        islandClasses,
+      ]}
+      aria-label={t.nav.toHome}
+    >
+      <EcLogo
+        class="transition-[width,height] duration-300 group-data-[is-scrolled=true]:size-10"
+      />
+    </a>
 
-  <nav id="siteNav" popover class="ec-site-nav" aria-label={t.nav.label}>
-    <ul role="list" class="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
-      {
-        navItems.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class="ec-nav-link"
-              aria-current={currentPath === item.href ? "page" : undefined}
-            >
-              <span class="ec-nav-dot" aria-hidden="true" />
-              <span class="translate-y-px transform leading-none">{item.label}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <button
+      type="button"
+      class:list={[
+        "ec-menu-toggle pointer-events-auto flex min-h-11 items-center gap-2 rounded-full px-4 font-bold transition-[background-color,color,box-shadow,height] duration-300 group-data-[is-scrolled=true]:h-island nav:hidden",
+        islandClasses,
+      ]}
+      popovertarget="siteNav"
+      data-chat-mute
+    >
+      <IconMenu2 class="ec-menu-icon-open size-5" aria-hidden="true" />
+      <IconX class="ec-menu-icon-close size-5" aria-hidden="true" />
+      <span class="translate-y-px">{t.nav.openMenu}</span>
+    </button>
 
-    <div class="mt-4 flex flex-col gap-5 md:mt-0 md:flex-row md:items-center md:gap-4">
-      {routeKey && <LanguageSwitch routeKey={routeKey} currentLocale={currentLocale} />}
+    <nav id="siteNav" popover class="ec-site-nav pointer-events-auto" aria-label={t.nav.label}>
+      <ul
+        role="list"
+        class="flex flex-col gap-1 nav:flex-row nav:items-center nav:gap-0"
+        data-chat={t.chatBubble.mainLinks}
+      >
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="ec-nav-link relative flex min-h-11 w-fit items-center px-6 py-2 text-lead no-underline transition-colors hover:text-gray-max nav:text-body nav:group-data-[is-on-dark=true]:group-data-[is-scrolled=false]:hover:text-gray-min"
+                aria-current={currentPath === item.href ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
 
-      <Button href={contactHref} size="compact">
-        {t.common.contactCta}
-        <IconArrowRight slot="icon-end" class="size-5" />
-      </Button>
-    </div>
-  </nav>
+      <div
+        class="mt-4 border-t border-gray-low px-6 pt-4 nav:mt-0 nav:ml-auto nav:border-0 nav:px-0 nav:pt-0"
+        data-chat={t.chatBubble.languageSwitch}
+      >
+        {routeKey && <LanguageSwitch routeKey={routeKey} currentLocale={currentLocale} />}
+      </div>
+    </nav>
+  </div>
 </header>
 
 <script>
-  // --- Light dismiss covers a click outside and Escape, but not a Tab past the
-  // last link: the panel would stay open behind the focus. Closing rather than
-  // trapping focus, because this is a disclosure menu and not a dialog. It
-  // covers no page content and seals nothing off, so holding focus inside would
-  // promise a modality that is not there. Progressive enhancement: without this
-  // script the menu still opens, and Escape and an outside click still close it.
-  //
-  // Watching focusin on the document rather than focusout on the panel: it
-  // covers leaving the toggle as well, and a window switch leaves focus where it
-  // was instead of reading as a departure.
+  const header = document.querySelector<HTMLElement>(".ec-site-header")
   const siteNav = document.querySelector<HTMLElement>("#siteNav")
   const menuToggle = document.querySelector("[popovertarget='siteNav']")
 
+  if (header) {
+    const update = () => {
+      header.dataset.isScrolled = window.scrollY >= 24 ? "true" : "false"
+    }
+
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+  }
+
+  // --- Crossing the breakpoint changes what the nav is: an inline row above,
+  // a closed popover below. Without this, the row would fade out as a card on
+  // the way down, and a card left open on a phone would stay on the desktop.
+  // For the frame of the switch every transition is off, and an open card is
+  // closed.
+  const desktop = window.matchMedia("(width >= 72rem)")
+
+  desktop.addEventListener("change", () => {
+    if (!header) return
+    header.dataset.isSwitching = "true"
+    if (siteNav?.matches(":popover-open")) siteNav.hidePopover()
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        delete header.dataset.isSwitching
+      })
+    )
+  })
+
+  // --- Light dismiss covers a click outside and Escape, but not a Tab past the
+  // last link. Closing rather than trapping focus, because this is a disclosure
+  // menu and not a dialog. Without this script the menu still opens and closes.
+
   if (siteNav) {
     document.addEventListener("focusin", (event) => {
-      // --- From md the same element is the inline header nav, never a panel
       if (!siteNav.matches(":popover-open")) return
 
       const target = event.target
@@ -108,135 +153,135 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
 </script>
 
 <style>
-  /* --- Below md: a panel in the top layer. No display here: the popover is
-     display:none while closed, and any author declaration in the base rule
-     would beat that UA style and leave the closed panel rendered, focusable
-     and swallowing clicks. Only the open state and the desktop rule set it. --- */
+  /* --- Below nav: a card under the capsule. No display in the base rule: the
+     popover is display:none while closed, and any author declaration here would
+     beat that UA style and leave the closed card rendered and focusable. Only
+     the open state and the desktop rule set it. --- */
   .ec-site-nav {
     position: fixed;
-    inset: 4.75rem 0.75rem auto 0.75rem;
+    inset: calc(var(--spacing-header) - 0.75rem) 0.75rem auto 0.75rem;
     flex-direction: column;
     margin: 0;
-    border: none;
+    border: 1px solid var(--color-gray-low);
     border-radius: 1.5rem;
-    background: var(--color-gray-min);
-    padding: 1.25rem 1.5rem 1.75rem;
+    padding: 1rem 0 1.25rem;
     width: auto;
     max-width: none;
-    border: 1px solid var(--color-gray-low);
-    box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.55);
+    background: var(--color-gray-min);
+    color: var(--color-typo-high);
+    box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.45);
     overflow: visible;
     transition:
-      opacity 240ms ease,
-      transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      overlay 240ms allow-discrete,
-      display 240ms allow-discrete;
+      opacity 220ms ease,
+      transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      overlay 220ms allow-discrete,
+      display 220ms allow-discrete;
     opacity: 0;
-    transform: translateY(-0.75rem);
+    transform: translateY(-0.5rem);
   }
 
   .ec-site-nav:popover-open {
     display: flex;
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 
     @starting-style {
       opacity: 0;
-      transform: translateY(-0.75rem);
+      transform: translateY(-0.5rem);
     }
   }
 
-  /* --- Deliberately no dimming here. A darkened backdrop promises that the rest
-     of the page is sealed off, and a popover seals nothing: focus still moves
-     through the page behind it. This is a disclosure menu, not a dialog, so it
-     is drawn as one and lifted by its shadow instead. Making it truly modal
-     would mean a <dialog>, which would leave the desktop navigation reporting
-     itself as a dialog. --- */
+  /* --- On wider screens below the breakpoint the card hangs under the
+     capsule instead of spanning the width --- */
+  @media (width >= 40rem) {
+    .ec-site-nav {
+      inset: calc(var(--spacing-header) - 0.75rem) 1.5rem auto auto;
+      width: 20rem;
+    }
+  }
+
+  .ec-site-header[data-is-switching] .ec-site-nav {
+    transition: none;
+  }
+
+  /* --- A popover seals nothing off, so nothing behind it is dimmed --- */
   .ec-site-nav::backdrop {
     background: none;
   }
 
-  /* --- From md: an author rule beats the popover's UA display:none, so the same
+  /* --- From nav: an author rule beats the popover's UA display:none, so the same
      element sits in the header row --- */
-  @media (width >= 48rem) {
+  @media (width >= 72rem) {
     .ec-site-nav {
       display: flex;
       position: static;
       inset: auto;
+      flex: 1;
       flex-direction: row;
       align-items: center;
       gap: 1.5rem;
+      border: none;
+      /* --- Rounded in both states, so only colour and spacing change --- */
+      border-radius: 1.5rem;
+      padding: 0;
+      background: none;
+      color: inherit;
+      box-shadow: none;
       opacity: 1;
       transform: none;
-      border: none;
-      border-radius: 0;
-      background: none;
-      padding: 0;
-      box-shadow: none;
-      transition: none;
+      /* --- Same duration and curve as the Tailwind duration-300 on the mark
+         and the header text, so every part of the switch moves as one --- */
+      transition-property: background-color, box-shadow, padding, height;
+      transition-duration: 300ms;
+      transition-timing-function: var(--default-transition-timing-function);
+    }
+
+    /* --- Scrolled: links and language on a white capsule, like the islands
+       below the breakpoint --- */
+    /* --- Same surface and height as the ec-island utility on the logo circle --- */
+    .ec-site-header[data-is-scrolled="true"] .ec-site-nav {
+      height: var(--spacing-island);
+      padding: 0 0.5rem;
+      background: var(--color-gray-min);
+      color: var(--color-typo-high);
+      box-shadow: var(--shadow-island);
     }
   }
 
-  .ec-menu-toggle {
-    color: var(--color-typo-high);
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  /* --- The name stays "Menü" in both states; aria-expanded carries the state,
-     which is what a toggle should do. Only the icon follows. --- */
   .ec-menu-icon-close,
-  :global(header:has(.ec-site-nav:popover-open)) .ec-menu-icon-open {
+  .ec-site-header:has(.ec-site-nav:popover-open) .ec-menu-icon-open {
     display: none;
   }
 
-  :global(header:has(.ec-site-nav:popover-open)) .ec-menu-icon-close {
+  .ec-site-header:has(.ec-site-nav:popover-open) .ec-menu-icon-close {
     display: block;
   }
 
-  /* --- The dot keeps its space at all times, so the current page is marked
-     without the row shifting --- */
-  .ec-nav-link {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border-radius: 9999px;
-    padding: 0.5rem 0.75rem 0.5rem 1.5rem;
-    min-height: 2.75rem;
-    font-size: 1.25rem;
-
-    @media (width >= 48rem) {
-      font-size: 1rem;
-    }
-
-    color: var(--color-typo-medium);
-    transition: color 180ms ease;
-  }
-
-  .ec-nav-link:hover {
-    color: var(--color-typo-high);
-  }
-
-  .ec-nav-link[aria-current="page"] {
-    color: var(--color-typo-high);
-    font-weight: 700;
-  }
-
-  /* --- Taken out of the inline flow: otherwise the link's underline would run
-     underneath the dot as well --- */
-  .ec-nav-dot {
+  /* --- The green bar from the previous site, under the label. Hover draws it
+     in at half strength from the left; the current page shows it in full. --- */
+  .ec-nav-link::before {
+    content: "";
     position: absolute;
-    top: 50%;
-    left: 0.625rem;
-    translate: 0 -50%;
-    width: 0.375rem;
-    height: 0.375rem;
+    bottom: 0.25rem;
+    left: 1.5rem;
+    width: calc(100% - 3rem);
+    height: 0.25rem;
     border-radius: 9999px;
-    background: transparent;
-    transition: background-color 180ms ease;
+    background: var(--color-brand-green-medium);
+    opacity: 0.5;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease;
   }
 
-  .ec-nav-link[aria-current="page"] .ec-nav-dot {
-    background: var(--color-brand-green-high);
+  .ec-nav-link:hover::before {
+    transform: none;
+  }
+
+  .ec-nav-link[aria-current="page"]::before {
+    opacity: 1;
+    transform: none;
   }
 </style>

@@ -185,12 +185,6 @@ h1, and the demo uses the same form for its comparison. A design page would quot
 selection frame with measurements, a code page a diff line. The motif carries an argument,
 so it belongs where it proves something — not as a badge at the top of a section.
 
-**The page shows its own semantics.** `SectionHeading` prints the level a screen reader
-announces next to the heading, and unfolds the full sentence for the section holding the
-viewport. The heading list is how blind users skim a page; making it visible is the
-argument of the site, applied to the site. Legal texts are exempt: there it would be
-decoration.
-
 **Section labels have to say something new.** An eyebrow reading `RECHTSLAGE` above
 "Was gilt, und wonach ich prüfe." says the same thing twice. If a label only restates its
 heading, drop it rather than restyle it.

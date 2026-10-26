@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 10 — Verdrängung</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      :root {
+        --sand: #edf5e1;
+        --mint: #aeebc1;
+        --signal: #5cdb95;
+        --pine: #379683;
+        --violet: #46237a;
+        --deep: #05386b;
+
+        /* --- Verdrängung braucht Trägheit: Masse weicht, sie springt nicht --- */
+        --yield: 680ms cubic-bezier(0.32, 0.9, 0.25, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--deep);
+        color: var(--sand);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .inner {
+        margin: 0 auto;
+        padding-inline: clamp(1.5rem, 5vw, 4rem);
+        width: min(100%, 80rem);
+      }
+
+      /* ---------- Kopf ---------- */
+
+      .top {
+        background: var(--deep);
+        color: var(--sand);
+      }
+
+      .top header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 1.75rem 0;
+      }
+
+      .top a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wordmark {
+        font-size: 1.0625rem;
+        font-weight: 700;
+      }
+
+      /* --- Auch die Navigation teilt sich einen festen Platz: was ein Link
+         gewinnt, geben die anderen ab. --- */
+      nav {
+        display: flex;
+        width: min(26rem, 55%);
+      }
+
+      nav a {
+        flex: var(--grow, 1) 1 0;
+        overflow: hidden;
+        border-left: 2px solid rgba(237, 245, 225, 0.3);
+        padding-left: 0.75rem;
+        white-space: nowrap;
+        transition: flex-grow var(--yield);
+      }
+
+      nav a:hover,
+      nav a:focus-visible {
+        --grow: 2.4;
+        color: var(--signal);
+      }
+
+      /* ---------- Das Feld ---------- */
+      /* Vier Bänder teilen sich eine Bildschirmhöhe. Der Scroll bewegt nichts,
+         er verteilt um: was das eine gewinnt, verliert das andere. */
+
+      .frame {
+        position: relative;
+        height: 460vh;
+      }
+
+      .field {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .band {
+        position: relative;
+        display: flex;
+        flex: var(--grow, 1) 1 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        border-top: 3px solid var(--deep);
+        min-height: 7rem;
+        overflow: hidden;
+        transition: flex-grow var(--yield);
+      }
+
+      .band[data-tone="sand"] {
+        background: var(--sand);
+        color: var(--deep);
+      }
+
+      .band[data-tone="mint"] {
+        background: var(--mint);
+        color: var(--deep);
+      }
+
+      .band[data-tone="signal"] {
+        background: var(--signal);
+        color: var(--deep);
+      }
+
+      .band[data-tone="violet"] {
+        background: var(--violet);
+        color: var(--sand);
+        border-top-color: var(--signal);
+      }
+
+      .band-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.6rem 1.5rem;
+        margin: 0 auto;
+        padding: 1.4rem clamp(1.5rem, 5vw, 4rem) 0;
+        width: min(100%, 80rem);
+      }
+
+      .band-head b {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.9375rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        opacity: 0.6;
+      }
+
+      .band-head h2,
+      .band-head h1 {
+        margin: 0;
+        max-width: 26ch;
+        font-size: clamp(1.25rem, 2.6vw, 2rem);
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+      }
+
+      /* --- Der Inhalt wird nicht eingeblendet. Er ist da; nur der Platz fehlt. --- */
+      .band-body {
+        margin: 0 auto;
+        padding: 1.25rem clamp(1.5rem, 5vw, 4rem) 2rem;
+        width: min(100%, 80rem);
+      }
+
+      .band-body p {
+        margin: 0 0 1rem;
+        max-width: 44ch;
+        font-size: clamp(1rem, 1.35vw, 1.1875rem);
+        opacity: 0.86;
+      }
+
+      .band-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .band .measure {
+        position: absolute;
+        top: 1.5rem;
+        right: clamp(1.5rem, 5vw, 4rem);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.14em;
+        opacity: 0.5;
+      }
+
+      /* ---------- Zahlenzeile ---------- */
+      /* Dieselbe Regel im Kleinen: die Zeile hat eine feste Breite. */
+
+      .split-row {
+        display: flex;
+        margin: 0;
+        border: 3px solid var(--sand);
+      }
+
+      .split-row div {
+        flex: var(--grow, 1) 1 0;
+        overflow: hidden;
+        border-left: 3px solid var(--sand);
+        padding: 1.1rem 1.25rem;
+        min-width: 0;
+        transition: flex-grow var(--yield), background-color 240ms ease;
+      }
+
+      .split-row div:first-child {
+        border-left: 0;
+      }
+
+      .split-row div:hover {
+        --grow: 2.6;
+        background: rgba(92, 219, 149, 0.16);
+      }
+
+      .split-row dt {
+        white-space: nowrap;
+        opacity: 0.6;
+      }
+
+      .split-row dd {
+        margin: 0.4rem 0 0;
+        font-size: 1.1875rem;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+
+      /* ---------- Unterer Teil ---------- */
+
+      .below {
+        background: var(--deep);
+        color: var(--sand);
+        padding: clamp(3rem, 9vh, 5rem) 0 0;
+      }
+
+      .below h2 {
+        margin: 0;
+        max-width: 19ch;
+        font-size: clamp(1.75rem, 4vw, 2.875rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+      }
+
+      .below p {
+        margin: 1.25rem 0 0;
+        max-width: 44ch;
+        opacity: 0.84;
+      }
+
+      .eyebrow {
+        display: block;
+        margin-bottom: 1.5rem;
+        opacity: 0.55;
+      }
+
+      /* ---------- Bedienelemente ---------- */
+      /* Die Leiste hat eine feste Breite. Zeigt man auf einen Knopf, nimmt er
+         sich den Platz — und die anderen geben ihn her. */
+
+      .bar {
+        display: flex;
+        margin-top: 2.5rem;
+        border: 3px solid var(--sand);
+        width: min(100%, 46rem);
+      }
+
+      .push {
+        flex: var(--grow, 1) 1 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.7rem;
+        border: 0;
+        border-left: 3px solid var(--sand);
+        background: transparent;
+        padding: 0 1.3rem;
+        min-height: 3.5rem;
+        min-width: 0;
+        overflow: hidden;
+        color: var(--sand);
+        font: inherit;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        white-space: nowrap;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          flex-grow var(--yield),
+          background-color 240ms ease,
+          color 240ms ease;
+      }
+
+      .push:first-child {
+        border-left: 0;
+      }
+
+      .push.filled {
+        background: var(--signal);
+        color: var(--deep);
+      }
+
+      .push:hover,
+      .push:focus-visible {
+        --grow: 2.8;
+        background: var(--signal);
+        color: var(--deep);
+        outline: none;
+      }
+
+      .push:focus-visible {
+        box-shadow: inset 0 0 0 3px var(--deep);
+      }
+
+      .push .arrow {
+        flex-shrink: 0;
+      }
+
+      .field-line {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.75rem;
+        border-bottom: 3px solid var(--sand);
+        padding-bottom: 0.5rem;
+        width: min(100%, 46rem);
+      }
+
+      .field-line label {
+        white-space: nowrap;
+        opacity: 0.55;
+      }
+
+      .field-line input {
+        border: 0;
+        background: transparent;
+        width: 100%;
+        color: inherit;
+        font: inherit;
+        font-size: 1.0625rem;
+      }
+
+      .field-line input:focus {
+        outline: none;
+      }
+
+      .field-line:focus-within {
+        border-bottom-color: var(--signal);
+      }
+
+      .field-line input::placeholder {
+        color: currentColor;
+        opacity: 0.45;
+      }
+
+      footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 3rem;
+        border-top: 3px solid rgba(237, 245, 225, 0.25);
+        padding: 1.5rem 0 3.5rem;
+        opacity: 0.6;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="top">
+      <div class="inner">
+        <header class="mono">
+          <a class="wordmark" href="#top">Ercan Cicek</a>
+          <nav>
+            <a href="#top">Leistungen</a>
+            <a href="#top">Rechtslage</a>
+            <a href="#kontakt">Kontakt</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <main id="top">
+      <div class="frame" data-frame>
+        <div class="field" data-field>
+          <section class="band" data-tone="sand" data-band>
+            <div class="band-head">
+              <b>01</b>
+              <h1>Ich mache deine Anwendung barrierefrei.</h1>
+            </div>
+            <span class="measure" data-share>—</span>
+            <div class="band-body">
+              <p>
+                Vier Bänder teilen sich eine Bildschirmhöhe. Der Scroll bewegt hier nichts, er
+                verteilt nur um: was ein Band gewinnt, geben die anderen her.
+              </p>
+              <p>
+                Ich prüfe deine Anwendung, behebe die Fehler im Code und zeige deinem Team, worauf
+                es ankommt. Alles von einer Person.
+              </p>
+            </div>
+          </section>
+
+          <section class="band" data-tone="mint" data-band>
+            <div class="band-head">
+              <b>02</b>
+              <h2>Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</h2>
+            </div>
+            <span class="measure" data-share>—</span>
+            <div class="band-body">
+              <p>
+                Er liest vor, was im Code steht. Passt beides nicht zusammen, merkt es im Team
+                niemand. Man sieht es ja nicht.
+              </p>
+              <p>
+                Aufmerksamkeit ist wie dieser Platz hier: begrenzt. Was du an einer Stelle
+                hinzufügst, fehlt an einer anderen.
+              </p>
+            </div>
+          </section>
+
+          <section class="band" data-tone="signal" data-band>
+            <div class="band-head">
+              <b>03</b>
+              <h2>Was gilt, und wonach ich prüfe.</h2>
+            </div>
+            <span class="measure" data-share>—</span>
+            <div class="band-body">
+              <p>
+                Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz. Der technische
+                Maßstab dahinter ist die EN 301 549, die derzeit auf WCAG 2.1 verweist.
+              </p>
+
+              <dl class="split-row" style="border-color: var(--deep)">
+                <div style="border-color: var(--deep)">
+                  <dt class="mono">Gesetz</dt>
+                  <dd>BFSG, seit 28. 6. 2025</dd>
+                </div>
+                <div style="border-color: var(--deep)">
+                  <dt class="mono">Norm</dt>
+                  <dd>EN 301 549</dd>
+                </div>
+                <div style="border-color: var(--deep)">
+                  <dt class="mono">Maßstab</dt>
+                  <dd>WCAG 2.2, AA</dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+
+          <section class="band" data-tone="violet" data-band id="kontakt">
+            <div class="band-head">
+              <b>04</b>
+              <h2>Sag mir, was du hast.</h2>
+            </div>
+            <span class="measure" data-share>—</span>
+            <div class="band-body">
+              <p>
+                Du bekommst geprüften Code zurück und keine Liste offener Aufgaben. Antwort
+                innerhalb eines Werktags, mit konkretem nächsten Schritt.
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="below">
+        <div class="inner">
+          <span class="eyebrow mono">Bausteine</span>
+          <h2>Auch die Leiste hat nur eine Breite.</h2>
+          <p>
+            Zeig auf einen Knopf: er nimmt sich den Platz, die anderen geben ihn her. Keiner wandert
+            aus der Leiste, keiner überlappt. Dieselbe Regel wie oben, nur quer.
+          </p>
+
+          <div class="bar">
+            <button class="push filled" type="button">
+              Projekt anfragen <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <a class="push" href="#top">
+              Alle Leistungen <span class="arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="push" href="#top">
+              Rechtslage <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div class="field-line">
+            <label class="mono" for="mail">E-Mail</label>
+            <input id="mail" type="email" placeholder="name@firma.de" />
+          </div>
+
+          <footer class="mono">
+            <span>Richtung 10 — Verdrängung · Prototyp</span>
+            <span>Der Platz ist endlich</span>
+          </footer>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ---------- Das Feld ----------
+      // Der Scrollfortschritt verteilt die Anteile. Ein Band bekommt den
+      // Löwenanteil, die Nachbarn behalten so viel, wie ihre Kopfzeile braucht.
+
+      const frame = document.querySelector("[data-frame]")
+      const field = document.querySelector("[data-field]")
+      const bands = [...field.querySelectorAll("[data-band]")]
+      const shares = bands.map((band) => band.querySelector("[data-share]"))
+
+      const OPEN = 7
+      const CLOSED = 1
+
+      let pinned = null
+      let queued = false
+
+      function distribute(active) {
+        bands.forEach((band, index) => {
+          const grow = index === active ? OPEN : CLOSED
+          band.style.setProperty("--grow", grow)
+        })
+
+        const total = OPEN + CLOSED * (bands.length - 1)
+        shares.forEach((share, index) => {
+          const grow = index === active ? OPEN : CLOSED
+          share.textContent = Math.round((grow / total) * 100) + " %"
+        })
+      }
+
+      function update() {
+        queued = false
+        if (pinned !== null) return
+
+        const box = frame.getBoundingClientRect()
+        const travel = -box.top
+        const span = frame.offsetHeight - window.innerHeight
+        const ratio = span > 0 ? Math.min(0.999, Math.max(0, travel / span)) : 0
+
+        distribute(Math.floor(ratio * bands.length))
+      }
+
+      function queue() {
+        if (queued) return
+        queued = true
+        window.requestAnimationFrame(update)
+      }
+
+      // --- Zeigen hat Vorrang vor dem Scroll: wer angefasst wird, bekommt Platz
+      bands.forEach((band, index) => {
+        band.addEventListener("pointerenter", () => {
+          pinned = index
+          distribute(index)
+        })
+
+        band.addEventListener("pointerleave", () => {
+          pinned = null
+          update()
+        })
+      })
+
+      window.addEventListener("scroll", queue)
+      window.addEventListener("resize", queue)
+      update()
+    </script>
+  </body>
+</html>

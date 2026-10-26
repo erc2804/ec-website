@@ -1,0 +1,328 @@
+---
+import { IconArrowRight, IconBrandLinkedin, IconChevronRight, IconMail } from "@tabler/icons-astro"
+import MouseChatBubble from "../../components/MouseChatBubble.astro"
+import Button from "../../components/ui/Button.astro"
+import ContactCard from "../../components/ui/ContactCard.astro"
+import ProjectCard from "../../components/ui/ProjectCard.astro"
+import Quote from "../../components/ui/Quote.astro"
+import ScrollCue from "../../components/ui/ScrollCue.astro"
+import Section from "../../components/ui/Section.astro"
+import { siteConfig } from "../../config/site"
+import { projects } from "../../data/projects"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale)
+const tHome = t.home
+const tBubble = t.chatBubble
+
+const contactHref = `mailto:${siteConfig.contact.email}`
+const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
+
+const offerKeys = ["accessibility", "design", "development"] as const
+
+// --- Each offer surface quotes the tool of its subject instead of showing a
+// pictogram: an icon-only button that still announces its name, a selection frame
+// with measurements on a canvas grid (the frame alone is centred, the size
+// label hangs under it without pushing it up), a diff that swaps a magic number for a
+// design token. Surface colours are the previous site's card
+// colours. All of it is decoration: the card text says the same in words.
+const offerSurfaceClasses = {
+  accessibility: "bg-brand-green-medium",
+  design: "ec-canvas-grid bg-brand-green-high",
+  development: "bg-brand-green-low",
+}
+---
+
+<main id="main">
+  <!-- --- Hero: three quarters of the viewport, so the page visibly goes on.
+       The lines rise in on load; on scroll the text drifts up and the photo
+       eases in, both driven by the scroll position itself, no script. -->
+  <section class="ec-hero ec-on-dark relative overflow-hidden bg-gray-min">
+    <!-- --- Three layers across the whole section: white ground, the cut-out
+         portrait anchored to the right edge of the screen, the dark overlay on
+         top. Only the text sits in a centred frame of at most 1920px. -->
+    <div class="relative mx-auto min-h-[min(78svh,56rem)] w-full max-w-[120rem]">
+      <div
+        class="ec-hero-content relative z-30 flex min-h-[min(78svh,56rem)] flex-col justify-center gap-8 px-6 pt-header pb-24 md:px-14 xl:px-32 2xl:px-52"
+      >
+        <!-- --- The dot between the two parts is drawn, not typed: a typed one
+             gets read out or swallowed by a screen reader. A hidden comma gives
+             the spoken version its pause. -->
+        <p class="flex ec-rise ec-optical-left items-center gap-2 text-sm tracking-[0.12em] text-brand-sand/70 uppercase">
+          <span>{tHome.hero.eyebrow[0]}</span>
+          <span class="size-1 rounded-full bg-current" aria-hidden="true"></span>
+          <span class="sr-only">,</span>
+          <span>{tHome.hero.eyebrow[1]}</span>
+        </p>
+
+        <h1
+          class="ec-rise ec-optical-left text-5xl tracking-[0.125rem] uppercase [--ec-rise-delay:120ms] md:text-7xl xl:text-8xl"
+        >
+          <span class="text-brand-green-medium" data-chat={tBubble.firstName}>Ercan</span>
+          {" "}
+          <span class="text-brand-sand">Cicek</span>
+        </h1>
+
+        <p
+          class="ec-rise ec-optical-left text-2xl leading-[1.2] text-brand-sand [--ec-rise-delay:240ms] md:text-4xl"
+        >
+          {tHome.hero.claim[0]}
+          <br />
+          {tHome.hero.claim[1]}
+        </p>
+
+        <div class="w-fit ec-rise [--ec-rise-delay:360ms]" data-chat={tBubble.contact}>
+          <Button href={contactHref}>
+            {t.common.contactCta}
+            <IconArrowRight slot="icon-end" class="size-5" />
+          </Button>
+        </div>
+      </div>
+
+      <ScrollCue
+        label={tHome.hero.scrollCue}
+        class="absolute bottom-8 left-6 z-30 ec-rise text-brand-sand [--ec-rise-delay:900ms] md:left-14 xl:left-32 2xl:left-52"
+      />
+
+    </div>
+    <!-- --- Photo at the right edge of the screen, never cropped (contain) -->
+    <picture>
+      <source media="(min-width: 920px)" srcset="/images/home/hero-landscape.png" />
+      <img
+        src="/images/home/hero-portrait.png"
+        alt=""
+        fetchpriority="high"
+        class="ec-hero-photo absolute inset-0 z-10 size-full object-contain object-right-bottom min-[920px]:object-right"
+      />
+    </picture>
+    <div class="absolute inset-0 z-20 bg-gray-max/75"></div>
+  </section>
+
+  <!-- --- The three offers, each with its own page -->
+  <Section>
+    <h2 class="ec-reveal text-heading-1">{tHome.offers.title}</h2>
+    <ul role="list" class="mt-10 grid gap-8 ec-reveal ec-reveal-late md:grid-cols-2 lg:grid-cols-3">
+      {
+        offerKeys.map((key) => (
+          <li data-chat={tBubble[key]} class="md:last:odd:col-span-2 lg:last:odd:col-span-1">
+            <!-- --- Card pattern from Inclusive Components: the link is the title
+                 only, so its name stays short and the title is a real heading.
+                 Its ::after stretches over the whole card for the click target.
+                 The ring sits on the card, in the card's own shape. -->
+            <div class="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-gray-min shadow-sm transition-shadow has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-brand-green-high lg:hover:shadow-lg">
+              <span
+                class:list={["grid h-40 place-items-center px-6", offerSurfaceClasses[key]]}
+                aria-hidden="true"
+                inert
+              >
+                {key === "accessibility" && (
+                  <span class="flex flex-col items-center gap-4">
+                    <span class="rounded-lg bg-gray-max/85 px-2.5 py-1 text-xs text-brand-sand">
+                      {tHome.offers.vignettes.accessibilityCaption}
+                    </span>
+                    <span class="grid size-11 place-items-center rounded-full bg-gray-min text-typo-high ring-[3px] ring-gray-high ring-offset-2 ring-offset-brand-green-medium transition-[box-shadow] duration-300 lg:group-hover:ring-offset-4 group-has-[a:focus-visible]:ring-offset-4">
+                      <IconChevronRight class="size-5" stroke-width={2.5} />
+                    </span>
+                  </span>
+                )}
+                {key === "design" && (
+                  <span class="relative">
+                    <span class="relative block p-1 outline outline-1 outline-brand-sand">
+                      <span class="block h-14 w-32 rounded-xl bg-gray-min/20 transition-[width] duration-300 lg:group-hover:w-40 group-has-[a:focus-visible]:w-40" />
+                      <span class="absolute -top-1 -left-1 size-2 border border-brand-sand bg-gray-min" />
+                      <span class="absolute -top-1 -right-1 size-2 border border-brand-sand bg-gray-min" />
+                      <span class="absolute -bottom-1 -left-1 size-2 border border-brand-sand bg-gray-min" />
+                      <span class="absolute -right-1 -bottom-1 size-2 border border-brand-sand bg-gray-min" />
+                    </span>
+                    <span class="absolute top-full left-1/2 mt-3 grid -translate-x-1/2 rounded bg-brand-sand px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-gray-high">
+                      <span class="col-start-1 row-start-1 transition-opacity duration-300 lg:group-hover:opacity-0 group-has-[a:focus-visible]:opacity-0">
+                        {tHome.offers.vignettes.designSizeBefore}
+                      </span>
+                      <span class="col-start-1 row-start-1 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100 group-has-[a:focus-visible]:opacity-100">
+                        {tHome.offers.vignettes.designSizeAfter}
+                      </span>
+                    </span>
+                  </span>
+                )}
+                {key === "development" && (
+                  <span class="flex w-full max-w-64 flex-col overflow-hidden rounded-xl bg-gray-min py-1 font-mono text-[0.8125rem] leading-7 shadow-sm">
+                    <span class="truncate px-3 text-typo-medium line-through opacity-70 transition-opacity duration-300 lg:group-hover:opacity-40 group-has-[a:focus-visible]:opacity-40">
+                      - {tHome.offers.vignettes.developmentRemoved}
+                    </span>
+                    <span class="truncate bg-brand-green-medium/35 px-3 text-typo-high transition-colors duration-300 lg:group-hover:bg-brand-green-medium/60 group-has-[a:focus-visible]:bg-brand-green-medium/60">
+                      + {tHome.offers.vignettes.developmentAdded}
+                    </span>
+                  </span>
+                )}
+              </span>
+              <span class="flex flex-1 flex-col gap-3 p-6 md:p-7">
+                <h3 class="text-heading-2 text-brand-green-high">
+                  <a
+                    href={localisedPath(key, currentLocale)}
+                    class="no-underline outline-none after:absolute after:inset-0 after:content-['']"
+                  >
+                    {tHome.offers.items[key].title}
+                  </a>
+                </h3>
+                <p class="text-typo-medium">{tHome.offers.items[key].teaser}</p>
+                <span
+                  class="mt-auto flex items-center gap-2 pt-4 font-bold text-typo-medium transition-colors group-hover:text-brand-green-high group-has-[a:focus-visible]:text-brand-green-high"
+                  aria-hidden="true"
+                >
+                  {tHome.offers.more}
+                  <IconArrowRight
+                    class="size-5 transition-transform group-hover:translate-x-1 group-has-[a:focus-visible]:translate-x-1"
+                  />
+                </span>
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- --- The argument: one person instead of three handovers -->
+  <Section tone="dark">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+      <div>
+        <h2 class="ec-reveal text-display text-balance">
+          {tHome.argument.title}
+        </h2>
+        <div class="mt-8 flex flex-col gap-5 ec-reveal ec-reveal-late">
+          {tHome.argument.body.map((paragraph) => <p class="text-lead text-typo-min/85">{paragraph}</p>)}
+        </div>
+      </div>
+      <dl class="grid content-center gap-8 ec-reveal ec-reveal-late sm:grid-cols-3 lg:grid-cols-1">
+        {
+          tHome.argument.facts.map((fact) => (
+            <div class="border-l-4 border-brand-green-medium pl-5">
+              <dd class="text-heading-1 text-brand-green-medium">{fact.value}</dd>
+              <dt class="text-typo-min/85">{fact.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </Section>
+
+  <!-- --- Endorsements -->
+  <Section>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 class="ec-reveal text-heading-1">{tHome.quotes.title}</h2>
+      <a href={`${linkedInUrl}/details/recommendations/`} class="ec-reveal font-bold" data-chat={tBubble.quotes}>
+        {tHome.quotes.allOnLinkedIn}
+      </a>
+    </div>
+    <ul role="list" class="mt-10 grid gap-8 ec-reveal ec-reveal-late md:grid-cols-3" data-chat={tBubble.quotes}>
+      {
+        tHome.quotes.items.map((quote) => (
+          <li>
+            <Quote
+              name={quote.name}
+              role={quote.role}
+              note={quote.isTranslated ? tHome.quotes.translated : undefined}
+            >
+              {quote.text}
+            </Quote>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- --- Portfolio excerpt -->
+  <Section tone="light">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 class="ec-reveal text-heading-1">{tHome.projects.title}</h2>
+      <a href={localisedPath("portfolio", currentLocale)} class="ec-reveal font-bold">
+        {tHome.projects.all}
+      </a>
+    </div>
+    <ul role="list" class="mt-10 grid grid-cols-2 gap-6 ec-reveal ec-reveal-late md:gap-8 xl:grid-cols-4" data-chat={tBubble.projects}>
+      {
+        projects.map((project) => (
+          <li>
+            <ProjectCard
+              href={localisedPath("portfolio", currentLocale)}
+              label={project.label}
+              type={project.type}
+              category={project.category[currentLocale]}
+              image={project.image}
+              techs={project.techs}
+              ariaLabel={`${tHome.projects.cardLabel}: ${project.label}, ${project.category[currentLocale]}`}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- --- Contact -->
+  <Section>
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20">
+      <div>
+        <h2 class="ec-reveal text-display text-balance">{tHome.contact.title}</h2>
+        <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
+          {tHome.contact.body}
+        </p>
+      </div>
+      <div class="flex flex-col gap-6 ec-reveal ec-reveal-late lg:justify-center" data-chat={tBubble.contact}>
+        <ContactCard href={contactHref} label={tHome.contact.email} address={siteConfig.contact.email}>
+          <IconMail aria-hidden="true" />
+        </ContactCard>
+        <ContactCard href={linkedInUrl} label={tHome.contact.linkedin} address="ercancicek" isExternal>
+          <IconBrandLinkedin aria-hidden="true" />
+        </ContactCard>
+      </div>
+    </div>
+  </Section>
+
+  <MouseChatBubble />
+</main>
+
+<style>
+  /* --- The dotted canvas of a design tool, behind the selection frame --- */
+  .ec-canvas-grid {
+    background-image: radial-gradient(circle, rgb(237 245 225 / 0.45) 1px, transparent 1.5px);
+    background-size: 1rem 1rem;
+    background-position: center;
+  }
+
+  /* --- Scroll-driven exit: progress follows the hero leaving the viewport,
+     so it is exactly as fast as the reader scrolls. Browsers without scroll
+     timelines simply get the static hero. --- */
+  @keyframes ec-hero-content-exit {
+    to {
+      opacity: 0;
+      transform: translateY(-3rem);
+    }
+  }
+
+  @keyframes ec-hero-photo-exit {
+    to {
+      transform: scale(1.06);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .ec-hero {
+        view-timeline-name: --ec-hero;
+      }
+
+      .ec-hero-content {
+        animation: ec-hero-content-exit linear both;
+        animation-timeline: --ec-hero;
+        animation-range: exit 0% exit 70%;
+      }
+
+      .ec-hero-photo {
+        animation: ec-hero-photo-exit linear both;
+        animation-timeline: --ec-hero;
+        animation-range: exit 0% exit 100%;
+      }
+    }
+  }
+</style>

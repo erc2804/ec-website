@@ -10,7 +10,6 @@ import {
   IconShieldLock,
 } from "@tabler/icons-astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
-import SectionHeading from "../../components/ui/SectionHeading.astro"
 import { useTranslations } from "../../i18n"
 
 const t = useTranslations(Astro.currentLocale).accessibility.demo
@@ -25,7 +24,7 @@ const targetLabel = (index: number) =>
 
 <section class="bg-gray-min py-20 md:py-28">
   <div class="ec-layout-visual-content">
-    <SectionHeading level={2}>{t.title}</SectionHeading>
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
 
     <p class="mt-6 max-w-[54ch] ec-reveal text-body text-typo-medium ec-reveal-late">{t.lead}</p>
 

@@ -1,6 +1,13 @@
 ---
 // --- Each language names itself and carries lang, so a screen reader announces
-// "English" in an English voice rather than reading it with a German one.
+// "English" in an English voice rather than reading it with a German one. The
+// visible code comes first in the name ("EN, English"), so voice control can
+// target it by what is on screen (WCAG 2.5.3, label in name).
+//
+// Both options in the full text colour; the current one is marked the same way
+// as the current page in the navigation, with the green bar under the label.
+// A thin drawn rule separates the two, decorative and hidden from assistive
+// technology. Every option is a 44px target.
 import { localeNames, localisedPath, useTranslations, type Locale, type RouteKey } from "../../i18n"
 import { siteConfig } from "../../config/site"
 
@@ -13,6 +20,9 @@ interface Props {
 const { routeKey, currentLocale, class: additionalClasses } = Astro.props
 
 const t = useTranslations(currentLocale).nav
+
+const optionClasses =
+  "relative grid size-11 place-items-center rounded-full text-sm font-bold tracking-[0.06em]"
 ---
 
 <div
@@ -21,51 +31,33 @@ const t = useTranslations(currentLocale).nav
   aria-label={t.languageLabel}
 >
   {
-    siteConfig.locales.map((locale) =>
-      locale === currentLocale ? (
-        <span class="ec-language-option" aria-current="true">
-          {localeNames[locale].short}
+    siteConfig.locales.map((locale, index) => (
+      <>
+        {index > 0 && <span class="h-4 w-0.5 bg-current opacity-40" aria-hidden="true" />}
+        {locale === currentLocale ? (
+        <span
+          class:list={[
+            optionClasses,
+            "after:absolute after:bottom-1.5 after:h-1 after:w-5 after:rounded-full after:bg-brand-green-medium",
+          ]}
+          aria-current="true"
+          lang={locale}
+        >
+          <span>{localeNames[locale].short}</span>
+          <span class="sr-only">, {localeNames[locale].full}</span>
         </span>
       ) : (
         <a
-          class="ec-language-option no-underline"
+          class:list={[optionClasses, "no-underline transition-colors hover:bg-current/10"]}
           href={localisedPath(routeKey, locale)}
           lang={locale}
           hreflang={locale}
         >
-          <span aria-hidden="true">{localeNames[locale].short}</span>
-          <span class="sr-only">{localeNames[locale].full}</span>
+          <span>{localeNames[locale].short}</span>
+          <span class="sr-only">, {localeNames[locale].full}</span>
         </a>
-      )
-    )
+        )}
+      </>
+    ))
   }
 </div>
-
-<style>
-  /* --- 2.75rem square keeps every option past the 24px target size WCAG 2.2
-     asks for, without making the pair look like two buttons. --- */
-  .ec-language-option {
-    display: grid;
-    place-items: center;
-    min-width: 2.25rem;
-    min-height: 2.25rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: currentColor;
-    opacity: 0.55;
-    transition:
-      opacity 180ms ease,
-      background-color 180ms ease;
-  }
-
-  .ec-language-option[aria-current="true"] {
-    opacity: 1;
-  }
-
-  a.ec-language-option:hover {
-    opacity: 1;
-    background-color: rgb(from currentColor r g b / 0.1);
-  }
-</style>

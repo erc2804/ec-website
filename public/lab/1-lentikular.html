@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 01 — Lentikular</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      /* --- Ohne registrierte Eigenschaft springt der Anteil, statt zu laufen --- */
+      @property --split {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 0;
+      }
+
+      :root {
+        --sand: #edf5e1;
+        --deep: #05386b;
+        --signal: #5cdb95;
+        --pine: #379683;
+
+        --lens: 15px;
+        --swap: 620ms;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--sand);
+        color: var(--deep);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .inner {
+        margin: 0 auto;
+        padding-inline: clamp(1.5rem, 5vw, 4rem);
+        width: min(100%, 78rem);
+      }
+
+      /* ---------- Die Linse ---------- */
+      /* Zwei Fassungen liegen deckungsgleich übereinander, beide durch ein
+         Streifengitter maskiert. Verschiebt sich der Anteil, wandert das Bild
+         von der einen Fassung in die andere — dazwischen sieht man beide. */
+
+      .lens {
+        position: relative;
+        --split: 0;
+      }
+
+      .lens > .face {
+        grid-area: 1 / 1;
+      }
+
+      .lens {
+        display: grid;
+      }
+
+      .face-front {
+        mask-image: repeating-linear-gradient(
+          90deg,
+          #000 0 calc(var(--lens) * (1 - var(--split))),
+          transparent 0 var(--lens)
+        );
+      }
+
+      .face-back {
+        mask-image: repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--lens) * (1 - var(--split))),
+          #000 0 var(--lens)
+        );
+      }
+
+      .lens[data-flip="true"] {
+        --split: 1;
+        transition: --split var(--swap) var(--ease);
+      }
+
+      .lens[data-flip="false"] {
+        --split: 0;
+        transition: --split var(--swap) var(--ease);
+      }
+
+      /* ---------- Kopf ---------- */
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 1.75rem 0;
+      }
+
+      header a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wordmark {
+        font-size: 1.0625rem;
+        font-weight: 700;
+      }
+
+      nav {
+        display: flex;
+        gap: 1.75rem;
+      }
+
+      /* --- Auch der Link wechselt gestreift: der Balken schiebt sich durch --- */
+      nav a {
+        position: relative;
+        overflow: hidden;
+        padding-bottom: 0.35rem;
+      }
+
+      nav a::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--deep) 0 calc(var(--lens) / 2),
+          var(--signal) 0 var(--lens)
+        );
+        content: "";
+        transform: translateX(-100%);
+        transition: transform 420ms steps(8, end);
+      }
+
+      nav a:hover::after,
+      nav a:focus-visible::after {
+        transform: none;
+      }
+
+      /* ---------- Inhalt ---------- */
+
+      section {
+        padding: clamp(3rem, 9vh, 5.5rem) 0;
+      }
+
+      .eyebrow {
+        display: block;
+        margin-bottom: 1.5rem;
+        opacity: 0.55;
+      }
+
+      .headline {
+        margin: 0;
+        max-width: 16ch;
+        font-size: clamp(2.25rem, 6.4vw, 4.75rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.035em;
+        text-wrap: balance;
+      }
+
+      /* --- Die Rückseite trägt, was ein Screenreader sagt --- */
+      .face-back .headline {
+        color: var(--pine);
+        font-size: clamp(1.5rem, 3.6vw, 2.75rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        max-width: 24ch;
+      }
+
+      .lead {
+        margin: 2rem 0 0;
+        max-width: 40ch;
+        font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+        opacity: 0.84;
+      }
+
+      p.body {
+        margin: 1.25rem 0 0;
+        max-width: 44ch;
+        opacity: 0.84;
+      }
+
+      .switchbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.9rem;
+        margin-top: 1.75rem;
+        color: var(--pine);
+      }
+
+      .switchbar i {
+        display: block;
+        width: 5rem;
+        height: 0.85rem;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--deep) 0 calc(var(--lens) / 2),
+          var(--signal) 0 var(--lens)
+        );
+      }
+
+      /* ---------- Streifenband ---------- */
+      /* Das Band trägt kein Bild, nur das Gitter selbst: beim Scrollen läuft
+         die Phase durch, das Muster kippt von Blau nach Grün. */
+
+      .grating {
+        height: clamp(4rem, 9vw, 7rem);
+        background:
+          repeating-linear-gradient(
+            90deg,
+            var(--deep) 0 calc(var(--lens) * (1 - var(--phase, 0))),
+            var(--signal) 0 var(--lens)
+          );
+      }
+
+      /* ---------- Zahlen ---------- */
+
+      .figures {
+        display: grid;
+        gap: 0;
+        margin: 2.5rem 0 0;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      }
+
+      .figures div {
+        border-left: 4px solid var(--deep);
+        padding: 0.25rem 1.5rem 0.75rem;
+      }
+
+      .figures div:first-child {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .figures dt {
+        opacity: 0.55;
+      }
+
+      .figures dd {
+        margin: 0.4rem 0 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* ---------- Bedienelemente ---------- */
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+      }
+
+      /* --- Der Knopf ist selbst eine Linse: der Hover schiebt die Füllung
+         streifenweise durch, statt sie zu überblenden. --- */
+      .lens-button {
+        position: relative;
+        display: inline-grid;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        --split: 0;
+        transition: --split 480ms var(--ease);
+      }
+
+      .lens-button:hover,
+      .lens-button:focus-visible {
+        --split: 1;
+      }
+
+      .lens-button > span {
+        grid-area: 1 / 1;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0 1.6rem;
+        min-height: 3.25rem;
+        font-size: 1.0625rem;
+        font-weight: 700;
+      }
+
+      .lens-button .rest {
+        background: var(--deep);
+        color: var(--sand);
+        mask-image: repeating-linear-gradient(
+          90deg,
+          #000 0 calc(var(--lens) * (1 - var(--split))),
+          transparent 0 var(--lens)
+        );
+      }
+
+      .lens-button .hot {
+        background: var(--signal);
+        color: var(--deep);
+        mask-image: repeating-linear-gradient(
+          90deg,
+          transparent 0 calc(var(--lens) * (1 - var(--split))),
+          #000 0 var(--lens)
+        );
+      }
+
+      .lens-button.hollow .rest {
+        background: transparent;
+        box-shadow: inset 0 0 0 3px var(--deep);
+        color: var(--deep);
+      }
+
+      .lens-button:focus-visible {
+        outline: 3px solid var(--pine);
+        outline-offset: 4px;
+      }
+
+      .field {
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+        padding-bottom: 0.4rem;
+        min-width: 17rem;
+        background:
+          repeating-linear-gradient(
+              90deg,
+              var(--deep) 0 calc(var(--lens) / 2),
+              transparent 0 var(--lens)
+            )
+            bottom / 100% 4px no-repeat;
+      }
+
+      .field:focus-within {
+        background-image: repeating-linear-gradient(
+          90deg,
+          var(--signal) 0 calc(var(--lens) / 2),
+          var(--deep) 0 var(--lens)
+        );
+      }
+
+      .field label {
+        white-space: nowrap;
+        opacity: 0.55;
+      }
+
+      .field input {
+        border: 0;
+        background: transparent;
+        width: 100%;
+        color: inherit;
+        font: inherit;
+        font-size: 1.0625rem;
+      }
+
+      .field input:focus {
+        outline: none;
+      }
+
+      .field input::placeholder {
+        color: currentColor;
+        opacity: 0.45;
+      }
+
+      footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem 0 3.5rem;
+        opacity: 0.55;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="inner">
+      <header class="mono">
+        <a class="wordmark" href="#top">Ercan Cicek</a>
+        <nav>
+          <a href="#top">Leistungen</a>
+          <a href="#top">Rechtslage</a>
+          <a href="#kit">Kontakt</a>
+        </nav>
+      </header>
+    </div>
+
+    <main id="top">
+      <div class="inner">
+        <section>
+          <span class="eyebrow mono">Zwei Fassungen in einem Bild</span>
+
+          <div class="lens" data-lens data-flip="false">
+            <div class="face face-front">
+              <h1 class="headline">Ich mache deine Anwendung barrierefrei.</h1>
+            </div>
+            <div class="face face-back" aria-hidden="true">
+              <p class="headline">
+                „Ich mache deine Anwendung barrierefrei. Überschrift Ebene 1“
+              </p>
+            </div>
+          </div>
+
+          <p class="switchbar mono">
+            <i aria-hidden="true"></i> Das Gitter kippt beim Scrollen zwischen dem, was du siehst,
+            und dem, was angesagt wird
+          </p>
+
+          <p class="lead">
+            Ein Linsenraster zeigt zwei Bilder auf derselben Fläche. Welches du siehst, hängt vom
+            Winkel ab. Hier hängt es davon ab, wie weit du bist.
+          </p>
+        </section>
+      </div>
+
+      <div class="grating" data-grating aria-hidden="true"></div>
+
+      <div class="inner">
+        <section>
+          <span class="eyebrow mono">01 — Der Kern</span>
+
+          <div class="lens" data-lens data-flip="false">
+            <div class="face face-front">
+              <h2 class="headline">Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</h2>
+            </div>
+            <div class="face face-back" aria-hidden="true">
+              <p class="headline">Er liest vor, was im Code steht.</p>
+            </div>
+          </div>
+
+          <p class="body">
+            Passt beides nicht zusammen, merkt es im Team niemand. Man sieht es ja nicht — man
+            sieht immer nur eine der beiden Fassungen.
+          </p>
+        </section>
+      </div>
+
+      <div class="grating" data-grating aria-hidden="true"></div>
+
+      <div class="inner">
+        <section>
+          <span class="eyebrow mono">02 — Maßstab</span>
+
+          <div class="lens" data-lens data-flip="false">
+            <div class="face face-front">
+              <h2 class="headline">Was gilt, und wonach ich prüfe.</h2>
+            </div>
+            <div class="face face-back" aria-hidden="true">
+              <p class="headline">WCAG 2.2, Stufe AA — eine Fassung weiter als gefordert.</p>
+            </div>
+          </div>
+
+          <dl class="figures">
+            <div>
+              <dt class="mono">Gesetz</dt>
+              <dd>BFSG, seit 28. Juni 2025</dd>
+            </div>
+            <div>
+              <dt class="mono">Norm</dt>
+              <dd>EN 301 549</dd>
+            </div>
+            <div>
+              <dt class="mono">Mein Maßstab</dt>
+              <dd>WCAG 2.2, Stufe AA</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+
+      <div class="grating" data-grating aria-hidden="true"></div>
+
+      <div class="inner">
+        <section id="kit">
+          <span class="eyebrow mono">03 — Bausteine</span>
+
+          <div class="lens" data-lens data-flip="false">
+            <div class="face face-front">
+              <h2 class="headline">Jeder Zustand ist ein zweites Bild.</h2>
+            </div>
+            <div class="face face-back" aria-hidden="true">
+              <p class="headline">Kein Überblenden — das Gitter schiebt sich durch.</p>
+            </div>
+          </div>
+
+          <p class="body">
+            Fahr über die Knöpfe: die Füllung wechselt streifenweise, nicht als Verlauf. Dieselbe
+            Mechanik wie oben, nur schneller.
+          </p>
+
+          <div class="row">
+            <button class="lens-button" type="button">
+              <span class="rest">Projekt anfragen <span aria-hidden="true">→</span></span>
+              <span class="hot" aria-hidden="true">Projekt anfragen <span>→</span></span>
+            </button>
+
+            <a class="lens-button hollow" href="#top">
+              <span class="rest">Alle Leistungen <span aria-hidden="true">→</span></span>
+              <span class="hot" aria-hidden="true">Alle Leistungen <span>→</span></span>
+            </a>
+
+            <div class="field">
+              <label class="mono" for="mail">E-Mail</label>
+              <input id="mail" type="email" placeholder="name@firma.de" />
+            </div>
+          </div>
+        </section>
+
+        <footer class="mono">
+          <span>Richtung 01 — Lentikular · Prototyp</span>
+          <span>Linsenraster, 15 px Teilung</span>
+        </footer>
+      </div>
+    </main>
+
+    <script>
+      // --- Jede Linse kippt, wenn ihre Mitte die Höhe des Blicks kreuzt.
+      // Der Wechsel ist nicht an- oder aus, sondern eine Phase: dazwischen
+      // stehen beide Fassungen gestreift nebeneinander.
+      const lenses = [...document.querySelectorAll("[data-lens]")]
+      const gratings = [...document.querySelectorAll("[data-grating]")]
+
+      let queued = false
+
+      function update() {
+        queued = false
+        const eye = window.innerHeight * 0.16
+
+        for (const lens of lenses) {
+          const box = lens.getBoundingClientRect()
+          lens.dataset.flip = String(box.top + box.height / 2 < eye)
+        }
+
+        // --- Die Bänder verschieben ihre Phase mit der Scrollstrecke
+        for (const grating of gratings) {
+          const box = grating.getBoundingClientRect()
+          const travel = (window.innerHeight - box.top) / (window.innerHeight + box.height)
+          grating.style.setProperty("--phase", Math.min(1, Math.max(0, travel)).toFixed(3))
+        }
+      }
+
+      function queue() {
+        if (queued) return
+        queued = true
+        window.requestAnimationFrame(update)
+      }
+
+      window.addEventListener("scroll", queue)
+      window.addEventListener("resize", queue)
+      document.fonts.ready.then(update)
+      update()
+    </script>
+  </body>
+</html>

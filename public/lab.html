@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Designrichtungen — Labor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        background: #0b0b0c;
+        color: #f4f4f2;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 0;
+        border-bottom: 1px solid #26262a;
+        background: #101013;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0 1.15rem;
+        border-right: 1px solid #26262a;
+        color: #6f6f78;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .brand b {
+        color: #f4f4f2;
+        font-weight: 600;
+      }
+
+      nav {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      button {
+        flex: 1 1 7.5rem;
+        border: 0;
+        border-right: 1px solid #26262a;
+        background: transparent;
+        padding: 0.72rem 1rem 0.66rem;
+        color: #83838d;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
+      }
+
+      button:hover {
+        background: #17171b;
+        color: #d8d8d4;
+      }
+
+      button:focus-visible {
+        outline: 2px solid #5cdb95;
+        outline-offset: -2px;
+      }
+
+      button[aria-current="true"] {
+        background: #f4f4f2;
+        color: #0b0b0c;
+      }
+
+      .idx {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        opacity: 0.55;
+      }
+
+      .name {
+        display: block;
+        margin-top: 0.15rem;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+
+      .motto {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        margin: 0;
+        border-top: 1px solid #26262a;
+        padding: 0.5rem 1.15rem;
+        color: #6f6f78;
+        font-size: 11px;
+        letter-spacing: 0.02em;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="brand"><b>Labor</b> Designrichtungen</div>
+
+      <nav id="nav" aria-label="Designrichtungen"></nav>
+
+      <p class="motto" id="motto"></p>
+    </header>
+
+    <iframe id="stage" title="Vorschau der Designrichtung"></iframe>
+
+    <script>
+      const directions = [
+        {
+          file: "lab/1-lentikular.html",
+          name: "Lentikular",
+          motto: "Linsenraster: zwei Fassungen auf einer Fläche, das Gitter schiebt sich durch.",
+        },
+        {
+          file: "lab/2-raster44.html",
+          name: "Raster 44",
+          motto: "Die Mindestzielgröße ist das Layoutraster. Bewegung springt, sie gleitet nie.",
+        },
+        {
+          file: "lab/3-segment.html",
+          name: "Segment",
+          motto: "Anzeigetafel: Segmente schalten an und aus. Nichts bewegt sich je.",
+        },
+        {
+          file: "lab/4-halbton.html",
+          name: "Halbton",
+          motto: "Rasterpunkte wachsen, bis sie sich schließen. Sie wandern nie.",
+        },
+        {
+          file: "lab/5-passer.html",
+          name: "Passer",
+          motto: "Druckbogen: drei Auszüge, die beim Scrollen in Deckung kommen.",
+        },
+        {
+          file: "lab/6-kontrastwaage.html",
+          name: "Kontrastwaage",
+          motto: "Die Seite misst ihren eigenen Kontrast, live, und zeigt den Wert an.",
+        },
+        {
+          file: "lab/7-radial.html",
+          name: "Radial",
+          motto: "Der Scroll ist ein Winkel. Keine Bewegung verläuft geradeaus.",
+        },
+        {
+          file: "lab/8-werkzeichnung.html",
+          name: "Werkzeichnung",
+          motto: "Bemaßung und Explosionsdarstellung. Bauteile fahren auseinander.",
+        },
+        {
+          file: "lab/9-kette.html",
+          name: "Kette",
+          motto: "Jede Regung wird weitergegeben. Ein fehlendes Glied hält alles auf.",
+        },
+        {
+          file: "lab/10-verdraengung.html",
+          name: "Verdrängung",
+          motto: "Der Platz ist endlich: was eines gewinnt, geben die anderen her.",
+        },
+      ]
+
+      const nav = document.getElementById("nav")
+      const stage = document.getElementById("stage")
+      const motto = document.getElementById("motto")
+
+      directions.forEach((direction, index) => {
+        const button = document.createElement("button")
+        button.type = "button"
+        button.innerHTML =
+          '<span class="idx">' + String(index + 1).padStart(2, "0") + '</span><span class="name">' + direction.name + "</span>"
+        button.addEventListener("click", () => show(index))
+        nav.append(button)
+      })
+
+      const buttons = [...nav.children]
+
+      function show(index) {
+        buttons.forEach((button, i) => button.setAttribute("aria-current", String(i === index)))
+        stage.src = directions[index].file
+        motto.textContent = directions[index].motto
+        location.hash = String(index + 1)
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.target.closest("input, textarea")) return
+        // --- 0 steht für die zehnte Richtung
+        const number = event.key === "0" ? 10 : Number(event.key)
+        if (number >= 1 && number <= directions.length) show(number - 1)
+      })
+
+      const fromHash = Number(location.hash.slice(1))
+      show(fromHash >= 1 && fromHash <= directions.length ? fromHash - 1 : 0)
+    </script>
+  </body>
+</html>

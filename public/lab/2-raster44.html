@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 02 — Raster 44</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      :root {
+        --cell: 44px;
+        --quarter: 11px;
+
+        --paper: #edf5e1;
+        --ink: #05386b;
+        --ink-soft: #3c5d76;
+
+        --r1: #05386b;
+        --r2: #14607b;
+        --r3: #379683;
+        --r4: #5cdb95;
+        --r5: #aeebc1;
+
+        --rule: rgba(5, 56, 107, 0.14);
+        --rule-strong: rgba(5, 56, 107, 0.42);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background-color: var(--paper);
+        background-image:
+          repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px var(--cell)),
+          repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px var(--cell));
+        color: var(--ink);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .wrap {
+        margin: 0 auto;
+        width: min(100% - 2 * var(--cell), 1188px);
+      }
+
+      /* ---------- Kopf ---------- */
+
+      header {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        background: var(--paper);
+      }
+
+      .wordmark {
+        display: flex;
+        align-items: center;
+        padding-inline: var(--cell);
+        height: calc(var(--cell) * 2);
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .head-nav {
+        display: flex;
+      }
+
+      .head-nav a {
+        display: flex;
+        align-items: center;
+        border-left: 1px solid var(--rule-strong);
+        padding-inline: calc(var(--quarter) * 3);
+        min-height: var(--cell);
+        color: var(--ink);
+        text-decoration: none;
+        transition:
+          background-color 200ms steps(3, end),
+          color 200ms steps(3, end);
+      }
+
+      .head-nav a:hover {
+        background: var(--r1);
+        color: var(--paper);
+      }
+
+      /* ---------- Hero ---------- */
+
+      .hero {
+        display: grid;
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        grid-template-columns: minmax(0, 1fr) calc(var(--cell) * 8);
+      }
+
+      .hero-text {
+        padding: calc(var(--cell) * 2) var(--cell);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 15ch;
+        font-size: clamp(2.5rem, 6.4vw, 4.25rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+
+      .lead {
+        margin: calc(var(--cell) * 0.75) 0 0;
+        max-width: 38ch;
+        color: var(--ink-soft);
+        font-size: 1.125rem;
+      }
+
+      /* ---------- Die Kachelwand ---------- */
+
+      .tiles {
+        display: grid;
+        overflow: hidden;
+        border-left: 1px solid var(--rule-strong);
+        grid-auto-flow: dense;
+        grid-template-columns: repeat(8, var(--cell));
+        grid-auto-rows: var(--cell);
+      }
+
+      .tile {
+        transition: background-color 340ms steps(4, end);
+      }
+
+      .tile[data-span="2"] {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      .tile[data-span="wide"] {
+        grid-column: span 2;
+      }
+
+      .tile[data-diamond="true"] {
+        transform: scale(0.62) rotate(45deg);
+      }
+
+      @media (max-width: 62rem) {
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .tiles {
+          border-top: 1px solid var(--rule-strong);
+          border-left: 0;
+          grid-template-columns: repeat(auto-fill, var(--cell));
+        }
+      }
+
+      /* ---------- Statement ---------- */
+
+      .statement {
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        background: var(--r1);
+        padding: calc(var(--cell) * 2) var(--cell);
+        color: var(--paper);
+      }
+
+      .statement p {
+        margin: 0;
+        max-width: 24ch;
+        font-size: clamp(1.75rem, 4.4vw, 3rem);
+        font-weight: 700;
+        line-height: 1.06;
+        letter-spacing: -0.015em;
+      }
+
+      .statement p + p {
+        margin-top: var(--quarter);
+        color: var(--r4);
+      }
+
+      .statement .note {
+        margin-top: var(--cell);
+        max-width: 44ch;
+        color: rgba(237, 245, 225, 0.72);
+        font-size: 1.0625rem;
+        font-weight: 400;
+        line-height: 1.6;
+      }
+
+      /* ---------- Fakten ---------- */
+
+      .facts {
+        display: grid;
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      }
+
+      .fact {
+        border-left: 1px solid var(--rule-strong);
+        padding: var(--cell);
+        transition: background-color 260ms steps(3, end);
+      }
+
+      .fact:first-child {
+        border-left: 0;
+      }
+
+      .fact:hover {
+        background: var(--r5);
+      }
+
+      .fact dt {
+        color: var(--ink-soft);
+      }
+
+      .fact dd {
+        margin: calc(var(--quarter) * 0.8) 0 0;
+        font-size: 1.375rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* ---------- Komponenten ---------- */
+
+      .kit {
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        padding: var(--cell);
+      }
+
+      h2 {
+        margin: 0 0 var(--quarter);
+        font-size: clamp(1.5rem, 3vw, 2.125rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+
+      .kit p {
+        margin: 0;
+        max-width: 46ch;
+        color: var(--ink-soft);
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: var(--cell);
+        margin-top: calc(var(--cell) * 1.25);
+      }
+
+      /* --- Der Hover füllt in sichtbaren Stufen, nicht als Verlauf --- */
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: 1.5px solid var(--r1);
+        background-color: transparent;
+        background-image: linear-gradient(to right, var(--r1) 0 100%);
+        background-repeat: no-repeat;
+        background-size: 0% 100%;
+        padding-inline: calc(var(--quarter) * 2);
+        height: var(--cell);
+        color: var(--r1);
+        font: inherit;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background-size 320ms steps(4, end),
+          color 320ms steps(4, end);
+      }
+
+      .btn:hover,
+      .btn:focus-visible {
+        background-size: 100% 100%;
+        color: var(--paper);
+      }
+
+      .btn.filled {
+        background-color: var(--r4);
+        background-image: linear-gradient(to right, var(--r1) 0 100%);
+        border-color: var(--r1);
+      }
+
+      .btn .arrow {
+        transition: transform 200ms steps(2, end);
+      }
+
+      .btn:hover .arrow {
+        transform: translateX(var(--quarter));
+      }
+
+      /* --- Zielgröße sichtbar machen --- */
+      .target {
+        position: relative;
+      }
+
+      .target::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--cell);
+        height: var(--cell);
+        outline: 1px dashed var(--r3);
+        content: "";
+        opacity: 0;
+        transform: translate(-50%, -50%);
+        transition: opacity 160ms steps(2, end);
+        pointer-events: none;
+      }
+
+      .target:hover::after,
+      .target:focus-visible::after {
+        opacity: 1;
+      }
+
+      .field {
+        display: grid;
+        gap: calc(var(--quarter) * 0.5);
+      }
+
+      .field label {
+        color: var(--ink-soft);
+      }
+
+      .field input {
+        border: 1.5px solid var(--rule-strong);
+        background: #fff;
+        padding-inline: 0.75rem;
+        width: calc(var(--cell) * 6);
+        max-width: 100%;
+        height: var(--cell);
+        color: var(--ink);
+        font: inherit;
+        transition: border-color 200ms steps(2, end);
+      }
+
+      .field input:focus {
+        border-color: var(--r1);
+        outline: 2px solid var(--r4);
+        outline-offset: 0;
+      }
+
+      .swatches {
+        display: flex;
+      }
+
+      .swatch {
+        display: grid;
+        align-content: end;
+        width: var(--cell);
+        height: calc(var(--cell) * 1.5);
+        padding-bottom: 0.25rem;
+        text-align: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9px;
+        transition: transform 200ms steps(2, end);
+      }
+
+      .swatch:hover {
+        transform: translateY(calc(var(--quarter) * -1));
+      }
+
+      footer {
+        border: 1px solid var(--rule-strong);
+        border-top: 0;
+        padding: var(--cell);
+        color: var(--ink-soft);
+      }
+
+      /* --- Eintritt springt, statt zu gleiten --- */
+      [data-enter] {
+        opacity: 0;
+        transform: translateY(var(--cell));
+      }
+
+      [data-enter="in"] {
+        opacity: 1;
+        transform: none;
+        transition:
+          opacity 300ms steps(3, end),
+          transform 300ms steps(2, end);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition-duration: 1ms !important;
+        }
+
+        [data-enter] {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <a class="wordmark" href="#top">Ercan&nbsp;Cicek</a>
+        <nav class="head-nav mono">
+          <a class="target" href="#top">Leistungen</a>
+          <a class="target" href="#top">Rechtslage</a>
+          <a class="target" href="#kit">Kontakt</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-text">
+            <p class="mono" style="margin: 0 0 var(--cell); color: var(--ink-soft)">
+              Raster 44 · Zielgröße als Maß
+            </p>
+            <h1>Ich mache deine Anwendung barrierefrei.</h1>
+            <p class="lead">
+              Jede Fläche dieser Seite ist ein Vielfaches von 44 Pixeln — der Mindestgröße, die ein
+              Bedienelement treffen lassen muss. Das Maß ist nicht Dekoration, es ist die Vorschrift.
+            </p>
+          </div>
+
+          <div class="tiles" id="tiles" aria-hidden="true"></div>
+        </section>
+
+        <section class="statement">
+          <p>Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</p>
+          <p>Er liest vor, was im Code steht.</p>
+          <p class="note">
+            Passt beides nicht zusammen, merkt es im Team niemand. Man sieht es ja nicht.
+          </p>
+        </section>
+
+        <dl class="facts" data-enter>
+          <div class="fact">
+            <dt class="mono">Gesetz</dt>
+            <dd>BFSG, seit 28. Juni 2025</dd>
+          </div>
+          <div class="fact">
+            <dt class="mono">Norm</dt>
+            <dd>EN 301 549</dd>
+          </div>
+          <div class="fact">
+            <dt class="mono">Mein Maßstab</dt>
+            <dd>WCAG 2.2, Stufe AA</dd>
+          </div>
+        </dl>
+
+        <section class="kit" id="kit" data-enter>
+          <h2>Bausteine rasten ein.</h2>
+          <p>
+            Nichts gleitet. Jede Bewegung ist ein Sprung um eine Zelle oder eine Viertelzelle, und
+            jeder Übergang läuft in gezählten Stufen. Fahr über die Elemente — der gestrichelte
+            Rahmen zeigt die Fläche, die tatsächlich zu treffen ist.
+          </p>
+
+          <div class="row">
+            <button class="btn filled target" type="button">
+              Projekt anfragen <span class="arrow" aria-hidden="true">→</span>
+            </button>
+
+            <a class="btn target" href="#top">
+              Alle Leistungen <span class="arrow" aria-hidden="true">→</span>
+            </a>
+
+            <div class="field">
+              <label class="mono" for="mail">E-Mail-Adresse</label>
+              <input id="mail" type="email" placeholder="name@firma.de" />
+            </div>
+
+            <div class="swatches">
+              <div class="swatch" style="background: var(--r1); color: #edf5e1">R1</div>
+              <div class="swatch" style="background: var(--r2); color: #edf5e1">R2</div>
+              <div class="swatch" style="background: var(--r3); color: #edf5e1">R3</div>
+              <div class="swatch" style="background: var(--r4); color: #05386b">R4</div>
+              <div class="swatch" style="background: var(--r5); color: #05386b">R5</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mono">Richtung 02 — Raster 44 · Prototyp</footer>
+    </div>
+
+    <script>
+      // --- Die Kachelwand: vier feste Zustände, zwischen denen der Scroll schaltet.
+      // Farbe und Größe folgen dem Index, damit die Choreografie reproduzierbar ist.
+      const ramp = ["--r1", "--r2", "--r3", "--r4", "--r5"]
+      const tilesHost = document.getElementById("tiles")
+      const COUNT = 96
+      const tiles = []
+
+      for (let i = 0; i < COUNT; i++) {
+        const tile = document.createElement("div")
+        tile.className = "tile"
+        tilesHost.append(tile)
+        tiles.push(tile)
+      }
+
+      function paint(frame) {
+        tiles.forEach((tile, i) => {
+          const step = (i * 7 + frame * 5) % 11
+          tile.style.background = "var(" + ramp[step % ramp.length] + ")"
+
+          const merged = (i * 3 + frame * 2) % 13 === 0
+          const wide = (i * 5 + frame) % 17 === 0
+          tile.dataset.span = merged ? "2" : wide ? "wide" : ""
+          tile.dataset.diamond = String((i * 11 + frame * 7) % 23 === 0)
+        })
+      }
+
+      let frame = -1
+
+      function updateFrame() {
+        const total = document.body.scrollHeight - window.innerHeight
+        const ratio = total > 0 ? Math.min(0.999, Math.max(0, window.scrollY / total)) : 0
+        const next = Math.floor(ratio * 4)
+        if (next === frame) return
+        frame = next
+        paint(frame)
+      }
+
+      window.addEventListener("scroll", updateFrame)
+      updateFrame()
+
+      // --- Ohne diese Ausrichtung liegt das Raster irgendwo, statt am Inhalt
+      const wrap = document.querySelector(".wrap")
+
+      function alignGrid() {
+        document.body.style.backgroundPositionX = wrap.getBoundingClientRect().left + "px"
+      }
+
+      window.addEventListener("resize", alignGrid)
+      alignGrid()
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.dataset.enter = "in"
+              observer.unobserve(entry.target)
+            }
+          }
+        },
+        { rootMargin: "0px 0px -18% 0px" }
+      )
+
+      document.querySelectorAll("[data-enter]").forEach((element) => observer.observe(element))
+    </script>
+  </body>
+</html>

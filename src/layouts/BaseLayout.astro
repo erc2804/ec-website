@@ -14,6 +14,8 @@ interface Props {
   isNoindex?: boolean
   hasStructuredData?: boolean
   routeKey?: RouteKey
+  /** --- Transparent header with light text, for a page that opens on a dark hero --- */
+  isHeaderOnDark?: boolean
   /** --- Applied to <body> --- */
   class?: string
 }
@@ -25,6 +27,7 @@ const {
   isNoindex,
   hasStructuredData,
   routeKey,
+  isHeaderOnDark = false,
   class: additionalClasses,
 } = Astro.props
 
@@ -53,7 +56,7 @@ const mainId = "main"
   <body class:list={[additionalClasses]}>
     <SkipLink targetId={mainId} />
 
-    <SiteHeader routeKey={routeKey} />
+    <SiteHeader routeKey={routeKey} isOnDark={isHeaderOnDark} />
 
     <slot />
 

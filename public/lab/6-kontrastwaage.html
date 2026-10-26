@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 06 — Kontrastwaage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      :root {
+        --ground: #edf5e1;
+        --figure: #05386b;
+        --accent: #379683;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--figure);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        transition:
+          background-color 140ms linear,
+          color 140ms linear;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .wrap {
+        margin: 0 auto;
+        padding-inline: clamp(1.5rem, 5vw, 4rem);
+        width: min(100%, 74rem);
+      }
+
+      /* ---------- Die Waage ---------- */
+
+      .gauge {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: clamp(0.75rem, 2vw, 1.5rem);
+        border-bottom: 1px solid currentColor;
+        padding: 0.6rem clamp(1rem, 4vw, 2rem);
+        color: var(--figure);
+        transition: color 140ms linear;
+      }
+
+      .gauge-value {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      .gauge-grade {
+        border: 1px solid currentColor;
+        padding: 0.2rem 0.45rem;
+        line-height: 1;
+      }
+
+      /* --- Skala: die Schwellen der WCAG stehen als Marken darauf --- */
+      .scale {
+        position: relative;
+        flex: 1;
+        height: 1.5rem;
+        min-width: 6rem;
+      }
+
+      .scale-line {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        left: 0;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.35;
+      }
+
+      .scale-mark {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--at);
+        width: 1px;
+        background: currentColor;
+        opacity: 0.5;
+      }
+
+      .scale-mark span {
+        position: absolute;
+        top: -0.15rem;
+        left: 0.25rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8px;
+        letter-spacing: 0.1em;
+        white-space: nowrap;
+      }
+
+      .needle {
+        position: absolute;
+        top: -0.2rem;
+        bottom: -0.2rem;
+        left: 0;
+        width: 3px;
+        background: currentColor;
+        transform: translateX(var(--at, 0px));
+        transition: transform 200ms var(--ease);
+      }
+
+      /* ---------- Inhalt ---------- */
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 4.5rem 0 0;
+      }
+
+      .wordmark {
+        color: inherit;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      nav {
+        display: flex;
+        gap: 1.75rem;
+      }
+
+      section {
+        padding: clamp(5rem, 14vh, 9rem) 0;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 15ch;
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+      }
+
+      h2 {
+        margin: 0;
+        max-width: 20ch;
+        font-size: clamp(1.75rem, 4vw, 2.875rem);
+        font-weight: 700;
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+
+      .lead {
+        margin: 2rem 0 0;
+        max-width: 40ch;
+        font-size: 1.1875rem;
+        opacity: 0.78;
+      }
+
+      p {
+        margin: 1.25rem 0 0;
+        max-width: 46ch;
+        opacity: 0.78;
+      }
+
+      .caption {
+        display: block;
+        margin-bottom: 1.5rem;
+        opacity: 0.6;
+      }
+
+      /* ---------- Farbpaare ---------- */
+
+      .pairs {
+        display: grid;
+        gap: 1px;
+        margin-top: 3rem;
+        border: 1px solid currentColor;
+        background: currentColor;
+        grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+      }
+
+      .pair {
+        display: grid;
+        gap: 0.6rem;
+        padding: 1.25rem 1.1rem 1.1rem;
+        min-height: 8.5rem;
+        align-content: space-between;
+        cursor: default;
+        transition: filter 200ms var(--ease);
+      }
+
+      .pair:hover {
+        filter: contrast(1.08);
+      }
+
+      .pair-ratio {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1.625rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      .pair-meta {
+        color: var(--legible);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .pair-grade {
+        border: 1px solid currentColor;
+        padding: 0.1rem 0.3rem;
+      }
+
+      /* ---------- Bedienelemente ---------- */
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 2rem;
+        margin-top: 2.75rem;
+      }
+
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: 2px solid currentColor;
+        background: transparent;
+        padding: 0.8rem 1.4rem;
+        color: inherit;
+        font: inherit;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background-color 220ms var(--ease),
+          color 220ms var(--ease);
+      }
+
+      /* --- Der Hover kehrt das Paar um; der Wert bleibt derselbe --- */
+      .btn:hover,
+      .btn:focus-visible {
+        background: var(--figure);
+        color: var(--ground);
+      }
+
+      .btn::after {
+        position: absolute;
+        top: calc(100% + 0.45rem);
+        left: 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        content: attr(data-ratio);
+        opacity: 0;
+        transition: opacity 220ms ease;
+      }
+
+      .btn:hover::after,
+      .btn:focus-visible::after {
+        opacity: 0.7;
+      }
+
+      .btn .arrow {
+        transition: transform 300ms var(--ease);
+      }
+
+      .btn:hover .arrow {
+        transform: translateX(0.35rem);
+      }
+
+      :is(a, button, input):focus-visible {
+        outline: 3px solid currentColor;
+        outline-offset: 3px;
+      }
+
+      .link {
+        color: inherit;
+        text-decoration-line: underline;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.28em;
+        transition: text-decoration-thickness 200ms ease;
+      }
+
+      .link:hover {
+        text-decoration-thickness: 0.16em;
+      }
+
+      .field {
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      .field label {
+        opacity: 0.7;
+      }
+
+      .field input {
+        border: 2px solid currentColor;
+        background: transparent;
+        padding: 0.7rem 0.85rem;
+        width: 15rem;
+        max-width: 100%;
+        color: inherit;
+        font: inherit;
+      }
+
+      .field input::placeholder {
+        color: currentColor;
+        opacity: 0.45;
+      }
+
+      footer {
+        border-top: 1px solid currentColor;
+        padding: 1.75rem 0 4rem;
+        opacity: 0.6;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="gauge">
+      <span class="gauge-value" id="value">21.0</span>
+      <span class="mono gauge-grade" id="grade">AAA</span>
+
+      <span class="scale" aria-hidden="true">
+        <span class="scale-line"></span>
+        <span class="scale-mark" data-at="3"><span>3</span></span>
+        <span class="scale-mark" data-at="4.5"><span>4,5</span></span>
+        <span class="scale-mark" data-at="7"><span>7</span></span>
+        <span class="needle" id="needle"></span>
+      </span>
+
+      <span class="mono" id="pairName">Sand auf Tiefblau</span>
+    </div>
+
+    <div class="wrap">
+      <header>
+        <a class="wordmark" href="#top">Ercan Cicek</a>
+        <nav class="mono">
+          <a class="link" href="#top">Leistungen</a>
+          <a class="link" href="#top">Rechtslage</a>
+          <a class="link" href="#kit">Kontakt</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section>
+          <span class="caption mono">Gemessen, nicht behauptet</span>
+          <h1>Ich mache deine Anwendung barrierefrei.</h1>
+          <p class="lead">
+            Diese Seite wechselt beim Scrollen ihr Farbpaar. Der Wert oben ist kein Etikett: er wird
+            aus den beiden Farben berechnet, die gerade auf dem Bildschirm stehen, nach derselben
+            Formel, nach der auch geprüft wird.
+          </p>
+        </section>
+
+        <section>
+          <span class="caption mono">01 — Der Kern</span>
+          <h2>Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</h2>
+          <p>
+            Er liest vor, was im Code steht. Passt beides nicht zusammen, merkt es im Team niemand.
+            Man sieht es ja nicht.
+          </p>
+          <p>
+            Beim Kontrast ist es umgekehrt: Man sieht ihn, aber man schätzt ihn falsch. Zwei Farben,
+            die nebeneinander gut aussehen, sind noch lange nicht lesbar. Deshalb wird gemessen.
+          </p>
+          <p>
+            Weiter unten kippt die Seite von heller auf dunkle Grundfarbe. Das passiert in einem
+            Schritt statt als Verlauf — dazwischen lägen Töne, in denen Grund und Schrift dieselbe
+            Helligkeit haben. Beide Fassungen haben an der Schnittstelle denselben Wert.
+          </p>
+        </section>
+
+        <section>
+          <span class="caption mono">02 — Die Paare</span>
+          <h2>Jede Paarung trägt ihren Wert.</h2>
+          <p>
+            Alle Werte unten sind im Browser berechnet. Wo die Schwelle von 4,5 gerissen wird, steht
+            es dort — auch wenn das Paar hübsch aussieht.
+          </p>
+
+          <div class="pairs" id="pairs"></div>
+        </section>
+
+        <section id="kit">
+          <span class="caption mono">03 — Bausteine</span>
+          <h2>Der Hover kehrt das Paar um.</h2>
+          <p>
+            Ein Bedienelement wechselt beim Zeigen nicht die Farbe, sondern tauscht Grund und
+            Zeichnung. Der Kontrastwert bleibt dabei exakt derselbe — deshalb kann kein Zustand
+            durchfallen.
+          </p>
+
+          <div class="row">
+            <button class="btn" type="button" data-ratio="">
+              Projekt anfragen <span class="arrow" aria-hidden="true">→</span>
+            </button>
+
+            <a class="btn" href="#top" data-ratio="">
+              Alle Leistungen <span class="arrow" aria-hidden="true">→</span>
+            </a>
+
+            <div class="field">
+              <label class="mono" for="mail">E-Mail-Adresse</label>
+              <input id="mail" type="email" placeholder="name@firma.de" />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mono">Richtung 06 — Kontrastwaage · Prototyp</footer>
+    </div>
+
+    <script>
+      // --- WCAG 2.2, relative Luminanz und Kontrastverhältnis
+      function channel(value) {
+        const v = value / 255
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+      }
+
+      function luminance([r, g, b]) {
+        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+      }
+
+      function ratio(a, b) {
+        const one = luminance(a)
+        const two = luminance(b)
+        return (Math.max(one, two) + 0.05) / (Math.min(one, two) + 0.05)
+      }
+
+      function toRgb(hex) {
+        return [
+          parseInt(hex.slice(1, 3), 16),
+          parseInt(hex.slice(3, 5), 16),
+          parseInt(hex.slice(5, 7), 16),
+        ]
+      }
+
+      function toHex(rgb) {
+        return "#" + rgb.map((v) => Math.round(v).toString(16).padStart(2, "0")).join("")
+      }
+
+      function grade(value) {
+        if (value >= 7) return "AAA"
+        if (value >= 4.5) return "AA"
+        if (value >= 3) return "AA GROSS"
+        return "DURCHGEFALLEN"
+      }
+
+      // --- Die Rampe, durch die der Scroll läuft. Alle Farben aus der Palette.
+      const stops = [
+        { ground: "#edf5e1", figure: "#05386b", name: "Tiefblau auf Sand" },
+        { ground: "#aeebc1", figure: "#05386b", name: "Tiefblau auf Hellgrün" },
+        { ground: "#5cdb95", figure: "#05386b", name: "Tiefblau auf Signalgrün", cut: true },
+        { ground: "#05386b", figure: "#5cdb95", name: "Signalgrün auf Tiefblau" },
+        { ground: "#05386b", figure: "#edf5e1", name: "Sand auf Tiefblau" },
+      ]
+
+      const value = document.getElementById("value")
+      const gradeBox = document.getElementById("grade")
+      const needle = document.getElementById("needle")
+      const pairName = document.getElementById("pairName")
+      const scale = document.querySelector(".scale")
+
+      // --- Die Skala ist logarithmisch: zwischen 1 und 4,5 passiert das Wesentliche
+      function position(value) {
+        return Math.min(1, Math.max(0, Math.log(value) / Math.log(21)))
+      }
+
+      document.querySelectorAll(".scale-mark").forEach((mark) => {
+        mark.style.setProperty("--at", position(Number(mark.dataset.at)) * 100 + "%")
+      })
+
+      function mix(a, b, t) {
+        return a.map((channel, i) => channel + (b[i] - channel) * t)
+      }
+
+      let ticking = false
+
+      function paint() {
+        ticking = false
+        const total = document.body.scrollHeight - window.innerHeight
+        const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0
+
+        const span = progress * (stops.length - 1)
+        const index = Math.min(stops.length - 2, Math.floor(span))
+        const t = span - index
+
+        // --- Über einen Schnitt wird nicht interpoliert, sondern umgeschaltet
+        const blend = stops[index].cut ? (t < 0.5 ? 0 : 1) : t
+        const ground = mix(toRgb(stops[index].ground), toRgb(stops[index + 1].ground), blend)
+        const figure = mix(toRgb(stops[index].figure), toRgb(stops[index + 1].figure), blend)
+
+        document.documentElement.style.setProperty("--ground", toHex(ground))
+        document.documentElement.style.setProperty("--figure", toHex(figure))
+
+        const measured = ratio(ground, figure)
+        value.textContent = measured.toFixed(1).replace(".", ",")
+        gradeBox.textContent = grade(measured)
+        pairName.textContent = blend < 0.5 ? stops[index].name : stops[index + 1].name
+        needle.style.setProperty("--at", position(measured) * scale.offsetWidth + "px")
+
+        document
+          .querySelectorAll(".btn")
+          .forEach((button) => (button.dataset.ratio = measured.toFixed(1).replace(".", ",") + " : 1"))
+      }
+
+      window.addEventListener("scroll", () => {
+        if (ticking) return
+        ticking = true
+        window.requestAnimationFrame(paint)
+      })
+
+      window.addEventListener("resize", paint)
+
+      // --- Die Paartafel: jedes Feld rechnet seinen eigenen Wert aus
+      const palette = [
+        { name: "Tiefblau", hex: "#05386b" },
+        { name: "Tannengrün", hex: "#379683" },
+        { name: "Signalgrün", hex: "#5cdb95" },
+        { name: "Hellgrün", hex: "#aeebc1" },
+        { name: "Sand", hex: "#edf5e1" },
+        { name: "Lila", hex: "#46237a" },
+      ]
+
+      const combinations = [
+        [0, 4],
+        [0, 3],
+        [0, 2],
+        [1, 4],
+        [5, 4],
+        [2, 0],
+        [4, 0],
+        [3, 1],
+        [2, 3],
+        [4, 3],
+      ]
+
+      const pairsHost = document.getElementById("pairs")
+
+      for (const [figureIndex, groundIndex] of combinations) {
+        const figure = palette[figureIndex]
+        const ground = palette[groundIndex]
+        const measured = ratio(toRgb(figure.hex), toRgb(ground.hex))
+
+        const legible = ratio(toRgb(ground.hex), [0, 0, 0]) >= ratio(toRgb(ground.hex), [255, 255, 255])
+          ? "#000000"
+          : "#ffffff"
+
+        const cell = document.createElement("div")
+        cell.className = "pair"
+        cell.style.background = ground.hex
+        cell.style.color = figure.hex
+        cell.style.setProperty("--legible", legible)
+        cell.innerHTML =
+          '<span class="pair-ratio">' +
+          measured.toFixed(2).replace(".", ",") +
+          '</span><span class="pair-meta"><span>' +
+          figure.name +
+          " auf " +
+          ground.name +
+          '</span><span class="pair-grade">' +
+          grade(measured) +
+          "</span></span>"
+        pairsHost.append(cell)
+      }
+
+      paint()
+    </script>
+  </body>
+</html>

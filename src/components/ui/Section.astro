@@ -1,0 +1,39 @@
+---
+// --- One page section: surface tone outside, content width inside. Views
+// compose pages out of these so vertical rhythm and widths stay in one place.
+interface Props {
+  as?: "section" | "div"
+  tone?: "page" | "light" | "dark"
+  width?: "visual" | "text"
+  id?: string
+  class?: string
+  /** --- Applied to the inner content wrapper --- */
+  contentClass?: string
+}
+
+const {
+  as: Tag = "section",
+  tone = "page",
+  width = "visual",
+  id,
+  class: additionalClasses,
+  contentClass,
+} = Astro.props
+
+const toneClasses = {
+  page: "",
+  light: "bg-gray-min",
+  dark: "ec-on-dark bg-brand-blue text-typo-min",
+}
+
+const widthClasses = {
+  visual: "ec-layout-visual-content",
+  text: "ec-layout-text-content",
+}
+---
+
+<Tag id={id} class:list={[toneClasses[tone], additionalClasses]}>
+  <div class:list={[widthClasses[width], "py-20 md:py-28", contentClass]}>
+    <slot />
+  </div>
+</Tag>

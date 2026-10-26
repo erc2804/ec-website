@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Richtung 05 — Passer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "an-regular";
+        src: url("/fonts/an-regular.woff2") format("woff2");
+        font-display: swap;
+      }
+
+      :root {
+        --paper: #f4f2ec;
+        --mark: #14161a;
+        --mark-soft: #6d6f6a;
+        --hair: #d5d2c8;
+
+        --plate-a: #05386b;
+        --plate-b: #379683;
+        --plate-c: #46237a;
+
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--mark);
+        font-family: "an-regular", system-ui, sans-serif;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.625rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- Der Bogen ---------- */
+
+      .sheet {
+        position: relative;
+        margin: 0 auto;
+        padding: 3.5rem clamp(1.75rem, 6vw, 5rem) 7rem;
+        width: min(100%, 80rem);
+      }
+
+      /* --- Schnittmarken: zwei Striche, die sich nie berühren --- */
+      .trim {
+        position: absolute;
+        width: 2.25rem;
+        height: 2.25rem;
+        pointer-events: none;
+      }
+
+      .trim::before,
+      .trim::after {
+        position: absolute;
+        background: var(--mark);
+        content: "";
+      }
+
+      .trim::before {
+        width: 1px;
+        height: 1.15rem;
+      }
+
+      .trim::after {
+        width: 1.15rem;
+        height: 1px;
+      }
+
+      .trim[data-corner="tl"] {
+        top: 1rem;
+        left: 1rem;
+      }
+      .trim[data-corner="tl"]::before {
+        top: 0;
+        left: 1.1rem;
+      }
+      .trim[data-corner="tl"]::after {
+        top: 1.1rem;
+        left: 0;
+      }
+
+      .trim[data-corner="tr"] {
+        top: 1rem;
+        right: 1rem;
+      }
+      .trim[data-corner="tr"]::before {
+        top: 0;
+        right: 1.1rem;
+      }
+      .trim[data-corner="tr"]::after {
+        top: 1.1rem;
+        right: 0;
+      }
+
+      .trim[data-corner="bl"] {
+        bottom: 1rem;
+        left: 1rem;
+      }
+      .trim[data-corner="bl"]::before {
+        bottom: 0;
+        left: 1.1rem;
+      }
+      .trim[data-corner="bl"]::after {
+        bottom: 1.1rem;
+        left: 0;
+      }
+
+      .trim[data-corner="br"] {
+        right: 1rem;
+        bottom: 1rem;
+      }
+      .trim[data-corner="br"]::before {
+        right: 1.1rem;
+        bottom: 0;
+      }
+      .trim[data-corner="br"]::after {
+        right: 0;
+        bottom: 1.1rem;
+      }
+
+      /* --- Passerkreuz --- */
+      .reg {
+        position: absolute;
+        width: 1.5rem;
+        height: 1.5rem;
+        pointer-events: none;
+      }
+
+      .reg[data-side="left"] {
+        top: 50%;
+        left: 0.7rem;
+      }
+
+      .reg[data-side="right"] {
+        top: 50%;
+        right: 0.7rem;
+      }
+
+      /* ---------- Farbauszüge ---------- */
+
+      .sep {
+        position: relative;
+        display: inline-block;
+        isolation: isolate;
+        --off: 1;
+      }
+
+      .sep > .plate,
+      .sep > .base {
+        mix-blend-mode: multiply;
+        transition: transform 140ms linear;
+      }
+
+      .sep > .plate {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      .plate-a {
+        color: var(--plate-a);
+        transform: translate(calc(var(--off) * -0.42rem), calc(var(--off) * -0.26rem));
+      }
+
+      .base {
+        display: block;
+        color: var(--plate-b);
+      }
+
+      .plate-c {
+        color: var(--plate-c);
+        transform: translate(calc(var(--off) * 0.42rem), calc(var(--off) * 0.26rem));
+      }
+
+      /* ---------- Kopf ---------- */
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 2rem;
+        border-bottom: 1px solid var(--hair);
+        padding-bottom: 1rem;
+      }
+
+      .wordmark {
+        color: var(--mark);
+        font-size: 1.0625rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      nav {
+        display: flex;
+        gap: 1.75rem;
+      }
+
+      /* ---------- Inhalt ---------- */
+
+      main {
+        padding-top: clamp(4rem, 12vh, 8rem);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 14ch;
+        text-wrap: balance;
+        font-size: clamp(2.5rem, 7.2vw, 5rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+
+      h2 {
+        margin: 0;
+        max-width: 20ch;
+        text-wrap: balance;
+        font-size: clamp(1.75rem, 4vw, 2.875rem);
+        font-weight: 700;
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+      }
+
+      .lead {
+        margin: 2rem 0 0;
+        max-width: 40ch;
+        color: var(--mark-soft);
+        font-size: 1.125rem;
+      }
+
+      p {
+        margin: 1.25rem 0 0;
+        max-width: 45ch;
+        color: var(--mark-soft);
+      }
+
+      section {
+        padding: clamp(4rem, 10vh, 7rem) 0;
+      }
+
+      .caption {
+        display: flex;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 1.75rem;
+        color: var(--mark-soft);
+      }
+
+      .caption::before {
+        width: 2.5rem;
+        height: 1px;
+        background: var(--mark-soft);
+        content: "";
+      }
+
+      .split {
+        display: grid;
+        gap: 3rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      @media (max-width: 58rem) {
+        .split {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .facts {
+        display: grid;
+        gap: 0;
+        margin: 0;
+        border-top: 1px solid var(--hair);
+      }
+
+      .fact {
+        display: grid;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--hair);
+        padding: 1.1rem 0;
+        grid-template-columns: 9rem minmax(0, 1fr);
+        align-items: baseline;
+      }
+
+      .fact dt {
+        color: var(--mark-soft);
+      }
+
+      .fact dd {
+        margin: 0;
+        font-size: 1.1875rem;
+        font-weight: 700;
+      }
+
+      /* ---------- Bedienelemente ---------- */
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 2.5rem;
+        margin-top: 2.75rem;
+      }
+
+      .act {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: 1px solid var(--mark);
+        background: transparent;
+        padding: 0.85rem 1.5rem;
+        color: var(--mark);
+        font: inherit;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          transform 240ms var(--ease),
+          box-shadow 240ms var(--ease),
+          background-color 240ms ease,
+          color 240ms ease;
+      }
+
+      /* --- Hover heißt: kurz aus dem Register --- */
+      .act:hover {
+        transform: translate(-2px, -2px);
+        box-shadow:
+          2px 2px 0 0 var(--plate-b),
+          4px 4px 0 0 var(--plate-c);
+      }
+
+      .act.solid {
+        border-color: var(--plate-a);
+        background: var(--plate-a);
+        color: var(--paper);
+      }
+
+      .act .arrow {
+        transition: transform 300ms var(--ease);
+      }
+
+      .act:hover .arrow {
+        transform: translateX(0.35rem);
+      }
+
+      :is(a, button, input):focus-visible {
+        outline: 1.5px solid var(--mark);
+        outline-offset: 6px;
+      }
+
+      .act:focus-visible {
+        box-shadow:
+          3px 3px 0 0 var(--plate-b),
+          6px 6px 0 0 var(--plate-c);
+      }
+
+      .link {
+        position: relative;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .link::before,
+      .link::after {
+        position: absolute;
+        right: 0;
+        bottom: -0.28em;
+        left: 0;
+        height: 1.5px;
+        content: "";
+        transition: transform 380ms var(--ease);
+      }
+
+      .link::before {
+        background: var(--plate-a);
+        transform: translateY(-2px);
+      }
+
+      .link::after {
+        background: var(--plate-c);
+        transform: translateY(2px);
+      }
+
+      .link:hover::before,
+      .link:hover::after,
+      .link:focus-visible::before,
+      .link:focus-visible::after {
+        transform: none;
+      }
+
+      .field {
+        display: grid;
+        gap: 0.35rem;
+        min-width: 15rem;
+      }
+
+      .field label {
+        color: var(--mark-soft);
+      }
+
+      .field input {
+        border: 1px solid var(--hair);
+        background: #fbfaf7;
+        padding: 0.7rem 0.85rem;
+        color: var(--mark);
+        font: inherit;
+        transition: border-color 240ms ease;
+      }
+
+      .field input:focus {
+        border-color: var(--plate-a);
+      }
+
+      /* ---------- Kontrollstreifen ---------- */
+
+      .strip {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-top: 1px solid var(--hair);
+        background: var(--paper);
+        padding: 0.4rem clamp(0.75rem, 3vw, 1.5rem);
+      }
+
+      .strip .bars {
+        position: relative;
+        display: flex;
+        flex: 1;
+        height: 0.7rem;
+      }
+
+      .strip .bars i {
+        flex: 1;
+      }
+
+      .strip .cursor {
+        position: absolute;
+        top: -0.25rem;
+        bottom: -0.25rem;
+        left: 0;
+        width: 2px;
+        background: var(--mark);
+        transform: translateX(calc(var(--p, 0) * (100cqw - 2px)));
+        transition: transform 90ms linear;
+      }
+
+      .strip .bars {
+        container-type: inline-size;
+      }
+
+      footer {
+        padding-top: 2rem;
+        color: var(--mark-soft);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .sep {
+          --off: 0;
+        }
+
+        *,
+        *::before,
+        *::after {
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="sheet">
+      <span class="trim" data-corner="tl" aria-hidden="true"></span>
+      <span class="trim" data-corner="tr" aria-hidden="true"></span>
+      <span class="trim" data-corner="bl" aria-hidden="true"></span>
+      <span class="trim" data-corner="br" aria-hidden="true"></span>
+
+      <svg class="reg" data-side="left" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="7" fill="none" stroke="#14161a" stroke-width="0.75" />
+        <path d="M12 0v24M0 12h24" stroke="#14161a" stroke-width="0.75" />
+      </svg>
+
+      <svg class="reg" data-side="right" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="7" fill="none" stroke="#14161a" stroke-width="0.75" />
+        <path d="M12 0v24M0 12h24" stroke="#14161a" stroke-width="0.75" />
+      </svg>
+
+      <header>
+        <a class="wordmark" href="#top">Ercan Cicek</a>
+        <nav class="mono">
+          <a class="link" href="#top">Leistungen</a>
+          <a class="link" href="#top">Rechtslage</a>
+          <a class="link" href="#kit">Kontakt</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <p class="caption mono">Bogen 01 · Auszüge A B C · Register offen</p>
+
+        <h1 class="sep" data-sep>
+          <span class="plate plate-a" aria-hidden="true">Ich mache deine Anwendung barrierefrei.</span>
+          <span class="base">Ich mache deine Anwendung barrierefrei.</span>
+          <span class="plate plate-c" aria-hidden="true">Ich mache deine Anwendung barrierefrei.</span>
+        </h1>
+
+        <p class="lead">
+          Was man sieht und was angesagt wird, sind zwei Auszüge derselben Seite. Stimmen sie nicht
+          überein, steht das Ergebnis daneben — sichtbar für niemanden, der nur hinsieht.
+        </p>
+
+        <section>
+          <p class="caption mono">01 — Der Kern</p>
+
+          <div class="split">
+            <h2 class="sep" data-sep>
+              <span class="plate plate-a" aria-hidden="true"
+                >Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</span
+              >
+              <span class="base">Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</span>
+              <span class="plate plate-c" aria-hidden="true"
+                >Ein Screenreader liest nicht vor, was auf dem Bildschirm steht.</span
+              >
+            </h2>
+
+            <div>
+              <p>
+                Er liest vor, was im Code steht. Passt beides nicht zusammen, merkt es im Team
+                niemand. Man sieht es ja nicht.
+              </p>
+              <p>
+                Registerhaltigkeit ist im Druck die Bedingung dafür, dass aus drei Auszügen ein
+                Bild wird. Hier ist sie die Bedingung dafür, dass aus Gestaltung und Auszeichnung
+                eine Anwendung wird, die alle bedienen können.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <p class="caption mono">02 — Maßstab</p>
+
+          <div class="split">
+            <h2 class="sep" data-sep>
+              <span class="plate plate-a" aria-hidden="true">Was gilt, und wonach ich prüfe.</span>
+              <span class="base">Was gilt, und wonach ich prüfe.</span>
+              <span class="plate plate-c" aria-hidden="true">Was gilt, und wonach ich prüfe.</span>
+            </h2>
+
+            <dl class="facts">
+              <div class="fact">
+                <dt class="mono">Gesetz</dt>
+                <dd>BFSG, seit 28. Juni 2025</dd>
+              </div>
+              <div class="fact">
+                <dt class="mono">Norm</dt>
+                <dd>EN 301 549</dd>
+              </div>
+              <div class="fact">
+                <dt class="mono">Mein Maßstab</dt>
+                <dd>WCAG 2.2, Stufe AA</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <section id="kit">
+          <p class="caption mono">03 — Bausteine</p>
+
+          <h2 class="sep" data-sep>
+            <span class="plate plate-a" aria-hidden="true">Bedienelemente gehen kurz aus dem Register.</span>
+            <span class="base">Bedienelemente gehen kurz aus dem Register.</span>
+            <span class="plate plate-c" aria-hidden="true">Bedienelemente gehen kurz aus dem Register.</span>
+          </h2>
+
+          <p>
+            Der Hover verschiebt das Element um zwei Punkte und legt die beiden anderen Auszüge
+            frei. Beim Loslassen fährt es zurück in Deckung.
+          </p>
+
+          <div class="row">
+            <button class="act solid" type="button">
+              Projekt anfragen <span class="arrow" aria-hidden="true">→</span>
+            </button>
+
+            <a class="act" href="#top">
+              Alle Leistungen <span class="arrow" aria-hidden="true">→</span>
+            </a>
+
+            <div class="field">
+              <label class="mono" for="mail">E-Mail-Adresse</label>
+              <input id="mail" type="email" placeholder="name@firma.de" />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mono">Richtung 05 — Passer · Prototyp</footer>
+    </div>
+
+    <div class="strip" aria-hidden="true">
+      <span class="mono">Reg</span>
+      <span class="bars" id="bars"><i class="cursor" id="cursor"></i></span>
+      <span class="mono" id="percent">0 %</span>
+    </div>
+
+    <script>
+      // --- Der Versatz hängt am Abstand zur Registerlinie: in ihrer Höhe liegen
+      // die drei Auszüge deckungsgleich, darüber und darunter driften sie auf.
+      const separations = [...document.querySelectorAll("[data-sep]")]
+      const REGISTER_LINE = 0.44
+      let queued = false
+
+      function register() {
+        queued = false
+        const line = window.innerHeight * REGISTER_LINE
+        const range = window.innerHeight * 0.42
+
+        for (const element of separations) {
+          const box = element.getBoundingClientRect()
+          const distance = Math.abs(box.top + box.height / 2 - line)
+          element.style.setProperty("--off", Math.min(1, distance / range).toFixed(3))
+        }
+      }
+
+      function queueRegister() {
+        if (queued) return
+        queued = true
+        window.requestAnimationFrame(register)
+      }
+
+      window.addEventListener("scroll", queueRegister)
+      window.addEventListener("resize", queueRegister)
+      document.fonts.ready.then(register)
+      register()
+
+      // --- Kontrollstreifen
+      const bars = document.getElementById("bars")
+      const cursor = document.getElementById("cursor")
+      const percent = document.getElementById("percent")
+      const swatches = [
+        "#05386b",
+        "#0f4d78",
+        "#1f6a7d",
+        "#2b8080",
+        "#379683",
+        "#5cdb95",
+        "#aeebc1",
+        "#f4f2ec",
+        "#d9d3e4",
+        "#a58fc4",
+        "#6b45a0",
+        "#46237a",
+        "#2c1650",
+        "#14161a",
+      ]
+
+      swatches.forEach((color) => {
+        const bar = document.createElement("i")
+        bar.style.background = color
+        bars.insertBefore(bar, cursor)
+      })
+
+      function onScroll() {
+        const total = document.body.scrollHeight - window.innerHeight
+        const ratio = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0
+        cursor.style.setProperty("--p", ratio)
+        percent.textContent = Math.round(ratio * 100) + " %"
+      }
+
+      window.addEventListener("scroll", onScroll)
+      window.addEventListener("resize", onScroll)
+      onScroll()
+    </script>
+  </body>
+</html>

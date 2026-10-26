@@ -1,0 +1,139 @@
+---
+// --- The pixel avatar that follows the cursor and comments on whatever it is
+// over. Elements opt in with data-chat="text". Over an element marked
+// data-chat-mute, and while any popover is open, it steps aside, so it never
+// sits next to a control someone is operating. Pointer only: on touch there is
+// no cursor to follow, and a bubble parked in a corner would cost screen space
+// for a gimmick. Decorative throughout, so hidden from assistive technology.
+import { useTranslations } from "../i18n"
+
+const t = useTranslations(Astro.currentLocale).chatBubble
+---
+
+<div
+  class="ec-chat-bubble pointer-events-none fixed z-50 hidden flex-col items-end gap-1 transition-opacity duration-300"
+  data-starter={t.starter}
+  aria-hidden="true"
+  inert
+>
+  <div
+    class="ec-chat-avatar size-10 shrink-0 -rotate-90 scale-0 overflow-hidden rounded-full bg-brand-sand transition-transform duration-500"
+  >
+    <img src="/images/pixelcan.png" alt="" width="40" height="40" class="size-full" />
+  </div>
+  <div
+    class="ec-chat-text flex min-h-6 max-w-50 items-center rounded-xl bg-brand-sand px-2 pt-px text-sm text-typo-high opacity-0 transition-opacity delay-300 duration-500"
+  >
+    <span class="ec-chat-message"></span>
+    <span class="ec-chat-typing hidden items-center gap-1 py-2">
+      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high"></span>
+      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:150ms]"></span>
+      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:300ms]"></span>
+    </span>
+  </div>
+</div>
+
+<script>
+  const bubble = document.querySelector<HTMLElement>(".ec-chat-bubble")
+
+  // --- Primary input can hover and is precise: a mouse or trackpad. A hybrid
+  // device that reports touch first still switches over once a real mouse moves.
+  const hasMouse = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches
+
+  const start = () => {
+    if (!bubble || bubble.dataset.isActive === "true") return
+    bubble.dataset.isActive = "true"
+    bubble.classList.remove("hidden")
+    bubble.classList.add("flex")
+
+    const avatar = bubble.querySelector<HTMLElement>(".ec-chat-avatar")!
+    const text = bubble.querySelector<HTMLElement>(".ec-chat-text")!
+    const message = bubble.querySelector<HTMLElement>(".ec-chat-message")!
+    const typing = bubble.querySelector<HTMLElement>(".ec-chat-typing")!
+
+    let currentMessage = bubble.dataset.starter ?? ""
+    let isVisible = false
+    let isStarterPinned = true
+    let isTyping = false
+    let pendingMessage: string | null = null
+
+    message.textContent = currentMessage
+
+    const show = () => {
+      if (isVisible) return
+      isVisible = true
+      // --- Arrives after a moment, and the opener stays long enough to be read
+      window.setTimeout(() => {
+        avatar.classList.remove("-rotate-90", "scale-0")
+        text.classList.remove("opacity-0")
+        window.setTimeout(() => {
+          isStarterPinned = false
+          if (pendingMessage) setMessage(pendingMessage)
+        }, 1500)
+      }, 2000)
+    }
+
+    const setMessage = (next: string) => {
+      if (next === currentMessage) return
+      if (isStarterPinned || isTyping) {
+        pendingMessage = next
+        return
+      }
+      isTyping = true
+      pendingMessage = null
+      message.classList.add("hidden")
+      typing.classList.remove("hidden")
+      typing.classList.add("flex")
+      window.setTimeout(() => {
+        currentMessage = next
+        message.textContent = next
+        typing.classList.add("hidden")
+        typing.classList.remove("flex")
+        message.classList.remove("hidden")
+        isTyping = false
+        if (pendingMessage) setMessage(pendingMessage)
+      }, 1000)
+    }
+
+    document.addEventListener("mousemove", (event: MouseEvent) => {
+      const avatarSize = 40
+      const safeSpace = 12
+      const maxTop = window.innerHeight - bubble.offsetHeight - 64
+      const maxRight = window.innerWidth - bubble.offsetWidth - 3
+
+      const top = Math.min(Math.max(80, event.clientY - avatarSize / 2), maxTop)
+      const right = Math.min(
+        Math.max(0, window.innerWidth - event.clientX - avatarSize - safeSpace * 2),
+        maxRight
+      )
+
+      bubble.style.top = `${top}px`
+      bubble.style.right = `${right}px`
+
+      show()
+
+      const target = event.target
+      if (!(target instanceof Element)) return
+
+      const isMuted =
+        target.closest("[data-chat-mute]") !== null || document.querySelector(":popover-open") !== null
+      bubble.style.opacity = isMuted ? "0" : ""
+      if (isMuted) return
+
+      const chatSource = target.closest<HTMLElement>("[data-chat]")
+      if (chatSource?.dataset.chat) setMessage(chatSource.dataset.chat)
+    })
+  }
+
+  if (hasMouse()) {
+    start()
+  } else {
+    document.addEventListener(
+      "pointermove",
+      (event) => {
+        if (event.pointerType === "mouse") start()
+      },
+      { once: true }
+    )
+  }
+</script>

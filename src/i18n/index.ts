@@ -15,7 +15,12 @@ export function useTranslations(locale: string | undefined) {
 
 // --- Localised slugs: the alternate URL cannot be derived from the current path.
 export const routes = {
+  home: { de: "/", en: "/en" },
   accessibility: { de: "/barrierefreiheit", en: "/en/accessibility" },
+  design: { de: "/ui-ux-design", en: "/en/ui-ux-design" },
+  development: { de: "/frontend-entwicklung", en: "/en/frontend-development" },
+  portfolio: { de: "/portfolio", en: "/en/portfolio" },
+  about: { de: "/ueber-mich", en: "/en/about-me" },
   imprint: { de: "/impressum", en: "/en/legal-notice" },
   privacy: { de: "/datenschutz", en: "/en/privacy" },
   accessibilityStatement: {
@@ -28,7 +33,13 @@ export type RouteKey = keyof typeof routes
 
 // --- Which routes appear where. Not every route belongs in the header, and the
 // legal pages belong only in the footer.
-export const mainNavRoutes = ["accessibility"] as const satisfies readonly RouteKey[]
+export const mainNavRoutes = [
+  "accessibility",
+  "design",
+  "development",
+  "portfolio",
+  "about",
+] as const satisfies readonly RouteKey[]
 
 export const footerRoutes = [
   "imprint",

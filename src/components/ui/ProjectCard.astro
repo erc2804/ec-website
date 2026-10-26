@@ -1,0 +1,69 @@
+---
+// --- The portfolio card from the previous site: a coloured surface by project
+// type, the mockup lifting on hover, a white strip with name, category and
+// technologies.
+import type { ProjectType } from "../../data/projects"
+
+interface Props {
+  href: string
+  label: string
+  type: ProjectType
+  category?: string
+  image: string
+  techs: string[]
+  /** --- Spoken instead of the visible pieces, e.g. "Go to project: KONUX" --- */
+  ariaLabel?: string
+  class?: string
+}
+
+const { href, label, type, category, image, techs, ariaLabel, class: additionalClasses } = Astro.props
+
+const surfaceClasses: Record<ProjectType, string> = {
+  web: "bg-brand-green-medium",
+  app: "bg-brand-green-high",
+  shop: "bg-brand-green-low",
+  other: "bg-brand-blue",
+}
+
+const accentClasses: Record<ProjectType, string> = {
+  web: "text-brand-green-high bg-brand-green-medium/10",
+  app: "text-brand-green-high bg-brand-green-high/10",
+  shop: "text-brand-green-high bg-brand-green-low/20",
+  other: "text-brand-blue bg-brand-blue/10",
+}
+---
+
+<a
+  href={href}
+  aria-label={ariaLabel}
+  class:list={[
+    "group relative block aspect-[3/4] overflow-hidden rounded-3xl no-underline shadow-sm transition-shadow lg:hover:shadow-lg",
+    surfaceClasses[type],
+    additionalClasses,
+  ]}
+>
+  <img
+    src={image}
+    alt=""
+    width="1413"
+    height="2916"
+    loading="lazy"
+    class="size-full object-contain pt-6 transition-transform lg:group-hover:-translate-y-3"
+  />
+  <span
+    class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gray-min px-4 pt-4 pb-5"
+    aria-hidden={ariaLabel ? "true" : undefined}
+  >
+    <span class="flex items-center justify-between gap-4">
+      <span class="text-heading-2 text-brand-green-high">{label}</span>
+      {
+        category && (
+          <span class:list={["rounded-full px-2 py-0.5 text-sm font-bold", accentClasses[type]]}>
+            {category}
+          </span>
+        )
+      }
+    </span>
+    <span class="line-clamp-2 text-typo-medium">{techs.join(", ")}</span>
+  </span>
+</a>

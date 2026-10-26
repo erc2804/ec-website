@@ -2,7 +2,6 @@
 import { IconArrowRight } from "@tabler/icons-astro"
 import Button from "../../components/ui/Button.astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
-import SectionHeading from "../../components/ui/SectionHeading.astro"
 import ScreenReaderDemo from "./ScreenReaderDemo.astro"
 import { siteConfig } from "../../config/site"
 import { useTranslations } from "../../i18n"
@@ -13,11 +12,11 @@ const contactHref = `mailto:${siteConfig.contact.email}`
 ---
 
 <main id="main">
-  <section class="ec-layout-visual-content pt-20 pb-24 md:pt-28 md:pb-32">
+  <section class="ec-layout-visual-content pt-[calc(var(--spacing-header)+5rem)] pb-24 md:pt-[calc(var(--spacing-header)+7rem)] md:pb-32">
     <!-- --- The heading and its announcement side by side: what you see, and
          what actually arrives. The claim of this page, made before it is made. -->
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:items-center">
-      <SectionHeading level={1}>{t.hero.title}</SectionHeading>
+      <h1 class="ec-reveal text-display text-balance">{t.hero.title}</h1>
 
       <div class="ec-reveal ec-reveal-late">
         <ScreenReaderCaption>{t.hero.announcement}</ScreenReaderCaption>
@@ -35,7 +34,7 @@ const contactHref = `mailto:${siteConfig.contact.email}`
     </Button>
   </section>
 
-  <section class="bg-brand-blue py-24 md:py-32">
+  <section class="ec-on-dark bg-brand-blue py-24 md:py-32">
     <div class="ec-layout-visual-content">
       <p class="max-w-[30ch] ec-reveal text-display text-typo-min/65">{t.statement.lead}</p>
       <p class="mt-2 max-w-[30ch] ec-reveal text-display text-brand-green-medium ec-reveal-late">
@@ -50,7 +49,7 @@ const contactHref = `mailto:${siteConfig.contact.email}`
   <ScreenReaderDemo />
 
   <section class="ec-layout-visual-content py-24 md:py-32">
-    <SectionHeading level={2}>{t.law.title}</SectionHeading>
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.law.title}</h2>
 
     <div
       class="mt-10 grid ec-reveal gap-x-16 gap-y-10 ec-reveal-late lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)]"
@@ -74,7 +73,7 @@ const contactHref = `mailto:${siteConfig.contact.email}`
 
   <section class="bg-gray-min py-24 md:py-32">
     <div class="ec-layout-visual-content">
-      <SectionHeading level={2}>{t.services.title}</SectionHeading>
+      <h2 class="ec-reveal text-heading-1 text-balance">{t.services.title}</h2>
 
       <p class="mt-6 max-w-[54ch] ec-reveal text-body text-typo-medium ec-reveal-late">
         {t.services.lead}
@@ -111,7 +110,7 @@ const contactHref = `mailto:${siteConfig.contact.email}`
   </section>
 
   <section class="ec-layout-visual-content py-24 md:py-32">
-    <SectionHeading level={2}>{t.why.title}</SectionHeading>
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.why.title}</h2>
 
     <div
       class="mt-10 grid ec-reveal gap-10 ec-reveal-late lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-16"
@@ -136,12 +135,12 @@ const contactHref = `mailto:${siteConfig.contact.email}`
     </div>
   </section>
 
-  <section class="bg-brand-blue py-20 md:py-24">
+  <section class="ec-on-dark bg-brand-blue py-20 md:py-24">
     <div
       class="ec-layout-visual-content grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-20"
     >
       <div>
-        <SectionHeading level={2} class="text-typo-min">{t.contact.title}</SectionHeading>
+        <h2 class="ec-reveal text-heading-1 text-balance text-typo-min">{t.contact.title}</h2>
         <p class="mt-5 max-w-[54ch] ec-reveal text-body text-typo-min/85 ec-reveal-late">
           {t.contact.body}
         </p>

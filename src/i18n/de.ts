@@ -7,11 +7,15 @@ export const de = {
   common: {
     opensInNewTab: "(öffnet in neuem Tab)",
     contactCta: "Projekt anfragen",
-    headingLevel: "Überschrift Ebene {level}",
   },
 
   routeLabels: {
+    home: "Start",
     accessibility: "Barrierefreiheit",
+    design: "Design",
+    development: "Entwicklung",
+    portfolio: "Portfolio",
+    about: "Über mich",
     imprint: "Impressum",
     privacy: "Datenschutz",
     accessibilityStatement: "Barrierefreiheitserklärung",
@@ -123,7 +127,110 @@ export const de = {
     },
   },
 
+  chatBubble: {
+    starter: "Wie geht's?",
+    firstName: "Mein Name wird Erdschan ausgesprochen (wie bei Dschungel).",
+    mainLinks: "Wohin als Nächstes?",
+    languageSwitch: "Keine Sorge, ich spreche beide Sprachen.",
+    accessibility: "Gute Wahl.",
+    design: "Ja, das mache ich auch selbst.",
+    development: "Und das auch.",
+    contact: "Trau dich.",
+    projects: "Alles echt, nichts ausgedacht.",
+    quotes: "Die haben das wirklich so geschrieben.",
+  },
+
+  home: {
+    meta: {
+      title: "Ercan Cicek | Product Engineer: UI/UX-Design, Frontend-Entwicklung und Barrierefreiheit",
+      description:
+        "Ich gestalte digitale Produkte, baue sie selbst und mache sie barrierefrei. Product Engineer aus Düsseldorf, über zehn Jahre Design und Code, remote oder vor Ort.",
+    },
+    hero: {
+      eyebrow: ["Product Engineer", "Düsseldorf"],
+      claim: ["Design, Code und Barrierefreiheit.", "Aus einer Hand."],
+      scrollCue: "Weiter nach unten",
+    },
+    offers: {
+      title: "Drei Dinge, die ich für dich tun kann",
+      items: {
+        accessibility: {
+          title: "Barrierefreiheit",
+          teaser:
+            "Ich prüfe deine Anwendung nach WCAG und BFSG, behebe die Fehler selbst im Code und zeige deinem Team, worauf es ankommt.",
+        },
+        design: {
+          title: "UI/UX-Design",
+          teaser:
+            "Oberflächen, die sich von selbst erklären. Auch wenn dein Produkt schon mit KI gebaut wurde und jetzt aussieht wie alle anderen.",
+        },
+        development: {
+          title: "Frontend-Entwicklung",
+          teaser:
+            "React, Vue, TypeScript. Ich baue, was das Design meint, mit allen Zuständen, nicht nur dem schönen.",
+        },
+      },
+      more: "Mehr dazu",
+      vignettes: {
+        accessibilityCaption: "Weiter, Taste",
+        designSizeBefore: "128 × 56",
+        designSizeAfter: "160 × 56",
+        developmentRemoved: "padding: 13px;",
+        developmentAdded: "padding: var(--space-3);",
+      },
+    },
+    argument: {
+      title: "Eine Person. Keine Stille Post.",
+      body: [
+        "Normalerweise entwirft jemand, jemand anderes baut, und am Ende prüft ein Dritter die Barrierefreiheit. Bei jeder Übergabe geht etwas verloren.",
+        "Bei mir nicht. Ich entwerfe in Figma, setze es selbst in Code um und teste mit Screenreader und Tastatur. Was ich zeichne, baue ich auch so.",
+      ],
+      facts: [
+        { value: "10+", label: "Jahre Design und Code" },
+        { value: "3", label: "Rollen, eine Person" },
+        { value: "DE / EN", label: "Remote oder in Düsseldorf" },
+      ],
+    },
+    quotes: {
+      title: "Das sagen Kunden",
+      translated: "Aus dem Englischen übersetzt",
+      allOnLinkedIn: "Alle 15 Empfehlungen auf LinkedIn",
+      items: [
+        {
+          text: "Ercan versteht Nutzerbedürfnisse ausgezeichnet und macht aus komplexen Problemen nahtlose, intuitive Erlebnisse. Ich würde jederzeit wieder mit ihm arbeiten.",
+          name: "Johanna Leisch",
+          role: "CEO, KONUX",
+          isTranslated: true,
+        },
+        {
+          text: "Ein durchdachter UI/UX-Designer mit solidem Verständnis für Frontend-Entwicklung. Er hat ein echtes Talent dafür, abstrakte technische Ideen in klare, intuitive Designs zu verwandeln.",
+          name: "Louis Saadé",
+          role: "Co-Founder & CTO, context/fab",
+          isTranslated: true,
+        },
+        {
+          text: "Mit dem Ergebnis und vor allem mit der Schnelligkeit und Flexibilität seiner Arbeit bin ich mehr als zufrieden. Er war der absolut richtige Partner für dieses Projekt!",
+          name: "Katharina Sauer",
+          role: "kindeskinder",
+          isTranslated: false,
+        },
+      ],
+    },
+    projects: {
+      title: "Ausgewählte Projekte",
+      all: "Alle Projekte",
+      cardLabel: "Zum Projekt",
+    },
+    contact: {
+      title: "Erzähl mir, worum es geht.",
+      body: "Schreib mir kurz, was du vorhast und womit es gebaut ist. Du bekommst eine ehrliche Einschätzung, auch wenn sie lautet: Dafür brauchst du mich nicht.",
+      email: "E-Mail",
+      linkedin: "LinkedIn",
+    },
+  },
+
   nav: {
+    toHome: "Zur Startseite",
     label: "Hauptnavigation",
     skipToContent: "Zum Inhalt springen",
     openMenu: "Menü",

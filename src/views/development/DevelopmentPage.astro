@@ -1,0 +1,60 @@
+---
+import { IconArrowRight } from "@tabler/icons-astro"
+import Button from "../../components/ui/Button.astro"
+import Placeholder from "../../components/ui/Placeholder.astro"
+import Section from "../../components/ui/Section.astro"
+import { siteConfig } from "../../config/site"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale)
+const contactHref = `mailto:${siteConfig.contact.email}`
+---
+
+<main id="main" class="pt-header">
+  <Section>
+    <h1 class="text-display text-balance">Ich baue, was das Design meint.</h1>
+    <p class="mt-8 max-w-[56ch] text-lead text-typo-medium">
+      Platzhalter für den Einleitungssatz: Frontend-Entwicklung mit React, Vue und TypeScript,
+      von jemandem, der auch gestaltet.
+    </p>
+    <Button class="mt-9" href={contactHref}>
+      {t.common.contactCta}
+      <IconArrowRight slot="icon-end" class="size-5" />
+    </Button>
+  </Section>
+
+  <Section tone="light">
+    <h2 class="text-heading-1">Demo: Ein Entwurf, alle Zustände</h2>
+    <Placeholder class="mt-10">
+      Eine Komponente, darüber eine Leiste: Normal, Lädt, Leer, Fehler, Tastatur, 320px. Klick
+      wechselt den Zustand. Daneben der Zähler: im Entwurf gezeichnet 1, im Code gebaut 6.
+    </Placeholder>
+  </Section>
+
+  <Section>
+    <h2 class="text-heading-1">Womit</h2>
+    <Placeholder class="mt-10">
+      Chips: React, Next.js, Vue, TypeScript, Tailwind, Webflow. Wie auf den Projektseiten.
+    </Placeholder>
+  </Section>
+
+  <Section tone="light">
+    <h2 class="text-heading-1">Wie ich arbeite</h2>
+    <Placeholder class="mt-10">
+      KI-gestützt, die Entscheidungen treffe ich. Drei Sätze.
+    </Placeholder>
+  </Section>
+
+  <Section>
+    <h2 class="text-heading-1">Projekte</h2>
+    <Placeholder class="mt-10">
+      Drei Portfolio-Karten (Industrie-KI, HR-Tech, KONUX).
+    </Placeholder>
+  </Section>
+
+  <Section tone="dark">
+    <Placeholder label="Kontakt" class="border-brand-green-medium/60 text-typo-min/85">
+      Kontakt-Block, auf allen Angebotsseiten gleich.
+    </Placeholder>
+  </Section>
+</main>

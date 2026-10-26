@@ -22,6 +22,7 @@ const t = useTranslations(Astro.currentLocale).nav
     top: 0.75rem;
     left: 0.75rem;
     z-index: 60;
+    border: 3px solid var(--color-gray-min);
     border-radius: 9999px;
     background: var(--color-brand-blue);
     padding: 0.75rem 1.25rem;
@@ -33,7 +34,11 @@ const t = useTranslations(Astro.currentLocale).nav
     transform: translateY(-250%);
   }
 
+  /* --- No ring: the link is only ever visible while it has focus, so its
+     appearance is the focus indicator. The thick white edge keeps it apart
+     from a dark hero and a light page alike. --- */
   .ec-skip-link:focus-visible {
+    outline: none;
     transform: translateY(0);
   }
 </style>

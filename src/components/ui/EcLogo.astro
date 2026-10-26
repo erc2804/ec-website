@@ -1,0 +1,45 @@
+---
+// --- The wordmark: two brackets and a slash. The brackets stay green on every
+// surface; the slash is purple on light ground and sand on dark. Inside the
+// header it follows the header state through the group: sand at the top of a
+// page that opens dark, purple once it sits on its white island.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<svg
+  viewBox="0 0 53 53"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class:list={["size-13", additionalClasses]}
+  aria-hidden="true"
+>
+  <path
+    d="M37.4216 15.1599L50.4343 26.4153M50.5329 26.5006L37.5202 37.756"
+    stroke-width="4.96"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="stroke-brand-green-medium"></path>
+  <path
+    d="M3.61719 26.4669H14.2639"
+    stroke-width="5.08"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="stroke-brand-green-medium"></path>
+  <path
+    d="M15.5783 37.7814L2.56562 26.526M2.46704 26.4407L15.4797 15.1853"
+    stroke-width="4.96"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="stroke-brand-green-medium"></path>
+  <path
+    d="M31.1869 2.67969L21.7231 50.3201"
+    stroke-width="5.36"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="stroke-brand-purple transition-colors duration-300 group-data-[is-on-dark=true]:group-data-[is-scrolled=false]:stroke-brand-sand"
+  ></path>
+</svg>

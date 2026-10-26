@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { useTranslations } from "../../i18n"
+import HomePage from "../../views/home/HomePage.astro"
+
+const t = useTranslations(Astro.currentLocale).home
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} routeKey="home" isHeaderOnDark hasStructuredData>
+  <HomePage />
+</BaseLayout>

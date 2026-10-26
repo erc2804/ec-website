@@ -1,0 +1,32 @@
+---
+// --- One endorsement. Attribution sits in a footer, which is what makes the
+// blockquote a quote and not a paragraph in quotation marks.
+import { IconQuote } from "@tabler/icons-astro"
+
+interface Props {
+  name: string
+  role: string
+  /** --- Shown as a note under the attribution --- */
+  note?: string
+  class?: string
+}
+
+const { name, role, note, class: additionalClasses } = Astro.props
+---
+
+<figure
+  class:list={[
+    "flex h-full flex-col gap-6 rounded-3xl bg-gray-min p-6 shadow-sm md:p-8",
+    additionalClasses,
+  ]}
+>
+  <IconQuote class="size-8 shrink-0 text-brand-green-medium" aria-hidden="true" />
+  <blockquote class="flex-1 text-body">
+    <slot />
+  </blockquote>
+  <figcaption class="text-typo-medium">
+    <span class="font-bold text-typo-high">{name}</span>
+    <span class="block">{role}</span>
+    {note && <span class="mt-1 block text-sm">{note}</span>}
+  </figcaption>
+</figure>

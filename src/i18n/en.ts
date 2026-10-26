@@ -7,11 +7,15 @@ export const en: Translations = {
   common: {
     opensInNewTab: "(opens in a new tab)",
     contactCta: "Start a conversation",
-    headingLevel: "Heading level {level}",
   },
 
   routeLabels: {
+    home: "Home",
     accessibility: "Accessibility",
+    design: "Design",
+    development: "Development",
+    portfolio: "Portfolio",
+    about: "About me",
     imprint: "Legal notice",
     privacy: "Privacy",
     accessibilityStatement: "Accessibility statement",
@@ -118,7 +122,110 @@ export const en: Translations = {
     },
   },
 
+  chatBubble: {
+    starter: "How are you doing?",
+    firstName: "My name is pronounced Erjan (like in jungle).",
+    mainLinks: "Where to next?",
+    languageSwitch: "No worries, I speak both languages.",
+    accessibility: "Good choice.",
+    design: "Yes, I do that myself too.",
+    development: "And that as well.",
+    contact: "Go on.",
+    projects: "All real, nothing made up.",
+    quotes: "They really wrote that.",
+  },
+
+  home: {
+    meta: {
+      title: "Ercan Cicek | Product Engineer: UI/UX Design, Frontend Development and Accessibility",
+      description:
+        "I design digital products, build them myself and make them accessible. Product engineer from Düsseldorf, more than ten years of design and code, remote or on site.",
+    },
+    hero: {
+      eyebrow: ["Product Engineer", "Düsseldorf"],
+      claim: ["Design, code and accessibility.", "From one person."],
+      scrollCue: "Scroll down",
+    },
+    offers: {
+      title: "Three things I can do for you",
+      items: {
+        accessibility: {
+          title: "Accessibility",
+          teaser:
+            "I audit your application against WCAG and the European Accessibility Act, fix the issues in the code myself and show your team what matters.",
+        },
+        design: {
+          title: "UI/UX Design",
+          teaser:
+            "Interfaces that explain themselves. Even when your product was built with AI and now looks like everyone else's.",
+        },
+        development: {
+          title: "Frontend Development",
+          teaser:
+            "React, Vue, TypeScript. I build what the design means, with every state, not just the pretty one.",
+        },
+      },
+      more: "Read more",
+      vignettes: {
+        accessibilityCaption: "Next, button",
+        designSizeBefore: "128 × 56",
+        designSizeAfter: "160 × 56",
+        developmentRemoved: "padding: 13px;",
+        developmentAdded: "padding: var(--space-3);",
+      },
+    },
+    argument: {
+      title: "One person. No game of telephone.",
+      body: [
+        "Usually one person designs, another one builds, and at the end a third one checks accessibility. Something gets lost at every handover.",
+        "Not with me. I design in Figma, build it in code myself and test with a screen reader and the keyboard. What I draw is what I build.",
+      ],
+      facts: [
+        { value: "10+", label: "years of design and code" },
+        { value: "3", label: "roles, one person" },
+        { value: "DE / EN", label: "remote or in Düsseldorf" },
+      ],
+    },
+    quotes: {
+      title: "What clients say",
+      translated: "Translated from German",
+      allOnLinkedIn: "All 15 recommendations on LinkedIn",
+      items: [
+        {
+          text: "Ercan excels at understanding user needs and turning complex problems into seamless, intuitive experiences. I would gladly work with him again.",
+          name: "Johanna Leisch",
+          role: "CEO, KONUX",
+          isTranslated: false,
+        },
+        {
+          text: "He's a thoughtful UI/UX designer with a solid understanding of frontend engineering. He has a real talent for turning abstract, technical ideas into clear, intuitive designs.",
+          name: "Louis Saadé",
+          role: "Co-Founder & CTO, context/fab",
+          isTranslated: false,
+        },
+        {
+          text: "I am more than satisfied with the result and above all with the speed and flexibility of his work. He was absolutely the right partner for this project!",
+          name: "Katharina Sauer",
+          role: "kindeskinder",
+          isTranslated: true,
+        },
+      ],
+    },
+    projects: {
+      title: "Selected projects",
+      all: "All projects",
+      cardLabel: "Go to project",
+    },
+    contact: {
+      title: "Tell me what it's about.",
+      body: "Drop me a short note on what you're planning and what it's built with. You'll get an honest assessment, even if it is: you don't need me for this.",
+      email: "Email",
+      linkedin: "LinkedIn",
+    },
+  },
+
   nav: {
+    toHome: "To the home page",
     label: "Main navigation",
     skipToContent: "Skip to content",
     openMenu: "Menu",
