@@ -75,6 +75,15 @@ const serviceSchema = {
   email: siteConfig.contact.email,
   telephone: siteConfig.contact.phone,
   founder: { "@type": "Person", name: siteConfig.name },
+  // --- Where a search engine or an assistant can send someone who wants to start a project
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: currentLocale === "en" ? "Project requests" : "Projektanfragen",
+    url: new URL(routes.inquiry[currentLocale === "en" ? "en" : "de"], siteConfig.url).href,
+    email: siteConfig.contact.email,
+    telephone: siteConfig.contact.phone,
+    availableLanguage: ["de", "en"],
+  },
   address: {
     "@type": "PostalAddress",
     streetAddress: siteConfig.address.street,

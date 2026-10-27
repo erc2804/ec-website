@@ -1,0 +1,75 @@
+---
+// --- The scene that tells the four roles: a product card, a team of three and
+// Pixel-Ercan. data-role on the root (1 to 4) places every piece; changing it
+// moves them there in one soft step. Decoration only, the role texts carry the
+// meaning, so it is hidden from assistive technology.
+//
+// 1 Take over: he sits on the corner of a large product, the team is faint.
+// 2 Join:      the product moves up, he takes a place in the team's row.
+// 3 Review:    he looks at the product from the outside, with a magnifier.
+// 4 Enable:    the product shrinks, the team fills in green, he steps back.
+import { IconZoomCheck } from "@tabler/icons-astro"
+
+interface Props {
+  role?: 1 | 2 | 3 | 4
+  /** --- Draws the scene at three quarters, for low containers --- */
+  isCompact?: boolean
+  class?: string
+}
+
+const { role = 1, isCompact = false, class: additionalClasses } = Astro.props
+---
+
+<div
+  class:list={["group relative overflow-hidden", additionalClasses]}
+  data-role={role}
+  aria-hidden="true"
+  inert
+>
+  <div class:list={["absolute inset-0", isCompact && "scale-75"]}>
+    <!-- --- The product: a card with three skeleton lines -->
+    <span
+      class="absolute top-1/2 left-1/2 -mt-14 -ml-22 flex h-28 w-44 flex-col gap-2.5 rounded-2xl bg-typo-min/10 p-4 outline outline-1 outline-typo-min/30 transition-[translate,scale,opacity] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)] group-data-[role=1]:scale-110 group-data-[role=2]:translate-y-[-3.5rem] group-data-[role=2]:scale-90 group-data-[role=3]:translate-x-[-2.5rem] group-data-[role=4]:translate-y-[-4.5rem] group-data-[role=4]:scale-75 group-data-[role=4]:opacity-40"
+    >
+      <span class="h-2.5 w-2/3 rounded-full bg-typo-min/40"></span>
+      <span class="h-2.5 w-full rounded-full bg-typo-min/20"></span>
+      <span class="h-2.5 w-1/2 rounded-full bg-typo-min/20"></span>
+      <span class="mt-auto h-5 w-16 rounded-full bg-brand-green-medium/80"></span>
+    </span>
+
+    <!-- --- The team: three people, empty until they can do it themselves -->
+    {
+      [
+        "group-data-[role=1]:translate-x-[-3rem] group-data-[role=2]:translate-x-[-7rem] group-data-[role=3]:translate-x-[-3rem] group-data-[role=4]:translate-x-[-5rem]",
+        "group-data-[role=1]:translate-x-0 group-data-[role=2]:translate-x-[-2.5rem] group-data-[role=3]:translate-x-0 group-data-[role=4]:translate-x-0",
+        "group-data-[role=1]:translate-x-[3rem] group-data-[role=2]:translate-x-[7rem] group-data-[role=3]:translate-x-[3rem] group-data-[role=4]:translate-x-[5rem]",
+      ].map((positionClasses) => (
+        <span
+          class:list={[
+            "absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 rounded-full border-2 border-typo-min/50 transition-[translate,scale,opacity,background-color,border-color] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]",
+            "group-data-[role=1]:translate-y-[7.5rem] group-data-[role=1]:opacity-20 group-data-[role=2]:translate-y-[4.5rem] group-data-[role=3]:translate-y-[7.5rem] group-data-[role=3]:opacity-20 group-data-[role=4]:translate-y-[3rem] group-data-[role=4]:scale-125 group-data-[role=4]:border-brand-green-medium group-data-[role=4]:bg-brand-green-medium",
+            positionClasses,
+          ]}
+        />
+      ))
+    }
+
+    <!-- --- Pixel-Ercan, with a magnifier that only shows while he reviews -->
+    <span
+      class="absolute top-1/2 left-1/2 -mt-7 -ml-7 size-14 transition-[translate,scale,opacity] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)] group-data-[role=1]:translate-x-[6.5rem] group-data-[role=1]:translate-y-[-4rem] group-data-[role=2]:translate-x-[2.5rem] group-data-[role=2]:translate-y-[4.5rem] group-data-[role=3]:translate-x-[7rem] group-data-[role=4]:translate-y-[7.5rem] group-data-[role=4]:scale-75 group-data-[role=4]:opacity-60"
+    >
+      <img
+        src="/images/pixelcan.png"
+        alt=""
+        width="56"
+        height="56"
+        class="size-full rounded-full bg-brand-sand"
+      />
+      <span
+        class="absolute -bottom-1 -left-2 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform duration-600 ease-[cubic-bezier(0.65,0,0.35,1)] group-data-[role=3]:scale-100"
+      >
+        <IconZoomCheck class="size-4" stroke-width={2.25} />
+      </span>
+    </span>
+  </div>
+</div>

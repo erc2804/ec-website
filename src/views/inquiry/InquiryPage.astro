@@ -1,0 +1,1277 @@
+---
+// --- The project request. One form, two ways into it: fill it in directly, or
+// write freely and let Pixel-Ercan put it into the fields. Nothing reaches Ercan
+// until the visitor presses send. Without JavaScript the chat is not rendered
+// and the form posts straight to Netlify Forms.
+import {
+  IconAlertCircle,
+  IconArrowDown,
+  IconArrowRight,
+  IconBrandLinkedin,
+  IconBulb,
+  IconCheck,
+  IconMail,
+  IconMailOpened,
+  IconSend,
+} from "@tabler/icons-astro"
+import Button from "../../components/ui/Button.astro"
+import ContactCard from "../../components/ui/ContactCard.astro"
+import { siteConfig } from "../../config/site"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).inquiry
+const tCommon = useTranslations(currentLocale).common
+
+const topicKeys = ["accessibility", "design", "development", "other"] as const
+const offerKeys = ["accessibility", "design", "development"] as const
+// --- One per step in "Was danach passiert": reading, then the assessment
+const stepIcons = [IconMailOpened, IconBulb]
+const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
+
+// --- Netlify Forms reads the form from the built HTML; the name ties the
+// submissions to it. The success page is the target without scripting.
+const formName = "projekt-anfrage"
+
+// --- Strings the script needs, handed over once
+const scriptText = {
+  assistant: t.assistant,
+  form: t.form,
+  sent: t.sent,
+  email: siteConfig.contact.email,
+}
+
+const labelClasses = "flex flex-wrap items-center gap-x-2.5 gap-y-1 font-bold"
+const optionalClasses = "font-normal text-typo-medium"
+const hintClasses = "text-sm text-typo-medium"
+const errorClasses = "ec-field-error hidden text-sm font-bold text-status-error-text"
+
+const inputClasses =
+  "block w-full rounded-xl border-2 border-gray-low bg-gray-min px-4 py-3 text-typo-high transition-colors placeholder:text-typo-low hover:border-typo-low focus-visible:border-brand-green-high focus-visible:outline-offset-2 aria-[invalid=true]:border-status-error-text in-data-[is-ai-filled=true]:border-brand-green-medium in-data-[is-ai-filled=true]:bg-brand-sand"
+
+// --- Shown next to a label while Pixel-Ercan's value stands
+const aiTagClasses =
+  "ec-ai-tag hidden items-center rounded-full bg-brand-green-low/60 px-2 py-0.5 text-xs font-bold whitespace-nowrap text-brand-blue in-data-[is-ai-filled=true]:inline-flex"
+---
+
+<main
+  id="main"
+  class="ec-inquiry"
+  data-text={JSON.stringify(scriptText)}
+  data-locale={currentLocale}
+>
+  <section
+    class="ec-layout-visual-content pt-[calc(var(--spacing-header)+3.5rem)] pb-12 md:pt-[calc(var(--spacing-header)+5.5rem)] md:pb-18"
+  >
+    <h1 class="max-w-[18ch] ec-rise text-display text-balance">{t.title}</h1>
+    <p class="mt-6 max-w-[54ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:120ms]">
+      {t.lead}
+    </p>
+  </section>
+
+  <div
+    class="ec-layout-visual-content grid items-start gap-10 pb-20 md:pb-28 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-14"
+  >
+    <!-- --- Pixel-Ercan, in the chat look of the previous site -->
+    <section
+      class="ec-assistant flex ec-rise flex-col gap-5 [--ec-rise-delay:220ms] lg:sticky lg:top-[calc(var(--spacing-header)+1rem)] lg:pt-8"
+      aria-labelledby="assistantTitle"
+    >
+      <h2 id="assistantTitle" class="text-heading-2">{t.assistant.title}</h2>
+
+      <div class="ec-log-frame relative">
+        <!-- --- On narrow screens only the latest exchange stays open; this
+             brings the earlier messages back, in the page flow -->
+        <button
+          type="button"
+          class="ec-show-earlier mb-4 hidden min-h-11 text-sm font-bold text-brand-blue underline underline-offset-4 lg:hidden"
+          aria-expanded="false"
+          aria-controls="assistantLog"></button>
+        <div
+          id="assistantLog"
+          class="ec-assistant-log flex flex-col gap-4 lg:max-h-[min(44svh,26rem)] lg:overflow-y-auto lg:py-1"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+          aria-label={t.assistant.logLabel}
+          tabindex="0"
+        >
+          <div class="ec-entry" data-from="assistant">
+            <span class="ec-avatar" aria-hidden="true">
+              <img src="/images/pixelcan.png" alt="" width="640" height="640" />
+            </span>
+            <p class="ec-bubble">
+              <span class="sr-only">{t.assistant.speakerAssistant}:</span>{" "}
+              {t.assistant.intro}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="ec-to-newest absolute bottom-1 left-1/2 hidden size-11 -translate-x-1/2 place-items-center rounded-full bg-gray-min text-brand-green-high shadow-island"
+          aria-label={t.assistant.toNewest}
+        >
+          <IconArrowDown class="size-5" aria-hidden="true" />
+        </button>
+
+        <!-- --- Scroll hints instead of a scrollbar: soft shadows at an edge with
+             more beyond it, and a slim thumb that shows where you are -->
+        <span class="ec-log-shadow" data-edge="top" aria-hidden="true"></span>
+        <span class="ec-log-shadow" data-edge="bottom" aria-hidden="true"></span>
+        <span class="ec-log-thumb" aria-hidden="true"></span>
+      </div>
+
+      <div class="ec-assistant-choices hidden flex-wrap justify-end gap-2">
+        <button type="button" class="ec-choice" data-choice="yes">{t.assistant.callbackYes}</button>
+        <button type="button" class="ec-choice" data-choice="no">{t.assistant.callbackNo}</button>
+      </div>
+
+      <form class="ec-assistant-form relative" novalidate>
+        <label for="assistantInput" class="sr-only">{t.assistant.inputLabel}</label>
+        <!-- --- py makes one line exactly as tall as the send button area, so a
+             single line sits centred; the script grows the field with its text -->
+        <textarea
+          id="assistantInput"
+          rows="1"
+          maxlength="2000"
+          class="block w-full resize-none rounded-xl bg-gray-min py-[calc((4rem_-_1.6em)/2)] pr-18 pl-5 text-typo-high shadow-sm placeholder:text-typo-low focus-visible:outline-offset-2"
+          placeholder={t.assistant.placeholder}
+          aria-describedby="assistantDisclosure"></textarea>
+        <button
+          type="submit"
+          class="absolute right-2 bottom-2 grid size-12 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-[background-color,scale] hover:scale-105 hover:bg-brand-green-low"
+          aria-label={t.assistant.send}
+          aria-describedby="assistantDisclosure"
+        >
+          <IconSend class="size-5" aria-hidden="true" />
+        </button>
+      </form>
+
+      <p
+        id="assistantStatus"
+        class="-mt-2 text-sm font-bold text-typo-medium empty:hidden"
+        aria-live="polite"
+      >
+      </p>
+
+      <div class="flex flex-col items-start gap-3">
+        <p id="assistantDisclosure" class="text-[0.8125rem] leading-normal text-typo-medium">
+          {t.assistant.disclosure}{" "}
+          <a href={localisedPath("privacy", currentLocale)}>{t.assistant.privacyLink}</a>
+        </p>
+        <button
+          type="button"
+          class="ec-assistant-reset hidden min-h-11 text-sm font-bold text-typo-medium underline underline-offset-4 hover:text-typo-high"
+        >
+          {t.assistant.reset}
+        </button>
+      </div>
+
+      <template id="assistantEntryTemplate">
+        <div class="ec-entry" data-from="assistant">
+          <span class="ec-avatar" aria-hidden="true">
+            <img src="/images/pixelcan.png" alt="" width="640" height="640" />
+          </span>
+          <p class="ec-bubble"></p>
+        </div>
+      </template>
+    </section>
+
+    <section
+      class="ec-request ec-rise rounded-3xl bg-gray-min p-5 shadow-sm [--ec-rise-delay:300ms] md:p-8 data-[is-sent=true]:lg:col-span-2"
+      aria-labelledby="requestTitle"
+    >
+      <div class="ec-request-body">
+        <h2 id="requestTitle" class="text-heading-2 outline-none" tabindex="-1">{t.form.title}</h2>
+
+        <div
+          class="ec-error-summary mt-6 hidden rounded-2xl bg-status-error-bg p-4 text-status-error-text"
+          tabindex="-1"
+        >
+          <p class="flex items-start gap-2 font-bold">
+            <IconAlertCircle class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+            {t.form.errorSummary}
+          </p>
+          <ul class="mt-2 flex list-disc flex-col gap-1 pl-5"></ul>
+        </div>
+
+        <form
+          name={formName}
+          method="POST"
+          action={localisedPath("inquirySent", currentLocale)}
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="ec-request-form mt-6 flex flex-col gap-7"
+        >
+          <input type="hidden" name="form-name" value={formName} />
+          <input type="hidden" name="sprache" value={currentLocale} />
+          <input type="hidden" name="ki-hilfe" value="nein" />
+
+          <p class="hidden">
+            <label>
+              {t.form.honeypotLabel}
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+
+          <fieldset data-field="topics" aria-describedby="topicsHint">
+            <legend class={labelClasses}>
+              <span>
+                {t.form.topicsLegend}{" "}
+                <span class={optionalClasses}>({t.form.optional})</span>
+              </span>
+              <span id="topicsAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+            </legend>
+            <p id="topicsHint" class:list={[hintClasses, "mt-1"]}>{t.form.topicsHint}</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {
+                topicKeys.map((key) => (
+                  <label class="group inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-gray-low px-4 transition-colors select-none hover:border-brand-green-high has-checked:border-brand-green-high has-checked:bg-brand-green-high has-checked:text-gray-min has-focus-visible:outline-4 has-focus-visible:outline-offset-4 has-focus-visible:outline-brand-green-high has-focus-visible:outline-solid">
+                    <input
+                      type="checkbox"
+                      name="thema"
+                      value={t.form.topics[key]}
+                      data-topic={key}
+                      class="sr-only"
+                    />
+                    <IconCheck
+                      class="hidden size-4 shrink-0 group-has-checked:block"
+                      aria-hidden="true"
+                    />
+                    {t.form.topics[key]}
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <div class="flex flex-col gap-2" data-field="goal">
+            <label for="goal" class={labelClasses}>
+              <span>{t.form.goalLabel}</span>
+              <span id="goalAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+            </label>
+            <p id="goalHint" class={hintClasses}>{t.form.goalHint}</p>
+            <textarea
+              id="goal"
+              name="vorhaben"
+              rows="5"
+              required
+              maxlength="4000"
+              class:list={[inputClasses, "resize-y"]}
+              placeholder={t.form.goalPlaceholder}
+              aria-describedby="goalHint goalError"></textarea>
+            <p id="goalError" class={errorClasses}></p>
+          </div>
+
+          <div class="flex flex-col gap-2" data-field="name">
+            <label for="name" class={labelClasses}>
+              <span>
+                {t.form.nameLabel}{" "}
+                <span class={optionalClasses}>({t.form.optional})</span>
+              </span>
+              <span id="nameAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+            </label>
+            <input id="name" name="name" autocomplete="name" maxlength="200" class={inputClasses} />
+          </div>
+
+          <div class="flex flex-col gap-2" data-field="email">
+            <label for="email" class={labelClasses}>
+              <span>{t.form.emailLabel}</span>
+              <span id="emailAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              spellcheck="false"
+              maxlength="200"
+              class={inputClasses}
+              placeholder={t.form.emailPlaceholder}
+              aria-describedby="emailError"
+            />
+            <p id="emailError" class={errorClasses}></p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2" data-field="phone">
+              <label for="phone" class={labelClasses}>
+                <span>
+                  {t.form.phoneLabel}{" "}
+                  <span class={optionalClasses}>({t.form.optional})</span>
+                </span>
+                <span id="phoneAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+              </label>
+              <input
+                id="phone"
+                name="telefon"
+                type="tel"
+                autocomplete="tel"
+                maxlength="60"
+                class={inputClasses}
+                placeholder={t.form.phonePlaceholder}
+                aria-describedby="phoneError"
+              />
+              <p id="phoneError" class={errorClasses}></p>
+            </div>
+
+            <div data-field="callback">
+              <label
+                class="inline-flex min-h-11 cursor-pointer flex-wrap items-center gap-x-3 gap-y-1"
+              >
+                <input
+                  id="callback"
+                  type="checkbox"
+                  name="rueckruf"
+                  value="ja"
+                  class="size-5 shrink-0 accent-brand-green-high"
+                />
+                <span>{t.form.callbackLabel}</span>
+                <span id="callbackAiTag" class={aiTagClasses}>{t.assistant.tag}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start gap-3">
+            <Button type="submit" class="ec-submit">
+              <span class="ec-submit-label">{t.form.submit}</span>
+              <IconArrowRight slot="icon-end" class="size-5" />
+            </Button>
+            <p
+              class="ec-submit-status text-sm font-bold text-status-error-text empty:hidden"
+              role="status"
+            >
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- --- Focus lands here after sending; the heading inside says what happened -->
+      <div
+        class="ec-sent mx-auto hidden max-w-[40rem] py-6 text-center outline-none md:py-10"
+        tabindex="-1"
+      >
+        <img
+          src="/images/pixelcan.png"
+          alt=""
+          width="640"
+          height="640"
+          class="mx-auto size-20 rounded-full bg-gray-low object-cover"
+        />
+        <h2 class="ec-sent-title mx-auto mt-6 max-w-[24ch] text-heading-1 text-balance"></h2>
+        <p class="mt-4 text-lead text-typo-medium">{t.sent.body}</p>
+
+        <div class="mt-12 text-left">
+          <h3 class="text-heading-2">{t.sent.offersTitle}</h3>
+          <ul role="list" class="mt-5 flex flex-col gap-3">
+            {
+              offerKeys.map((key) => (
+                <li data-offer={key}>
+                  <a
+                    href={localisedPath(key, currentLocale)}
+                    class="group flex items-center justify-between gap-4 rounded-2xl border-2 border-gray-low p-5 no-underline transition-colors hover:border-brand-green-high"
+                  >
+                    <span class="flex flex-col gap-1">
+                      <span class="font-bold text-typo-high">{t.sent.offers[key].title}</span>
+                      <span class="text-typo-medium">{t.sent.offers[key].text}</span>
+                    </span>
+                    <IconArrowRight
+                      class="size-5 shrink-0 text-brand-green-high transition-transform group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <Button type="button" variant="secondary" class="ec-new-request mt-10"
+          >{t.sent.newRequest}</Button
+        >
+      </div>
+    </section>
+  </div>
+
+  <section class="ec-layout-visual-content pb-20 md:pb-24" aria-labelledby="nextTitle">
+    <h2 id="nextTitle" class="ec-reveal text-heading-1">{t.next.title}</h2>
+    <ul role="list" class="mt-8 grid ec-reveal gap-8 ec-reveal-late md:grid-cols-2 md:gap-12">
+      {
+        t.next.steps.map((step, index) => {
+          const StepIcon = stepIcons[index]
+          return (
+            <li class="flex items-start gap-4">
+              <span
+                class="grid size-11 shrink-0 place-items-center rounded-full bg-brand-green-low/60 text-brand-blue"
+                aria-hidden="true"
+              >
+                <StepIcon class="size-6" />
+              </span>
+              <span class="flex flex-col gap-1.5">
+                <span class="text-lead text-typo-high">{step.title}</span>
+                <span class="text-typo-medium">{step.text}</span>
+              </span>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </section>
+
+  <!-- --- The divider of the previous site: the direct ways below stand apart
+       from the request and what follows it -->
+  <div class="ec-layout-visual-content">
+    <hr class="border-gray-low" />
+  </div>
+
+  <section
+    class="ec-layout-visual-content pt-20 pb-24 md:pt-24 md:pb-32"
+    aria-labelledby="directTitle"
+  >
+    <h2 id="directTitle" class="ec-reveal text-heading-1">{t.next.directTitle}</h2>
+    <div class="mt-8 grid ec-reveal gap-4 ec-reveal-late md:grid-cols-2 md:gap-6">
+      <ContactCard
+        href={`mailto:${siteConfig.contact.email}`}
+        label={t.next.email}
+        address={siteConfig.contact.email}
+      >
+        <IconMail aria-hidden="true" />
+      </ContactCard>
+      <ContactCard href={linkedInUrl} label={t.next.linkedin} address={tCommon.linkedinInvite} isExternal>
+        <IconBrandLinkedin aria-hidden="true" />
+      </ContactCard>
+    </div>
+  </section>
+</main>
+
+<script>
+  type TopicKey = "accessibility" | "design" | "development" | "other"
+  type FieldKey = "topics" | "goal" | "name" | "email" | "phone" | "callback"
+  type FormState = {
+    topics: TopicKey[]
+    goal: string
+    name: string
+    email: string
+    phone: string
+    callback: boolean
+  }
+  type AssistantResult = {
+    fields: Partial<FormState>
+    reply: string
+    step: string
+    askCallback: boolean
+    isComplete: boolean
+  }
+  type ChatMessage = { role: "user" | "assistant"; content: string }
+
+  const root = document.querySelector<HTMLElement>(".ec-inquiry")!
+  const text = JSON.parse(root.dataset.text ?? "{}")
+  const locale = root.dataset.locale ?? "de"
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+  const desktop = window.matchMedia("(width >= 64rem)")
+  const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
+  const fill = (template: string, values: Record<string, string>) =>
+    template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "")
+  const scrollBehavior = (): ScrollBehavior => (reducedMotion.matches ? "auto" : "smooth")
+
+  // --- The form ---------------------------------------------------------------
+  const form = root.querySelector<HTMLFormElement>(".ec-request-form")!
+  const goal = form.querySelector<HTMLTextAreaElement>("#goal")!
+  const name = form.querySelector<HTMLInputElement>("#name")!
+  const email = form.querySelector<HTMLInputElement>("#email")!
+  const phone = form.querySelector<HTMLInputElement>("#phone")!
+  const callback = form.querySelector<HTMLInputElement>("#callback")!
+  const topicInputs = [...form.querySelectorAll<HTMLInputElement>("[data-topic]")]
+  const aiHelpInput = form.querySelector<HTMLInputElement>("[name='ki-hilfe']")!
+  const errorSummary = root.querySelector<HTMLElement>(".ec-error-summary")!
+  const submitLabel = root.querySelector<HTMLElement>(".ec-submit-label")!
+  const submitStatus = root.querySelector<HTMLElement>(".ec-submit-status")!
+  const textControls = { goal, name, email, phone } as const
+
+  form.noValidate = true
+
+  // --- A reload starts from an empty form. Browsers would otherwise put the
+  // previous values back, without Pixel-Ercan's marks or the chat they came from.
+  form.reset()
+  aiHelpInput.value = "nein"
+
+  const readState = (): FormState => ({
+    topics: topicInputs
+      .filter((input) => input.checked)
+      .map((input) => input.dataset.topic as TopicKey),
+    goal: goal.value.trim(),
+    name: name.value.trim(),
+    email: email.value.trim(),
+    phone: phone.value.trim(),
+    callback: callback.checked,
+  })
+
+  const writeState = (state: Partial<FormState>) => {
+    if (state.topics)
+      topicInputs.forEach((input) => {
+        input.checked = state.topics!.includes(input.dataset.topic as TopicKey)
+      })
+    ;(Object.keys(textControls) as (keyof typeof textControls)[]).forEach((key) => {
+      if (typeof state[key] === "string") textControls[key].value = state[key]
+    })
+    if (typeof state.callback === "boolean") callback.checked = state.callback
+  }
+
+  // --- Arriving from an offer page: ?thema=barrierefreiheit preselects the topic
+  const topicFromUrl = new URLSearchParams(location.search).get("thema") ?? ""
+  const topicAliases: Record<string, TopicKey> = {
+    barrierefreiheit: "accessibility",
+    accessibility: "accessibility",
+    design: "design",
+    entwicklung: "development",
+    development: "development",
+  }
+
+  // --- Pixel-Ercan's marks: a field keeps its tag while his value stands. Once
+  // the visitor changes it, the tag goes; the value is theirs from then on,
+  // until they correct it through the chat again.
+  const aiFilled = new Set<FieldKey>()
+  // --- Whether the call back is settled: an unticked box alone may only mean
+  // nobody has asked yet
+  let isCallbackAnswered = false
+  // --- What Pixel-Ercan has asked so far, so he asks for more detail only once
+  const askedSteps = new Set<string>()
+  const fieldWrapper = (key: FieldKey) => form.querySelector<HTMLElement>(`[data-field='${key}']`)!
+
+  const markAiFilled = (key: FieldKey, isAiFilled: boolean) => {
+    fieldWrapper(key).dataset.isAiFilled = String(isAiFilled)
+    if (isAiFilled) aiFilled.add(key)
+    else aiFilled.delete(key)
+
+    // --- The tag joins the description of a text field, so it is read with
+    // it. In the topic legend and the callback label it is part of the name.
+    if (key === "topics" || key === "callback") return
+    const control = textControls[key]
+    const ids = (control.getAttribute("aria-describedby") ?? "").split(" ").filter(Boolean)
+    const tagId = `${key}AiTag`
+    const next = isAiFilled ? [...new Set([...ids, tagId])] : ids.filter((id) => id !== tagId)
+    if (next.length) control.setAttribute("aria-describedby", next.join(" "))
+    else control.removeAttribute("aria-describedby")
+  }
+
+  // --- Errors
+  const errorTargets = { goal, email, phone } as const
+  type ErrorKey = keyof typeof errorTargets
+
+  const setError = (key: ErrorKey, message = "") => {
+    const control = errorTargets[key]
+    const element = root.querySelector<HTMLElement>(`#${key}Error`)!
+    if (message) control.setAttribute("aria-invalid", "true")
+    else control.removeAttribute("aria-invalid")
+    element.textContent = message
+    element.classList.toggle("hidden", !message)
+  }
+
+  const validate = () => {
+    const state = readState()
+    const errors: [ErrorKey, string][] = []
+    if (!state.goal) errors.push(["goal", text.form.errors.goal])
+    if (!state.email) errors.push(["email", text.form.errors.email])
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email))
+      errors.push(["email", text.form.errors.emailInvalid])
+    if (state.callback && !state.phone) errors.push(["phone", text.form.errors.callbackPhone])
+
+    ;(Object.keys(errorTargets) as ErrorKey[]).forEach((key) => setError(key))
+    errors.forEach(([key, message]) => setError(key, message))
+
+    errorSummary.querySelector("ul")!.replaceChildren(
+      ...errors.map(([key, message]) => {
+        const item = document.createElement("li")
+        const link = document.createElement("a")
+        link.href = `#${errorTargets[key].id}`
+        link.textContent = message
+        link.addEventListener("click", (event) => {
+          event.preventDefault()
+          errorTargets[key].focus()
+        })
+        item.append(link)
+        return item
+      })
+    )
+    errorSummary.classList.toggle("hidden", errors.length === 0)
+    if (errors.length) errorSummary.focus()
+    return errors.length === 0
+  }
+
+  // --- Every manual change: the tag goes and a shown error clears
+  const fieldOf = (control: Element) =>
+    control.closest<HTMLElement>("[data-field]")!.dataset.field as FieldKey
+
+  form.addEventListener("input", (event) => {
+    const control = event.target as HTMLElement
+    if (!control.closest("[data-field]")) return
+    const key = fieldOf(control)
+    markAiFilled(key, false)
+    if (key === "callback") isCallbackAnswered = true
+    if (key in errorTargets && !root.querySelector(`#${key}Error`)!.classList.contains("hidden"))
+      setError(key as ErrorKey)
+    if (key === "callback" && !callback.checked) setError("phone")
+  })
+
+  // --- After sending: the pages of the chosen topics, or all three when none
+  // of them was picked, and a way to start a new request
+  const request = root.querySelector<HTMLElement>(".ec-request")!
+  const sent = root.querySelector<HTMLElement>(".ec-sent")!
+  const offerItems = [...sent.querySelectorAll<HTMLElement>("[data-offer]")]
+
+  const showOffers = (topics: TopicKey[]) => {
+    const chosen = offerItems.filter((item) => topics.includes(item.dataset.offer as TopicKey))
+    const shown = chosen.length ? chosen : offerItems
+    offerItems.forEach((item) => item.classList.toggle("hidden", !shown.includes(item)))
+  }
+
+  // --- Sending
+  let isSending = false
+  let isAssistantWorking = false
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    if (isSending) return
+    if (isAssistantWorking) {
+      submitStatus.textContent = text.form.waitForAssistant
+      return
+    }
+    submitStatus.textContent = ""
+    if (!validate()) return
+
+    isSending = true
+    submitLabel.textContent = text.form.sending
+    const data = new FormData(form)
+    const topics = data.getAll("thema").join(", ")
+    data.delete("thema")
+    data.set("thema", topics)
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+      })
+      if (!response.ok) throw new Error(String(response.status))
+
+      const firstName = name.value.trim().split(/\s+/)[0]
+      root.querySelector(".ec-sent-title")!.textContent = firstName
+        ? fill(text.sent.titleWithName, { name: firstName })
+        : text.sent.title
+      showOffers(readState().topics)
+      request.dataset.isSent = "true"
+      root.querySelector(".ec-request-body")!.classList.add("hidden")
+      root.querySelector(".ec-assistant")!.classList.add("hidden")
+      sent.classList.remove("hidden")
+      sent.focus()
+    } catch {
+      submitStatus.textContent = fill(text.form.sendError, { email: text.email })
+    } finally {
+      isSending = false
+      submitLabel.textContent = text.form.submit
+    }
+  })
+
+  // --- Pixel-Ercan --------------------------------------------------------------
+  const assistant = root.querySelector<HTMLElement>(".ec-assistant")!
+  const log = assistant.querySelector<HTMLElement>(".ec-assistant-log")!
+  const toNewest = assistant.querySelector<HTMLButtonElement>(".ec-to-newest")!
+  const entryTemplate = assistant.querySelector<HTMLTemplateElement>("#assistantEntryTemplate")!
+  const assistantForm = assistant.querySelector<HTMLFormElement>(".ec-assistant-form")!
+  const assistantInput = assistant.querySelector<HTMLTextAreaElement>("#assistantInput")!
+  const assistantStatus = assistant.querySelector<HTMLElement>("#assistantStatus")!
+  const choices = assistant.querySelector<HTMLElement>(".ec-assistant-choices")!
+  const resetButton = assistant.querySelector<HTMLButtonElement>(".ec-assistant-reset")!
+  const introEntry = log.firstElementChild!
+  assistantInput.value = ""
+
+  // --- The field grows with its text up to a limit, then scrolls. Measured by
+  // hand: field-sizing is not in Safari. While empty it sizes to the
+  // placeholder, so the example is never cut off.
+  const maxInputHeight = 240
+  const resizeInput = () => {
+    // --- Hidden (after sending) there is nothing to measure; a height taken
+    // then would be 0 and stick once the chat is back
+    if (!assistantInput.offsetWidth) return
+    const value = assistantInput.value
+    assistantInput.style.height = "auto"
+    if (!value) assistantInput.value = assistantInput.placeholder
+    const height = Math.min(assistantInput.scrollHeight, maxInputHeight)
+    if (!value) assistantInput.value = ""
+    assistantInput.style.height = `${height}px`
+    assistantInput.style.overflowY = height >= maxInputHeight ? "auto" : "hidden"
+  }
+  assistantInput.addEventListener("input", resizeInput)
+  window.addEventListener("resize", resizeInput)
+  resizeInput()
+  let messages: ChatMessage[] = []
+
+  // --- No scrollbar in the conversation. Faded edges show there is more above
+  // or below, and a round button leads back to the newest message.
+  const logFrame = assistant.querySelector<HTMLElement>(".ec-log-frame")!
+  const logThumb = assistant.querySelector<HTMLElement>(".ec-log-thumb")!
+
+  const updateScrollHints = () => {
+    const { scrollTop, scrollHeight, clientHeight } = log
+    const isScrollable = scrollHeight > clientHeight + 1
+    const isAtTop = scrollTop <= 1
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 8
+    logFrame.dataset.isScrollable = String(isScrollable)
+    logFrame.dataset.shadowTop = String(isScrollable && !isAtTop)
+    logFrame.dataset.shadowBottom = String(isScrollable && !isAtBottom)
+    toNewest.classList.toggle("hidden", !isScrollable || isAtBottom)
+    toNewest.classList.toggle("grid", isScrollable && !isAtBottom)
+
+    if (!isScrollable) return
+    const thumbHeight = Math.max(32, (clientHeight * clientHeight) / scrollHeight)
+    const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - thumbHeight)
+    logThumb.style.height = `${thumbHeight}px`
+    logThumb.style.transform = `translateY(${thumbTop}px)`
+  }
+  log.addEventListener("scroll", updateScrollHints, { passive: true })
+  window.addEventListener("resize", updateScrollHints)
+
+  // --- Everything before the latest message of the visitor counts as earlier.
+  // Folded on narrow screens until the visitor opens it; a new message folds
+  // it again.
+  const showEarlier = assistant.querySelector<HTMLButtonElement>(".ec-show-earlier")!
+  let isEarlierOpen = false
+
+  const updateEarlier = () => {
+    const children = [...log.children] as HTMLElement[]
+    const lastUser = children.findLastIndex((child) => child.dataset.from === "user")
+    children.forEach((child, index) => child.classList.toggle("is-earlier", index < lastUser))
+    const earlierCount = children.filter(
+      (child, index) => index < lastUser && child.classList.contains("ec-entry")
+    ).length
+    log.dataset.isCollapsed = String(!isEarlierOpen)
+    showEarlier.classList.toggle("hidden", earlierCount === 0)
+    showEarlier.setAttribute("aria-expanded", String(isEarlierOpen))
+    showEarlier.textContent = isEarlierOpen
+      ? text.assistant.hideEarlier
+      : fill(earlierCount === 1 ? text.assistant.showEarlierOne : text.assistant.showEarlierMany, {
+          count: String(earlierCount),
+        })
+  }
+
+  showEarlier.addEventListener("click", () => {
+    isEarlierOpen = !isEarlierOpen
+    updateEarlier()
+  })
+
+  const scrollToNewest = (isSmooth = true) => {
+    log.scrollTo({ top: log.scrollHeight, behavior: isSmooth ? scrollBehavior() : "auto" })
+    updateScrollHints()
+  }
+  toNewest.addEventListener("click", () => scrollToNewest())
+
+  const scrollToForm = () => request.scrollIntoView({ behavior: scrollBehavior(), block: "start" })
+
+  const addEntry = (from: "user" | "assistant", content?: string) => {
+    let entry: HTMLElement
+    if (from === "assistant") {
+      entry = entryTemplate.content.firstElementChild!.cloneNode(true) as HTMLElement
+    } else {
+      entry = document.createElement("div")
+      entry.classList.add("ec-entry")
+      entry.dataset.from = "user"
+      const bubble = document.createElement("p")
+      bubble.classList.add("ec-bubble")
+      entry.append(bubble)
+    }
+    const bubble = entry.querySelector<HTMLElement>(".ec-bubble")!
+    // --- Who is speaking is otherwise only told by side and colour
+    const speaker = document.createElement("span")
+    speaker.classList.add("sr-only")
+    speaker.textContent = `${from === "user" ? text.assistant.speakerYou : text.assistant.speakerAssistant}: `
+    if (content === undefined) {
+      // --- Typing dots, hidden from screen readers; the status line says it
+      bubble.classList.add("ec-typing")
+      entry.setAttribute("aria-hidden", "true")
+      bubble.append(...[1, 2, 3].map(() => document.createElement("span")))
+    } else {
+      bubble.replaceChildren(speaker, content)
+    }
+
+    // --- The visitor's own message goes into the history without being read
+    // back to them; only what Pixel-Ercan adds is announced
+    if (from === "user") {
+      log.setAttribute("aria-live", "off")
+      // --- Long enough for the accessibility tree to take the change in silence
+      window.setTimeout(() => log.setAttribute("aria-live", "polite"), 250)
+    }
+    log.append(entry)
+    if (from === "user") {
+      isEarlierOpen = false
+      updateEarlier()
+    }
+    scrollToNewest()
+    return entry
+  }
+
+  // --- One quiet line before the reply: what just went into the form. On a
+  // phone the form is out of sight below, so it also leads there.
+  const addFilledLine = (keys: string[]) => {
+    const line = document.createElement("p")
+    line.classList.add("ec-filled")
+    const icon = document.createElement("span")
+    icon.setAttribute("aria-hidden", "true")
+    icon.textContent = "✓"
+    const label = document.createElement("span")
+    label.textContent = fill(text.assistant.filled, {
+      fields: keys.map((key) => text.assistant.fieldNames[key]).join(", "),
+    })
+    line.append(icon, label)
+    if (!desktop.matches) {
+      const link = document.createElement("button")
+      link.type = "button"
+      link.classList.add("ec-filled-link")
+      link.textContent = text.assistant.toForm
+      link.addEventListener("click", () => {
+        scrollToForm()
+        root.querySelector<HTMLElement>("#requestTitle")!.focus({ preventScroll: true })
+      })
+      line.append(link)
+    }
+    log.append(line)
+    scrollToNewest()
+  }
+
+  // --- Typed in rather than set, so the change is visible where it happens.
+  // Longer texts type in steps; under reduced motion the value is simply there.
+  const typeInto = async (control: HTMLInputElement | HTMLTextAreaElement, value: string) => {
+    if (reducedMotion.matches) {
+      control.value = value
+      return
+    }
+    const step = Math.max(1, Math.ceil(value.length / 60))
+    for (let index = 0; index < value.length; index += step) {
+      control.value = value.slice(0, index + step)
+      await wait(16)
+    }
+    control.value = value
+  }
+
+  // --- The server only returns fields the latest message adds or changes
+  const applyFields = async (fields: Partial<FormState>) => {
+    const changed: FieldKey[] = []
+    if (fields.topics) {
+      writeState({ topics: fields.topics })
+      markAiFilled("topics", true)
+      changed.push("topics")
+    }
+    for (const key of Object.keys(textControls) as (keyof typeof textControls)[]) {
+      const value = fields[key]
+      if (typeof value !== "string") continue
+      markAiFilled(key, true)
+      if (key in errorTargets) setError(key as ErrorKey)
+      await typeInto(textControls[key], value)
+      changed.push(key)
+    }
+    if (typeof fields.callback === "boolean") {
+      isCallbackAnswered = true
+      callback.checked = fields.callback
+      markAiFilled("callback", true)
+      changed.push("callback")
+      if (!fields.callback) setError("phone")
+    }
+    return changed
+  }
+
+  const setChoicesVisible = (isVisible: boolean) => {
+    choices.classList.toggle("hidden", !isVisible)
+    choices.classList.toggle("flex", isVisible)
+  }
+
+  const ask = async (content: string) => {
+    if (isAssistantWorking) return
+    isAssistantWorking = true
+    setChoicesVisible(false)
+    messages.push({ role: "user", content })
+    const userEntry = addEntry("user", content)
+    assistantStatus.textContent = text.assistant.working
+    const typing = addEntry("assistant")
+
+    try {
+      const response = await fetch("/api/inquiry-assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          locale,
+          messages,
+          form: readState(),
+          callbackAnswered: isCallbackAnswered,
+          askedSteps: [...askedSteps],
+        }),
+      })
+      if (response.status === 429 || response.status === 503) throw new Error("busy")
+      if (response.status === 413) throw new Error("tooLong")
+      if (!response.ok) throw new Error("error")
+      const result: AssistantResult = await response.json()
+      askedSteps.add(result.step)
+
+      // --- The dots keep going while the fields fill in; then what went in,
+      // and his next question last, where the eye ends up
+      aiHelpInput.value = "ja"
+      const changed = await applyFields(result.fields)
+      typing.remove()
+      assistantStatus.textContent = ""
+      if (changed.length) addFilledLine(changed)
+      messages.push({ role: "assistant", content: result.reply })
+      addEntry("assistant", result.reply)
+      setChoicesVisible(result.askCallback)
+      resetButton.classList.remove("hidden")
+      assistantInput.placeholder = text.assistant.replyPlaceholder
+      resizeInput()
+
+      // --- Done: on narrow screens the form sits below, out of sight. A moment
+      // first, so the last line in the chat is read before the page moves.
+      if (result.isComplete && !desktop.matches) {
+        await wait(1400)
+        scrollToForm()
+      }
+    } catch (error) {
+      // --- Nothing is lost: the message goes back into the field
+      typing.remove()
+      userEntry.remove()
+      updateEarlier()
+      messages.pop()
+      if (!assistantInput.value) assistantInput.value = content
+      resizeInput()
+      const reason = error instanceof Error ? error.message : ""
+      assistantStatus.textContent =
+        reason === "busy"
+          ? text.assistant.busy
+          : reason === "tooLong"
+            ? text.assistant.tooLong
+            : text.assistant.error
+    } finally {
+      isAssistantWorking = false
+      updateScrollHints()
+    }
+  }
+
+  assistantForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    const content = assistantInput.value.trim()
+    if (!content) {
+      assistantStatus.textContent = text.assistant.empty
+      assistantInput.focus()
+      return
+    }
+    assistantInput.value = ""
+    resizeInput()
+    ask(content)
+  })
+
+  // --- Enter sends, Shift+Enter breaks the line, as in any chat
+  assistantInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+      event.preventDefault()
+      assistantForm.requestSubmit()
+    }
+  })
+  assistantInput.addEventListener("input", () => {
+    if (assistantStatus.textContent === text.assistant.empty) assistantStatus.textContent = ""
+  })
+
+  choices.querySelectorAll<HTMLButtonElement>("[data-choice]").forEach((button) =>
+    button.addEventListener("click", () => {
+      isCallbackAnswered = true
+      ask(
+        button.dataset.choice === "yes"
+          ? text.assistant.callbackYesMessage
+          : text.assistant.callbackNoMessage
+      )
+      assistantInput.focus()
+    })
+  )
+
+  // --- Starting over clears the conversation, not the form: what is in the
+  // fields stays, it just no longer counts as Pixel-Ercan's
+  const resetChat = () => {
+    messages = []
+    askedSteps.clear()
+    isCallbackAnswered = callback.checked
+    log.replaceChildren(introEntry)
+    isEarlierOpen = false
+    updateEarlier()
+    ;[...aiFilled].forEach((key) => markAiFilled(key, false))
+    setChoicesVisible(false)
+    assistantStatus.textContent = ""
+    assistantInput.value = ""
+    assistantInput.placeholder = text.assistant.placeholder
+    resizeInput()
+    resetButton.classList.add("hidden")
+    updateScrollHints()
+  }
+
+  resetButton.addEventListener("click", () => {
+    if (isAssistantWorking) return
+    resetChat()
+    assistantInput.focus()
+  })
+
+  if (topicAliases[topicFromUrl]) writeState({ topics: [topicAliases[topicFromUrl]] })
+
+  // --- A new request starts from scratch: empty form, fresh chat
+  sent.querySelector(".ec-new-request")!.addEventListener("click", () => {
+    form.reset()
+    aiHelpInput.value = "nein"
+    ;[...aiFilled].forEach((key) => markAiFilled(key, false))
+    ;(Object.keys(errorTargets) as ErrorKey[]).forEach((key) => setError(key))
+    errorSummary.classList.add("hidden")
+    submitStatus.textContent = ""
+    resetChat()
+    sent.classList.add("hidden")
+    request.dataset.isSent = "false"
+    root.querySelector(".ec-request-body")!.classList.remove("hidden")
+    assistant.classList.remove("hidden")
+    resizeInput()
+    updateScrollHints()
+    request.scrollIntoView({ behavior: scrollBehavior(), block: "start" })
+    root.querySelector<HTMLElement>("#requestTitle")!.focus({ preventScroll: true })
+  })
+</script>
+
+<style>
+  /* --- The chat needs scripting; without it the panel would be a dead end --- */
+  @media (scripting: none) {
+    .ec-assistant {
+      display: none;
+    }
+  }
+
+  /* --- The chat of the previous site: avatar with a green tint and an online
+     dot, bubbles with a corner tail. The colours are mixed to solid tones, so
+     bubble and tail never overlap into a darker seam. --- */
+  .ec-assistant {
+    --ec-bubble-assistant: color-mix(in srgb, var(--color-gray-low) 60%, var(--color-gray-subtle));
+    --ec-bubble-user: color-mix(in srgb, var(--color-brand-blue) 85%, var(--color-gray-subtle));
+  }
+
+  /* --- Narrow screens: earlier messages fold away instead of making the page
+     ever longer; desktop scrolls the conversation in its own area --- */
+  @media (width < 64rem) {
+    .ec-assistant-log[data-is-collapsed="true"] > :global(.is-earlier) {
+      display: none;
+    }
+  }
+
+  .ec-assistant-log {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* --- Scroll shadows: the page colour fading over the content at an edge
+     where more follows, with a soft shade along the edge itself --- */
+  .ec-log-shadow {
+    position: absolute;
+    inset-inline: 0;
+    height: 2.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .ec-log-shadow[data-edge="top"] {
+    top: 0;
+    background:
+      radial-gradient(farthest-side at 50% 0, rgb(5 56 107 / 0.12), transparent),
+      linear-gradient(var(--color-gray-subtle), transparent);
+  }
+
+  .ec-log-shadow[data-edge="bottom"] {
+    bottom: 0;
+    background:
+      radial-gradient(farthest-side at 50% 100%, rgb(5 56 107 / 0.12), transparent),
+      linear-gradient(transparent, var(--color-gray-subtle));
+  }
+
+  .ec-log-frame[data-shadow-top="true"] .ec-log-shadow[data-edge="top"],
+  .ec-log-frame[data-shadow-bottom="true"] .ec-log-shadow[data-edge="bottom"] {
+    opacity: 1;
+  }
+
+  /* --- The position, as a slim thumb outside the bubbles --- */
+  .ec-log-thumb {
+    position: absolute;
+    top: 0;
+    right: -0.875rem;
+    width: 0.25rem;
+    border-radius: 9999px;
+    background: var(--color-gray-low);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .ec-log-frame[data-is-scrollable="true"] .ec-log-thumb {
+    opacity: 1;
+  }
+
+  .ec-assistant :global(.ec-entry) {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"]) {
+    justify-content: flex-end;
+    padding-inline: 3.75rem 0.75rem;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"]) {
+    padding-inline-end: 1.5rem;
+  }
+
+  .ec-assistant :global(.ec-avatar) {
+    position: relative;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .ec-assistant :global(.ec-avatar img) {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--color-gray-low);
+    object-fit: cover;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  }
+
+  .ec-assistant :global(.ec-avatar::before) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgb(from var(--color-brand-green-high) r g b / 0.2);
+  }
+
+  .ec-assistant :global(.ec-avatar::after) {
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 2px solid var(--color-gray-subtle);
+    border-radius: 9999px;
+    background: var(--color-brand-green-medium);
+  }
+
+  .ec-assistant :global(.ec-bubble) {
+    position: relative;
+    border-radius: 0.75rem;
+    padding: 0.8rem 1.25rem;
+    line-height: 1.55;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"] .ec-bubble) {
+    margin-top: 0.25rem;
+    border-top-left-radius: 0;
+    background: var(--ec-bubble-assistant);
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"] .ec-bubble::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 100%;
+    border-right: 0.75rem solid var(--ec-bubble-assistant);
+    border-bottom: 0.75rem solid transparent;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"] .ec-bubble) {
+    border-top-right-radius: 0;
+    background: var(--ec-bubble-user);
+    color: var(--color-typo-min);
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"] .ec-bubble::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border-left: 0.75rem solid var(--ec-bubble-user);
+    border-bottom: 0.75rem solid transparent;
+  }
+
+  .ec-assistant :global(.ec-typing) {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 3.1rem;
+  }
+
+  .ec-assistant :global(.ec-typing span) {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-brand-green-high);
+    animation: ec-typing-dot 1s ease-in-out infinite;
+  }
+
+  .ec-assistant :global(.ec-typing span:nth-child(2)) {
+    animation-delay: 150ms;
+  }
+
+  .ec-assistant :global(.ec-typing span:nth-child(3)) {
+    animation-delay: 300ms;
+  }
+
+  @keyframes ec-typing-dot {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: none;
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(-0.2rem);
+    }
+  }
+
+  /* --- What went into the form: one line between the bubbles, nothing more --- */
+  .ec-assistant :global(.ec-filled) {
+    padding-inline-start: 3.75rem;
+    color: var(--color-typo-medium);
+    font-size: 0.875rem;
+  }
+
+  .ec-assistant :global(.ec-filled > span:first-child) {
+    margin-inline-end: 0.4rem;
+    color: var(--color-brand-green-high);
+    font-weight: 700;
+  }
+
+  .ec-assistant :global(.ec-filled-link) {
+    margin-inline-start: 0.5rem;
+    min-height: 2.75rem;
+    color: var(--color-brand-blue);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .ec-choice {
+    min-height: 2.75rem;
+    border: 2px solid var(--color-brand-green-high);
+    border-radius: 9999px;
+    padding: 0 1.1rem;
+    color: var(--color-brand-blue);
+    font-weight: 700;
+    transition: background-color 180ms ease;
+  }
+
+  .ec-choice:hover {
+    background: rgb(from var(--color-brand-green-low) r g b / 0.35);
+  }
+</style>

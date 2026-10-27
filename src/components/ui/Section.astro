@@ -1,11 +1,14 @@
 ---
 // --- One page section: surface tone outside, content width inside. Views
 // compose pages out of these so vertical rhythm and widths stay in one place.
-interface Props {
+import type { HTMLAttributes } from "astro/types"
+
+// --- Any other attribute (data-chat, aria-labelledby …) passes through to the
+// outer element
+interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   as?: "section" | "div"
   tone?: "page" | "light" | "dark"
   width?: "visual" | "text"
-  id?: string
   class?: string
   /** --- Applied to the inner content wrapper --- */
   contentClass?: string
@@ -15,9 +18,9 @@ const {
   as: Tag = "section",
   tone = "page",
   width = "visual",
-  id,
   class: additionalClasses,
   contentClass,
+  ...attributes
 } = Astro.props
 
 const toneClasses = {
@@ -32,7 +35,7 @@ const widthClasses = {
 }
 ---
 
-<Tag id={id} class:list={[toneClasses[tone], additionalClasses]}>
+<Tag class:list={[toneClasses[tone], additionalClasses]} {...attributes}>
   <div class:list={[widthClasses[width], "py-20 md:py-28", contentClass]}>
     <slot />
   </div>

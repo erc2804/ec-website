@@ -1,8 +1,11 @@
 ---
 // --- The pixel avatar that follows the cursor and comments on whatever it is
-// over. Elements opt in with data-chat="text". Over an element marked
-// data-chat-mute, and while any popover is open, it steps aside, so it never
-// sits next to a control someone is operating. Pointer only: on touch there is
+// over. It only appears inside areas marked data-chat-zone; everywhere else it
+// steps aside, so a new section stays quiet unless it asks for him. He says the
+// nearest data-chat above the cursor: a zone carries a default line for all of
+// it, an element inside with its own line wins there. data-chat-mute
+// sends him away again (e.g. a control someone is operating). While a popover
+// is open he steps aside too. Pointer only: on touch there is
 // no cursor to follow, and a bubble parked in a corner would cost screen space
 // for a gimmick. Decorative throughout, so hidden from assistive technology.
 import { useTranslations } from "../i18n"
@@ -11,24 +14,26 @@ const t = useTranslations(Astro.currentLocale).chatBubble
 ---
 
 <div
-  class="ec-chat-bubble pointer-events-none fixed z-50 hidden flex-col items-end gap-1 transition-opacity duration-300"
+  class="ec-chat-bubble pointer-events-none fixed z-50 hidden flex-col items-end gap-1"
   data-starter={t.starter}
   aria-hidden="true"
   inert
 >
   <div
-    class="ec-chat-avatar size-10 shrink-0 -rotate-90 scale-0 overflow-hidden rounded-full bg-brand-sand transition-transform duration-500"
+    class="ec-chat-avatar size-10 shrink-0 scale-0 -rotate-90 overflow-hidden rounded-full bg-brand-sand transition-transform duration-500"
   >
     <img src="/images/pixelcan.png" alt="" width="40" height="40" class="size-full" />
   </div>
   <div
-    class="ec-chat-text flex min-h-6 max-w-50 items-center rounded-xl bg-brand-sand px-2 pt-px text-sm text-typo-high opacity-0 transition-opacity delay-300 duration-500"
+    class="ec-chat-text flex min-h-6 max-w-50 items-center rounded-xl bg-brand-sand px-2 pt-px text-sm text-typo-high opacity-0 transition-opacity duration-500"
   >
     <span class="ec-chat-message"></span>
     <span class="ec-chat-typing hidden items-center gap-1 py-2">
       <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high"></span>
-      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:150ms]"></span>
-      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:300ms]"></span>
+      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:150ms]"
+      ></span>
+      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:300ms]"
+      ></span>
     </span>
   </div>
 </div>
@@ -40,8 +45,14 @@ const t = useTranslations(Astro.currentLocale).chatBubble
   // device that reports touch first still switches over once a real mouse moves.
   const hasMouse = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches
 
+  // --- A gimmick that moves with the cursor is exactly what someone asking for
+  // reduced motion does not want, and its lines carry no information. So it
+  // does not appear at all then, and leaves if the setting is switched on
+  // while the page is open.
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+
   const start = () => {
-    if (!bubble || bubble.dataset.isActive === "true") return
+    if (!bubble || reducedMotion.matches || bubble.dataset.isActive === "true") return
     bubble.dataset.isActive = "true"
     bubble.classList.remove("hidden")
     bubble.classList.add("flex")
@@ -53,24 +64,102 @@ const t = useTranslations(Astro.currentLocale).chatBubble
 
     let currentMessage = bubble.dataset.starter ?? ""
     let isVisible = false
+    let hasArrived = false
+    let isMuted = false
     let isStarterPinned = true
     let isTyping = false
     let pendingMessage: string | null = null
 
     message.textContent = currentMessage
 
+    let lastPointer: { x: number; y: number } | null = null
+    let lineZone: HTMLElement | null = null
+    let hasElementLine = false
+
+    // --- Shows only inside a zone and leaves everywhere else; inside a zone it
+    // picks up the message of what it is over.
+    const react = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return
+
+      const shouldMute =
+        target.closest("[data-chat-zone]") === null ||
+        target.closest("[data-chat-mute]") !== null ||
+        document.querySelector(":popover-open") !== null
+
+      // --- Once something inside a zone gave him a line, the zone's own default
+      // stays quiet until he leaves the zone. Otherwise every gap between two
+      // elements would flip him back and he would be typing all the time.
+      const zone = target.closest<HTMLElement>("[data-chat-zone]")
+      const source = target.closest<HTMLElement>("[data-chat]")
+      const isZoneDefault = source !== null && source === zone
+      if (shouldMute || zone !== lineZone) {
+        lineZone = shouldMute ? null : zone
+        hasElementLine = false
+      }
+      if (source && !isZoneDefault) hasElementLine = true
+      const line = isZoneDefault && hasElementLine ? undefined : source?.dataset.chat
+
+      if (shouldMute !== isMuted) {
+        isMuted = shouldMute
+        if (hasArrived) {
+          if (isMuted) leave()
+          else {
+            // --- Coming back, he already knows where he is: the line of this
+            // spot is in place before he fades in, no typing for an old one.
+            if (line && !isStarterPinned) placeMessage(line)
+            arrive()
+          }
+        }
+      }
+      if (isMuted) return
+
+      if (line) setMessage(line)
+    }
+
+    // --- Arriving and leaving are the same motion, one the reverse of the
+    // other. In: the avatar turns and grows, then the line fades in behind it.
+    // Out: the line fades first, then the avatar turns back and shrinks away.
+    const arrive = () => {
+      avatar.style.transitionDelay = "0ms"
+      text.style.transitionDelay = "300ms"
+      avatar.classList.remove("-rotate-90", "scale-0")
+      text.classList.remove("opacity-0")
+    }
+
+    const leave = () => {
+      text.style.transitionDelay = "0ms"
+      avatar.style.transitionDelay = "300ms"
+      text.classList.add("opacity-0")
+      avatar.classList.add("-rotate-90", "scale-0")
+    }
+
     const show = () => {
       if (isVisible) return
       isVisible = true
       // --- Arrives after a moment, and the opener stays long enough to be read
       window.setTimeout(() => {
-        avatar.classList.remove("-rotate-90", "scale-0")
-        text.classList.remove("opacity-0")
+        hasArrived = true
+        if (!isMuted) arrive()
         window.setTimeout(() => {
           isStarterPinned = false
           if (pendingMessage) setMessage(pendingMessage)
         }, 1500)
       }, 2000)
+    }
+
+    // --- Bumped by placeMessage, so a typing round still running cannot
+    // overwrite the line that was placed after it started
+    let messageRound = 0
+
+    const placeMessage = (next: string) => {
+      messageRound += 1
+      isTyping = false
+      pendingMessage = null
+      currentMessage = next
+      message.textContent = next
+      typing.classList.add("hidden")
+      typing.classList.remove("flex")
+      message.classList.remove("hidden")
     }
 
     const setMessage = (next: string) => {
@@ -81,10 +170,12 @@ const t = useTranslations(Astro.currentLocale).chatBubble
       }
       isTyping = true
       pendingMessage = null
+      const round = messageRound
       message.classList.add("hidden")
       typing.classList.remove("hidden")
       typing.classList.add("flex")
       window.setTimeout(() => {
+        if (round !== messageRound) return
         currentMessage = next
         message.textContent = next
         typing.classList.add("hidden")
@@ -112,18 +203,36 @@ const t = useTranslations(Astro.currentLocale).chatBubble
 
       show()
 
-      const target = event.target
-      if (!(target instanceof Element)) return
-
-      const isMuted =
-        target.closest("[data-chat-mute]") !== null || document.querySelector(":popover-open") !== null
-      bubble.style.opacity = isMuted ? "0" : ""
-      if (isMuted) return
-
-      const chatSource = target.closest<HTMLElement>("[data-chat]")
-      if (chatSource?.dataset.chat) setMessage(chatSource.dataset.chat)
+      lastPointer = { x: event.clientX, y: event.clientY }
+      react(event.target)
     })
+
+    // --- Scrolling moves the page under a resting cursor, so a muted section
+    // can arrive without the mouse moving. Check what lies under it again.
+    let isScrollPending = false
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!lastPointer || isScrollPending) return
+        isScrollPending = true
+        requestAnimationFrame(() => {
+          isScrollPending = false
+          if (lastPointer) react(document.elementFromPoint(lastPointer.x, lastPointer.y))
+        })
+      },
+      { passive: true }
+    )
   }
+
+  reducedMotion.addEventListener("change", () => {
+    if (!bubble) return
+    if (bubble.dataset.isActive !== "true") {
+      if (hasMouse()) start()
+      return
+    }
+    bubble.classList.toggle("hidden", reducedMotion.matches)
+    bubble.classList.toggle("flex", !reducedMotion.matches)
+  })
 
   if (hasMouse()) {
     start()

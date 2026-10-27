@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import InquiryPage from "../../views/inquiry/InquiryPage.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).inquiry
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} routeKey="inquiry">
+  <InquiryPage />
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+// --- Where the form lands without scripting. With scripting the same message
+// appears in place of the form and this page is never seen.
+import Button from "../../components/ui/Button.astro"
+import { siteConfig } from "../../config/site"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).inquiry.sent
+---
+
+<main
+  id="main"
+  class="ec-layout-text-content pt-[calc(var(--spacing-header)+5rem)] pb-24 text-center md:pt-[calc(var(--spacing-header)+7rem)] md:pb-32"
+>
+  <img
+    src="/images/pixelcan.png"
+    alt=""
+    width="40"
+    height="40"
+    class="mx-auto size-20 rounded-3xl bg-brand-green-low/50 p-2 [image-rendering:pixelated]"
+  />
+  <h1 class="mx-auto mt-8 max-w-[22ch] text-display text-balance">{t.title}</h1>
+  <p class="mt-6 text-lead text-typo-medium">{t.body}</p>
+  <Button class="mt-10" href={localisedPath("home", currentLocale)}>{t.back}</Button>
+</main>

@@ -1,320 +1,404 @@
 ---
-// --- One form step with five marked defects. The markers sit in a gutter column
-// so every target gets its own row; each button spans both columns via subgrid.
-// Form on the left, readout on the right, so a selection and its result are
-// visible at the same time without scrolling.
-import {
-  IconAlertCircle,
-  IconArrowRight,
-  IconPointerFilled,
-  IconShieldLock,
-} from "@tabler/icons-astro"
+// --- "Looks the same, sounds different": one ordinary form step, stepped
+// through like a screen reader. Above, what is seen and what is heard; below, one
+// row with every control. The picture is drawn in a neutral style of "some other
+// site", so nothing in it looks like the controls of this page. It is inert; a
+// live region tells a real screen reader what the panel shows.
+import { IconArrowRight, IconEyeOff, IconShieldLock } from "@tabler/icons-astro"
+import Button from "../../components/ui/Button.astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
 import { useTranslations } from "../../i18n"
 
 const t = useTranslations(Astro.currentLocale).accessibility.demo
 
-// --- The required marker sits mid-sentence in German and at the end in English,
-// so the sentence is one string with a placeholder rather than glued fragments.
-const [legendBeforeMark, legendAfterMark] = t.requiredLegend.split("{mark}")
+const scriptText = {
+  cases: t.cases,
+  silent: t.silent,
+  position: t.position,
+  liveTemplate: t.liveTemplate,
+  variantCommon: t.variantCommon,
+  variantCorrect: t.variantCorrect,
+}
 
-const targetLabel = (index: number) =>
-  t.markerLabel.replace("{number}", String(index + 1)).replace("{name}", t.cases[index].name)
+// --- A switch between two builds, so a radio group: one choice, arrow keys
+// move it, and it changes the readout rather than revealing a separate panel
+const variantClasses =
+  "flex min-h-11 cursor-pointer items-center justify-center rounded-full px-4 py-2 text-center leading-tight text-typo-medium transition-[background-color,color] duration-200 hover:text-typo-high has-checked:bg-brand-blue has-checked:text-typo-min has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-green-high has-focus-visible:outline-solid"
 ---
 
-<section class="bg-gray-min py-20 md:py-28">
-  <div class="ec-layout-visual-content">
-    <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+<section class="bg-gray-min py-20 md:py-28" aria-labelledby="demoTitle">
+  <div class="ec-demo ec-layout-visual-content" data-text={JSON.stringify(scriptText)}>
+    <h2 id="demoTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+    <!-- --- How to use the demo: a different job from the lead, so smaller and apart -->
+    <p class="mt-4 max-w-[56ch] ec-reveal text-typo-medium ec-reveal-late">{t.instruction}</p>
 
-    <p class="mt-6 max-w-[54ch] ec-reveal text-body text-typo-medium ec-reveal-late">{t.lead}</p>
+    <!-- --- One grid, arranged in ec-demo-layout below. DOM order is focus order:
+         the build switch, then the curtain, then the step, on phones and desktop
+         alike. -->
+    <div class="ec-demo-layout mt-12 ec-reveal ec-reveal-late" data-is-blind="false">
+      <!-- --- The build switch changes only what is heard, so on desktop it sits
+           right above the announcement -->
+      <fieldset class="ec-demo-variant max-lg:mb-4 lg:mb-8">
+        <legend class="mb-2 pl-1 text-sm text-typo-medium">{t.variantLabel}</legend>
+        <div class="inline-grid grid-cols-2 gap-1 rounded-full border-2 border-gray-low p-1">
+          <label class={variantClasses}>
+            <input type="radio" name="demoVariant" value="common" class="sr-only" checked />
+            {t.variantCommon}
+          </label>
+          <label class={variantClasses}>
+            <input type="radio" name="demoVariant" value="correct" class="sr-only" />
+            {t.variantCorrect}
+          </label>
+        </div>
+      </fieldset>
 
-    <div
-      class="mt-12 grid ec-reveal gap-10 ec-reveal-late lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] lg:gap-14"
-    >
+      <!-- --- The controls for the picture: the curtain, then the step. On desktop
+           one row below the rule; on phones the wrapper dissolves, so the curtain
+           sits above the screen and the step below it. -->
       <div
-        class="ec-demo-form grid h-fit grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-x-4 gap-y-5 rounded-3xl border border-gray-low bg-gray-min p-6 sm:p-7"
+        class="ec-demo-controls lg:mt-10 lg:flex lg:flex-wrap lg:items-center lg:justify-between lg:gap-x-10 lg:gap-y-6 lg:pt-8"
       >
-        <button
-          type="button"
-          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
-          data-case="0"
-          aria-current="false"
-        >
-          <span class="ec-marker" aria-hidden="true">1</span>
-          <span class="ec-sr-frame justify-self-start">
-            <span class="grid size-11 place-items-center rounded-xl bg-brand-green-medium/20">
-              <IconShieldLock class="size-6 text-brand-green-high" aria-hidden="true" />
-            </span>
-            <span class="sr-only">{targetLabel(0)}</span>
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
-          data-case="1"
-          aria-current="false"
-        >
-          <span class="ec-marker" aria-hidden="true">2</span>
-          <span class="ec-sr-frame justify-self-start">
-            <span class="text-heading-2">{t.formTitle}</span>
-            <span class="sr-only">{targetLabel(1)}</span>
-          </span>
-        </button>
-
-        <p class="col-start-2 -mt-2 text-typo-medium">
-          {legendBeforeMark}<span class="font-bold text-status-error-text">*</span>{legendAfterMark}
-        </p>
-
-        <p class="col-start-2 mb-[-0.75rem] text-typo-medium">
-          {t.nameLabel}<span class="font-bold text-status-error-text">*</span>
-        </p>
-
-        <button
-          type="button"
-          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
-          data-case="2"
-          aria-current="false"
-        >
-          <span class="ec-marker" aria-hidden="true">3</span>
-          <span class="ec-sr-frame w-full">
+        <div class="ec-demo-settings max-lg:mb-6">
+          <button
+            type="button"
+            role="switch"
+            aria-checked="false"
+            class="ec-demo-blind group inline-flex min-h-11 items-center gap-3 text-typo-high"
+          >
+            {t.blind}
             <span
-              class="flex min-h-13 items-center rounded-xl border-2 border-gray-low px-4 py-3 text-body"
+              class="relative h-7 w-12 rounded-full border-2 border-typo-medium transition-colors duration-200 group-aria-checked:border-brand-blue group-aria-checked:bg-brand-blue"
+              aria-hidden="true"
             >
-              {t.nameValue}
+              <span
+                class="absolute top-1 left-1 size-4 rounded-full bg-typo-medium transition-[translate,background-color] duration-200 group-aria-checked:translate-x-5 group-aria-checked:bg-gray-min"
+              ></span>
             </span>
-            <span class="sr-only">{targetLabel(2)}</span>
+          </button>
+        </div>
+
+        <div class="ec-demo-step flex flex-wrap items-center gap-x-5 gap-y-3 max-lg:mt-4">
+          <Button type="button" class="ec-demo-next">
+            {t.next}
+            <IconArrowRight slot="icon-end" class="size-5" />
+          </Button>
+          <span class="ec-demo-position min-w-16 text-typo-medium" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- --- The picture. Tapping a part selects it, the way VoiceOver on an
+           iPhone announces what a finger touches; "Next element" does the same
+           for the keyboard. Behind the curtain it does not react. Nothing in it is focusable, so aria-hidden is enough. -->
+      <div class="ec-demo-stage relative" aria-hidden="true">
+        <div class="flex flex-col gap-4 rounded-3xl bg-gray-subtle p-6 sm:p-8">
+          <span
+            class="grid size-11 place-items-center rounded-xl bg-gray-low/70 text-typo-medium"
+            data-target="0"
+          >
+            <IconShieldLock class="size-6" />
           </span>
-        </button>
 
-        <p class="col-start-2 mb-[-0.75rem] text-typo-medium">
-          {t.emailLabel}<span class="font-bold text-status-error-text">*</span>
-        </p>
+          <span class="w-fit text-heading-2" data-target="1">{t.formTitle}</span>
 
-        <button
-          type="button"
-          class="ec-sr-target col-span-full grid grid-cols-subgrid items-center"
-          data-case="3"
-          aria-current="false"
-        >
-          <span class="ec-marker" aria-hidden="true">4</span>
-          <span class="ec-sr-frame w-full">
+          <span class="-mb-2 w-fit text-typo-medium" data-tap="2">
+            {t.nameLabel}<span class="text-status-error-text">*</span>
+          </span>
+          <span
+            class="flex min-h-13 items-center rounded-xl border-2 border-gray-low bg-gray-min px-4"
+            data-target="2"
+          >
+            {t.nameValue}
+          </span>
+
+          <span class="-mb-2 w-fit text-typo-medium" data-tap="3">
+            {t.emailLabel}<span class="text-status-error-text">*</span>
+          </span>
+          <span class="flex flex-col gap-1.5" data-target="3">
             <span
-              class="flex min-h-13 items-center rounded-xl border-2 border-status-error-text bg-status-error-bg px-4 py-3 text-body"
+              class="flex min-h-13 items-center rounded-xl border-2 border-status-error-text bg-status-error-bg px-4"
             >
               {t.emailValue}
             </span>
-            <span class="sr-only">{targetLabel(3)}</span>
+            <span class="text-sm text-status-error-text">{t.emailError}</span>
           </span>
-        </button>
 
-        <p class="col-start-2 -mt-2 flex items-center gap-2 text-status-error-text">
-          <IconAlertCircle class="size-5 shrink-0" aria-hidden="true" />
-          <span>{t.emailError}</span>
-        </p>
-
-        <button
-          type="button"
-          class="ec-sr-target col-span-full mt-1 grid grid-cols-subgrid items-center"
-          data-case="4"
-          aria-current="false"
-        >
-          <span class="ec-marker" aria-hidden="true">5</span>
-          <span class="ec-sr-frame justify-self-start">
-            <span class="grid size-13 place-items-center rounded-full bg-brand-green-medium">
-              <IconArrowRight class="size-6 text-brand-blue" aria-hidden="true" />
-            </span>
-            <span class="sr-only">{targetLabel(4)}</span>
-          </span>
-        </button>
-      </div>
-
-      <div
-        class="ec-readout"
-        id="demoReadout"
-        data-has-selection="false"
-        data-silent-text={t.silent}
-        data-live-template={t.liveTemplate}
-        data-cases={JSON.stringify(t.cases)}
-      >
-        <div class="ec-readout-empty flex items-start gap-4 lg:pt-4">
           <span
-            class="grid size-9 shrink-0 place-items-center rounded-full bg-brand-green-medium"
-            aria-hidden="true"
+            class="mt-1 grid size-13 place-items-center rounded-full bg-gray-high text-gray-min"
+            data-target="4"
           >
-            <IconPointerFilled class="size-5 text-brand-blue" />
+            <IconArrowRight class="size-6" />
           </span>
-
-          <p class="max-w-[38ch] text-lead text-typo-medium">{t.placeholderBody}</p>
         </div>
 
-        <!-- --- Announced through the live region below instead: letting a real
-             screen reader read transcripts of a screen reader gets confusing. -->
-        <div class="ec-readout-result flex flex-col gap-6" aria-hidden="true">
-          <p class="flex items-center gap-3.5">
-            <span class="ec-marker" data-is-active="true" id="demoCaseNumber">1</span>
-            <span class="text-heading-2" id="demoCaseName"></span>
-          </p>
+        <!-- --- One frame that travels from part to part, the way the VoiceOver
+             cursor does -->
+        <span class="ec-vo-cursor"></span>
+      </div>
 
-          <div class="flex flex-col gap-2.5">
-            <p class="text-label text-typo-medium uppercase">{t.columnCommon}</p>
-            <ScreenReaderCaption textId="demoCaseCommon" />
-          </div>
-
-          <div class="flex flex-col gap-2.5">
-            <p class="text-label text-brand-blue uppercase">{t.columnCorrect}</p>
-            <ScreenReaderCaption textId="demoCaseCorrect" />
-          </div>
-
-          <p class="max-w-[62ch] text-body text-typo-medium" id="demoCaseExplanation"></p>
+      <div class="ec-curtain" aria-hidden="true">
+        <div class="flex flex-col items-center gap-4 text-center">
+          <IconEyeOff class="size-8 text-brand-green-medium" />
+          <p class="max-w-[18rem] text-lead text-typo-min">{t.curtainText}</p>
         </div>
       </div>
+
+      <!-- --- What is heard. Told to a real screen reader through the live region
+           below. -->
+      <p
+        class="ec-demo-label hidden pl-1 text-sm text-typo-medium lg:mb-3 lg:block"
+        aria-hidden="true"
+      >
+        {t.outputLabel}
+      </p>
+
+      <div class="ec-demo-caption max-lg:mt-4" aria-hidden="true">
+        <!-- --- Greyed out until the first step, so the waiting state is not
+             mistaken for an announcement -->
+        <ScreenReaderCaption textId="demoCaption" isSilent>{t.ready}</ScreenReaderCaption>
+      </div>
+
+      <div class="ec-demo-note mt-8" aria-hidden="true">
+        <p class="ec-demo-name text-heading-2"></p>
+        <p class="ec-demo-text mt-2 max-w-[46ch] text-typo-medium">{t.readyNote}</p>
+      </div>
+
+      <span
+        class="ec-demo-rule hidden border-t border-gray-low lg:mt-10 lg:block"
+        aria-hidden="true"></span>
     </div>
 
     <p class="sr-only" id="demoAnnouncement" aria-live="polite"></p>
-
-    <p class="mt-14 max-w-[62ch] ec-reveal text-body text-typo-medium">{t.closing}</p>
   </div>
 </section>
 
 <style>
-  /* --- Numbered marker, the way a defect is called out on an annotated drawing --- */
-  .ec-marker {
-    display: grid;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 9999px;
-    background: var(--color-brand-green-low);
-    color: var(--color-brand-blue);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    transition:
-      background-color 160ms ease,
-      color 160ms ease;
-  }
-
-  .ec-sr-target[aria-current="true"] .ec-marker,
-  .ec-marker[data-is-active="true"] {
-    background: #0b0c0e;
-    color: #ffffff;
-  }
-
-  .ec-sr-target {
-    cursor: pointer;
-    text-align: left;
-  }
-
-  /* --- Ring imitates the screen reader cursor. It doubles as the focus
-     indicator, so a keyboard user sees one frame instead of two competing ones;
-     near black on white clears the 3:1 that a focus indicator needs. --- */
-  .ec-sr-frame {
-    position: relative;
-    display: block;
-  }
-
-  .ec-sr-frame::after {
-    content: "";
+  /* --- The VoiceOver cursor: near black, which clears 3:1 on the light form --- */
+  .ec-vo-cursor {
     position: absolute;
-    inset: -0.5rem;
+    top: 0;
+    left: 0;
     border: 3px solid #0b0c0e;
     border-radius: 0.875rem;
     opacity: 0;
-    transition: opacity 160ms ease;
     pointer-events: none;
+    transition:
+      transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      width 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      height 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 200ms ease;
   }
 
-  .ec-sr-target[aria-current="true"] .ec-sr-frame::after,
-  .ec-sr-target:focus-visible .ec-sr-frame::after {
+  .ec-demo-stage[data-has-cursor="true"] .ec-vo-cursor {
     opacity: 1;
   }
 
-  .ec-sr-target:focus-visible {
-    outline: none;
+  /* --- Before the first step the cursor has no place yet; it appears where it
+     starts instead of flying in from the corner --- */
+  .ec-demo-stage[data-is-placing="true"] .ec-vo-cursor {
+    transition: opacity 200ms ease;
   }
 
-  .ec-sr-target:hover:not([aria-current="true"]) .ec-sr-frame::after {
-    opacity: 0.25;
+  /* --- Only the parts are tappable, and only while they can be seen --- */
+  .ec-demo-stage :is([data-target], [data-tap]) {
+    cursor: pointer;
   }
 
-  .ec-readout[data-has-selection="false"] .ec-readout-result,
-  .ec-readout[data-has-selection="true"] .ec-readout-empty {
-    display: none;
+  .ec-demo-layout[data-is-blind="true"] .ec-demo-stage :is([data-target], [data-tap]) {
+    cursor: default;
+  }
+
+  /* --- Same cell as the picture, painted above it --- */
+  .ec-curtain {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 1.5rem;
+    background: #0b0c0e;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 450ms ease;
+  }
+
+  .ec-demo-layout[data-is-blind="true"] .ec-curtain {
+    opacity: 1;
+  }
+
+  /* --- Phones: settings above the picture, then the caption and the step right
+     below it, so picture, caption and button fit on one screen.
+     Desktop: what is seen on the left, what is heard on the right with its
+     switch on top, the controls for the picture in one row below. --- */
+  .ec-demo-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "variant"
+      "settings"
+      "screen"
+      "caption"
+      "step"
+      "note";
+
+    @media (width >= 64rem) {
+      grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+      grid-template-rows: auto auto auto 1fr auto;
+      grid-template-areas:
+        "screen variant"
+        "screen label"
+        "screen caption"
+        "screen note"
+        "controls controls";
+      column-gap: 4rem;
+    }
+  }
+
+  /* --- display only below lg: a scoped display would beat the lg:flex in the
+     markup --- */
+  .ec-demo-controls {
+    @media (width < 64rem) {
+      display: contents;
+    }
+
+    @media (width >= 64rem) {
+      grid-area: controls;
+    }
+  }
+
+  .ec-demo-variant {
+    grid-area: variant;
+  }
+
+  .ec-demo-settings {
+    grid-area: settings;
+  }
+
+  .ec-demo-stage {
+    grid-area: screen;
+  }
+
+  .ec-curtain {
+    grid-area: screen;
+  }
+
+  .ec-demo-label {
+    grid-area: label;
+  }
+
+  .ec-demo-caption {
+    grid-area: caption;
+  }
+
+  .ec-demo-step {
+    grid-area: step;
+  }
+
+  .ec-demo-note {
+    grid-area: note;
+  }
+
+  .ec-demo-rule {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    align-self: start;
   }
 </style>
 
 <script>
   import type { DemoCase } from "../../i18n/types"
 
-  const readout = document.getElementById("demoReadout")
-  const targets = Array.from(document.querySelectorAll<HTMLButtonElement>(".ec-sr-target"))
-  const caseNumber = document.getElementById("demoCaseNumber")
-  const caseName = document.getElementById("demoCaseName")
-  const caseExplanation = document.getElementById("demoCaseExplanation")
-  const commonOutput = document.getElementById("demoCaseCommon")
-  const correctOutput = document.getElementById("demoCaseCorrect")
-  const liveRegion = document.getElementById("demoAnnouncement")
+  const demo = document.querySelector<HTMLElement>(".ec-demo")
+  if (demo) {
+    const text = JSON.parse(demo.dataset.text ?? "{}")
+    const cases: DemoCase[] = text.cases
+    const layout = demo.querySelector<HTMLElement>(".ec-demo-layout")!
+    const stage = demo.querySelector<HTMLElement>(".ec-demo-stage")!
+    const cursor = stage.querySelector<HTMLElement>(".ec-vo-cursor")!
+    const targets = [...stage.querySelectorAll<HTMLElement>("[data-target]")]
+    const caption = demo.querySelector<HTMLElement>("#demoCaption")!
+    const position = demo.querySelector<HTMLElement>(".ec-demo-position")!
+    const caseName = demo.querySelector<HTMLElement>(".ec-demo-name")!
+    const caseText = demo.querySelector<HTMLElement>(".ec-demo-text")!
+    const announcement = demo.querySelector<HTMLElement>("#demoAnnouncement")!
+    const blindSwitch = demo.querySelector<HTMLButtonElement>(".ec-demo-blind")!
+    const variantInputs = [...demo.querySelectorAll<HTMLInputElement>("[name='demoVariant']")]
 
-  const cases: DemoCase[] = JSON.parse(readout?.dataset.cases ?? "[]")
-  const silentText = readout?.dataset.silentText ?? ""
-  const liveTemplate = readout?.dataset.liveTemplate ?? ""
+    let index = -1
+    const isCorrect = () => variantInputs.find((input) => input.checked)?.value === "correct"
+    const fill = (template: string, values: Record<string, string>) =>
+      template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "")
 
-  function renderCaption(element: HTMLElement | null, text: string, isSilent: boolean) {
-    if (!element) return
-    element.textContent = isSilent ? silentText : text
-    // --- The caption swaps its icon and its tone off this attribute
-    element.closest(".ec-caption")?.setAttribute("data-is-silent", String(isSilent))
-  }
-
-  function revealReadout() {
-    if (!readout) return
-    const rect = readout.getBoundingClientRect()
-    // --- Only below lg, where the readout sits under the form instead of beside it
-    const isFullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
-    if (isFullyVisible) return
-    readout.scrollIntoView({ block: "end", behavior: "smooth" })
-  }
-
-  function selectCase(index: number) {
-    const demoCase = cases[index]
-    if (!demoCase || !readout) return
-
-    targets.forEach((target, targetIndex) => {
-      target.setAttribute("aria-current", targetIndex === index ? "true" : "false")
-    })
-
-    const isCommonSilent = demoCase.isCommonSilent === true
-    const isCorrectSilent = demoCase.isCorrectSilent === true
-
-    readout.dataset.hasSelection = "true"
-    if (caseNumber) caseNumber.textContent = String(index + 1)
-    if (caseName) caseName.textContent = demoCase.name
-    if (caseExplanation) caseExplanation.textContent = demoCase.explanation
-    renderCaption(commonOutput, demoCase.common, isCommonSilent)
-    renderCaption(correctOutput, demoCase.correct, isCorrectSilent)
-
-    if (liveRegion) {
-      liveRegion.textContent = liveTemplate
-        .replace("{name}", demoCase.name)
-        .replace("{common}", isCommonSilent ? silentText : demoCase.common)
-        .replace("{correct}", isCorrectSilent ? silentText : demoCase.correct)
-        .replace("{explanation}", demoCase.explanation)
+    // --- The cursor sits a little outside the part it frames
+    const placeCursor = () => {
+      const target = targets[index]
+      if (!target) return
+      const stageRect = stage.getBoundingClientRect()
+      const rect = target.getBoundingClientRect()
+      const gap = 8
+      cursor.style.transform = `translate(${rect.left - stageRect.left - gap}px, ${rect.top - stageRect.top - gap}px)`
+      cursor.style.width = `${rect.width + gap * 2}px`
+      cursor.style.height = `${rect.height + gap * 2}px`
     }
+
+    const render = () => {
+      const demoCase = cases[index]
+      if (!demoCase) return
+      const correct = isCorrect()
+      const isSilent = correct
+        ? demoCase.isCorrectSilent === true
+        : demoCase.isCommonSilent === true
+      const spoken = isSilent ? text.silent : correct ? demoCase.correct : demoCase.common
+      const note = correct ? demoCase.fix : demoCase.explanation
+      const positionText = fill(text.position, {
+        number: String(index + 1),
+        total: String(cases.length),
+      })
+
+      caption.textContent = spoken
+      caption.closest(".ec-caption")?.setAttribute("data-is-silent", String(isSilent))
+      position.textContent = positionText
+      caseName.textContent = correct ? demoCase.fixedName : demoCase.name
+      caseText.textContent = note
+      announcement.textContent = fill(text.liveTemplate, {
+        position: positionText,
+        variant: correct ? text.variantCorrect : text.variantCommon,
+        // --- The template adds its own full stop after the caption
+        caption: spoken.replace(/\.$/, ""),
+        note,
+      })
+    }
+
+    const select = (newIndex: number) => {
+      const isFirst = index < 0
+      index = newIndex
+      if (isFirst) stage.dataset.isPlacing = "true"
+      placeCursor()
+      stage.dataset.hasCursor = "true"
+      if (isFirst) requestAnimationFrame(() => delete stage.dataset.isPlacing)
+      render()
+    }
+
+    demo
+      .querySelector(".ec-demo-next")!
+      .addEventListener("click", () => select((index + 1) % cases.length))
+
+    // --- A tap on a part or its label selects it. A tap beside them does nothing,
+    // like VoiceOver on an empty spot.
+    stage.addEventListener("click", (event) => {
+      if (layout.dataset.isBlind === "true") return
+      const tapped = (event.target as HTMLElement).closest<HTMLElement>("[data-target], [data-tap]")
+      if (tapped) select(Number(tapped.dataset.target ?? tapped.dataset.tap))
+    })
+
+    variantInputs.forEach((input) => input.addEventListener("change", render))
+
+    blindSwitch.addEventListener("click", () => {
+      const isBlind = blindSwitch.getAttribute("aria-checked") !== "true"
+      blindSwitch.setAttribute("aria-checked", String(isBlind))
+      layout.dataset.isBlind = String(isBlind)
+    })
+
+    window.addEventListener("resize", placeCursor)
   }
-
-  targets.forEach((target, index) => {
-    target.addEventListener("click", (event) => {
-      selectCase(index)
-      // --- detail is 0 for Enter and Space; scrolling on keyboard activation
-      // would move the page out from under the user.
-      if (event.detail > 0) revealReadout()
-    })
-
-    // --- Keyboard focus selects too, the way a screen reader cursor would
-    target.addEventListener("focus", () => {
-      if (target.matches(":focus-visible")) selectCase(index)
-    })
-  })
 </script>

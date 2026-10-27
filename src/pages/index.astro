@@ -6,6 +6,12 @@ import HomePage from "../views/home/HomePage.astro"
 const t = useTranslations(Astro.currentLocale).home
 ---
 
-<BaseLayout title={t.meta.title} description={t.meta.description} routeKey="home" isHeaderOnDark hasStructuredData>
+<BaseLayout
+  title={t.meta.title}
+  description={t.meta.description}
+  routeKey="home"
+  isHeaderOnDark
+  hasStructuredData
+>
   <HomePage />
 </BaseLayout>

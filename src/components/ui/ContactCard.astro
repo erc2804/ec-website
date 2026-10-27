@@ -28,7 +28,7 @@ const t = useTranslations(Astro.currentLocale).common
   </span>
   <span class="flex flex-col">
     <span>{label}</span>
-    <span class="text-lead font-bold [overflow-wrap:anywhere]">{address}</span>
+    <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
     {isExternal && <span class="sr-only">{t.opensInNewTab}</span>}
   </span>
 </a>

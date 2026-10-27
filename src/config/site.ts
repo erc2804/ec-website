@@ -26,10 +26,7 @@ export const siteConfig = {
   },
 
   // --- Platform drives which icon and which label the footer uses
-  profiles: [
-    { platform: "linkedin", url: "https://www.linkedin.com/in/ercancicek" },
-    { platform: "xing", url: "https://www.xing.com/profile/Ercan_Cicek10" },
-  ],
+  profiles: [{ platform: "linkedin", url: "https://www.linkedin.com/in/ercancicek" }],
 
   areaServed: ["Düsseldorf", "Ratingen", "Köln", "Nordrhein-Westfalen"],
 } as const

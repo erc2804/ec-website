@@ -1,7 +1,7 @@
 ---
 // --- Kept to one quiet row: the contact section above it is the close of the
 // page, and a heavy footer would compete with it.
-import { IconBrandLinkedin, IconBrandXing } from "@tabler/icons-astro"
+import { IconBrandLinkedin } from "@tabler/icons-astro"
 import { siteConfig } from "../config/site"
 import { footerRoutes, localisedPath, useTranslations, type Locale } from "../i18n"
 
@@ -20,7 +20,6 @@ const links = footerRoutes.map((key) => ({
 // --- Platform picks the mark; the link carries the name, the icon is decoration
 const profileIcons = {
   linkedin: IconBrandLinkedin,
-  xing: IconBrandXing,
 }
 
 // --- trailingSlash is "never", so a bare comparison is enough
@@ -28,7 +27,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
 ---
 
 <footer
-  class="ec-layout-visual-content flex flex-col gap-6 py-10 text-typo-medium md:flex-row md:items-center md:justify-between"
+  class="ec-layout-visual-content flex flex-col gap-6 py-10 text-typo-medium nav:flex-row nav:items-center nav:justify-between"
 >
   <p>© {year} {siteConfig.name}. {t.footer.rights}</p>
 
@@ -72,8 +71,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
 </footer>
 
 <style>
-  /* --- 2.75rem of height keeps every link past the target size WCAG 2.2 asks
-     for, without the row looking like a list of buttons --- */
   /* --- 2.75rem of height keeps every link past the target size WCAG 2.2 asks
      for; the underline itself comes from the base layer --- */
   .ec-footer-link {

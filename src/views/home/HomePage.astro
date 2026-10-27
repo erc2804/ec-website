@@ -1,22 +1,22 @@
 ---
-import { IconArrowRight, IconBrandLinkedin, IconChevronRight, IconMail } from "@tabler/icons-astro"
+import { IconArrowRight, IconChevronRight, IconExternalLink } from "@tabler/icons-astro"
+import ContactSection from "../../components/ContactSection.astro"
 import MouseChatBubble from "../../components/MouseChatBubble.astro"
+import RoleScene from "../../components/RoleScene.astro"
 import Button from "../../components/ui/Button.astro"
-import ContactCard from "../../components/ui/ContactCard.astro"
 import ProjectCard from "../../components/ui/ProjectCard.astro"
 import Quote from "../../components/ui/Quote.astro"
 import ScrollCue from "../../components/ui/ScrollCue.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
-import { projects } from "../../data/projects"
-import { localisedPath, useTranslations, type Locale } from "../../i18n"
+import { featuredProjects } from "../../data/projects"
+import { localisedPath, useTranslations, type Locale, inquiryPath } from "../../i18n"
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
 const tHome = t.home
 const tBubble = t.chatBubble
 
-const contactHref = `mailto:${siteConfig.contact.email}`
 const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
 
 const offerKeys = ["accessibility", "design", "development"] as const
@@ -38,7 +38,11 @@ const offerSurfaceClasses = {
   <!-- --- Hero: three quarters of the viewport, so the page visibly goes on.
        The lines rise in on load; on scroll the text drifts up and the photo
        eases in, both driven by the scroll position itself, no script. -->
-  <section class="ec-hero ec-on-dark relative overflow-hidden bg-gray-min">
+  <section
+    class="ec-hero relative overflow-hidden bg-gray-min ec-on-dark"
+    data-chat-zone
+    data-chat={tBubble.heroZone}
+  >
     <!-- --- Three layers across the whole section: white ground, the cut-out
          portrait anchored to the right edge of the screen, the dark overlay on
          top. Only the text sits in a centred frame of at most 1920px. -->
@@ -49,7 +53,9 @@ const offerSurfaceClasses = {
         <!-- --- The dot between the two parts is drawn, not typed: a typed one
              gets read out or swallowed by a screen reader. A hidden comma gives
              the spoken version its pause. -->
-        <p class="flex ec-rise ec-optical-left items-center gap-2 text-sm tracking-[0.12em] text-brand-sand/70 uppercase">
+        <p
+          class="ec-optical-left flex ec-rise items-center gap-2 text-sm tracking-[0.12em] text-brand-sand/70 uppercase"
+        >
           <span>{tHome.hero.eyebrow[0]}</span>
           <span class="size-1 rounded-full bg-current" aria-hidden="true"></span>
           <span class="sr-only">,</span>
@@ -57,7 +63,7 @@ const offerSurfaceClasses = {
         </p>
 
         <h1
-          class="ec-rise ec-optical-left text-5xl tracking-[0.125rem] uppercase [--ec-rise-delay:120ms] md:text-7xl xl:text-8xl"
+          class="ec-optical-left ec-rise text-5xl tracking-[0.125rem] uppercase [--ec-rise-delay:120ms] md:text-7xl xl:text-8xl"
         >
           <span class="text-brand-green-medium" data-chat={tBubble.firstName}>Ercan</span>
           {" "}
@@ -65,15 +71,19 @@ const offerSurfaceClasses = {
         </h1>
 
         <p
-          class="ec-rise ec-optical-left text-2xl leading-[1.2] text-brand-sand [--ec-rise-delay:240ms] md:text-4xl"
+          class="ec-optical-left ec-rise text-2xl leading-[1.2] text-brand-sand [--ec-rise-delay:240ms] md:text-4xl"
         >
           {tHome.hero.claim[0]}
           <br />
           {tHome.hero.claim[1]}
         </p>
 
-        <div class="w-fit ec-rise [--ec-rise-delay:360ms]" data-chat={tBubble.contact}>
-          <Button href={contactHref}>
+        <div
+          class="w-fit ec-rise [--ec-rise-delay:360ms]"
+          data-chat={tBubble.contact}
+          data-inquiry-cta
+        >
+          <Button href={inquiryPath(currentLocale)}>
             {t.common.contactCta}
             <IconArrowRight slot="icon-end" class="size-5" />
           </Button>
@@ -84,7 +94,6 @@ const offerSurfaceClasses = {
         label={tHome.hero.scrollCue}
         class="absolute bottom-8 left-6 z-30 ec-rise text-brand-sand [--ec-rise-delay:900ms] md:left-14 xl:left-32 2xl:left-52"
       />
-
     </div>
     <!-- --- Photo at the right edge of the screen, never cropped (contain) -->
     <picture>
@@ -100,16 +109,16 @@ const offerSurfaceClasses = {
   </section>
 
   <!-- --- The three offers, each with its own page -->
-  <Section>
+  <Section data-chat-zone data-chat={tBubble.offersZone}>
     <h2 class="ec-reveal text-heading-1">{tHome.offers.title}</h2>
-    <ul role="list" class="mt-10 grid gap-8 ec-reveal ec-reveal-late md:grid-cols-2 lg:grid-cols-3">
+    <ul role="list" class="mt-10 grid ec-reveal gap-8 ec-reveal-late md:grid-cols-2 lg:grid-cols-3">
+      <!-- --- Card pattern from Inclusive Components: the link is the title
+           only, so its name stays short and the title is a real heading.
+           Its ::after stretches over the whole card for the click target.
+           The ring sits on the card, in the card's own shape. -->
       {
         offerKeys.map((key) => (
           <li data-chat={tBubble[key]} class="md:last:odd:col-span-2 lg:last:odd:col-span-1">
-            <!-- --- Card pattern from Inclusive Components: the link is the title
-                 only, so its name stays short and the title is a real heading.
-                 Its ::after stretches over the whole card for the click target.
-                 The ring sits on the card, in the card's own shape. -->
             <div class="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-gray-min shadow-sm transition-shadow has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-brand-green-high lg:hover:shadow-lg">
               <span
                 class:list={["grid h-40 place-items-center px-6", offerSurfaceClasses[key]]}
@@ -121,7 +130,7 @@ const offerSurfaceClasses = {
                     <span class="rounded-lg bg-gray-max/85 px-2.5 py-1 text-xs text-brand-sand">
                       {tHome.offers.vignettes.accessibilityCaption}
                     </span>
-                    <span class="grid size-11 place-items-center rounded-full bg-gray-min text-typo-high ring-[3px] ring-gray-high ring-offset-2 ring-offset-brand-green-medium transition-[box-shadow] duration-300 lg:group-hover:ring-offset-4 group-has-[a:focus-visible]:ring-offset-4">
+                    <span class="grid size-11 place-items-center rounded-full bg-gray-min text-typo-high ring-[3px] ring-gray-high ring-offset-2 ring-offset-brand-green-medium transition-[box-shadow] duration-300 group-has-[a:focus-visible]:ring-offset-4 lg:group-hover:ring-offset-4">
                       <IconChevronRight class="size-5" stroke-width={2.5} />
                     </span>
                   </span>
@@ -129,17 +138,17 @@ const offerSurfaceClasses = {
                 {key === "design" && (
                   <span class="relative">
                     <span class="relative block p-1 outline outline-1 outline-brand-sand">
-                      <span class="block h-14 w-32 rounded-xl bg-gray-min/20 transition-[width] duration-300 lg:group-hover:w-40 group-has-[a:focus-visible]:w-40" />
+                      <span class="block h-14 w-32 rounded-xl bg-gray-min/20 transition-[width] duration-300 group-has-[a:focus-visible]:w-40 lg:group-hover:w-40" />
                       <span class="absolute -top-1 -left-1 size-2 border border-brand-sand bg-gray-min" />
                       <span class="absolute -top-1 -right-1 size-2 border border-brand-sand bg-gray-min" />
                       <span class="absolute -bottom-1 -left-1 size-2 border border-brand-sand bg-gray-min" />
                       <span class="absolute -right-1 -bottom-1 size-2 border border-brand-sand bg-gray-min" />
                     </span>
                     <span class="absolute top-full left-1/2 mt-3 grid -translate-x-1/2 rounded bg-brand-sand px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-gray-high">
-                      <span class="col-start-1 row-start-1 transition-opacity duration-300 lg:group-hover:opacity-0 group-has-[a:focus-visible]:opacity-0">
+                      <span class="col-start-1 row-start-1 transition-opacity duration-300 group-has-[a:focus-visible]:opacity-0 lg:group-hover:opacity-0">
                         {tHome.offers.vignettes.designSizeBefore}
                       </span>
-                      <span class="col-start-1 row-start-1 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100 group-has-[a:focus-visible]:opacity-100">
+                      <span class="col-start-1 row-start-1 opacity-0 transition-opacity duration-300 group-has-[a:focus-visible]:opacity-100 lg:group-hover:opacity-100">
                         {tHome.offers.vignettes.designSizeAfter}
                       </span>
                     </span>
@@ -147,10 +156,10 @@ const offerSurfaceClasses = {
                 )}
                 {key === "development" && (
                   <span class="flex w-full max-w-64 flex-col overflow-hidden rounded-xl bg-gray-min py-1 font-mono text-[0.8125rem] leading-7 shadow-sm">
-                    <span class="truncate px-3 text-typo-medium line-through opacity-70 transition-opacity duration-300 lg:group-hover:opacity-40 group-has-[a:focus-visible]:opacity-40">
+                    <span class="truncate px-3 text-typo-medium line-through opacity-70 transition-opacity duration-300 group-has-[a:focus-visible]:opacity-40 lg:group-hover:opacity-40">
                       - {tHome.offers.vignettes.developmentRemoved}
                     </span>
-                    <span class="truncate bg-brand-green-medium/35 px-3 text-typo-high transition-colors duration-300 lg:group-hover:bg-brand-green-medium/60 group-has-[a:focus-visible]:bg-brand-green-medium/60">
+                    <span class="truncate bg-brand-green-medium/35 px-3 text-typo-high transition-colors duration-300 group-has-[a:focus-visible]:bg-brand-green-medium/60 lg:group-hover:bg-brand-green-medium/60">
                       + {tHome.offers.vignettes.developmentAdded}
                     </span>
                   </span>
@@ -171,9 +180,7 @@ const offerSurfaceClasses = {
                   aria-hidden="true"
                 >
                   {tHome.offers.more}
-                  <IconArrowRight
-                    class="size-5 transition-transform group-hover:translate-x-1 group-has-[a:focus-visible]:translate-x-1"
-                  />
+                  <IconArrowRight class="size-5 transition-transform group-hover:translate-x-1 group-has-[a:focus-visible]:translate-x-1" />
                 </span>
               </span>
             </div>
@@ -183,46 +190,103 @@ const offerSurfaceClasses = {
     </ul>
   </Section>
 
-  <!-- --- The argument: one person instead of three handovers -->
+  <!-- --- The roles. The cards above say what I do; this says in which role
+       someone can bring me in, across all three fields. Told with a small
+       scene (RoleScene) that changes with the role.
+
+       Desktop: one scene that travels down the left column and settles next to
+       the role being read, changing into it as it arrives. Below lg: every role carries
+       its own scene, already in its state, so nothing has to move.
+
+       No chat zone: the scene has its own Ercan. -->
   <Section tone="dark">
-    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-      <div>
-        <h2 class="ec-reveal text-display text-balance">
-          {tHome.argument.title}
-        </h2>
-        <div class="mt-8 flex flex-col gap-5 ec-reveal ec-reveal-late">
-          {tHome.argument.body.map((paragraph) => <p class="text-lead text-typo-min/85">{paragraph}</p>)}
-        </div>
+    <h2 class="ec-reveal text-display text-balance">{tHome.roles.title}</h2>
+    <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-min/85 ec-reveal-late">
+      {tHome.roles.lead}
+    </p>
+
+    <div class="ec-roles mt-10 grid lg:mt-16 lg:grid-cols-2 lg:gap-16">
+      <div class="relative hidden lg:block">
+        <RoleScene
+          class="ec-roles-scene absolute inset-x-0 top-0 h-[26rem] rounded-3xl bg-typo-min/5 transition-[translate] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+        />
       </div>
-      <dl class="grid content-center gap-8 ec-reveal ec-reveal-late sm:grid-cols-3 lg:grid-cols-1">
+
+      <ol role="list">
         {
-          tHome.argument.facts.map((fact) => (
-            <div class="border-l-4 border-brand-green-medium pl-5">
-              <dd class="text-heading-1 text-brand-green-medium">{fact.value}</dd>
-              <dt class="text-typo-min/85">{fact.label}</dt>
-            </div>
+          tHome.roles.items.map((role, index) => (
+            <li
+              class="ec-roles-step flex flex-col gap-3 border-t border-typo-min/20 py-10 transition-colors duration-500 lg:min-h-[26rem] lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-medium"
+              data-role={index + 1}
+              data-is-active={index === 0 ? "true" : "false"}
+            >
+              <RoleScene
+                role={(index + 1) as 1 | 2 | 3 | 4}
+                isCompact
+                class="mb-4 h-56 ec-reveal rounded-3xl bg-typo-min/5 lg:hidden"
+              />
+              <span
+                class="text-sm font-bold tracking-[0.12em] text-brand-green-medium"
+                aria-hidden="true"
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 class="text-heading-1">{role.title}</h3>
+              <p class="max-w-[46ch] text-lead text-typo-min/85">
+                {role.text
+                  .split("**")
+                  .map((part, partIndex) =>
+                    partIndex % 2 === 1 ? (
+                      <strong class="rounded-sm bg-brand-green-medium/15 [box-decoration-break:clone] px-1 font-normal text-typo-min">
+                        {part}
+                      </strong>
+                    ) : (
+                      part
+                    )
+                  )}
+              </p>
+            </li>
           ))
         }
-      </dl>
+      </ol>
     </div>
+
+    <p class="mt-10 max-w-[60ch] ec-reveal text-lead text-typo-min/85 lg:mt-16">
+      {tHome.roles.note}
+    </p>
   </Section>
 
   <!-- --- Endorsements -->
   <Section>
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
       <h2 class="ec-reveal text-heading-1">{tHome.quotes.title}</h2>
-      <a href={`${linkedInUrl}/details/recommendations/`} class="ec-reveal font-bold" data-chat={tBubble.quotes}>
-        {tHome.quotes.allOnLinkedIn}
-      </a>
+      <!-- --- The link says where it goes, the hint under it says what it needs.
+           LinkedIn shows recommendations only to signed-in members, so the
+           hint is tied to the link as its description: a screen reader reads
+           it with the link, before anyone runs into the login wall. -->
+      <div class="flex ec-reveal flex-col gap-1 md:items-end">
+        <a
+          href={`${linkedInUrl}/details/recommendations/`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 font-bold"
+          aria-describedby="quotesLoginHint"
+        >
+          {tHome.quotes.allLink}
+          <IconExternalLink class="size-[1.1em] shrink-0 -translate-y-0.5" aria-hidden="true" />
+          <span class="sr-only">{t.common.opensInNewTab}</span>
+        </a>
+        <p id="quotesLoginHint" class="text-sm text-typo-medium">{tHome.quotes.loginNote}</p>
+      </div>
     </div>
-    <ul role="list" class="mt-10 grid gap-8 ec-reveal ec-reveal-late md:grid-cols-3" data-chat={tBubble.quotes}>
+    <ul role="list" class="mt-10 grid ec-reveal gap-8 ec-reveal-late md:grid-cols-3">
       {
         tHome.quotes.items.map((quote) => (
           <li>
             <Quote
               name={quote.name}
               role={quote.role}
-              note={quote.isTranslated ? tHome.quotes.translated : undefined}
+              annotation={quote.isTranslated ? tHome.quotes.translated : undefined}
             >
               {quote.text}
             </Quote>
@@ -240,18 +304,21 @@ const offerSurfaceClasses = {
         {tHome.projects.all}
       </a>
     </div>
-    <ul role="list" class="mt-10 grid grid-cols-2 gap-6 ec-reveal ec-reveal-late md:gap-8 xl:grid-cols-4" data-chat={tBubble.projects}>
+    <ul
+      role="list"
+      class="mt-10 grid ec-reveal grid-cols-2 gap-6 ec-reveal-late md:gap-8 xl:grid-cols-4"
+    >
       {
-        projects.map((project) => (
+        featuredProjects.map((project) => (
           <li>
             <ProjectCard
               href={localisedPath("portfolio", currentLocale)}
+              slug={project.slug}
               label={project.label}
               type={project.type}
-              category={project.category[currentLocale]}
               image={project.image}
-              techs={project.techs}
-              ariaLabel={`${tHome.projects.cardLabel}: ${project.label}, ${project.category[currentLocale]}`}
+              summary={project.summary[currentLocale]}
+              ariaLabel={`${tHome.projects.cardLabel}: ${project.label}`}
             />
           </li>
         ))
@@ -260,27 +327,88 @@ const offerSurfaceClasses = {
   </Section>
 
   <!-- --- Contact -->
-  <Section>
-    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20">
-      <div>
-        <h2 class="ec-reveal text-display text-balance">{tHome.contact.title}</h2>
-        <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
-          {tHome.contact.body}
-        </p>
-      </div>
-      <div class="flex flex-col gap-6 ec-reveal ec-reveal-late lg:justify-center" data-chat={tBubble.contact}>
-        <ContactCard href={contactHref} label={tHome.contact.email} address={siteConfig.contact.email}>
-          <IconMail aria-hidden="true" />
-        </ContactCard>
-        <ContactCard href={linkedInUrl} label={tHome.contact.linkedin} address="ercancicek" isExternal>
-          <IconBrandLinkedin aria-hidden="true" />
-        </ContactCard>
-      </div>
-    </div>
-  </Section>
+  <ContactSection
+    title={tHome.contact.title}
+    body={tHome.contact.body}
+    cardsChat={tBubble.contact}
+    data-chat-zone
+    data-chat={tBubble.contactZone}
+  />
 
   <MouseChatBubble />
 </main>
+
+<script>
+  // --- Desktop roles: the scene travels down to the role being read and
+  // settles beside it, changing into it on the way. The active role is the last one
+  // whose top has passed the middle of the viewport. Worked out from the
+  // positions on every frame of scrolling rather than from intersection
+  // events, so it is the same answer in both directions and at any speed.
+  //
+  // When the change starts is a share of the move: 0 runs both together, 0.7
+  // lets the scene arrive first and turn as it lands. Move and change share
+  // duration and curve (600ms, see RoleScene), so either reads as one motion.
+  const scene = document.querySelector<HTMLElement>(".ec-roles-scene")
+  const steps = [...document.querySelectorAll<HTMLElement>(".ec-roles-step")]
+  const desktop = window.matchMedia("(width >= 64rem)")
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+  const moveDuration = 600
+  const morphDelayShare = 0
+  let activeIndex = -1
+  let morphTimeout = 0
+
+  const update = (isInstant = false) => {
+    if (!scene || !steps.length || !desktop.matches) return
+
+    const centre = window.innerHeight / 2
+    let index = 0
+    steps.forEach((step, stepIndex) => {
+      if (step.getBoundingClientRect().top <= centre) index = stepIndex
+    })
+    if (index === activeIndex && !isInstant) return
+
+    activeIndex = index
+    for (const [stepIndex, step] of steps.entries()) {
+      step.dataset.isActive = stepIndex === index ? "true" : "false"
+    }
+
+    const offset = steps[index].getBoundingClientRect().top - steps[0].getBoundingClientRect().top
+    const role = steps[index].dataset.role ?? "1"
+    window.clearTimeout(morphTimeout)
+
+    if (isInstant) {
+      // --- No travel on load and after a resize: the scene just is there
+      scene.style.transition = "none"
+      scene.style.translate = `0 ${offset}px`
+      scene.dataset.role = role
+      void scene.offsetHeight
+      scene.style.transition = ""
+      return
+    }
+
+    scene.style.translate = `0 ${offset}px`
+    // --- Under reduced motion the move is instant, so there is nothing to wait for
+    const delay = reducedMotion.matches ? 0 : moveDuration * morphDelayShare
+    morphTimeout = window.setTimeout(() => {
+      scene.dataset.role = role
+    }, delay)
+  }
+
+  let isFramePending = false
+  const requestUpdate = () => {
+    if (isFramePending) return
+    isFramePending = true
+    requestAnimationFrame(() => {
+      isFramePending = false
+      update()
+    })
+  }
+
+  update(true)
+  window.addEventListener("scroll", requestUpdate, { passive: true })
+  // --- Sizes change with the layout, so the position is measured afresh
+  window.addEventListener("resize", () => update(true), { passive: true })
+</script>
 
 <style>
   /* --- The dotted canvas of a design tool, behind the selection frame --- */

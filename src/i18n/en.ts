@@ -1,4 +1,5 @@
 import type { Translations } from "./index"
+import type { DemoCase } from "./types"
 
 // --- Screen reader transcripts follow English VoiceOver, which says "button" and
 // "edit text" where the German voice says "Taste" and "Textfeld".
@@ -6,7 +7,9 @@ import type { Translations } from "./index"
 export const en: Translations = {
   common: {
     opensInNewTab: "(opens in a new tab)",
-    contactCta: "Start a conversation",
+    contactCta: "Start a project",
+    // --- Under "LinkedIn" on the contact cards: what the click brings, not the profile slug
+    linkedinInvite: "Let's connect",
   },
 
   routeLabels: {
@@ -16,6 +19,8 @@ export const en: Translations = {
     development: "Development",
     portfolio: "Portfolio",
     about: "About me",
+    inquiry: "Start a project",
+    inquirySent: "Request sent",
     imprint: "Legal notice",
     privacy: "Privacy",
     accessibilityStatement: "Accessibility statement",
@@ -26,7 +31,6 @@ export const en: Translations = {
     rights: "All rights reserved.",
     profiles: {
       linkedin: "LinkedIn profile",
-      xing: "Xing profile",
     },
   },
 
@@ -123,6 +127,9 @@ export const en: Translations = {
   },
 
   chatBubble: {
+    heroZone: "Glad you made it.",
+    offersZone: "Which one do you need?",
+    contactZone: "Looking forward to hearing from you.",
     starter: "How are you doing?",
     firstName: "My name is pronounced Erjan (like in jungle).",
     mainLinks: "Where to next?",
@@ -131,8 +138,6 @@ export const en: Translations = {
     design: "Yes, I do that myself too.",
     development: "And that as well.",
     contact: "Go on.",
-    projects: "All real, nothing made up.",
-    quotes: "They really wrote that.",
   },
 
   home: {
@@ -174,22 +179,34 @@ export const en: Translations = {
         developmentAdded: "padding: var(--space-3);",
       },
     },
-    argument: {
-      title: "One person. No game of telephone.",
-      body: [
-        "Usually one person designs, another one builds, and at the end a third one checks accessibility. Something gets lost at every handover.",
-        "Not with me. I design in Figma, build it in code myself and test with a screen reader and the keyboard. What I draw is what I build.",
+    roles: {
+      title: "How you can bring me in",
+      lead: "Whether it's accessibility, design or development: you decide which role I take on.",
+      items: [
+        {
+          title: "Take over",
+          text: "You give me the goal, I deliver the result. **Design, frontend or both**, from the first idea to the finished product.",
+        },
+        {
+          title: "Join your team",
+          text: "I become **part of your team**. As a designer who knows what can be built, or as a developer who understands what the design is after.",
+        },
+        {
+          title: "Review",
+          text: "You want to know where you stand. I audit your application for **accessibility** and, if you like, look at design and code too. You get a **report** your team can work with right away.",
+        },
+        {
+          title: "Enable",
+          text: "Your team should be able to do it themselves. Through **mentoring and training** in accessibility, design and frontend, so they apply it with confidence in day-to-day work.",
+        },
       ],
-      facts: [
-        { value: "10+", label: "years of design and code" },
-        { value: "3", label: "roles, one person" },
-        { value: "DE / EN", label: "remote or in Düsseldorf" },
-      ],
+      note: "It often starts with a review and grows from there. If you're not sure what you need, that's a good reason to talk.",
     },
     quotes: {
-      title: "What clients say",
-      translated: "Translated from German",
-      allOnLinkedIn: "All 15 recommendations on LinkedIn",
+      title: "Selected recommendations",
+      allLink: "All recommendations on LinkedIn",
+      loginNote: "Visible only when signed in to LinkedIn",
+      translated: "translated",
       items: [
         {
           text: "Ercan excels at understanding user needs and turning complex problems into seamless, intuitive experiences. I would gladly work with him again.",
@@ -206,19 +223,143 @@ export const en: Translations = {
         {
           text: "I am more than satisfied with the result and above all with the speed and flexibility of his work. He was absolutely the right partner for this project!",
           name: "Katharina Sauer",
-          role: "kindeskinder",
+          role: "Managing Director, KKS Karl Konrad",
           isTranslated: true,
         },
       ],
     },
     projects: {
-      title: "Selected projects",
-      all: "All projects",
+      title: "From my portfolio",
+      all: "See the portfolio",
       cardLabel: "Go to project",
     },
     contact: {
       title: "Tell me what it's about.",
       body: "Drop me a short note on what you're planning and what it's built with. You'll get an honest assessment, even if it is: you don't need me for this.",
+      email: "Email",
+      linkedin: "LinkedIn",
+    },
+  },
+
+  inquiry: {
+    meta: {
+      title: "Start a project | Ercan Cicek",
+      description:
+        "Tell me what it's about: accessibility, design or development. Fill in the form yourself or let Pixel-Ercan help. I usually reply within two working days.",
+    },
+    title: "Start a project",
+    lead: "Tell me what it's about. A few sentences are enough. Fill in the form yourself, or just write it down and Pixel-Ercan fills it in for you.",
+    assistant: {
+      title: "Fill it in with Pixel-Ercan",
+      intro: "Hi, I'm Pixel-Ercan. Tell me about your project and I'll fill in the form for you.",
+      disclosure:
+        "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic. Nothing is sent to Ercan until you send it yourself.",
+      privacyLink: "More in the privacy policy",
+      logLabel: "Conversation with Pixel-Ercan",
+      speakerYou: "You",
+      speakerAssistant: "Pixel-Ercan",
+      inputLabel: "Your message to Pixel-Ercan",
+      placeholder:
+        "Hi Ercan, we run an online shop for bike parts and need to be accessible by June. Can you check where we stand? I'm Lena, you can reach me at lena@example.com",
+      replyPlaceholder: "Your reply …",
+      send: "Send",
+      callbackYes: "Yes, please",
+      callbackNo: "No, email is fine",
+      callbackYesMessage: "Yes, please call me.",
+      callbackNoMessage: "No, email is fine.",
+      working: "Pixel-Ercan is typing …",
+      empty: "Write Pixel-Ercan a few words first, then he gets going.",
+      filled: "Filled in: {fields}",
+      toForm: "Show",
+      showEarlierOne: "Show 1 earlier message",
+      showEarlierMany: "Show {count} earlier messages",
+      hideEarlier: "Hide earlier messages",
+      toNewest: "Jump to the latest message",
+      reset: "Start the chat over",
+      error: "That didn't work just now. Try again in a moment or fill in the form yourself.",
+      busy: "It's busy right now. Try again in a minute or fill in the form yourself.",
+      tooLong: "The chat is getting long. Please add the rest directly in the form.",
+      tag: "by Pixel-Ercan",
+      fieldNames: {
+        topics: "Topic",
+        goal: "Project",
+        name: "Name",
+        email: "Email",
+        phone: "Phone",
+        callback: "Call back",
+      },
+    },
+    form: {
+      title: "Your request",
+      optional: "optional",
+      topicsLegend: "What can I help with?",
+      topicsHint: "Pick as many as you like",
+      topics: {
+        accessibility: "Accessibility",
+        design: "Design",
+        development: "Development",
+        other: "Something else",
+      },
+      goalLabel: "Your project",
+      goalHint: "What should be built or improved? Add a timeframe and anything you already know",
+      goalPlaceholder:
+        "Our online shop needs to be accessible by June. We don't know where we stand and are looking for someone who checks it and fixes the issues right in the code.",
+      nameLabel: "Your name",
+      emailLabel: "Your email",
+      emailPlaceholder: "name@company.com",
+      phoneLabel: "Phone",
+      phonePlaceholder: "+49 211 1234567",
+      callbackLabel: "Please call me back",
+      honeypotLabel: "Please leave this field empty",
+      submit: "Send request",
+      sending: "Sending …",
+      waitForAssistant: "One moment, Pixel-Ercan is still filling in.",
+      sendError: "Your request didn't come through. Try again or write to me directly at {email}.",
+      errorSummary: "Your request hasn't been sent yet. Please check the following:",
+      errors: {
+        goal: "Tell me about your project in a sentence or two. That's enough for a first assessment.",
+        email: "I can't reply without your email address. Add it here.",
+        emailInvalid:
+          "Something's missing in the email address. It should look like name@company.com",
+        callbackPhone:
+          "I need your phone number to call you back. Or clear the “Please call me back” checkbox.",
+      },
+    },
+    sent: {
+      title: "Thank you! Your request has arrived.",
+      titleWithName: "Thank you, {name}! Your request has arrived.",
+      body: "You'll usually hear from me within the next two working days.",
+      back: "Back to the start page",
+      newRequest: "Start a new request",
+      offersTitle: "While you wait",
+      offers: {
+        accessibility: {
+          title: "Accessibility",
+          text: "How I test, what the law requires and how a screen reader experiences your site.",
+        },
+        design: {
+          title: "Design",
+          text: "How I design interfaces that explain themselves.",
+        },
+        development: {
+          title: "Development",
+          text: "How a design turns into code that holds up in every state.",
+        },
+      },
+    },
+    next: {
+      title: "What happens next",
+      steps: [
+        {
+          title: "I read your request myself",
+          text: "I usually get back to you within two working days.",
+        },
+        {
+          title: "You get a clear assessment",
+          text: "What makes sense, what it takes and how we can get started.",
+        },
+      ],
+      directTitle: "You can also reach me directly",
       email: "Email",
       linkedin: "LinkedIn",
     },
@@ -234,148 +375,184 @@ export const en: Translations = {
 
   accessibility: {
     meta: {
-      title: "Accessibility for web applications | Ercan Cicek",
+      title: "Accessibility audits and fixes for the EAA | Ercan Cicek",
       description:
-        "I test your web application for accessibility, fix what I find in the code, and show your team how to keep it that way. To WCAG 2.2 and the European Accessibility Act.",
+        "I test websites and web applications for accessibility to WCAG 2.2 and the European Accessibility Act, fix the issues in design and code, and train your team. The first call is free and comes with no strings attached.",
     },
 
     hero: {
       title: "I make your application accessible.",
       announcement: "I make your application accessible. Heading level 1",
-      announcementLabel: "How a screen reader announces this heading",
-      lead: "I test your application, fix what I find in the code, and show your team what to look out for. All from one person. You get working code back, not a list of things to do.",
-    },
-
-    statement: {
-      lead: "A screen reader doesn't read what's on the screen.",
-      emphasis: "It reads what's in the code.",
-      body: "When those two disagree, nobody on the team notices. There's nothing to see.",
+      announcementLabel: "What a screen reader says about this heading",
+      lead: "I test websites and web applications for accessibility to WCAG and the European Accessibility Act. If you like, I fix the issues myself, in design and code, and train your team so no new ones creep in.",
     },
 
     demo: {
-      title: "Five defects you cannot see.",
-      lead: "An ordinary form step, the kind every portal has. Five spots in it are marked.",
+      title: "Looks the same. Sounds different.",
+      lead: "People who are blind or have low vision use a screen reader. It's a program that reads out what's on the screen, on a Mac for example VoiceOver. So many barriers can't be seen, only heard.",
+      instruction:
+        "Step through the form element by element and compare what VoiceOver announces. Turn on the Screen Curtain and the picture goes dark.",
+      outputLabel: "What VoiceOver says",
+      variantLabel: "Build",
+      variantCommon: "How it's often built",
+      variantCorrect: "How it should be",
+      next: "Next element",
+      blind: "Screen Curtain",
+      curtainText: "Now all that's left is what the screen reader says.",
+      ready: "Nothing announced yet",
+      readyNote: "Press “Next element” or click a part of the form.",
+      silent: "Nothing announced, skipped.",
+      position: "{number} of {total}",
+      liveTemplate: "{position}, {variant}: {caption}. {note}",
       formTitle: "Your details",
-      requiredLegend: "Fields marked with {mark} are required.",
       nameLabel: "Full name",
       nameValue: "Martin Beck",
       emailLabel: "Email address",
       emailValue: "beck.company.com",
       emailError: "The @ is missing. For example: name@company.com",
-      markerLabel: "Defect {number}: {name}",
-      columnCommon: "Built the usual way",
-      columnCorrect: "Marked up properly",
-      placeholderBody:
-        "Pick a marked spot in the form. What a screen reader says about it, and what's missing in the code, appears here.",
-      silent: "nothing announced, the element is skipped",
-      liveTemplate:
-        "{name}. Built the usual way: {common}. Marked up properly: {correct}. {explanation}",
-      closing:
-        "All five live in the code, not the design. You won't spot them on screen, and you won't spot them in a sign-off meeting. They only show up when someone uses the application the way the people who rely on it do.",
       cases: [
         {
           name: "A symbol that means nothing",
+          fixedName: "A symbol that gets skipped",
           explanation:
-            "The shield is decoration. Without an empty alt attribute, the screen reader reads out the file name.",
+            "Pure decoration, but not marked as such in the code. So the screen reader reads out the file name.",
+          fix: "Marked as decoration, the symbol is simply skipped.",
           common: "image, icon-shield-blue-2.svg",
           correct: "",
           isCorrectSilent: true,
         },
         {
           name: "A heading that isn't one",
+          fixedName: "A real heading",
           explanation:
-            "Big and bold is not a heading. Without an h2 the line never reaches the heading list that blind users rely on to skim a page.",
+            "It looks like a heading but isn't one in the code. Anyone jumping from heading to heading with a screen reader won't find it.",
+          fix: "Marked up as a heading, it can be found without looking.",
           common: "Your details",
           correct: "Your details, heading level 2",
         },
         {
-          name: "A field with no label",
-          explanation:
-            "The text above looks like a label but isn't one. Without a label the field stays nameless, and the asterisk marking it as required never comes across either.",
+          name: "A field without a label",
+          fixedName: "A field with a label",
+          explanation: "The text above isn't connected to the field. The field stays nameless.",
+          fix: "Connected to its label, the field says what goes in and that it's required.",
           common: "edit text, Martin Beck",
           correct: "Full name, required, edit text, Martin Beck",
         },
         {
-          name: "An error only the eye can see",
-          explanation:
-            "A red border and red text are purely visual. Without aria-invalid and aria-describedby, nobody learns that the entry is wrong or why.",
-          common: "Email address, required, edit text, beck.company.com",
+          name: "An error shown only in red",
+          fixedName: "An error that gets announced",
+          explanation: "Only the color shows the error. Nobody hears it.",
+          fix: "Error and hint are tied to the field, so they're announced with it.",
+          common: "Email address, edit text, beck.company.com",
           correct:
-            "Email address, required, invalid data, edit text, beck.company.com, The @ is missing. For example: name@company.com",
+            "Email address, invalid data, edit text, beck.company.com. The @ is missing. For example: name@company.com",
         },
         {
-          name: "A button with no name",
-          explanation:
-            "An arrow is not a name. With no text in the button, nobody knows what happens on click.",
+          name: "A button without a name",
+          fixedName: "A button with a name",
+          explanation: "An arrow isn't a name. Nobody knows what the click does.",
+          fix: "With a name, it's clear where it leads.",
           common: "button",
           correct: "Continue to summary, button",
         },
-      ],
+      ] as DemoCase[],
     },
 
     law: {
-      title: "What applies, and what I test against.",
+      title: "The European Accessibility Act in short",
       body: [
-        "Since 28 June 2025, the German Accessibility Act applies to a wide range of digital services. The technical standard behind it is EN 301 549. It currently points at WCAG 2.1.",
-        "I test against WCAG 2.2, because the newer version closes gaps that 2.1 leaves open. When the standard catches up, you'll already be there.",
+        "Since June 28, 2025, many digital services for consumers in the EU have to be accessible. In Germany that's the BFSG. What it means in practice is set by the European standard EN 301 549. Its new version builds on WCAG 2.2, the international guidelines for accessible websites and apps. That's what I test against.",
+        "Market surveillance authorities check compliance, after complaints and on their own. They can set deadlines for fixes, issue fines and, as a last resort, shut a service down.",
       ],
-      facts: [
-        { term: "Law", description: "German Accessibility Act, in force since 28 June 2025" },
-        { term: "Standard", description: "EN 301 549, points at WCAG 2.1" },
-        { term: "What I test", description: "WCAG 2.2, level AA" },
-      ],
+      affectedTitle: "Usually affected",
+      affected:
+        "Online shops, online banking, booking and ticketing, contract sign-ups and apps for consumers",
+      notAffectedTitle: "Usually not",
+      notAffected:
+        "Purely B2B offerings and micro-enterprises providing services, meaning fewer than 10 employees and no more than €2 million in turnover",
     },
 
     services: {
-      title: "Three services, one person.",
-      lead: "Book any of them on its own. Together they go faster, because nothing gets handed over and nothing gets explained twice.",
+      title: "How I can help",
+      lead: "It usually starts with an audit. After that, I take on as much as you need.",
       items: [
         {
-          title: "Test",
-          lead: "I use your application the way people actually use it: with a screen reader and with the keyboard. Automated tools catch some of it. The rest you only find by hand.",
-          result: "A report your team can work from straight away",
-          items: [
-            "Every problem with its place in the code and a fix that works",
-            "Ordered by who it blocks, not by criterion number",
-            "Something you can build your accessibility statement on",
-          ],
+          title: "Audit",
+          text: "I test your application against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. Every issue comes with a fix your team can work with right away.",
         },
         {
           title: "Fix",
-          lead: "I make the changes myself, in your framework and your design system. You get working code back, not homework.",
-          result: "Reviewed code in your repository",
-          items: [
-            "React, Vue, Angular, or plain HTML and CSS",
-            "Fixed in the component, not patched in fifty places",
-            "Dialogs, menus, forms and tables that survive the next release",
-          ],
+          text: "I fix the issues myself, in Figma and right in your code, with your components and tools. Fix a component and the issue is gone everywhere.",
         },
         {
-          title: "Teach",
-          lead: "So the same problems don't grow back, I work alongside your team while they build. After a few weeks you won't need me for this.",
-          result: "A team that carries on without me",
-          items: [
-            "I review new components before they reach the sprint",
-            "For designers: contrast, focus, states, target sizes",
-            "Acceptance criteria that sit in the ticket and can be checked",
-          ],
+          title: "Enable",
+          text: "I show your team what matters, using your own components. Through mentoring and training, they build accessibility in from the start.",
         },
       ],
     },
 
-    why: {
-      title: "Why this usually stalls.",
+    process: {
+      title: "How it can go",
+      lead: "An example. Every project is different, so we shape the process around you.",
+      steps: [
+        {
+          title: "Getting to know each other",
+          text: "You tell me what you offer and what it's built with.",
+          outcome: "Afterwards you know whether I can help.",
+        },
+        {
+          title: "Setting the scope",
+          text: "We pick the pages and flows that matter, such as search and checkout.",
+          outcome: "You get a quote with a fixed scope.",
+        },
+        {
+          title: "Testing",
+          text: "I go through the chosen flows step by step, the way your customers use them.",
+          outcome: "You get the report.",
+        },
+        {
+          title: "Talking it through",
+          text: "We go through the findings together: what's urgent, what's quick and what can wait.",
+          outcome: "Afterwards you know what comes first, and you decide who does it: your team or me.",
+        },
+      ],
+    },
+
+    oneHand: {
+      title: "Audit and fixes from one person",
+      body: "I come from UI/UX design and frontend development. So an issue doesn't end with **a criterion number** for me. It ends with **a fix** that fits your design system and can ship in the next sprint.",
       portraitAlt: "Ercan Cicek",
-      body: [
-        "Hardly any audit report gets implemented in full, and it's rarely for lack of trying. The people who test write in generalities, because they don't know the code. The people who know the code guess at the criteria. And anything that went wrong in the design reaches both of them far too late.",
-        "I came up through frontend development and UI/UX design, and I test against WCAG. I find a problem, fix it in the same component, and change the design so it doesn't come back. Nothing gets handed over in between.",
-        "This matters most in large applications: portals with a dozen user roles, frontends that grew over years, design systems several teams build on. One fix there lands in a hundred places at once. So does one mistake.",
+    },
+
+    faq: {
+      title: "Frequently asked questions",
+      items: [
+        {
+          question: "Does the law apply to me?",
+          answer:
+            "Most likely, if consumers buy, book or sign up for something from you online. If you're unsure, we'll look at it together on a first call. This isn't legal advice.",
+        },
+        {
+          question: "What does an audit cost?",
+          answer:
+            "It depends on scope: how many different page types and flows get tested, not how many pages there are. After a free first call, you get a concrete quote.",
+        },
+        {
+          question: "Aren't automated testing tools enough?",
+          answer:
+            "They're a good start and catch typical technical issues like missing image descriptions or low contrast. Whether you can get through checkout with a keyboard, whether an announcement makes sense or an error message helps, only a person can judge.",
+        },
+        {
+          question: "What about accessibility plugins?",
+          answer:
+            "Plugins and overlays put a layer on top of the page, but the code underneath stays the same. That's where most barriers come from. People who use a screen reader bring their own tools anyway and need a page that's built right.",
+        },
       ],
     },
 
     contact: {
-      title: "Tell me where you are.",
-      body: "Send me a few lines about what you're working on and what it's built with. You'll get my read on what needs doing and roughly what it costs. If you don't need me, I'll say so.",
+      title: "Let's see where you stand.",
+      body: "Tell me which application it's about. On a first call we'll take a quick look together, and afterwards you'll know where you stand and what to do next. Free, with no strings attached.",
     },
   },
 }

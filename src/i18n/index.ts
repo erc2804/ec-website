@@ -21,6 +21,8 @@ export const routes = {
   development: { de: "/frontend-entwicklung", en: "/en/frontend-development" },
   portfolio: { de: "/portfolio", en: "/en/portfolio" },
   about: { de: "/ueber-mich", en: "/en/about-me" },
+  inquiry: { de: "/projekt-anfragen", en: "/en/start-a-project" },
+  inquirySent: { de: "/projekt-anfragen/danke", en: "/en/start-a-project/thank-you" },
   imprint: { de: "/impressum", en: "/en/legal-notice" },
   privacy: { de: "/datenschutz", en: "/en/privacy" },
   accessibilityStatement: {
@@ -56,4 +58,15 @@ export const localeNames = {
 
 export function localisedPath(route: RouteKey, locale: Locale) {
   return routes[route][locale]
+}
+
+// --- "Projekt anfragen" from an offer page arrives with that topic preselected
+const inquiryTopics = {
+  de: { accessibility: "barrierefreiheit", design: "design", development: "entwicklung" },
+  en: { accessibility: "accessibility", design: "design", development: "development" },
+} as const satisfies Record<Locale, Record<string, string>>
+
+export function inquiryPath(locale: Locale, topic?: keyof (typeof inquiryTopics)["de"]) {
+  const path = routes.inquiry[locale]
+  return topic ? `${path}?thema=${inquiryTopics[locale][topic]}` : path
 }

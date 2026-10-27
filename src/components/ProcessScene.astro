@@ -1,0 +1,202 @@
+---
+// --- The scene beside the accessibility process, in the picture language of
+// the start page's RoleScene: one small picture per step, built from the same
+// pieces, that changes as the step being read changes. data-step on the root
+// (1 to 4) places every piece. Decoration only, the step texts carry the
+// meaning, so it is hidden from assistive technology.
+//
+// 1 Get to know:   two speech bubbles between the client and Pixel-Ercan.
+// 2 Set the scope: the product appears, two of its flows are marked.
+// 3 Audit:         the VoiceOver frame from the demo goes through the marked
+//                  flows, findings appear on them, Pixel-Ercan looks on with
+//                  the magnifier.
+// 4 Talk through:  the product steps back, the findings sort into three
+//                  groups (urgent, quick, can wait), both sit together below.
+import { IconUser, IconZoomCheck } from "@tabler/icons-astro"
+
+interface Props {
+  step?: 1 | 2 | 3 | 4
+  /** --- Draws the scene at three quarters, for low containers --- */
+  isCompact?: boolean
+  class?: string
+}
+
+const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
+
+// --- Same duration and curve as RoleScene, so both pages move alike
+const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+
+// --- Each finding: where it sits on the product during the audit, where it
+// lands in its group afterwards, and the group's colour
+const findings = [
+  {
+    position:
+      "translate-x-[20px] translate-y-[-18px] group-data-[step=4]:translate-x-[-118px] group-data-[step=4]:translate-y-[-46px]",
+    colour: "",
+  },
+  {
+    position:
+      "translate-x-[4px] translate-y-[14px] group-data-[step=4]:translate-x-[-118px] group-data-[step=4]:translate-y-[-26px]",
+    colour: "",
+  },
+  {
+    position:
+      "translate-x-[36px] translate-y-[-18px] group-data-[step=4]:translate-x-[-18px] group-data-[step=4]:translate-y-[-46px]",
+    colour: "group-data-[step=4]:bg-brand-green-medium",
+  },
+  {
+    position:
+      "translate-x-[20px] translate-y-[14px] group-data-[step=4]:translate-x-[-18px] group-data-[step=4]:translate-y-[-26px]",
+    colour: "group-data-[step=4]:bg-brand-green-medium",
+  },
+  {
+    position:
+      "translate-x-[36px] translate-y-[14px] group-data-[step=4]:translate-x-[82px] group-data-[step=4]:translate-y-[-46px]",
+    colour: "group-data-[step=4]:bg-gray-high/40",
+  },
+]
+
+const groupSlots = ["translate-x-[-100px]", "translate-x-0", "translate-x-[100px]"]
+---
+
+<div
+  class:list={["group relative overflow-hidden", additionalClasses]}
+  data-step={step}
+  aria-hidden="true"
+  inert
+>
+  <div class:list={["absolute inset-0", isCompact && "scale-75"]}>
+    <!-- --- Step 1: the conversation, in the bubble shape of the inquiry chat -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[-2rem] translate-y-[-3.5rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-bl-sm bg-gray-subtle px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-gray-low"></span>
+      <span class="h-2 w-2/3 rounded-full bg-gray-low"></span>
+    </span>
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[2rem] translate-y-[0.25rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-br-sm bg-brand-green-low px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100 group-data-[step=1]:delay-300",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-brand-green-medium/50"></span>
+      <span class="h-2 w-1/2 rounded-full bg-brand-green-medium/50"></span>
+    </span>
+
+    <!-- --- The product: a card whose two middle rows are the flows that get
+         tested -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-16 -ml-24 flex h-32 w-48 flex-col gap-2 rounded-2xl bg-gray-subtle p-4 outline outline-1 outline-gray-low transition-[translate,scale,opacity] group-data-[step=1]:translate-y-[-1rem] group-data-[step=1]:scale-90 group-data-[step=1]:opacity-0 group-data-[step=3]:translate-x-[-2rem] group-data-[step=4]:translate-y-[-2rem] group-data-[step=4]:scale-90 group-data-[step=4]:opacity-0",
+        motion,
+      ]}
+    >
+      <span class="h-2.5 w-2/3 shrink-0 rounded-full bg-gray-low"></span>
+      {
+        [0, 1].map(() => (
+          <span class="h-6 shrink-0 rounded-lg bg-gray-low/60 transition-colors duration-600 group-data-[step=2]:bg-brand-green-low group-data-[step=3]:bg-brand-green-low" />
+        ))
+      }
+      <span class="mt-auto h-3.5 w-14 rounded-full bg-brand-green-medium/80"></span>
+    </span>
+
+    <!-- --- Step 4: three groups the findings sort into -->
+    {
+      groupSlots.map((slotPosition) => (
+        <span
+          class:list={[
+            "absolute top-1/2 left-1/2 -mt-12 -ml-10 h-24 w-20 translate-y-[-1rem] scale-90 rounded-2xl bg-gray-subtle opacity-0 transition-[scale,opacity] group-data-[step=4]:scale-100 group-data-[step=4]:opacity-100",
+            slotPosition,
+            motion,
+          ]}
+        />
+      ))
+    }
+
+    <!-- --- The findings: dots on the product during the audit, then bars in
+         their group. The left edge stays put and the dot widens to the right,
+         so the step 4 positions sit 18px left of the slot centres. -->
+    {
+      findings.map((finding) => (
+        <span
+          class:list={[
+            "absolute top-1/2 left-1/2 -mt-1.5 -ml-1.5 h-3 w-3 rounded-full bg-status-error-text opacity-0 transition-[translate,width,opacity,background-color] group-data-[step=3]:opacity-100 group-data-[step=3]:delay-700 group-data-[step=4]:w-12 group-data-[step=4]:opacity-100",
+            finding.position,
+            finding.colour,
+            motion,
+          ]}
+        />
+      ))
+    }
+
+    <!-- --- The VoiceOver frame from the demo, going through the two flows -->
+    <span class="ec-scan-frame absolute top-1/2 left-1/2 -mt-4 -ml-21 h-8 w-42 rounded-lg border-3 border-[#0b0c0e] opacity-0 transition-opacity duration-300 group-data-[step=3]:opacity-100 group-data-[step=3]:delay-300"
+    ></span>
+
+    <!-- --- The client -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 grid size-14 translate-x-[-1.75rem] translate-y-[6.5rem] scale-75 place-items-center rounded-full bg-gray-low/70 text-typo-medium transition-[translate,scale,opacity] group-data-[step=1]:translate-x-[-4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=3]:opacity-0",
+        motion,
+      ]}
+    >
+      <IconUser class="size-7" />
+    </span>
+
+    <!-- --- Pixel-Ercan, with the magnifier of the start page while he audits -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 size-14 translate-x-[1.75rem] translate-y-[6.5rem] scale-75 transition-[translate,scale] group-data-[step=1]:translate-x-[4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=3]:translate-x-[7.5rem] group-data-[step=3]:translate-y-0 group-data-[step=3]:scale-100",
+        motion,
+      ]}
+    >
+      <img
+        src="/images/pixelcan.png"
+        alt=""
+        width="56"
+        height="56"
+        class="size-full rounded-full bg-brand-sand"
+      />
+      <span
+        class:list={[
+          "absolute -bottom-1 -left-2 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=3]:scale-100",
+          motion,
+        ]}
+      >
+        <IconZoomCheck class="size-4" stroke-width={2.25} />
+      </span>
+    </span>
+  </div>
+</div>
+
+<style>
+  /* --- The frame rests on one flow, then the other, the way the VoiceOver
+     cursor rests while an element is read. Under reduced motion the global
+     rule stops it after one pass. --- */
+  .ec-scan-frame {
+    translate: -2rem -18px;
+  }
+
+  [data-step="3"] .ec-scan-frame {
+    animation: ec-scan 3.2s cubic-bezier(0.65, 0, 0.35, 1) 300ms infinite;
+  }
+
+  @keyframes ec-scan {
+    0%,
+    40% {
+      translate: -2rem -18px;
+    }
+
+    50%,
+    90% {
+      translate: -2rem 14px;
+    }
+
+    100% {
+      translate: -2rem -18px;
+    }
+  }
+</style>

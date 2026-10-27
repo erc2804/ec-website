@@ -4,7 +4,8 @@ import astro from "eslint-plugin-astro"
 import prettier from "eslint-config-prettier"
 
 export default [
-  { ignores: ["dist/**", ".astro/**", "node_modules/**"] },
+  // --- .netlify holds what `netlify dev` builds and bundles, not our code
+  { ignores: ["dist/**", ".astro/**", ".netlify/**", "node_modules/**"] },
 
   js.configs.recommended,
   ...tseslint.configs.recommended,

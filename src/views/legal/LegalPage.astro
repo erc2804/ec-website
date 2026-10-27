@@ -16,7 +16,10 @@ const { title, lead, sections, status } = Astro.props
 const contactEmail = siteConfig.contact.email
 ---
 
-<main id="main" class="ec-layout-text-content pt-[calc(var(--spacing-header)+5rem)] pb-20 md:pt-[calc(var(--spacing-header)+7rem)] md:pb-28">
+<main
+  id="main"
+  class="ec-layout-text-content pt-[calc(var(--spacing-header)+5rem)] pb-20 md:pt-[calc(var(--spacing-header)+7rem)] md:pb-28"
+>
   <section>
     <h1 class="ec-reveal text-display text-balance">{title}</h1>
 

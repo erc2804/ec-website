@@ -22,7 +22,7 @@ const { routeKey, currentLocale, class: additionalClasses } = Astro.props
 const t = useTranslations(currentLocale).nav
 
 const optionClasses =
-  "relative grid size-11 place-items-center rounded-full text-sm font-bold tracking-[0.06em]"
+  "ec-focus-inset relative grid size-11 place-items-center rounded-full text-sm font-bold tracking-[0.06em]"
 ---
 
 <div
@@ -35,27 +35,27 @@ const optionClasses =
       <>
         {index > 0 && <span class="h-4 w-0.5 bg-current opacity-40" aria-hidden="true" />}
         {locale === currentLocale ? (
-        <span
-          class:list={[
-            optionClasses,
-            "after:absolute after:bottom-1.5 after:h-1 after:w-5 after:rounded-full after:bg-brand-green-medium",
-          ]}
-          aria-current="true"
-          lang={locale}
-        >
-          <span>{localeNames[locale].short}</span>
-          <span class="sr-only">, {localeNames[locale].full}</span>
-        </span>
-      ) : (
-        <a
-          class:list={[optionClasses, "no-underline transition-colors hover:bg-current/10"]}
-          href={localisedPath(routeKey, locale)}
-          lang={locale}
-          hreflang={locale}
-        >
-          <span>{localeNames[locale].short}</span>
-          <span class="sr-only">, {localeNames[locale].full}</span>
-        </a>
+          <span
+            class:list={[
+              optionClasses,
+              "after:absolute after:bottom-1.5 after:h-1 after:w-5 after:rounded-full after:bg-brand-green-medium",
+            ]}
+            aria-current="true"
+            lang={locale}
+          >
+            <span>{localeNames[locale].short}</span>
+            <span class="sr-only">, {localeNames[locale].full}</span>
+          </span>
+        ) : (
+          <a
+            class:list={[optionClasses, "no-underline transition-colors hover:bg-current/10"]}
+            href={localisedPath(routeKey, locale)}
+            lang={locale}
+            hreflang={locale}
+          >
+            <span>{localeNames[locale].short}</span>
+            <span class="sr-only">, {localeNames[locale].full}</span>
+          </a>
         )}
       </>
     ))

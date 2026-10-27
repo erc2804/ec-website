@@ -1,0 +1,64 @@
+---
+// --- The closing contact block: a big line, a sentence, the request button and
+// the two direct ways. Shared by the start page and the offer pages, each with
+// its own words.
+import type { HTMLAttributes } from "astro/types"
+import { IconArrowRight, IconBrandLinkedin, IconMail } from "@tabler/icons-astro"
+import Button from "./ui/Button.astro"
+import ContactCard from "./ui/ContactCard.astro"
+import Section from "./ui/Section.astro"
+import { siteConfig } from "../config/site"
+import { inquiryPath, useTranslations, type Locale } from "../i18n"
+
+// --- Any other attribute (data-chat-zone, aria-labelledby …) goes to the section
+interface Props extends Omit<HTMLAttributes<"section">, "class"> {
+  title: string
+  body: string
+  /** --- Preselects the topic on the request page --- */
+  topic?: "accessibility" | "design" | "development"
+  /** --- Pixel-Ercan's line over the two contact cards --- */
+  cardsChat?: string
+  class?: string
+}
+
+const { title, body, topic, cardsChat, class: additionalClasses, ...attributes } = Astro.props
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale)
+const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
+---
+
+<Section class={additionalClasses} {...attributes}>
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20">
+    <div>
+      <h2 class="ec-reveal text-display text-balance">{title}</h2>
+      <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{body}</p>
+      <div class="mt-9 w-fit ec-reveal ec-reveal-late" data-inquiry-cta>
+        <Button href={inquiryPath(currentLocale, topic)}>
+          {t.common.contactCta}
+          <IconArrowRight slot="icon-end" class="size-5" />
+        </Button>
+      </div>
+    </div>
+    <div
+      class="flex ec-reveal flex-col gap-6 ec-reveal-late lg:justify-center"
+      data-chat={cardsChat}
+    >
+      <ContactCard
+        href={`mailto:${siteConfig.contact.email}`}
+        label={t.home.contact.email}
+        address={siteConfig.contact.email}
+      >
+        <IconMail aria-hidden="true" />
+      </ContactCard>
+      <ContactCard
+        href={linkedInUrl}
+        label={t.home.contact.linkedin}
+        address={t.common.linkedinInvite}
+        isExternal
+      >
+        <IconBrandLinkedin aria-hidden="true" />
+      </ContactCard>
+    </div>
+  </div>
+</Section>

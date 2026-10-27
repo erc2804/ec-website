@@ -4,20 +4,23 @@ import Button from "../../components/ui/Button.astro"
 import Placeholder from "../../components/ui/Placeholder.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
-import { useTranslations } from "../../i18n"
+import { inquiryPath, useTranslations, type Locale } from "../../i18n"
 
 const t = useTranslations(Astro.currentLocale)
-const contactHref = `mailto:${siteConfig.contact.email}`
+const inquiryHref = inquiryPath(
+  (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale,
+  "design"
+)
 ---
 
 <main id="main" class="pt-header">
   <Section>
     <h1 class="text-display text-balance">Ich gestalte Produkte, die sich von selbst erklären.</h1>
     <p class="mt-8 max-w-[56ch] text-lead text-typo-medium">
-      Platzhalter für den Einleitungssatz: UI/UX-Design für Startups und Unternehmen, von der
-      Idee bis zur gebauten Oberfläche.
+      Platzhalter für den Einleitungssatz: UI/UX-Design für Startups und Unternehmen, von der Idee
+      bis zur gebauten Oberfläche.
     </p>
-    <Button class="mt-9" href={contactHref}>
+    <Button class="mt-9" href={inquiryHref} data-inquiry-cta>
       {t.common.contactCta}
       <IconArrowRight slot="icon-end" class="size-5" />
     </Button>

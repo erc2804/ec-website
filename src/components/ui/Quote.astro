@@ -6,12 +6,12 @@ import { IconQuote } from "@tabler/icons-astro"
 interface Props {
   name: string
   role: string
-  /** --- Shown as a note under the attribution --- */
-  note?: string
+  /** --- Short remark in brackets right after the quote, e.g. "übersetzt" --- */
+  annotation?: string
   class?: string
 }
 
-const { name, role, note, class: additionalClasses } = Astro.props
+const { name, role, annotation, class: additionalClasses } = Astro.props
 ---
 
 <figure
@@ -23,10 +23,17 @@ const { name, role, note, class: additionalClasses } = Astro.props
   <IconQuote class="size-8 shrink-0 text-brand-green-medium" aria-hidden="true" />
   <blockquote class="flex-1 text-body">
     <slot />
+    {
+      annotation && (
+        <>
+          {" "}
+          <span class="text-sm whitespace-nowrap text-typo-medium">({annotation})</span>
+        </>
+      )
+    }
   </blockquote>
   <figcaption class="text-typo-medium">
     <span class="font-bold text-typo-high">{name}</span>
     <span class="block">{role}</span>
-    {note && <span class="mt-1 block text-sm">{note}</span>}
   </figcaption>
 </figure>

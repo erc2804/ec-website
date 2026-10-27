@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import InquirySentPage from "../../../views/inquiry/InquirySentPage.astro"
+import { useTranslations } from "../../../i18n"
+
+const t = useTranslations(Astro.currentLocale)
+---
+
+<BaseLayout
+  title={`${t.routeLabels.inquirySent} | Ercan Cicek`}
+  description={t.inquiry.sent.body}
+  routeKey="inquirySent"
+  isNoindex
+>
+  <InquirySentPage />
+</BaseLayout>

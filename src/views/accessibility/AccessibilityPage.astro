@@ -1,164 +1,324 @@
 ---
-import { IconArrowRight } from "@tabler/icons-astro"
+// --- Accessibility offer page. Built along the questions a client brings:
+// what is this about (demo), what do I get (services), does it apply to me
+// (law), how does it work (process), why you (one hand), the usual doubts
+// (questions).
+import {
+  IconArrowRight,
+  IconCheck,
+  IconChevronDown,
+  IconMinus,
+  IconSchool,
+  IconTool,
+  IconZoomCheck,
+} from "@tabler/icons-astro"
+import ContactSection from "../../components/ContactSection.astro"
+import ProcessScene from "../../components/ProcessScene.astro"
 import Button from "../../components/ui/Button.astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
+import Section from "../../components/ui/Section.astro"
 import ScreenReaderDemo from "./ScreenReaderDemo.astro"
 import { siteConfig } from "../../config/site"
-import { useTranslations } from "../../i18n"
+import { inquiryPath, useTranslations, type Locale } from "../../i18n"
 
-const t = useTranslations(Astro.currentLocale).accessibility
-const tCommon = useTranslations(Astro.currentLocale).common
-const contactHref = `mailto:${siteConfig.contact.email}`
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).accessibility
+const tCommon = useTranslations(currentLocale).common
+const inquiryHref = inquiryPath(currentLocale, "accessibility")
+
+// --- One icon per service, in the order of the copy: audit (the magnifier of the
+// start page's role scene), fixing, training
+const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
 ---
 
 <main id="main">
-  <section class="ec-layout-visual-content pt-[calc(var(--spacing-header)+5rem)] pb-24 md:pt-[calc(var(--spacing-header)+7rem)] md:pb-32">
+  <section
+    class="ec-layout-visual-content pt-[calc(var(--spacing-header)+4rem)] pb-20 md:pt-[calc(var(--spacing-header)+6rem)] md:pb-28"
+  >
     <!-- --- The heading and its announcement side by side: what you see, and
-         what actually arrives. The claim of this page, made before it is made. -->
-    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:items-center">
-      <h1 class="ec-reveal text-display text-balance">{t.hero.title}</h1>
+         what actually arrives -->
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:items-end lg:gap-16">
+      <h1 class="ec-rise text-display text-balance">{t.hero.title}</h1>
 
-      <div class="ec-reveal ec-reveal-late">
+      <!-- --- Hidden from screen readers: they have just heard exactly this, and
+           the quote before its label would only repeat the heading -->
+      <div class="ec-rise [--ec-rise-delay:450ms]" aria-hidden="true">
         <ScreenReaderCaption>{t.hero.announcement}</ScreenReaderCaption>
-        <p class="mt-3 pl-1 text-typo-medium">{t.hero.announcementLabel}</p>
+        <p class="mt-3 pl-1 text-sm text-typo-medium">{t.hero.announcementLabel}</p>
       </div>
     </div>
 
-    <p class="mt-14 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
+    <p class="mt-10 max-w-[52ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:150ms]">
       {t.hero.lead}
     </p>
 
-    <Button class="mt-9 ec-reveal ec-reveal-late" href={contactHref}>
-      {tCommon.contactCta}
-      <IconArrowRight slot="icon-end" class="size-5" />
-    </Button>
-  </section>
-
-  <section class="ec-on-dark bg-brand-blue py-24 md:py-32">
-    <div class="ec-layout-visual-content">
-      <p class="max-w-[30ch] ec-reveal text-display text-typo-min/65">{t.statement.lead}</p>
-      <p class="mt-2 max-w-[30ch] ec-reveal text-display text-brand-green-medium ec-reveal-late">
-        {t.statement.emphasis}
-      </p>
-      <p class="mt-10 max-w-[48ch] ec-reveal text-lead text-typo-min/85 ec-reveal-late">
-        {t.statement.body}
-      </p>
+    <div class="mt-9 w-fit ec-rise [--ec-rise-delay:250ms]" data-inquiry-cta>
+      <Button href={inquiryHref}>
+        {tCommon.contactCta}
+        <IconArrowRight slot="icon-end" class="size-5" />
+      </Button>
     </div>
   </section>
 
   <ScreenReaderDemo />
 
-  <section class="ec-layout-visual-content py-24 md:py-32">
-    <h2 class="ec-reveal text-heading-1 text-balance">{t.law.title}</h2>
+  <!-- --- Services, each from the reader's situation. White cards on the grey
+       ground, with shadow, like the offer cards on the start page. -->
+  <Section aria-labelledby="servicesTitle">
+    <h2 id="servicesTitle" class="ec-reveal text-heading-1 text-balance">{t.services.title}</h2>
+    <p class="mt-5 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
+      {t.services.lead}
+    </p>
 
+    <!-- --- Subgrid rows, so icon, title and text line up across the three
+         however long each title is -->
+    <ul role="list" class="mt-12 grid gap-6 md:grid-cols-3 md:gap-y-0">
+      {
+        t.services.items.map((service, index) => {
+          const ServiceIcon = serviceIcons[index]
+          return (
+            <li
+              class="flex ec-reveal flex-col rounded-3xl bg-gray-min p-6 shadow-sm md:row-span-3 md:grid md:grid-rows-subgrid md:p-8"
+              style={`--ec-reveal-delay: ${index * 110}ms`}
+            >
+              <span
+                class="grid size-12 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue"
+                aria-hidden="true"
+              >
+                <ServiceIcon class="size-6" />
+              </span>
+              <h3 class="mt-6 text-heading-2 text-balance">{service.title}</h3>
+              <p class="mt-3 text-typo-medium">{service.text}</p>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </Section>
+
+  <!-- --- The law: prose on the left, the answer to "does this apply to me" on
+       the right -->
+  <Section tone="light" aria-labelledby="lawTitle">
+    <h2 id="lawTitle" class="ec-reveal text-heading-1 text-balance">{t.law.title}</h2>
     <div
-      class="mt-10 grid ec-reveal gap-x-16 gap-y-10 ec-reveal-late lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)]"
+      class="mt-10 grid ec-reveal gap-x-16 gap-y-10 ec-reveal-late lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]"
     >
-      <div class="flex flex-col gap-5">
+      <div class="flex max-w-[60ch] flex-col gap-5">
         {t.law.body.map((paragraph) => <p class="text-body text-typo-medium">{paragraph}</p>)}
       </div>
 
-      <dl class="flex flex-col gap-7">
-        {
-          t.law.facts.map((fact) => (
-            <div>
-              <dt class="text-typo-medium">{fact.term}</dt>
-              <dd class="mt-1 text-lead font-bold text-brand-blue">{fact.description}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </div>
-  </section>
-
-  <section class="bg-gray-min py-24 md:py-32">
-    <div class="ec-layout-visual-content">
-      <h2 class="ec-reveal text-heading-1 text-balance">{t.services.title}</h2>
-
-      <p class="mt-6 max-w-[54ch] ec-reveal text-body text-typo-medium ec-reveal-late">
-        {t.services.lead}
-      </p>
-
-      <!-- --- Not numbered: the copy says each one can be booked on its own, so
-           a sequence would promise an order that does not exist. --- -->
-      <ul role="list" class="mt-16 grid ec-reveal gap-x-12 gap-y-14 md:grid-cols-3">
-        {
-          t.services.items.map((service) => (
-            <li class="flex flex-col">
-              <h3 class="text-heading-1">{service.title}</h3>
-
-              <p class="mt-4 text-lead font-bold text-brand-blue">{service.result}</p>
-
-              <p class="mt-6 text-typo-medium">{service.lead}</p>
-
-              <ul role="list" class="mt-7 flex flex-col gap-3 text-typo-medium">
-                {service.items.map((item) => (
-                  <li class="flex gap-3">
-                    <span
-                      class="mt-2.5 size-1.5 shrink-0 rounded-full bg-brand-green-high"
-                      aria-hidden="true"
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))
-        }
+      <ul role="list" class="flex flex-col gap-7">
+        <li class="flex items-start gap-4">
+          <span
+            class="grid size-10 shrink-0 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue"
+            aria-hidden="true"
+          >
+            <IconCheck class="size-5" />
+          </span>
+          <p class="pt-1">
+            <span class="block text-lead text-typo-high">{t.law.affectedTitle}</span>
+            <span class="mt-1 block text-typo-medium">{t.law.affected}</span>
+          </p>
+        </li>
+        <li class="flex items-start gap-4">
+          <span
+            class="grid size-10 shrink-0 place-items-center rounded-full bg-gray-low/70 text-typo-high"
+            aria-hidden="true"
+          >
+            <IconMinus class="size-5" />
+          </span>
+          <p class="pt-1">
+            <span class="block text-lead text-typo-high">{t.law.notAffectedTitle}</span>
+            <span class="mt-1 block text-typo-medium">{t.law.notAffected}</span>
+          </p>
+        </li>
       </ul>
     </div>
-  </section>
+  </Section>
 
-  <section class="ec-layout-visual-content py-24 md:py-32">
-    <h2 class="ec-reveal text-heading-1 text-balance">{t.why.title}</h2>
+  <!-- --- Process as an ordered list. Each step says what the reader has
+       afterwards. On desktop the VoiceOver frame from the demo glides to the step
+       being read, and the scene in the sticky column (ProcessScene) changes into
+       it. Below lg every step carries its own scene, already in its state. The visual "01" is hidden from screen readers, the list numbers them. -->
+  <Section aria-labelledby="processTitle">
+    <div class="ec-process grid gap-12 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-20">
+      <div class="lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start">
+        <h2 id="processTitle" class="ec-reveal text-heading-1 text-balance">{t.process.title}</h2>
+        <p class="mt-5 ec-reveal text-lead text-typo-medium ec-reveal-late">{t.process.lead}</p>
+        <ProcessScene class="ec-process-scene mt-10 hidden h-80 rounded-3xl bg-gray-min shadow-sm lg:block" />
+      </div>
 
-    <div
-      class="mt-10 grid ec-reveal gap-10 ec-reveal-late lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-16"
-    >
-      <img
-        src="/images/portraitcan.png"
-        alt={t.why.portraitAlt}
-        width="400"
-        height="500"
-        class="h-fit w-full rounded-3xl object-cover"
-      />
-
-      <div class="flex max-w-[62ch] flex-col gap-5">
-        <p class="text-lead text-typo-high">{t.why.body[0]}</p>
-
-        {
-          t.why.body
-            .slice(1)
-            .map((paragraph) => <p class="text-body text-typo-medium">{paragraph}</p>)
-        }
+      <div class="relative">
+        <ol role="list" class="flex ec-reveal flex-col gap-4 ec-reveal-late">
+          {
+            t.process.steps.map((step, index) => (
+              <li
+                class="ec-process-step rounded-2xl p-5 transition-[background-color,box-shadow] duration-300 lg:p-6 lg:data-[is-active=true]:bg-gray-min lg:data-[is-active=true]:shadow-sm"
+                data-is-active={index === 0 ? "true" : "false"}
+              >
+                <ProcessScene
+                  step={(index + 1) as 1 | 2 | 3 | 4}
+                  isCompact
+                  class="mb-6 h-56 ec-reveal rounded-3xl bg-gray-min shadow-sm lg:hidden"
+                />
+                <span
+                  class="text-sm font-bold tracking-[0.12em] text-typo-medium"
+                  aria-hidden="true"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 class="mt-1 text-heading-2">{step.title}</h3>
+                <p class="mt-3 max-w-[52ch] text-typo-medium">{step.text}</p>
+                <p class="mt-2 max-w-[52ch] text-typo-high">{step.outcome}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <span class="ec-process-cursor hidden lg:block" aria-hidden="true"></span>
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="ec-on-dark bg-brand-blue py-20 md:py-24">
-    <div
-      class="ec-layout-visual-content grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-20"
-    >
+  <!-- --- Why one person: the argument, with a face to it -->
+  <Section tone="dark" aria-labelledby="oneHandTitle">
+    <div class="grid items-center gap-12 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-20">
+      <img
+        src="/images/ercancicek.jpg"
+        alt={t.oneHand.portraitAlt}
+        width="573"
+        height="573"
+        loading="lazy"
+        class="aspect-square w-full max-w-56 ec-reveal rounded-full object-cover md:max-w-64"
+      />
       <div>
-        <h2 class="ec-reveal text-heading-1 text-balance text-typo-min">{t.contact.title}</h2>
-        <p class="mt-5 max-w-[54ch] ec-reveal text-body text-typo-min/85 ec-reveal-late">
-          {t.contact.body}
+        <h2 id="oneHandTitle" class="ec-reveal text-heading-1 text-balance">{t.oneHand.title}</h2>
+        <!-- --- Green on the blue clears 6:1, well past the 4.5:1 body text needs -->
+        <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-min/85 ec-reveal-late">
+          {
+            t.oneHand.body
+              .split("**")
+              .map((part, index) =>
+                index % 2 === 1 ? <span class="text-brand-green-medium">{part}</span> : part
+              )
+          }
         </p>
       </div>
-
-      <div class="flex ec-reveal flex-col items-start gap-5 ec-reveal-late">
-        <Button href={contactHref}>
-          {tCommon.contactCta}
-          <IconArrowRight slot="icon-end" class="size-5" />
-        </Button>
-
-        <a
-          href={contactHref}
-          class="text-body text-typo-min/85 underline underline-offset-4 transition-colors hover:text-typo-min"
-        >
-          {siteConfig.contact.email}
-        </a>
-      </div>
     </div>
-  </section>
+  </Section>
+
+  <!-- --- White, so it stands apart from the grey contact block below. The
+       answers are grey panels without shadow, like the demo form: white on grey
+       gets a shadow, grey on white does not. -->
+  <Section tone="light" aria-labelledby="faqTitle">
+    <h2 id="faqTitle" class="ec-reveal text-heading-1 text-balance">{t.faq.title}</h2>
+    <div class="mt-10 flex max-w-3xl ec-reveal flex-col gap-3 ec-reveal-late">
+      {
+        t.faq.items.map((item) => (
+          <details class="ec-faq group rounded-2xl bg-gray-subtle">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 rounded-2xl px-6 py-4 text-lead text-typo-high ec-focus-inset [&::-webkit-details-marker]:hidden">
+              {item.question}
+              <span
+                class="grid size-9 shrink-0 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue transition-transform duration-300 group-open:rotate-180"
+                aria-hidden="true"
+              >
+                <IconChevronDown class="size-5" />
+              </span>
+            </summary>
+            <p class="max-w-[60ch] px-6 pb-6 text-typo-medium">{item.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </Section>
+
+  <ContactSection title={t.contact.title} body={t.contact.body} topic="accessibility" />
 </main>
+
+<script>
+  // --- The step whose top has passed the middle of the viewport is the one
+  // being read: the frame moves onto it. Worked out per frame from positions,
+  // like the roles on the start page, so it is the same answer scrolling up or
+  // down.
+  const process = document.querySelector<HTMLElement>(".ec-process")
+  if (process) {
+    const steps = [...process.querySelectorAll<HTMLElement>(".ec-process-step")]
+    const cursor = process.querySelector<HTMLElement>(".ec-process-cursor")!
+    const scene = process.querySelector<HTMLElement>(".ec-process-scene")!
+    const desktop = window.matchMedia("(width >= 64rem)")
+    let activeIndex = -1
+    let isTicking = false
+
+    const update = (isInstant = false) => {
+      isTicking = false
+      if (!desktop.matches) return
+      const centre = window.innerHeight / 2
+      let index = 0
+      steps.forEach((step, stepIndex) => {
+        if (step.getBoundingClientRect().top <= centre) index = stepIndex
+      })
+      if (index === activeIndex && !isInstant) return
+      activeIndex = index
+
+      steps.forEach((step, stepIndex) => {
+        step.dataset.isActive = String(stepIndex === index)
+      })
+      scene.dataset.step = String(index + 1)
+      const step = steps[index]
+      if (isInstant) process.dataset.isPlacing = "true"
+      cursor.style.transform = `translateY(${step.offsetTop}px)`
+      cursor.style.height = `${step.offsetHeight}px`
+      if (isInstant) requestAnimationFrame(() => delete process.dataset.isPlacing)
+    }
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (isTicking) return
+        isTicking = true
+        requestAnimationFrame(() => update())
+      },
+      { passive: true }
+    )
+    window.addEventListener("resize", () => update(true))
+    update(true)
+  }
+</script>
+
+<style>
+  /* --- The VoiceOver frame from the demo (same colour and weight), gliding to
+     the step being read --- */
+  .ec-process-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 3px solid #0b0c0e;
+    border-radius: 1rem;
+    pointer-events: none;
+    transition:
+      transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      height 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .ec-process[data-is-placing="true"] .ec-process-cursor {
+    transition: none;
+  }
+
+  /* --- The answer opens with a short slide where the browser can animate to
+     auto heights; elsewhere it simply opens --- */
+  .ec-faq {
+    interpolate-size: allow-keywords;
+
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        content-visibility 300ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+  }
+</style>

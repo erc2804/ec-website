@@ -1,22 +1,24 @@
 ---
 // --- The portfolio card from the previous site: a coloured surface by project
-// type, the mockup lifting on hover, a white strip with name, category and
-// technologies.
+// type, the mockup lifting on hover, a white strip with name and one sentence
+// on what I did there.
 import type { ProjectType } from "../../data/projects"
 
 interface Props {
   href: string
+  /** --- Ties the summary to the link, so it is read after the name --- */
+  slug: string
   label: string
   type: ProjectType
-  category?: string
   image: string
-  techs: string[]
-  /** --- Spoken instead of the visible pieces, e.g. "Go to project: KONUX" --- */
+  summary: string
+  /** --- Spoken instead of the visible name, e.g. "Go to project: KONUX" --- */
   ariaLabel?: string
   class?: string
 }
 
-const { href, label, type, category, image, techs, ariaLabel, class: additionalClasses } = Astro.props
+const { href, slug, label, type, image, summary, ariaLabel, class: additionalClasses } = Astro.props
+const summaryId = `project-summary-${slug}`
 
 const surfaceClasses: Record<ProjectType, string> = {
   web: "bg-brand-green-medium",
@@ -24,18 +26,12 @@ const surfaceClasses: Record<ProjectType, string> = {
   shop: "bg-brand-green-low",
   other: "bg-brand-blue",
 }
-
-const accentClasses: Record<ProjectType, string> = {
-  web: "text-brand-green-high bg-brand-green-medium/10",
-  app: "text-brand-green-high bg-brand-green-high/10",
-  shop: "text-brand-green-high bg-brand-green-low/20",
-  other: "text-brand-blue bg-brand-blue/10",
-}
 ---
 
 <a
   href={href}
   aria-label={ariaLabel}
+  aria-describedby={ariaLabel ? summaryId : undefined}
   class:list={[
     "group relative block aspect-[3/4] overflow-hidden rounded-3xl no-underline shadow-sm transition-shadow lg:hover:shadow-lg",
     surfaceClasses[type],
@@ -54,16 +50,7 @@ const accentClasses: Record<ProjectType, string> = {
     class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gray-min px-4 pt-4 pb-5"
     aria-hidden={ariaLabel ? "true" : undefined}
   >
-    <span class="flex items-center justify-between gap-4">
-      <span class="text-heading-2 text-brand-green-high">{label}</span>
-      {
-        category && (
-          <span class:list={["rounded-full px-2 py-0.5 text-sm font-bold", accentClasses[type]]}>
-            {category}
-          </span>
-        )
-      }
-    </span>
-    <span class="line-clamp-2 text-typo-medium">{techs.join(", ")}</span>
+    <span class="text-heading-2 text-brand-green-high">{label}</span>
+    <span id={summaryId} class="line-clamp-2 text-typo-medium">{summary}</span>
   </span>
 </a>

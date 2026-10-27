@@ -10,10 +10,18 @@
 // popover card, from it an author rule overrides the popover's display:none and
 // it sits inline. See ADR 0008.
 import { IconMenu2, IconX } from "@tabler/icons-astro"
+import Button from "./ui/Button.astro"
 import EcLogo from "./ui/EcLogo.astro"
 import LanguageSwitch from "./ui/LanguageSwitch.astro"
 import { siteConfig } from "../config/site"
-import { localisedPath, mainNavRoutes, useTranslations, type Locale, type RouteKey } from "../i18n"
+import {
+  inquiryPath,
+  localisedPath,
+  mainNavRoutes,
+  useTranslations,
+  type Locale,
+  type RouteKey,
+} from "../i18n"
 
 interface Props {
   routeKey?: RouteKey
@@ -31,20 +39,28 @@ const navItems = mainNavRoutes.map((key) => ({
   label: t.routeLabels[key],
 }))
 
+// --- Not on the request page itself, where it would point at the page you are on
+const hasInquiryCta = routeKey !== "inquiry" && routeKey !== "inquirySent"
+
 // --- trailingSlash is "never", so a bare comparison is enough
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
 
-const islandClasses = "group-data-[is-scrolled=true]:ec-island"
+// --- Once scrolled, the logo and the menu capsule are white islands that may
+// float over the dark hero. A ring around them would land on that dark ground,
+// so it moves inside, clear of the white rim.
+const islandClasses =
+  "group-data-[is-scrolled=true]:ec-island group-data-[is-scrolled=true]:ec-focus-inset [--ec-focus-inset:4px]"
 ---
 
 <header
-  class="ec-site-header group pointer-events-none fixed top-0 left-0 z-50 w-full text-typo-high transition-colors duration-300 data-[is-on-dark=true]:data-[is-scrolled=false]:ec-on-dark data-[is-on-dark=true]:data-[is-scrolled=false]:text-brand-sand"
+  class="ec-site-header group pointer-events-none fixed top-0 left-0 z-50 w-full text-typo-high transition-colors duration-300 data-[is-on-dark=true]:data-[is-scrolled=false]:text-brand-sand data-[is-on-dark=true]:data-[is-scrolled=false]:ec-on-dark"
   data-is-on-dark={isOnDark ? "true" : "false"}
   data-is-scrolled="false"
+  data-is-inquiry-cta-in-view="true"
+  data-chat-zone
+  data-chat={t.chatBubble.mainLinks}
 >
-  <div
-    class="flex h-header items-center justify-between gap-6 px-4 nav:gap-8 nav:px-6"
-  >
+  <div class="flex h-header items-center justify-between gap-6 px-4 nav:gap-8 nav:px-6">
     <a
       href={localisedPath("home", currentLocale)}
       class:list={[
@@ -69,7 +85,7 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
     >
       <IconMenu2 class="ec-menu-icon-open size-5" aria-hidden="true" />
       <IconX class="ec-menu-icon-close size-5" aria-hidden="true" />
-      <span class="translate-y-px">{t.nav.openMenu}</span>
+      <span>{t.nav.openMenu}</span>
     </button>
 
     <nav id="siteNav" popover class="ec-site-nav pointer-events-auto" aria-label={t.nav.label}>
@@ -83,7 +99,7 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
             <li>
               <a
                 href={item.href}
-                class="ec-nav-link relative flex min-h-11 w-fit items-center px-6 py-2 text-lead no-underline transition-colors hover:text-gray-max nav:text-body nav:group-data-[is-on-dark=true]:group-data-[is-scrolled=false]:hover:text-gray-min"
+                class="ec-nav-link relative flex min-h-11 w-fit items-center px-6 py-2 text-lead whitespace-nowrap no-underline ec-focus-inset transition-colors hover:text-gray-max nav:px-4 nav:text-body nav:group-data-[is-on-dark=true]:group-data-[is-scrolled=false]:hover:text-gray-min"
                 aria-current={currentPath === item.href ? "page" : undefined}
               >
                 {item.label}
@@ -99,6 +115,18 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
       >
         {routeKey && <LanguageSwitch routeKey={routeKey} currentLocale={currentLocale} />}
       </div>
+
+      {
+        hasInquiryCta && (
+          <div class="ec-header-cta mt-4 px-6 nav:mt-0 nav:px-0" data-chat-mute>
+            <div class="ec-header-cta-clip">
+              <Button href={inquiryPath(currentLocale)} size="compact" class="w-full nav:w-auto">
+                {t.common.contactCta}
+              </Button>
+            </div>
+          </div>
+        )
+      }
     </nav>
   </div>
 </header>
@@ -110,11 +138,51 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
 
   if (header) {
     const update = () => {
-      header.dataset.isScrolled = window.scrollY >= 24 ? "true" : "false"
+      const isScrolled = window.scrollY >= 24
+      header.dataset.isScrolled = isScrolled ? "true" : "false"
+      // --- Pixel-Ercan comments on the navigation only at the top of the page;
+      // once the header floats over other sections it stays out of them
+      header.toggleAttribute("data-chat-zone", !isScrolled)
     }
 
     update()
     window.addEventListener("scroll", update, { passive: true })
+  }
+
+  // --- From the breakpoint the header carries "Projekt anfragen", but not while
+  // another one is on screen (the hero button, the contact section): two of the
+  // same button in view say nothing more than one. In the menu card it always
+  // shows.
+  //
+  // It starts hidden and the first answer is applied without animation, so a
+  // page does not open with the button sliding in or out.
+  const inquiryCtas = document.querySelectorAll("[data-inquiry-cta]")
+  const setInquiryCtaInView = (isInView: boolean, isInstant: boolean) => {
+    if (!header) return
+    if (isInstant) header.dataset.isSettling = "true"
+    header.dataset.isInquiryCtaInView = String(isInView)
+    if (isInstant)
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          delete header.dataset.isSettling
+        })
+      )
+  }
+
+  if (!inquiryCtas.length) {
+    setInquiryCtaInView(false, true)
+  } else {
+    const visible = new Set<Element>()
+    let isFirst = true
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visible.add(entry.target)
+        else visible.delete(entry.target)
+      })
+      setInquiryCtaInView(visible.size > 0, isFirst)
+      isFirst = false
+    })
+    inquiryCtas.forEach((cta) => observer.observe(cta))
   }
 
   // --- Crossing the breakpoint changes what the nav is: an inline row above,
@@ -164,11 +232,13 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
     margin: 0;
     border: 1px solid var(--color-gray-low);
     border-radius: 1.5rem;
-    padding: 1rem 0 1.25rem;
+    padding: 1rem 0.75rem 1.25rem;
     width: auto;
     max-width: none;
     background: var(--color-gray-min);
     color: var(--color-typo-high);
+    /* --- The card is white even when it opens over the dark hero --- */
+    --ec-focus-color: var(--color-brand-green-high);
     box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.45);
     overflow: visible;
     transition:
@@ -200,6 +270,11 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
     }
   }
 
+  /* --- Doubled class: it has to outrank the transitions of the hidden state --- */
+  .ec-site-header.ec-site-header[data-is-settling] .ec-header-cta {
+    transition: none;
+  }
+
   .ec-site-header[data-is-switching] .ec-site-nav {
     transition: none;
   }
@@ -227,6 +302,7 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
       background: none;
       color: inherit;
       box-shadow: none;
+      --ec-focus-color: inherit;
       opacity: 1;
       transform: none;
       /* --- Same duration and curve as the Tailwind duration-300 on the mark
@@ -248,6 +324,46 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
     }
   }
 
+  /* --- The button makes room for itself instead of popping in: its column
+     grows from 0fr (the language switch slides along), then it fades in.
+     Leaving runs the other way round. Hidden, it is also out of the tab order.
+     The column shrinks the clip wrapper, not the button: a column cannot get
+     narrower than the padding of what it holds. The wrapper clips only while
+     hidden, so the focus ring of the shown button is never cut off. --- */
+  @media (width >= 72rem) {
+    .ec-header-cta {
+      display: grid;
+      grid-template-columns: 1fr;
+      transition:
+        grid-template-columns 300ms var(--default-transition-timing-function),
+        margin-inline-start 300ms var(--default-transition-timing-function),
+        opacity 200ms ease 200ms,
+        visibility 0s;
+    }
+
+    .ec-header-cta-clip {
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .ec-site-header[data-is-inquiry-cta-in-view="true"] .ec-header-cta {
+      grid-template-columns: 0fr;
+      /* --- Takes back the gap in front, so the switch ends up flush right --- */
+      margin-inline-start: -1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 150ms ease,
+        grid-template-columns 300ms var(--default-transition-timing-function) 100ms,
+        margin-inline-start 300ms var(--default-transition-timing-function) 100ms,
+        visibility 0s 400ms;
+    }
+
+    .ec-site-header[data-is-inquiry-cta-in-view="true"] .ec-header-cta-clip {
+      overflow: clip;
+    }
+  }
+
   .ec-menu-icon-close,
   .ec-site-header:has(.ec-site-nav:popover-open) .ec-menu-icon-open {
     display: none;
@@ -259,12 +375,21 @@ const islandClasses = "group-data-[is-scrolled=true]:ec-island"
 
   /* --- The green bar from the previous site, under the label. Hover draws it
      in at half strength from the left; the current page shows it in full. --- */
+  /* --- Same as the link's px-6 / nav:px-4, so the bar spans the label --- */
+  .ec-nav-link {
+    --ec-nav-link-padding: 1.5rem;
+
+    @media (width >= 72rem) {
+      --ec-nav-link-padding: 1rem;
+    }
+  }
+
   .ec-nav-link::before {
     content: "";
     position: absolute;
     bottom: 0.25rem;
-    left: 1.5rem;
-    width: calc(100% - 3rem);
+    left: var(--ec-nav-link-padding);
+    width: calc(100% - 2 * var(--ec-nav-link-padding));
     height: 0.25rem;
     border-radius: 9999px;
     background: var(--color-brand-green-medium);
