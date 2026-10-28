@@ -20,5 +20,11 @@ as soon as the slugs differ. `Seo.astro` builds hreflang from it; without a `rou
 tags are omitted rather than guessed. Every new page needs an entry. See
 [ADR 0007](adr/0007-localised-slugs.md).
 
+**The route table is the sitemap.** `src/pages/sitemap.xml.ts` lists every route in both
+languages with the same hreflang pairs as the head; `robots.txt` points to it. A page
+without an entry is missing from the sitemap. A page rendered with `isNoindex` also goes
+into `unindexedRoutes`, so the sitemap leaves it out. robots.txt never disallows it:
+a crawler that may not fetch the page never sees its noindex.
+
 Each page therefore exists twice as a thin routing file — title, description, route key —
 both rendering the same view. A view may be a whole page composition, not only a section.

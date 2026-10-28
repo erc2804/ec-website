@@ -1,0 +1,391 @@
+---
+// --- Chrome's device mode around whatever it wraps, the way the design page's
+// heading sits in a design tool's selection frame: the toolbar with the
+// dimensions and the measured width and height, the screen with the page on
+// it, and the resizers on its right and bottom edge, as DevTools draws them.
+// Decoration for sighted readers, hidden from assistive technology; the
+// content on the screen stays real.
+//
+// On load it plays a few seconds of work: a pointer comes in, takes the right
+// resizer, drags the screen down to 320 px and back, and leaves. As in
+// DevTools the screen stays centred, so it narrows on both sides. The content
+// is laid out against the screen, not the window (container queries, see
+// DevelopmentPage), so it breaks the way the page breaks at that width, and
+// the toolbar counts the screen's real size. While the screen is narrow its
+// height holds, as the viewport's does in DevTools, and what no longer fits
+// is cut off at the bottom edge. Only from lg up; below it and under reduced
+// motion the screen stands still at full width.
+import { IconChevronDown } from "@tabler/icons-astro"
+
+interface Props {
+  /** --- The toolbar's label and the responsive preset, as DevTools words
+       them in the page's language --- */
+  dimensionsLabel: string
+  responsiveLabel: string
+  class?: string
+}
+
+const { dimensionsLabel, responsiveLabel, class: additionalClasses } = Astro.props
+---
+
+<div class:list={["ec-device", additionalClasses]}>
+  <div class="ec-device-toolbar" aria-hidden="true" inert>
+    <span class="flex items-center gap-1">
+      {dimensionsLabel}:
+      <span class="flex items-center gap-0.5 text-[#1f1f1f]">
+        {responsiveLabel}<IconChevronDown class="size-3" />
+      </span>
+    </span>
+    <span class="ec-device-input ec-device-width"></span>
+    <span>×</span>
+    <span class="ec-device-input ec-device-height"></span>
+  </div>
+
+  <div class="ec-device-area relative">
+    <div class="ec-device-frame relative mx-auto">
+      <div class="ec-device-screen">
+        <slot />
+      </div>
+      <span class="ec-device-resizer ec-device-resizer-right" aria-hidden="true" inert><i></i></span
+      >
+      <span class="ec-device-resizer ec-device-resizer-bottom" aria-hidden="true" inert
+        ><i></i></span
+      >
+      <span class="ec-device-resizer ec-device-resizer-corner" aria-hidden="true" inert></span>
+    </div>
+
+    <!-- --- The pointer: the plain arrow, and the resize cursor it turns into
+         over the resizer, as the system draws them -->
+    <svg
+      class="ec-device-pointer ec-device-arrow pointer-events-none absolute top-0 left-0 size-5"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M2.5 1.5 L13.5 8.2 L8.6 9.3 L6 14.5 Z"
+        fill="#1c1a17"
+        stroke="#ffffff"
+        stroke-width="1.2"
+        stroke-linejoin="round"></path>
+    </svg>
+    <svg
+      class="ec-device-pointer ec-device-resize pointer-events-none absolute top-0 left-0 h-4 w-6"
+      viewBox="0 0 24 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1.5 8 L7 2.5 V5.5 H17 V2.5 L22.5 8 L17 13.5 V10.5 H7 V13.5 Z"
+        fill="#1c1a17"
+        stroke="#ffffff"
+        stroke-width="1.2"
+        stroke-linejoin="round"></path>
+    </svg>
+  </div>
+</div>
+
+<style>
+  /* --- The timeline, all from the moment the content's rise has settled:
+     the pointer reaches the resizer at 900 ms, drags until 2300, rests until
+     2800, drags back until 3700 and leaves. Over after 4.6 s: moving content
+     under five seconds needs no pause control (WCAG 2.2.2). --- */
+  .ec-device {
+    --ec-start: 500ms;
+    --ec-path: 4100ms;
+    --ec-ease: cubic-bezier(0.65, 0, 0.35, 1);
+    /* --- DevTools' "Mobile S", the narrowest of its preset widths --- */
+    --ec-device-narrow: 320px;
+    --ec-device-resizer-size: 1rem;
+    /* --- The pointer's stops, set by the script: below the screen, on the
+       resizer at full width, on the resizer at the narrow width --- */
+    --ec-p0-x: 80%;
+    --ec-p0-y: 120%;
+    --ec-p1-x: 100%;
+    --ec-p1-y: 50%;
+    --ec-p2-x: 60%;
+    --ec-p2-y: 50%;
+  }
+
+  /* --- Nothing moves before the script has measured the stops --- */
+  .ec-device:not([data-is-ready])
+    :is(.ec-device-frame, .ec-device-resizer-right, .ec-device-pointer) {
+    animation-name: none;
+  }
+
+  /* --- DevTools' toolbar, in its own system type and greys --- */
+  .ec-device-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    color: #474747;
+  }
+
+  .ec-device-input {
+    min-width: 3.25rem;
+    border: 1px solid #c7c7c7;
+    border-radius: 0.25rem;
+    background: #ffffff;
+    padding: 0 0.375rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    color: #1f1f1f;
+  }
+
+  /* --- The screen's edge is DevTools' own: a hairline and a soft glow --- */
+  .ec-device-screen {
+    container-type: inline-size;
+    height: var(--ec-device-height, auto);
+    overflow: clip;
+    box-shadow:
+      hsl(240deg 3% 84%) 0 0 0 0.5px,
+      hsl(0deg 0% 80% / 40%) 0 0 1.25rem;
+  }
+
+  .ec-device-resizer {
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* --- The resizers sit outside the screen; the area keeps room for them
+     on the right and below. Only where the screen can move. --- */
+  @media (width >= 64rem) {
+    .ec-device-area {
+      padding-right: var(--ec-device-resizer-size);
+      padding-bottom: var(--ec-device-resizer-size);
+    }
+
+    .ec-device-resizer {
+      display: flex;
+    }
+  }
+
+  .ec-device-resizer-right {
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    width: var(--ec-device-resizer-size);
+  }
+
+  .ec-device-resizer-bottom {
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: var(--ec-device-resizer-size);
+  }
+
+  .ec-device-resizer-corner {
+    top: 100%;
+    left: 100%;
+    width: var(--ec-device-resizer-size);
+    height: var(--ec-device-resizer-size);
+    background: #f8fafd;
+  }
+
+  /* --- The grips: two short lines across the direction of the drag --- */
+  .ec-device-resizer-right i {
+    width: 0.25rem;
+    height: 1.625rem;
+    border-inline: 1px solid #8f8f8f;
+  }
+
+  .ec-device-resizer-bottom i {
+    width: 1.625rem;
+    height: 0.25rem;
+    border-block: 1px solid #8f8f8f;
+  }
+
+  .ec-device-pointer {
+    opacity: 0;
+  }
+
+  /* --- The resize cursor's hot spot is its centre --- */
+  .ec-device-resize {
+    translate: -50% -50%;
+  }
+
+  @media (width >= 64rem) and (prefers-reduced-motion: no-preference) {
+    .ec-device-frame {
+      animation: ec-device-squeeze var(--ec-path) var(--ec-ease) var(--ec-start) both;
+    }
+
+    .ec-device-resizer-right {
+      animation: ec-device-grab var(--ec-path) linear var(--ec-start) both;
+    }
+
+    .ec-device-arrow {
+      animation: ec-device-arrow-path var(--ec-path) var(--ec-ease) var(--ec-start) both;
+    }
+
+    .ec-device-resize {
+      animation: ec-device-resize-path var(--ec-path) var(--ec-ease) var(--ec-start) both;
+    }
+  }
+
+  /* --- Percentages of the 4100 ms path: 900 grab, 2300 narrow, 2800 back,
+     3700 full width, then the pointer leaves. Pointers move with left and
+     top, not translate, so Chrome does not freeze the stops. --- */
+  @keyframes ec-device-squeeze {
+    0%,
+    21.95% {
+      width: 100%;
+    }
+    56.1%,
+    68.29% {
+      width: var(--ec-device-narrow);
+    }
+    90.24%,
+    100% {
+      width: 100%;
+    }
+  }
+
+  @keyframes ec-device-grab {
+    0%,
+    21.9% {
+      background: transparent;
+    }
+    21.95%,
+    90.24% {
+      background: rgb(31 31 31 / 0.08);
+    }
+    90.3%,
+    100% {
+      background: transparent;
+    }
+  }
+
+  @keyframes ec-device-arrow-path {
+    0% {
+      opacity: 0;
+      left: var(--ec-p0-x);
+      top: var(--ec-p0-y);
+    }
+    4% {
+      opacity: 1;
+    }
+    21.9% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    21.95%,
+    90.24% {
+      opacity: 0;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    90.3% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    100% {
+      opacity: 0;
+      left: calc(var(--ec-p1-x) + 3rem);
+      top: calc(var(--ec-p1-y) + 2rem);
+    }
+  }
+
+  @keyframes ec-device-resize-path {
+    0%,
+    21.9% {
+      opacity: 0;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    21.95% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    56.1%,
+    68.29% {
+      opacity: 1;
+      left: var(--ec-p2-x);
+      top: var(--ec-p2-y);
+    }
+    90.24% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    90.3%,
+    100% {
+      opacity: 0;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+  }
+</style>
+
+<script>
+  // --- Counts the screen's real size into the toolbar, and measures where the
+  // pointer stops before the drag starts. The screen's height is held while it
+  // moves, as the viewport's is in DevTools.
+  for (const device of document.querySelectorAll<HTMLElement>(".ec-device")) {
+    const area = device.querySelector<HTMLElement>(".ec-device-area")!
+    const frame = device.querySelector<HTMLElement>(".ec-device-frame")!
+    const screen = device.querySelector<HTMLElement>(".ec-device-screen")!
+    const width = device.querySelector<HTMLElement>(".ec-device-width")!
+    const height = device.querySelector<HTMLElement>(".ec-device-height")!
+
+    const count = () => {
+      const rect = screen.getBoundingClientRect()
+      width.textContent = String(Math.round(rect.width))
+      height.textContent = String(Math.round(rect.height))
+    }
+    count()
+    new ResizeObserver(count).observe(screen)
+
+    const isMoving = window.matchMedia(
+      "(width >= 64rem) and (prefers-reduced-motion: no-preference)"
+    ).matches
+    if (!isMoving) continue
+
+    const place = () => {
+      const origin = area.getBoundingClientRect()
+      const rect = frame.getBoundingClientRect()
+      const style = getComputedStyle(device)
+      const narrow = parseFloat(style.getPropertyValue("--ec-device-narrow"))
+      const resizer = parseFloat(
+        getComputedStyle(device.querySelector(".ec-device-resizer-right")!).width
+      )
+      const centre = rect.left - origin.left + rect.width / 2
+      // --- The resizer at a given screen width: the screen stays centred
+      const grip = (screenWidth: number) => centre + screenWidth / 2 + resizer / 2
+      const middle = rect.top - origin.top + rect.height / 2
+      const at = (name: string, x: number, y: number) => {
+        device.style.setProperty(`--ec-${name}-x`, `${Math.round(x)}px`)
+        device.style.setProperty(`--ec-${name}-y`, `${Math.round(y)}px`)
+      }
+      at("p0", grip(rect.width) - 96, rect.height + 96)
+      at("p1", grip(rect.width), middle)
+      at("p2", grip(narrow), middle)
+    }
+
+    const start = () => {
+      place()
+      device.style.setProperty("--ec-device-height", `${screen.getBoundingClientRect().height}px`)
+      device.dataset.isReady = "true"
+      frame.addEventListener(
+        "animationend",
+        () => {
+          device.style.removeProperty("--ec-device-height")
+        },
+        { once: true }
+      )
+    }
+    Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(
+      start
+    )
+  }
+</script>

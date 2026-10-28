@@ -43,6 +43,10 @@ export const mainNavRoutes = [
   "about",
 ] as const satisfies readonly RouteKey[]
 
+// --- Pages rendered with isNoindex. They stay out of the sitemap; robots.txt
+// still lets crawlers in, or they would never see the noindex.
+export const unindexedRoutes = ["inquirySent"] as const satisfies readonly RouteKey[]
+
 export const footerRoutes = [
   "imprint",
   "privacy",

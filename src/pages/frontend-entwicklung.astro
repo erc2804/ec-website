@@ -1,12 +1,16 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+import { useTranslations } from "../i18n"
 import DevelopmentPage from "../views/development/DevelopmentPage.astro"
+
+const t = useTranslations(Astro.currentLocale).development
 ---
 
 <BaseLayout
-  title="Frontend-Entwicklung | Ercan Cicek"
-  description="Platzhalter."
+  title={t.meta.title}
+  description={t.meta.description}
   routeKey="development"
+  hasStructuredData
 >
   <DevelopmentPage />
 </BaseLayout>

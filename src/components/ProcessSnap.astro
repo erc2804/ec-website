@@ -1,38 +1,46 @@
 ---
-// --- "How it can go": four steps, each says what the reader has afterwards.
-// Told like the roles on the start page: on desktop one scene travels down
-// the left column and settles next to the step being read, changing into it
-// as it arrives. Below lg every step carries its own scene, already in its
-// state, so nothing has to move. The steps are a plain ordered list; nothing
-// is operated.
-import DesignProcessScene from "./DesignProcessScene.astro"
-import Section from "../../components/ui/Section.astro"
-import { useTranslations } from "../../i18n"
+// --- The offer pages' "how it can go", told like the roles on the start
+// page: on desktop one scene travels down the left column and settles next to
+// the step being read, changing into it as it arrives. Below lg every step
+// carries its own scene, already in its state, so nothing has to move. The
+// steps are a plain ordered list; nothing is operated.
+//
+// The scene is the page's own component (DesignProcessScene,
+// DevelopmentProcessScene): it takes `step` (1 to 4), `isCompact` and
+// `class`, and reads data-step on its root.
+import Section from "./ui/Section.astro"
 
-const t = useTranslations(Astro.currentLocale).design.process
+interface Props {
+  title: string
+  lead: string
+  steps: { title: string; text: string; outcome: string }[]
+  Scene: (props: { step?: 1 | 2 | 3 | 4; isCompact?: boolean; class?: string }) => unknown
+}
+
+const { title, lead, steps, Scene } = Astro.props
 ---
 
 <Section aria-labelledby="processTitle">
-  <div class="ec-design-process">
-    <h2 id="processTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
-    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+  <div class="ec-process-snap">
+    <h2 id="processTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
+    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{lead}</p>
 
     <div class="mt-10 grid ec-reveal ec-reveal-late lg:mt-16 lg:grid-cols-2 lg:gap-16">
       <div class="relative hidden lg:block">
-        <DesignProcessScene
-          class="ec-design-process-scene absolute inset-x-0 top-0 h-80 rounded-3xl bg-gray-min shadow-sm transition-[translate] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+        <Scene
+          class="ec-process-snap-scene absolute inset-x-0 top-0 h-80 rounded-3xl bg-gray-min shadow-sm transition-[translate] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
         />
       </div>
 
       <ol role="list">
         {
-          t.steps.map((step, index) => (
+          steps.map((step, index) => (
             <li
-              class="ec-design-process-step flex flex-col gap-3 border-t border-gray-low py-10 transition-colors duration-500 lg:min-h-80 lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-high"
+              class="ec-process-snap-step flex flex-col gap-3 border-t border-gray-low py-10 transition-colors duration-500 lg:min-h-80 lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-high"
               data-step={index + 1}
               data-is-active={index === 0 ? "true" : "false"}
             >
-              <DesignProcessScene
+              <Scene
                 step={(index + 1) as 1 | 2 | 3 | 4}
                 isCompact
                 class="mb-4 h-56 rounded-3xl bg-gray-min shadow-sm lg:hidden"
@@ -57,9 +65,9 @@ const t = useTranslations(Astro.currentLocale).design.process
   // positions on every frame of scrolling, so it is the same answer in both
   // directions. The scene moves to it and changes as it lands; move and change
   // share duration and curve (600ms), so they read as one motion.
-  for (const process of document.querySelectorAll<HTMLElement>(".ec-design-process")) {
-    const scene = process.querySelector<HTMLElement>(".ec-design-process-scene")!
-    const steps = [...process.querySelectorAll<HTMLElement>(".ec-design-process-step")]
+  for (const process of document.querySelectorAll<HTMLElement>(".ec-process-snap")) {
+    const scene = process.querySelector<HTMLElement>(".ec-process-snap-scene")!
+    const steps = [...process.querySelectorAll<HTMLElement>(".ec-process-snap-step")]
     const desktop = window.matchMedia("(width >= 64rem)")
     let activeIndex = -1
 

@@ -1,69 +1,92 @@
 # Design language
 
-Read this before any concept or design work.
-
 ## Stance
 
-- **The home page is the reference.** Calm, clear, lots of white space, a few strong
-  elements. Style instead of decoration.
-- **Fewer elements, but not thin.** Every element needs real content. Clutter goes, and so
-  do gaps that leave a section empty.
-- **Research first.** Look at how others solve it (competitors, NN/g, Smashing Magazine,
-  the W3C patterns), then find an own solution that is better. Never the first generic
-  answer.
-- **Animation is refined and means something.** Good: a focus frame glides from element
-  to element like the VoiceOver cursor. Bad: steps simply change colour one after another.
-- **Accessibility as far as it helps people.** No overengineering.
+- The home page sets the tone: few elements, each with real content, lots of room. Style,
+  not decoration.
+- Research before concept: how do others solve it, what do NN/g, Smashing Magazine and the
+  W3C patterns say. Then an own answer, never the first generic one. A concept is mocked
+  before it is built.
+- Motion means something or does not happen. A frame that glides from element to element
+  like the VoiceOver cursor, a scene that turns into the step being read. Never a timeline
+  where dots change colour one after another.
+- Accessibility as far as it helps people, without overengineering.
 
-## Each page quotes the tool of its subject
+## Every page quotes the tool of its subject
 
-The accessibility page quotes the macOS VoiceOver caption panel: `ScreenReaderCaption`
-shows what a screen reader says about the h1, and the demo uses the same form for its
-comparison. A design page would quote a selection frame with measurements, a code page a
-diff line. The motif carries an argument, so it belongs where it proves something — not as
-a badge at the top of a section. A quote has to be factually right; a tool used for
-something it does not do is worse than no quote.
+Accessibility quotes the VoiceOver caption panel (`ScreenReaderCaption`), design the
+selection frame of Figma (`SelectionFrame`), development the browser's inspector next to
+the terminal in which I instruct the AI (`InspectFrame`). The quote carries the argument, so it sits where it proves something, not
+as a badge on top of a section. A quote has to be right: a tool shown doing something it
+does not do is worse than no quote.
 
-## Section labels have to say something new
+Each page tells its own story. The shared pieces (sections, the scenes, Pixel-Ercan, the
+tool cursor) are a vocabulary, not a template: nothing is on a page because another page
+has it.
 
-An eyebrow reading `RECHTSLAGE` above "Was gilt, und wonach ich prüfe." says the same thing
-twice. If a label only restates its heading, drop it rather than restyle it.
+## Motion
 
-## What worked
+- One run, under five seconds, then rest. No loop, no autoplay, nothing that would need a
+  pause control (WCAG 2.2.2).
+- Scrolling or the reader's own action triggers it, never a timer that runs regardless.
+- `prefers-reduced-motion` shows the final state at once: no cursor, no retype, no travel.
+- Below `lg` the process scenes stand still: every step carries its own picture, already in
+  its state. The tool quotes in the heroes play at every width.
 
-- **Inquiry page:** a normal form, with an optional chat next to it that fills the fields.
+## Decoration is never a control
+
+Scenes, captions, cursors and panels are `aria-hidden` plus `inert`, and carry nothing the
+text next to them does not say. A list of steps stays a list. A control only exists where
+it does something for everyone, screen reader users included; a radio group that switches
+a hidden picture is a control without a purpose.
+
+## The scenes
+
+One picture language across the site (`RoleScene`, `ProcessScene`, `DesignProcessScene`,
+`DevelopmentProcessScene`): speech bubbles in the shape of the inquiry chat, a grey
+wireframe card for the product, the designed card from the states demo, a dark code block
+with green token lines, the client as a grey user icon, Pixel-Ercan as the round avatar
+with a badge for what he is doing (magnifier, brush, code). Pieces move between states
+(600 ms, `cubic-bezier(0.65, 0, 0.35, 1)`), nothing is swapped.
+
+## Examples
+
+The product shown is always a generic, fictional one (Klaro, a time tracking tool), never a
+bank or an insurer. A "designed" example must not look like the AI template next to it:
+no gradient hero, no three icon cards, no two buttons side by side.
+
+## Colour and type
+
+- `brand-green-medium` for the one action on a page, `brand-green-high` for links and
+  marks, `brand-blue` for the dark blocks. Single words in running text are highlighted in
+  green with a tinted box, so the emphasis does not rest on colour alone.
+- Greys from `gray-min` (white) over `gray-subtle` (the page) to `gray-low` (lines). White
+  on grey gets `shadow-sm`, grey on white gets none. Two neighbouring sections never share a
+  background.
+- One typeface, `an-regular`, one weight. Hierarchy comes from size and colour
+  (`typo-high`, `typo-medium`, `typo-low`).
+- Pills for buttons and chips, large radii on cards, the round portrait. Text sits
+  optically centred in every pill (`ec-pill-label`).
+
+## What is on the site
+
+- A normal form on the inquiry page, with an optional chat beside it that fills the fields.
   The visitor still sends the form.
-- **Chat look** from the old site: round avatar with an online dot, speech bubbles with a
-  pointed corner.
-- **Quiet scroll cues** instead of a visible scrollbar.
-- **The blind test** in the screen reader demo: a curtain with one calm sentence, not a
-  gimmick.
-- **The header's "Projekt anfragen" button** fading out while another inquiry button is in
-  view.
-- **Single words highlighted in green** in running text, where the contrast holds.
-- **The round portrait.**
-- **A large contact section** like the one on the home page.
-- **Personal and concrete copy** such as "Ich komme aus UI/UX-Design …", without bragging.
+- The chat look of the old site: round avatar with an online dot, bubbles with one pointed
+  corner.
+- Quiet scroll cues instead of a visible scrollbar.
+- A large contact block at the end of every page, with its own wording per page.
+- Copy that is personal and concrete, without bragging.
 
-## What was rejected, and why
+## What is not on the site
 
-- **A green timeline with dots, steps turning blue:** generic, seen everywhere.
-- **Strokes or lines above cards, dashed boxes:** ugly. Where a separation is needed, one
-  thin line.
-- **Cards where none are needed**, for example under "Was danach passiert": icons with text
-  are enough.
-- **Decorative tiles without content** ("0 Pixel") and **mock-ups of reports:** clutter.
-- **Inconsistent card styles.** The rule: white on grey gets `shadow-sm`, grey on white
-  gets none.
-- **Two neighbouring sections with the same background.**
-- **Cards in a row with text of different length**, so the row jumps.
-- **Text not vertically centred** in chips, inputs and buttons.
-- **Plus icons on accordions.** Use a chevron.
-- **Asterisks on required fields, "Optional" pills, step numbers in a form.**
-- **Switches nobody understands without explanation.** Always a visible label that says
-  what is being switched.
-- **Invented screen reader announcements.** Check first what the element really is, for
-  example an ordered list.
-- **Empty states that look like errors** ("Bereit. Drück Weiter"). An empty state says that
-  nothing has happened yet, and what one can do.
-- **Needless line breaks, wild layouts, too many ideas at once.**
+- Cards where icons with text do the job, and card rows whose heights jump.
+- Dashed boxes, strokes above cards, decorative tiles without content, mock-ups of reports.
+  Where a separation is needed, one thin line.
+- Eyebrows that repeat their heading. A label says something new or goes.
+- Switches without a visible label, plus icons on accordions (chevron), asterisks on
+  required fields, "optional" pills, step numbers in a form.
+- Empty states that look like errors. An empty state says nothing has happened yet, and
+  what one can do.
+- Invented screen reader announcements or tool behaviour. Check first.
+- Many ideas at once.

@@ -17,11 +17,12 @@ import {
   IconVectorBezier2,
 } from "@tabler/icons-astro"
 import CompareSlider from "./CompareSlider.astro"
-import DesignProcess from "./DesignProcess.astro"
+import DesignProcessScene from "./DesignProcessScene.astro"
 import StatesDemo from "./StatesDemo.astro"
 import ContactSection from "../../components/ContactSection.astro"
 import FaqSection from "../../components/FaqSection.astro"
 import OneHandSection from "../../components/OneHandSection.astro"
+import ProcessSnap from "../../components/ProcessSnap.astro"
 import ServicesSection from "../../components/ServicesSection.astro"
 import Button from "../../components/ui/Button.astro"
 import Section from "../../components/ui/Section.astro"
@@ -108,7 +109,12 @@ const serviceIcons = [IconVectorBezier2, IconAdjustmentsHorizontal, IconComponen
 
   <StatesDemo />
 
-  <DesignProcess />
+  <ProcessSnap
+    title={t.process.title}
+    lead={t.process.lead}
+    steps={t.process.steps}
+    Scene={DesignProcessScene}
+  />
 
   <OneHandSection
     title={t.oneHand.title}

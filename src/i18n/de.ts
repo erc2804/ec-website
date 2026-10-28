@@ -147,9 +147,9 @@ export const de = {
   home: {
     meta: {
       title:
-        "Ercan Cicek | Product Engineer: UI/UX-Design, Frontend-Entwicklung und Barrierefreiheit",
+        "Barrierefreiheit, UI/UX-Design und Frontend in Düsseldorf | Ercan Cicek",
       description:
-        "Ich gestalte digitale Produkte, baue sie selbst und mache sie barrierefrei. Product Engineer aus Düsseldorf, über zehn Jahre Design und Code, remote oder vor Ort.",
+        "Ich mache Websites und Apps barrierefrei nach BFSG, gestalte sie und baue sie selbst. Selbstständiger Product Engineer in Düsseldorf, über zehn Jahre Design und Code.",
     },
     hero: {
       eyebrow: ["Product Engineer", "Düsseldorf"],
@@ -162,12 +162,12 @@ export const de = {
         accessibility: {
           title: "Barrierefreiheit",
           teaser:
-            "Ich prüfe deine Anwendung nach WCAG und BFSG, behebe die Fehler selbst im Code und zeige deinem Team, worauf es ankommt.",
+            "Ich prüfe deine Website oder App nach WCAG und BFSG, behebe die Fehler selbst im Code und zeige deinem Team, worauf es ankommt.",
         },
         design: {
           title: "UI/UX-Design",
           teaser:
-            "Oberflächen, die sich von selbst erklären. Auch wenn dein Produkt schon mit KI gebaut wurde und jetzt aussieht wie alle anderen.",
+            "Oberflächen, die sich von selbst erklären. Auch für Produkte, die mit KI gebaut wurden und jetzt ein eigenes Gesicht bekommen.",
         },
         development: {
           title: "Frontend-Entwicklung",
@@ -186,7 +186,7 @@ export const de = {
     },
     roles: {
       title: "Wie du mich einsetzen kannst",
-      lead: "Egal ob Barrierefreiheit, Design oder Entwicklung: Du entscheidest, in welcher Rolle ich dazukomme.",
+      lead: "Ob Startup, Unternehmen oder Agentur: Du entscheidest, in welcher Rolle ich dazukomme.",
       items: [
         {
           title: "Übernehmen",
@@ -198,10 +198,10 @@ export const de = {
         },
         {
           title: "Prüfen",
-          text: "Du willst wissen, wo du stehst. Ich prüfe deine Anwendung auf **Barrierefreiheit** und schaue mir auf Wunsch auch Design und Code an. Du bekommst einen **Bericht**, mit dem dein Team sofort arbeiten kann.",
+          text: "Du willst wissen, wo du stehst. Ich prüfe deine Website oder App auf **Barrierefreiheit** und schaue mir auf Wunsch auch Design und Code an. Du bekommst einen **Bericht**, mit dem dein Team sofort arbeiten kann.",
         },
         {
-          title: "Befähigen",
+          title: "Schulen",
           text: "Dein Team soll es selbst können. Mit **Mentoring und Schulungen** zu Barrierefreiheit, Design und Frontend, damit es das Wissen im Alltag sicher anwendet.",
         },
       ],
@@ -386,7 +386,7 @@ export const de = {
     meta: {
       title: "UI/UX-Design für Web-Apps und Websites | Ercan Cicek",
       description:
-        "Ich gestalte Oberflächen, in denen man sofort findet, was man braucht, und baue sie auf Wunsch selbst. Auch für Produkte, die mit KI gebaut wurden. Das erste Gespräch ist unverbindlich und kostenlos.",
+        "UI/UX-Design für Web-Apps und Websites, auf Wunsch gleich gebaut. Auch für Produkte aus KI-Vorlagen. Aus Düsseldorf, das erste Gespräch ist unverbindlich und kostenlos.",
     },
 
     hero: {
@@ -399,7 +399,7 @@ export const de = {
       tokenBefore: "text/tertiary",
       tokenMiddle: "text/secondary",
       tokenAfter: "text/primary",
-      lead: "Niemand soll überlegen müssen, wo er klickt. Dafür sorge ich: in neuen Produkten, in bestehenden, und in solchen, die mit KI gebaut wurden und jetzt den letzten Schritt brauchen.",
+      lead: "Jeder soll sofort sehen, wo es weitergeht. Dafür sorge ich: in neuen Produkten, in bestehenden, und in solchen, die mit KI gebaut wurden und jetzt den letzten Schritt brauchen.",
     },
 
     // --- The before/after section with the slider
@@ -407,7 +407,7 @@ export const de = {
       title: "Gleicher Inhalt. Anderes Produkt.",
       lead: "KI-Werkzeuge liefern in Minuten eine Seite, die funktioniert. Das ist ein guter Anfang, oft der beste, den ein Projekt haben kann. Nur ist es eine Vorlage, und Vorlagen sehen sich ähnlich: Verlauf oben, drei Karten mit Symbolen, zwei Buttons. Was noch fehlt, ist die Entscheidung, was auf dieser Seite zählt.",
       example:
-        "Hier die Startseite eines Zeiterfassungs-Tools, links als Vorlage, rechts fertig gestaltet. Nichts wurde dazuerfunden, nur entschieden.",
+        "Hier die Startseite eines erfundenen Zeiterfassungs-Tools, links als Vorlage, rechts fertig gestaltet. Dasselbe Produkt, nur entschieden: was zuerst zählt, was weg kann und was man zeigt.",
       before: "KI-Vorlage",
       after: "Gestaltet",
       sliderLabel: "Vergleich derselben Startseite: links die KI-Vorlage, rechts gestaltet",
@@ -485,7 +485,7 @@ export const de = {
         {
           key: "loading",
           label: "Lädt",
-          why: "Links ein englisches Wort auf leerer Fläche. Rechts zeigen Platzhalter, dass etwas kommt und wie viel. Die Seite wirkt schneller, obwohl sie es nicht ist.",
+          why: "Links ein englisches Wort auf leerer Fläche. Rechts zeigen Platzhalter, dass etwas kommt und wie viel. So wartet man ruhiger.",
         },
         {
           key: "empty",
@@ -511,11 +511,11 @@ export const de = {
       items: [
         {
           title: "Gestalten",
-          text: "Neue Produkte und Funktionen, von den ersten Abläufen bis zum klickbaren Prototyp in Figma. Mit allen Zuständen, nicht nur dem schönen.",
+          text: "Neue Produkte und Funktionen, von den ersten Abläufen bis zum klickbaren Prototyp in Figma.",
         },
         {
           title: "Nachschärfen",
-          text: "Dein Produkt läuft, vielleicht aus einer KI-Vorlage. Es bekommt eine klare Ordnung und ein eigenes Gesicht, ohne dass ihr von vorn anfangt.",
+          text: "Dein Produkt läuft, vielleicht aus einer KI-Vorlage. Es bekommt eine klare Ordnung und einen eigenen Auftritt, ohne dass ihr von vorn anfangt.",
         },
         {
           title: "Designsystem",
@@ -593,24 +593,24 @@ export const de = {
     meta: {
       title: "Barrierefreiheit prüfen und umsetzen nach BFSG | Ercan Cicek",
       description:
-        "Ich prüfe Websites und Web-Anwendungen auf Barrierefreiheit nach WCAG 2.2 und BFSG, behebe die Fehler in Design und Code und schule dein Team. Das erste Gespräch ist unverbindlich und kostenlos.",
+        "Ich prüfe deine Website oder App nach BFSG und WCAG 2.2, behebe die Fehler in Design und Code und schule dein Team. Aus Düsseldorf. Erstes Gespräch unverbindlich und kostenlos.",
     },
 
     hero: {
-      title: "Ich mache deine Anwendung barrierefrei.",
+      title: "Ich mache deine digitalen Produkte barrierefrei.",
       // --- What VoiceOver announces for the heading above, shown next to it
-      announcement: "Ich mache deine Anwendung barrierefrei. Überschrift, Ebene 1",
+      announcement: "Ich mache deine digitalen Produkte barrierefrei. Überschrift, Ebene 1",
       announcementLabel: "Das sagt ein Screenreader zu dieser Überschrift",
-      lead: "Ich prüfe deine Website oder App auf Barrierefreiheit nach BFSG: Können auch Menschen mit Behinderung sie ohne Hürden nutzen? Auf Wunsch behebe ich die Fehler selbst, in Design und Code, und schule dein Team, damit keine neuen dazukommen.",
+      lead: "Ich prüfe sie nach BFSG: Können auch Menschen mit Behinderung sie ohne Hürden nutzen? Auf Wunsch behebe ich die Fehler selbst, in Design und Code, und schule dein Team, damit keine neuen Fehler dazukommen.",
     },
 
     demo: {
       title: "Sieht gleich aus. Klingt anders.",
-      lead: "Wer nicht oder schlecht sieht, lässt sich Websites von einem Screenreader vorlesen, auf dem Mac zum Beispiel von VoiceOver. Ist ein Element unsauber entwickelt, liest er Falsches oder gar nichts vor oder erreicht wichtige Buttons gar nicht. Im Zweifel kommt man dann nicht weiter.",
+      lead: "Wer nicht oder schlecht sieht, lässt sich Websites vorlesen, auf dem Mac von VoiceOver. Ist ein Element unsauber gebaut, hört man Falsches, nichts, oder kommt gar nicht erst an den Button. Und dann nicht weiter.",
       instruction:
-        "Geh mit „Zurück“ und „Weiter“ durch das Formular. Zu jedem Element siehst du, was VoiceOver bei einem häufigen Fehler sagt und was, wenn es richtig gebaut ist.",
+        "Geh mit „Zurück“ und „Weiter“ durchs Formular. Zu jedem Element steht da, was VoiceOver bei einem häufigen Fehler sagt, und was, wenn es richtig gebaut ist.",
       // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "Mit dem Bildschirmvorhang erlebst du es ohne Bild.",
+      instructionCurtain: "Mit „Bildschirm aus“ erlebst du es ohne Bild, so wie VoiceOver-Nutzer.",
       commonLabel: "Häufiger Fehler",
       correctLabel: "Richtig gebaut",
       previous: "Zurück",
@@ -619,8 +619,10 @@ export const de = {
       close: "Schließen",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "Zur Ansage",
-      // --- Apple's own name for the VoiceOver mode that turns the screen off
-      blind: "Bildschirmvorhang",
+      // --- The switch in plain words; VoiceOver's own name for the mode,
+      // Screen Curtain, is named in the hint under it
+      blind: "Bildschirm aus",
+      blindHint: "Bei VoiceOver heißt das Bildschirmvorhang.",
       curtainText: "Jetzt bleibt dir nur noch, was VoiceOver sagt.",
       silent: "Keine Ansage",
       position: "Element {number} von {total}",
@@ -690,7 +692,7 @@ export const de = {
     law: {
       title: "Das BFSG in Kürze",
       body: [
-        "Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz, kurz BFSG. Danach müssen viele digitale Angebote für Privatkunden barrierefrei sein. Was das genau heißt, steht in der europäischen Norm EN 301 549. Ihre neue Fassung baut auf den WCAG 2.2 auf, den internationalen Regeln für barrierefreie Websites und Apps. Danach prüfe ich.",
+        "Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz, kurz BFSG. Danach müssen viele digitale Angebote für Privatkunden barrierefrei sein. Als technischer Maßstab dienen in der Praxis die europäische Norm EN 301 549 und die WCAG, die internationalen Regeln für barrierefreie Websites und Apps. Ich prüfe nach WCAG 2.2 (dem aktuellen Stand, auf dem auch die neue Fassung der Norm aufbaut).",
         "Ob sich jemand daran hält, kontrolliert eine Behörde der Bundesländer, die Marktüberwachungsstelle. Sie wird nach Beschwerden aktiv, aber auch von sich aus. Sie kann eine Frist zum Nachbessern setzen, ein Bußgeld verhängen und im äußersten Fall das Angebot verbieten.",
       ],
       affectedTitle: "Meist betroffen",
@@ -698,7 +700,7 @@ export const de = {
         "Onlineshops, Online-Banking, Buchungs- und Ticketportale, Vertragsabschlüsse und Apps für Privatkunden",
       notAffectedTitle: "Meist nicht",
       notAffected:
-        "Angebote nur für Firmenkunden und sehr kleine Firmen mit Dienstleistungen, also weniger als 10 Beschäftigte und höchstens 2 Millionen Euro Umsatz im Jahr",
+        "Angebote nur für Firmenkunden und Dienstleistungen sehr kleiner Firmen: weniger als 10 Beschäftigte und höchstens 2 Millionen Euro Jahresumsatz oder Bilanzsumme (§ 3 BFSG)",
     },
 
     services: {
@@ -707,14 +709,14 @@ export const de = {
       items: [
         {
           title: "Prüfen",
-          text: "Ich prüfe deine Anwendung nach WCAG\u00A02.2, mit Prüftools und von Hand mit Screenreader und Tastatur. Zu jedem Fehler bekommst du einen Lösungsvorschlag, mit dem dein Team sofort loslegen kann.",
+          text: "Ich prüfe deine Website oder App nach WCAG\u00A02.2, mit Prüftools und von Hand mit Screenreader und Tastatur. Zu jedem Fehler bekommst du einen Lösungsvorschlag, mit dem dein Team sofort loslegen kann. Auf Wunsch schreibe ich auch die Barrierefreiheitserklärung.",
         },
         {
           title: "Beheben",
           text: "Ich behebe die Fehler selbst, in Figma und direkt in eurem Code, mit euren Werkzeugen. Am liebsten in den Bausteinen, aus denen eure Seiten bestehen. Dann ist ein Fehler überall auf einmal weg.",
         },
         {
-          title: "Befähigen",
+          title: "Schulen",
           text: "Ich zeige deinem Team an euren eigenen Seiten, worauf es ankommt. Mit Schulungen und Begleitung im Alltag denkt es Barrierefreiheit von Anfang an mit.",
         },
       ],
@@ -749,7 +751,7 @@ export const de = {
 
     oneHand: {
       title: "Prüfung und Umsetzung aus einer Hand",
-      body: "Ich komme aus UI/UX-Design und Frontend-Entwicklung. Deshalb endet ein Befund bei mir **nicht mit einer Kriteriennummer**, sondern **mit einer Lösung**, die in euer Design-System passt und sich im nächsten Sprint umsetzen lässt.",
+      body: "Ich komme aus UI/UX-Design und Frontend-Entwicklung. Deshalb endet ein Befund bei mir **nicht mit einer Kriteriennummer**, sondern **mit einer Lösung**, die in euer Designsystem passt und sich im nächsten Sprint umsetzen lässt.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -780,8 +782,144 @@ export const de = {
     },
 
     contact: {
-      title: "Lass uns schauen, wo du stehst.",
-      body: "Sag mir, um welche Anwendung es geht. Im ersten Gespräch schauen wir kurz gemeinsam drauf, und danach weißt du, wo du stehst und was als Nächstes dran ist. Unverbindlich und kostenlos.",
+      title: "Lass uns schauen, wo dein Produkt steht.",
+      body: "Sag mir, um welche Website oder App es geht. Im ersten Gespräch schauen wir kurz gemeinsam drauf, und danach weißt du, was fehlt und was als Nächstes dran ist. Unverbindlich und kostenlos.",
+    },
+  },
+  development: {
+    meta: {
+      title: "Frontend-Entwicklung mit React, Vue und TypeScript | Ercan Cicek",
+      description:
+        "Ich baue Frontends, die auch in zwei Jahren noch halten: neu, in Bestehendem oder als Verstärkung für dein Team. KI schreibt mit, die Entscheidungen treffe ich. Das erste Gespräch ist unverbindlich und kostenlos.",
+    },
+
+    hero: {
+      title: "Sauberer Code, von KI geschrieben, von mir angeleitet.",
+      lead: "Frontend-Entwicklung ist heute KI-getrieben. Mit mehr als zehn Jahren Erfahrung leite ich die KI so an, dass der Code skaliert und auch das stimmt, was man nicht sieht.",
+      // --- The terminal next to the heading: what I tell the AI, what it
+      // shows while it works, and its answer
+      prompt: "Mach die Überschrift zu einem echten h1.",
+      working: "Ändere …",
+    },
+
+    findings: {
+      title: "KI baut schnell. Und übersieht, was man ihr nicht sagt.",
+      lead: "Das zeigen gerade mehrere große Auswertungen. Drei Punkte davon betreffen Frontends direkt, und bei allen dreien entscheidet nicht das Werkzeug, sondern wer es führt.",
+      items: [
+        {
+          title: "Sieht richtig aus, ist es nicht.",
+          text: "Mehr als die Hälfte der befragten Entwickler hat Code bekommen, der korrekt wirkte und erst im Betrieb versagte. Zwei Drittel ärgern sich über Lösungen, die „fast richtig“ sind.",
+          me: "Darum lese und teste ich, was die KI liefert, bevor es zu dir geht. Jede Komponente, nicht stichprobenartig.",
+          source: "Sonar, Befragung von 1.149 Entwicklern; Stack Overflow Developer Survey 2025",
+          href: "https://redwerk.com/blog/vibe-coding-report/",
+        },
+        {
+          title: "Barrierefrei nur auf Nachfrage. Und selbst dann nicht.",
+          text: "Fünf KI-Werkzeuge sollten ausdrücklich barrierefreie Websites bauen. Alle 15 Ergebnisse scheiterten schon an der niedrigsten WCAG-Stufe, im Schnitt mit 55 Fehlern pro Seite.",
+          me: "Ich baue Tastaturbedienung, Kontraste und Screenreader-Texte von Anfang an ein und prüfe sie, wie ich es bei Audits mache.",
+          source: "AudioEye, September 2026 (Studie des Anbieters, via VentureBeat)",
+          href: "https://venturebeat.com/ai/we-asked-five-ai-tools-to-build-accessible-websites-all-15-sites-failed",
+        },
+        {
+          title: "Es wächst, aber niemand räumt auf.",
+          text: "Der Anteil der Änderungen, die bestehenden Code ordnen, ist seit 2022 von 21 auf unter 4 Prozent gefallen. Kopierte Codeblöcke haben sich fast verdoppelt. So wird jede spätere Änderung teurer.",
+          me: "Ich gebe der KI die Struktur vor, Komponenten, Variablen, Grenzen, und halte sie ein. Dann bleibt dein Produkt auch nach dem zehnten Feature änderbar.",
+          source: "GitClear, Auswertung von 623 Mio. Code-Änderungen 2023 bis 2026 (via LeadDev)",
+          href: "https://leaddev.com/ai/code-maintainability-plummets-in-the-ai-coding-era",
+        },
+      ],
+      sourceLabel: "Quelle",
+    },
+
+    services: {
+      title: "So kannst du mich einsetzen",
+      lead: "Neu, in Bestehendem oder als Verstärkung für dein Team.",
+      items: [
+        {
+          title: "Bauen",
+          text: "Eine neue Web-App oder Website, vom Entwurf bis zum Start. Du bekommst Code, den dein Team später selbst lesen und ändern kann.",
+        },
+        {
+          title: "Weiterbauen",
+          text: "Ein Produkt, das es schon gibt, oft mit KI gebaut und schnell gewachsen. Ich räume auf, wo es klemmt, und baue weiter. Ohne Neustart.",
+        },
+        {
+          title: "Verstärken",
+          text: "Dein Team braucht eine Zeit lang eine Hand mehr. Ich arbeite in eurem Code und in euren Abläufen mit, so lange es nötig ist.",
+        },
+      ],
+    },
+
+    process: {
+      title: "So kann es ablaufen",
+      lead: "Ein Beispiel. Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab.",
+      steps: [
+        {
+          title: "Kennenlernen",
+          text: "Du erzählst mir, was gebaut werden soll und was es schon gibt.",
+          outcome: "Danach weißt du, ob ich helfen kann.",
+        },
+        {
+          title: "Einlesen",
+          text: "Ich lese Entwurf und Code, falls es ihn schon gibt, und kläre, was offen ist, bevor es losgeht.",
+          outcome: "Du bekommst ein Angebot mit klarem Umfang.",
+        },
+        {
+          title: "Bauen",
+          text: "Ich baue in kurzen Abschnitten und zeige dir regelmäßig den Stand, lauffähig, nicht als Screenshot.",
+          outcome: "Du siehst früh, ob es passt.",
+        },
+        {
+          title: "Übergeben",
+          text: "Der Code liegt in eurem Repository, mit Erklärung. Dein Team macht weiter, oder ich bleibe dran.",
+          outcome: "Es läuft, und ihr könnt es ändern.",
+        },
+      ],
+    },
+
+    oneHand: {
+      title: "Wozu noch ein Entwickler, wenn KI den Code schreibt?",
+      body: "Weil der Code der letzte Schritt ist. Vorher entscheidet jemand, **was gebaut wird und wie es zu deinem Produkt und deinem Design passt**. Diese Entscheidungen treffe ich, dann lasse ich die KI bauen und **prüfe, was sie liefert**. Dazu kommt, was ein Modell nicht wissen kann: alles, was nach seinem Training erschienen ist. Das lerne ich laufend und gebe es weiter.",
+      portraitAlt: "Ercan Cicek",
+    },
+
+    faq: {
+      title: "Häufige Fragen",
+      items: [
+        {
+          question: "Was kostet das?",
+          answer:
+            "Das hängt vom Umfang ab: wie viele Screens und Abläufe es sind und ob ich neu baue oder in Bestehendem arbeite. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
+        },
+        {
+          question: "Wann kannst du anfangen?",
+          answer: "Das hängt von meiner Auslastung ab. Frag einfach, dann sage ich dir ehrlich, wann es geht.",
+        },
+        {
+          question: "Mit welchen Technologien arbeitest du?",
+          answer:
+            "React, Vue und TypeScript, Astro für Websites, Webflow, wenn es ohne Entwickler weitergehen soll. Was bei dir schon im Einsatz ist, bleibt. Ich bringe kein Framework mit, nur weil ich es mag.",
+        },
+        {
+          question: "Wir haben schon Entwickler. Passt das?",
+          answer:
+            "Ja. Ich arbeite in eurem Repository, nach euren Regeln und mit euren Werkzeugen. Wenn ich gehe, bleibt kein Code zurück, den nur ich verstehe.",
+        },
+        {
+          question: "Gehört uns der Code?",
+          answer: "Ja, von der ersten Zeile an. Alles liegt in eurem Repository, ohne Abhängigkeit von mir.",
+        },
+        {
+          question: "Ist Barrierefreiheit mit drin?",
+          answer:
+            "Ja, von Anfang an. Tastatur, Kontraste, Fokus und Screenreader-Texte plane ich direkt mit, so muss später nichts nachgerüstet werden.",
+        },
+      ],
+    },
+
+    contact: {
+      title: "Melde dich, wenn ich helfen kann.",
+      body: "Egal, ob das Projekt schon läuft oder gerade erst eine Idee ist. Ein kurzes Gespräch reicht, unverbindlich und kostenlos.",
     },
   },
 }

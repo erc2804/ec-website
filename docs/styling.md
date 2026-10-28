@@ -46,8 +46,18 @@ links — opt out with `no-underline`. Do not write a second link hover into a c
 
 **The font carries its own vertical metrics.** Safari ignores `ascent-override`, so the
 metrics are edited into `public/fonts/an-regular.*` itself, loaded with `?v=2`. Bump the
-query string whenever the files change. Headings use weight 400: there is no bold cut, and
-Safari smears the synthetic one.
+query string whenever the files change. There is no bold cut: `font-bold` is a synthetic
+weight, and Safari draws it ragged. It stays on buttons and labels until a real bold file
+exists; do not switch it off with `font-synthesis`.
+
+**Animated cursors move with `left` and `top`, not `translate`.** Chrome runs `translate`
+on the compositor and freezes keyframe stops that come from custom properties, so a path
+measured by a script lands beside its marks. `left`/`top` are evaluated every frame. Set
+the stops before the animation starts (`data-is-ready`), and keep the keyframe shorthand
+free of `var()` that changes later.
+
+**Pill text sits high in its line box.** `ec-pill-label` (line-height 1, uneven block
+padding) centres it optically. Every chip, tab and segmented control uses it.
 
 **German compounds need soft hyphens at display sizes.** A word like
 `Barrierefreiheitserklärung` has no break opportunity and runs straight out of a 320px

@@ -142,13 +142,13 @@ export const en: Translations = {
 
   home: {
     meta: {
-      title: "Ercan Cicek | Product Engineer: UI/UX Design, Frontend Development and Accessibility",
+      title: "Accessibility, UI/UX Design and Frontend in Düsseldorf | Ercan Cicek",
       description:
-        "I design digital products, build them myself and make them accessible. Product engineer from Düsseldorf, more than ten years of design and code, remote or on site.",
+        "I make websites and apps accessible, design them and build them myself. Independent product engineer in Düsseldorf, Germany, with more than ten years in design and code.",
     },
     hero: {
       eyebrow: ["Product Engineer", "Düsseldorf"],
-      claim: ["Design, code and accessibility.", "From one person."],
+      claim: ["Design, code and accessibility.", "All from one person."],
       scrollCue: "Scroll down",
     },
     offers: {
@@ -157,12 +157,12 @@ export const en: Translations = {
         accessibility: {
           title: "Accessibility",
           teaser:
-            "I audit your application against WCAG and the European Accessibility Act, fix the issues in the code myself and show your team what matters.",
+            "I audit your website or app against WCAG and the European Accessibility Act, fix the issues in the code myself and show your team what matters.",
         },
         design: {
           title: "UI/UX Design",
           teaser:
-            "Interfaces that explain themselves. Even when your product was built with AI and now looks like everyone else's.",
+            "Interfaces that explain themselves. Also for products built with AI that are ready for a look of their own.",
         },
         development: {
           title: "Frontend Development",
@@ -181,7 +181,7 @@ export const en: Translations = {
     },
     roles: {
       title: "How you can bring me in",
-      lead: "Whether it's accessibility, design or development: you decide which role I take on.",
+      lead: "Whether you're a startup, a company or an agency: you decide which role I take on.",
       items: [
         {
           title: "Take over",
@@ -193,10 +193,10 @@ export const en: Translations = {
         },
         {
           title: "Review",
-          text: "You want to know where you stand. I audit your application for **accessibility** and, if you like, look at design and code too. You get a **report** your team can work with right away.",
+          text: "You want to know where you stand. I audit your website or app for **accessibility** and, if you like, look at design and code too. You get a **report** your team can work with right away.",
         },
         {
-          title: "Enable",
+          title: "Train",
           text: "Your team should be able to do it themselves. Through **mentoring and training** in accessibility, design and frontend, so they apply it with confidence in day-to-day work.",
         },
       ],
@@ -377,7 +377,7 @@ export const en: Translations = {
     meta: {
       title: "UI/UX design for web apps and websites | Ercan Cicek",
       description:
-        "I design interfaces where people find what they need right away, and build them myself if you like. Also for products built with AI. The first call is free, with no strings attached.",
+        "UI/UX design for web apps and websites, built by me if you like. Also for products started from an AI template. Based in Düsseldorf. The first call is free, with no strings attached.",
     },
 
     hero: {
@@ -388,14 +388,14 @@ export const en: Translations = {
       tokenBefore: "text/tertiary",
       tokenMiddle: "text/secondary",
       tokenAfter: "text/primary",
-      lead: "Nobody should have to think about where to click. That's what I take care of: in new products, in existing ones, and in those built with AI that now need the last step.",
+      lead: "Everyone should see right away where to go next. That's what I take care of: in new products, in existing ones, and in those built with AI that now need the last step.",
     },
 
     compare: {
       title: "Same content. Different product.",
       lead: "AI tools deliver a working page in minutes. That's a good start, often the best a project can have. But it's a template, and templates look alike: a gradient on top, three cards with icons, two buttons. What's still missing is the decision about what matters on this page.",
       example:
-        "Here's the home page of a time-tracking tool, the template on the left, fully designed on the right. Nothing was invented, only decided.",
+        "Here's the home page of a made-up time-tracking tool, the template on the left, fully designed on the right. The same product, only decided: what comes first, what can go and what to show.",
       before: "AI template",
       after: "Designed",
       sliderLabel: "Comparison of the same home page: the AI template on the left, designed on the right",
@@ -471,7 +471,7 @@ export const en: Translations = {
         {
           key: "loading",
           label: "Loading",
-          why: "On the left, one word on an empty surface. On the right, placeholders show that something is coming and how much. The page feels faster, even though it isn't.",
+          why: "On the left, one word on an empty surface. On the right, placeholders show that something is coming and how much. That makes the wait easier.",
         },
         {
           key: "empty",
@@ -497,11 +497,11 @@ export const en: Translations = {
       items: [
         {
           title: "Design",
-          text: "New products and features, from the first flows to a clickable prototype in Figma. With every state, not just the pretty one.",
+          text: "New products and features, from the first flows to a clickable prototype in Figma.",
         },
         {
           title: "Sharpen",
-          text: "Your product works, maybe from an AI template. It gets a clear order and a face of its own, without starting over.",
+          text: "Your product works, maybe from an AI template. It gets a clear order and a look of its own, without starting over.",
         },
         {
           title: "Design system",
@@ -515,22 +515,22 @@ export const en: Translations = {
       lead: "An example. Every project is different, so we adapt the steps to you.",
       steps: [
         {
-          title: "Get to know",
+          title: "Getting to know each other",
           text: "You show me your product or your idea and tell me who uses it.",
           outcome: "Afterwards you know whether I can help.",
         },
         {
-          title: "Understand",
+          title: "Understanding",
           text: "I go through what users want to do and where they get stuck today.",
           outcome: "We know which screens matter.",
         },
         {
-          title: "Design",
+          title: "Designing",
           text: "I design in Figma, with every state, and show you early drafts along the way.",
           outcome: "You get a clickable prototype.",
         },
         {
-          title: "Hand over",
+          title: "Handing over",
           text: "Design, states and tokens go to your team, with an explanation. If you want, I build along.",
           outcome: "Your team can get going.",
         },
@@ -571,7 +571,7 @@ export const en: Translations = {
 
     contact: {
       title: "Let's talk about your product.",
-      body: "Send me a link or a few screenshots. On a first call we'll look at it together, free and with no strings attached.",
+      body: "Send me a link or a few screenshots. On a first call we'll look at it together, free, with no strings attached.",
     },
   },
 
@@ -579,23 +579,23 @@ export const en: Translations = {
     meta: {
       title: "Accessibility audits and fixes for the EAA | Ercan Cicek",
       description:
-        "I test websites and web applications for accessibility to WCAG 2.2 and the European Accessibility Act, fix the issues in design and code, and train your team. The first call is free and comes with no strings attached.",
+        "I audit your website or app against the European Accessibility Act and WCAG 2.2, fix the issues in design and code, and train your team. Based in Düsseldorf. The first call is free, with no strings attached.",
     },
 
     hero: {
-      title: "I make your application accessible.",
-      announcement: "I make your application accessible. Heading level 1",
+      title: "I make your digital products accessible.",
+      announcement: "I make your digital products accessible. Heading level 1",
       announcementLabel: "What a screen reader says about this heading",
-      lead: "I check your website or app for accessibility under the European Accessibility Act: can people with disabilities use it without barriers? If you like, I fix the issues myself, in design and code, and train your team so no new ones creep in.",
+      lead: "I check them under the European Accessibility Act: can people with disabilities use them without barriers? If you like, I fix the issues myself, in design and code, and train your team so no new issues creep in.",
     },
 
     demo: {
       title: "Looks the same. Sounds different.",
-      lead: "People who can't see well or at all have websites read out to them by a screen reader, on a Mac for example by VoiceOver. If an element is built carelessly, it reads out the wrong thing or nothing at all, or can't even reach important buttons. Then people may get stuck.",
+      lead: "People who can't see well or at all have websites read out to them, on a Mac by VoiceOver. If an element is built carelessly, they hear the wrong thing, nothing, or never reach the button. And then they're stuck.",
       instruction:
         "Use “Back” and “Next” to step through the form. For each element you see what VoiceOver says with a common mistake, and what it says when built right.",
       // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "The Screen Curtain lets you try it without the picture.",
+      instructionCurtain: "With “Screen off” you try it without the picture, the way VoiceOver users do.",
       commonLabel: "Common mistake",
       correctLabel: "Built right",
       previous: "Back",
@@ -604,7 +604,8 @@ export const en: Translations = {
       close: "Close",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "To the announcement",
-      blind: "Screen Curtain",
+      blind: "Screen off",
+      blindHint: "VoiceOver calls this the Screen Curtain.",
       curtainText: "Now all you have is what VoiceOver says.",
       silent: "Nothing announced",
       position: "Element {number} of {total}",
@@ -674,7 +675,7 @@ export const en: Translations = {
     law: {
       title: "The European Accessibility Act in short",
       body: [
-        "Since June 28, 2025, many digital services for consumers in the EU have to be accessible. In Germany that's the BFSG. What it means in practice is set by the European standard EN 301 549. Its new version builds on WCAG 2.2, the international guidelines for accessible websites and apps. That's what I test against.",
+        "Since June 28, 2025, many digital services for consumers in the EU have to be accessible. In Germany that's the BFSG. In practice, the technical benchmark is the European standard EN 301 549 together with WCAG, the international guidelines for accessible websites and apps. I test against WCAG 2.2 (the current version, which the new edition of the standard builds on).",
         "Public authorities check whether companies comply, after complaints and on their own initiative. They can set a deadline for fixes, impose a fine and, as a last resort, stop the service.",
       ],
       affectedTitle: "Usually affected",
@@ -682,7 +683,7 @@ export const en: Translations = {
         "Online shops, online banking, booking and ticketing, contract sign-ups and apps for consumers",
       notAffectedTitle: "Usually not",
       notAffected:
-        "Services only for business customers, and very small companies providing services: fewer than 10 employees and no more than €2 million in annual turnover",
+        "Services only for business customers, and services from very small companies: fewer than 10 employees and no more than €2 million in annual turnover or balance sheet total (Section 3 BFSG)",
     },
 
     services: {
@@ -691,14 +692,14 @@ export const en: Translations = {
       items: [
         {
           title: "Audit",
-          text: "I test your application against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. For every issue you get a suggested fix your team can start on right away.",
+          text: "I test your website or app against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. For every issue you get a suggested fix your team can start on right away. If you like, I also write your accessibility statement.",
         },
         {
           title: "Fix",
           text: "I fix the issues myself, in Figma and right in your code, with your tools. Ideally in the building blocks your pages are made of, so an issue is gone everywhere at once.",
         },
         {
-          title: "Enable",
+          title: "Train",
           text: "I show your team what matters, using your own pages. With training and support in day-to-day work, they build accessibility in from the start.",
         },
       ],
@@ -764,8 +765,142 @@ export const en: Translations = {
     },
 
     contact: {
-      title: "Let's see where you stand.",
-      body: "Tell me which application it's about. On a first call we'll take a quick look together, and afterwards you'll know where you stand and what to do next. Free, with no strings attached.",
+      title: "Let's see where your product stands.",
+      body: "Tell me which website or app it's about. On a first call we'll take a quick look together, and afterwards you'll know what's missing and what to do next. Free, with no strings attached.",
+    },
+  },
+  development: {
+    meta: {
+      title: "Frontend development with React, Vue and TypeScript | Ercan Cicek",
+      description:
+        "I build frontends that still hold up in two years: new, in existing code, or as an extra pair of hands for your team. AI writes along, I make the decisions. The first call is free, with no strings attached.",
+    },
+
+    hero: {
+      title: "Clean code, written by AI, directed by me.",
+      lead: "Frontend development is AI-driven today. With more than ten years of experience, I direct the AI so the code scales and the things you don't see are right too.",
+      prompt: "Make the heading a real h1.",
+      working: "Updating …",
+    },
+
+    findings: {
+      title: "AI builds fast. And misses what nobody tells it.",
+      lead: "Several large studies are showing this right now. Three of their findings concern frontends directly, and in all three it is not the tool that decides, but who guides it.",
+      items: [
+        {
+          title: "Looks right. Isn't.",
+          text: "More than half of the developers surveyed received code that looked correct and only failed in production. Two thirds are frustrated by solutions that are \"almost right\".",
+          me: "That is why I read and test what the AI delivers before it reaches you. Every component, not a sample.",
+          source: "Sonar, survey of 1,149 developers; Stack Overflow Developer Survey 2025",
+          href: "https://redwerk.com/blog/vibe-coding-report/",
+        },
+        {
+          title: "Accessible only on request. And not even then.",
+          text: "Five AI tools were explicitly asked to build accessible websites. All 15 results failed the lowest WCAG level, with 55 issues per page on average.",
+          me: "I build keyboard use, contrast and screen reader text in from the start and check them the way I do in audits.",
+          source: "AudioEye, September 2026 (vendor study, via VentureBeat)",
+          href: "https://venturebeat.com/ai/we-asked-five-ai-tools-to-build-accessible-websites-all-15-sites-failed",
+        },
+        {
+          title: "It grows, but nobody tidies up.",
+          text: "The share of changes that tidy existing code has fallen from 21 to under 4 percent since 2022. Copied code blocks have almost doubled. Every later change gets more expensive.",
+          me: "I give the AI the structure, components, variables, boundaries, and hold it to them. Then your product stays changeable after the tenth feature.",
+          source: "GitClear, analysis of 623 million code changes 2023 to 2026 (via LeadDev)",
+          href: "https://leaddev.com/ai/code-maintainability-plummets-in-the-ai-coding-era",
+        },
+      ],
+      sourceLabel: "Source",
+    },
+
+    services: {
+      title: "How you can bring me in",
+      lead: "New, in existing code, or as an extra pair of hands for your team.",
+      items: [
+        {
+          title: "Build",
+          text: "A new web app or website, from the design to launch. You get code your team can read and change later on its own.",
+        },
+        {
+          title: "Build on",
+          text: "A product that already exists, often built with AI and grown fast. I tidy up where it sticks and keep building. No restart.",
+        },
+        {
+          title: "Reinforce",
+          text: "Your team needs one more pair of hands for a while. I work in your code and your routines for as long as it takes.",
+        },
+      ],
+    },
+
+    process: {
+      title: "How it can go",
+      lead: "An example. Every project is different, so we adapt the steps to you.",
+      steps: [
+        {
+          title: "Getting to know each other",
+          text: "You tell me what should be built and what already exists.",
+          outcome: "Afterwards you know whether I can help.",
+        },
+        {
+          title: "Reading in",
+          text: "I read the design and the code, if there is any, and clear up what is open before we start.",
+          outcome: "You get an offer with a clear scope.",
+        },
+        {
+          title: "Building",
+          text: "I build in short rounds and show you the state regularly, running, not as a screenshot.",
+          outcome: "You see early whether it fits.",
+        },
+        {
+          title: "Handing over",
+          text: "The code lives in your repository, with an explanation. Your team carries on, or I stay on.",
+          outcome: "It runs, and you can change it.",
+        },
+      ],
+    },
+
+    oneHand: {
+      title: "Why a developer, when AI writes the code?",
+      body: "Because the code is the last step. Before that, someone decides **what gets built and how it fits your product and your design**. I make those decisions, then let the AI build and **check what it delivers**. Add what a model cannot know: everything that came out after its training. I keep learning it and pass it on.",
+      portraitAlt: "Ercan Cicek",
+    },
+
+    faq: {
+      title: "Common questions",
+      items: [
+        {
+          question: "What does it cost?",
+          answer:
+            "That depends on the scope: how many screens and flows there are and whether I build new or work in existing code. After a free, no-obligation first call you get a concrete offer.",
+        },
+        {
+          question: "When can you start?",
+          answer: "That depends on my workload. Just ask, and I will tell you honestly when it works.",
+        },
+        {
+          question: "Which technologies do you work with?",
+          answer:
+            "React, Vue and TypeScript, Astro for websites, Webflow when it should carry on without a developer. Whatever you already use stays. I do not bring a framework just because I like it.",
+        },
+        {
+          question: "We already have developers. Does that work?",
+          answer:
+            "Yes. I work in your repository, by your rules and with your tools. When I leave, there is no code left that only I understand.",
+        },
+        {
+          question: "Do we own the code?",
+          answer: "Yes, from the first line. Everything lives in your repository, with no dependency on me.",
+        },
+        {
+          question: "Is accessibility included?",
+          answer:
+            "Yes, from the start. Keyboard, contrast, focus and screen reader text are planned in right away, so nothing has to be retrofitted later.",
+        },
+      ],
+    },
+
+    contact: {
+      title: "Get in touch if I can help.",
+      body: "Whether the project is already running or still just an idea. A short call is enough, free, with no strings attached.",
     },
   },
 }

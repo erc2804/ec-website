@@ -1,0 +1,482 @@
+---
+// --- The browser's inspector around whatever it wraps, the way the design
+// page's heading sits in a design tool's selection frame: the element overlay
+// with the tooltip (tag, class, measured size), and next to it the terminal
+// in which I tell the AI what to build. Decoration for sighted readers,
+// hidden from assistive technology; the content inside stays real.
+//
+// On load it plays a moment of work: a pointer comes in, selects the heading
+// and is gone. The overlay and the tooltip stay, and the tooltip says what
+// the AI built on its own: a div that only looks like a heading. In the
+// terminal my instruction is typed, the AI works for a moment and answers
+// with the change, and the tooltip flips to h1. The terminal is part of the
+// layout from the start: beside the heading where there is room, below it on
+// narrow screens. It has its size from the start, nothing grows.
+//
+// The edit is simulated: the heading is an h1 the whole time, the tooltip
+// shows "div" until the answer comes. Under reduced motion there is no
+// pointer and no typing, only the final state.
+interface Props {
+  /** --- My instruction, as it is typed into the terminal --- */
+  prompt: string
+  /** --- What the terminal shows while the AI works --- */
+  working: string
+  class?: string
+}
+
+const { prompt, working, class: additionalClasses } = Astro.props
+---
+
+<span class:list={["ec-inspect relative block w-fit", additionalClasses]}>
+  <span class="ec-inspect-content relative block">
+    <slot />
+
+    <!-- --- The element overlay: the content box, no padding or margin to show.
+         Both tags are in the DOM, one fades into the other. -->
+    <span class="ec-inspect-box pointer-events-none absolute inset-0" aria-hidden="true" inert>
+      <span class="ec-inspect-tip">
+        <span class="ec-inspect-tag"
+          ><span class="ec-inspect-tag-before">div</span><span class="ec-inspect-tag-after">h1</span
+          ></span
+        ><b>.text-display</b><i class="ec-inspect-size"></i>
+      </span>
+    </span>
+  </span>
+
+  <!-- --- The terminal: a window bar, my line, then the AI's work and its
+       answer in one row -->
+  <span class="ec-terminal pointer-events-none" aria-hidden="true" inert>
+    <span class="ec-terminal-bar"><i></i><i></i><i></i></span>
+    <span class="ec-terminal-line ec-terminal-prompt">
+      <span class="ec-terminal-sign">›</span>
+      <span class="ec-terminal-typed">{prompt}</span><span class="ec-terminal-caret"></span>
+    </span>
+    <span class="ec-terminal-output">
+      <span class="ec-terminal-line ec-terminal-working">
+        <span class="ec-terminal-spinner"></span>
+        {working}
+      </span>
+      <span class="ec-terminal-line ec-terminal-answer">
+        <span class="ec-terminal-check">✓</span>
+        <span
+          ><s>div</s>.text-display <span class="ec-terminal-arrow">→</span>
+          <b>h1</b>.text-display</span
+        >
+      </span>
+    </span>
+  </span>
+
+  <!-- --- The pointer: a plain arrow, as the browser draws it -->
+  <svg
+    class="ec-inspect-pointer pointer-events-none absolute top-0 left-0 size-5"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M2.5 1.5 L13.5 8.2 L8.6 9.3 L6 14.5 Z"
+      fill="#1c1a17"
+      stroke="#ffffff"
+      stroke-width="1.2"
+      stroke-linejoin="round"></path>
+  </svg>
+</span>
+
+<style>
+  /* --- The timeline, all from the moment the content's rise has settled:
+     the pointer selects the heading and is gone, the instruction is typed,
+     Enter, the AI works, the answer comes and the tooltip flips. Over after
+     4.6 s: moving content under five seconds needs no pause control
+     (WCAG 2.2.2). --- */
+  .ec-inspect {
+    --ec-start: 500ms;
+    --ec-path: 1300ms;
+    --ec-select: calc(var(--ec-start) + 1000ms);
+    --ec-type: calc(var(--ec-start) + 1500ms);
+    --ec-type-duration: 1400ms;
+    --ec-enter: calc(var(--ec-type) + var(--ec-type-duration) + 150ms);
+    --ec-answer: calc(var(--ec-enter) + 850ms);
+    /* --- Chrome's overlay colour for the content box, lighter, since it
+       stays on the heading --- */
+    --ec-inspect-fill-color: rgb(111 168 220 / 0.35);
+    /* --- The pointer's stops, set by the script: below the heading, on the
+       heading --- */
+    --ec-p0-x: 60%;
+    --ec-p0-y: 160%;
+    --ec-p1-x: 55%;
+    --ec-p1-y: 60%;
+  }
+
+  /* --- Nothing moves before the script has measured the stops. Chrome
+     snapshots the pointer's keyframes when the animation starts, so the stops
+     have to be in place first. --- */
+  .ec-inspect:not([data-is-ready]) :global(*) {
+    animation-name: none;
+  }
+
+  .ec-inspect-box {
+    background: var(--ec-inspect-fill-color);
+    opacity: 0;
+    animation: ec-inspect-show 150ms ease var(--ec-select) forwards;
+  }
+
+  .ec-inspect-tip {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 0.5rem);
+    border-radius: 0.25rem;
+    background: #202124;
+    padding: 0.3rem 0.55rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+    white-space: nowrap;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  }
+
+  .ec-inspect-tip b {
+    font-weight: 500;
+    color: #9fc4ff;
+  }
+
+  .ec-inspect-tip i {
+    margin-left: 0.5rem;
+    font-style: normal;
+    color: #f9ae56;
+  }
+
+  /* --- The tag: div until the answer, then h1, stacked in one cell --- */
+  .ec-inspect-tag {
+    display: inline-grid;
+  }
+
+  .ec-inspect-tag > span {
+    grid-area: 1 / 1;
+  }
+
+  .ec-inspect-tag-before {
+    animation: ec-tag-out 200ms ease var(--ec-answer) forwards;
+  }
+
+  .ec-inspect-tag-after {
+    opacity: 0;
+    animation: ec-tag-in 200ms ease var(--ec-answer) forwards;
+  }
+
+  /* --- The terminal: the dark block of the scenes, in mono, with a fixed
+     size so nothing grows while it plays --- */
+  .ec-terminal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 1.75rem;
+    width: min(23rem, 100%);
+    border-radius: 0.875rem;
+    background: linear-gradient(180deg, #262320, #1b1917);
+    padding: 0.7rem 1rem 0.85rem;
+    outline: 1px solid rgb(255 255 255 / 0.07);
+    outline-offset: -1px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.76rem;
+    line-height: 1.6;
+    letter-spacing: 0;
+    color: #f3efe6;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.05) inset,
+      0 16px 40px rgb(5 56 107 / 0.18);
+  }
+
+  /* --- Beside the heading where there is room --- */
+  @media (width >= 80rem) {
+    .ec-terminal {
+      position: absolute;
+      top: 0;
+      left: calc(100% + 3rem);
+      margin-top: 0;
+    }
+  }
+
+  /* --- The window bar: three dots, as terminal windows draw them --- */
+  .ec-terminal-bar {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .ec-terminal-bar i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .ec-terminal-line {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .ec-terminal-sign,
+  .ec-terminal-check {
+    color: #5cdb95;
+  }
+
+  /* --- The instruction: hidden, then typed in --- */
+  .ec-terminal-typed {
+    display: inline-block;
+    overflow: hidden;
+    max-width: 0;
+    white-space: nowrap;
+    vertical-align: bottom;
+    animation: ec-terminal-type var(--ec-type-duration) steps(42, jump-start) var(--ec-type)
+      forwards;
+  }
+
+  /* --- On the narrowest screens the instruction wraps and appears at once;
+     the typing needs one line --- */
+  @media (width < 30rem) {
+    .ec-terminal-typed {
+      max-width: none;
+      white-space: normal;
+      opacity: 0;
+      animation-name: ec-terminal-appear;
+      animation-timing-function: ease;
+      animation-duration: 150ms;
+    }
+  }
+
+  /* --- The caret: blinks from the start of the typing until Enter --- */
+  .ec-terminal-caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    translate: 0 0.2em;
+    background: #f3efe6;
+    opacity: 0;
+    animation:
+      ec-terminal-caret 1s steps(2) var(--ec-type) infinite,
+      ec-terminal-hide 1ms linear var(--ec-enter) forwards;
+  }
+
+  /* --- Work and answer share one cell, so the terminal keeps its height --- */
+  .ec-terminal-output {
+    display: grid;
+  }
+
+  .ec-terminal-output > span {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  .ec-terminal-working {
+    color: #b6ad9f;
+    animation:
+      ec-terminal-appear 1ms linear var(--ec-enter) forwards,
+      ec-terminal-hide 1ms linear var(--ec-answer) forwards;
+  }
+
+  .ec-terminal-spinner {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    translate: 0 0.05em;
+    border: 1.5px solid #b6ad9f;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: ec-terminal-spin 700ms linear infinite;
+  }
+
+  .ec-terminal-answer {
+    animation: ec-terminal-appear 1ms linear var(--ec-answer) forwards;
+  }
+
+  .ec-terminal-answer s,
+  .ec-terminal-arrow {
+    color: #b6ad9f;
+  }
+
+  .ec-terminal-answer b {
+    font-weight: 500;
+    color: #5cdb95;
+  }
+
+  /* --- The pointer: in from below, selects the heading, fades where it is --- */
+  .ec-inspect-pointer {
+    opacity: 0;
+    transform-origin: 15% 10%;
+    animation:
+      ec-inspect-path var(--ec-path) cubic-bezier(0.45, 0, 0.2, 1) var(--ec-start) forwards,
+      ec-inspect-click var(--ec-path) ease-in-out var(--ec-start) both;
+  }
+
+  @keyframes ec-inspect-show {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ec-tag-out {
+    99% {
+      opacity: 0;
+      translate: 0 -0.3em;
+    }
+    to {
+      opacity: 0;
+      display: none;
+    }
+  }
+
+  @keyframes ec-tag-in {
+    from {
+      opacity: 0;
+      translate: 0 0.3em;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes ec-terminal-type {
+    to {
+      max-width: 42ch;
+    }
+  }
+
+  @keyframes ec-terminal-caret {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ec-terminal-hide {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ec-terminal-appear {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ec-terminal-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  /* --- Percentages of the 1300 ms path: 900 on the heading, 1000 the click,
+     then it fades where it is. left and top, not translate, so Chrome does
+     not freeze the stops. --- */
+  @keyframes ec-inspect-path {
+    0% {
+      opacity: 0;
+      left: var(--ec-p0-x);
+      top: var(--ec-p0-y);
+    }
+    12% {
+      opacity: 1;
+    }
+    69%,
+    85% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    100% {
+      opacity: 0;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+  }
+
+  @keyframes ec-inspect-click {
+    75%,
+    79% {
+      scale: 1;
+    }
+    77% {
+      scale: 0.82;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ec-inspect-box,
+    .ec-inspect-tag-before,
+    .ec-inspect-tag-after,
+    .ec-terminal-typed,
+    .ec-terminal-caret,
+    .ec-terminal-working,
+    .ec-terminal-answer,
+    .ec-inspect-pointer {
+      animation: none;
+    }
+
+    .ec-inspect-box,
+    .ec-inspect-tag-after,
+    .ec-terminal-answer {
+      opacity: 1;
+    }
+
+    .ec-inspect-tag-before,
+    .ec-inspect-pointer,
+    .ec-terminal-caret,
+    .ec-terminal-working {
+      display: none;
+    }
+
+    .ec-terminal-typed {
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  // --- Measures what the tooltip shows (the content's size) and where the
+  // pointer stops: below the heading, on the heading. Everything is relative
+  // to the wrapper's top left corner.
+  for (const inspect of document.querySelectorAll<HTMLElement>(".ec-inspect")) {
+    const element = inspect.querySelector<HTMLElement>(".ec-inspect-content")!
+      .firstElementChild as HTMLElement
+    const size = inspect.querySelector<HTMLElement>(".ec-inspect-size")!
+
+    const measure = () => {
+      const rect = element.getBoundingClientRect()
+      size.textContent = `${Math.round(rect.width)} × ${Math.round(rect.height)}`
+    }
+
+    const place = () => {
+      const origin = inspect.getBoundingClientRect()
+      const rect = element.getBoundingClientRect()
+      const at = (name: string, x: number, y: number) => {
+        inspect.style.setProperty(`--ec-${name}-x`, `${Math.round(x - origin.left)}px`)
+        inspect.style.setProperty(`--ec-${name}-y`, `${Math.round(y - origin.top)}px`)
+      }
+      at("p0", rect.left + rect.width * 0.6, rect.bottom + 140)
+      at("p1", rect.left + rect.width * 0.55, rect.top + rect.height * 0.62)
+    }
+
+    const start = () => {
+      measure()
+      place()
+      inspect.dataset.isReady = "true"
+    }
+    measure()
+    // Fonts change the line breaks, so wait for them, but not forever.
+    Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(
+      start
+    )
+    new ResizeObserver(() => {
+      measure()
+      place()
+    }).observe(inspect)
+  }
+</script>

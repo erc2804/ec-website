@@ -53,11 +53,11 @@ const offerSurfaceClasses = {
         <!-- --- The dot between the two parts is drawn, not typed: a typed one
              gets read out or swallowed by a screen reader. A hidden comma gives
              the spoken version its pause. -->
-        <p
-          class="ec-optical-left flex ec-rise items-center gap-2 text-sm tracking-[0.12em] text-brand-sand/70 uppercase"
-        >
+        <p class="ec-optical-left ec-rise text-sm tracking-[0.12em] text-brand-sand/70 uppercase">
           <span>{tHome.hero.eyebrow[0]}</span>
-          <span class="size-1 rounded-full bg-current" aria-hidden="true"></span>
+          <span
+            class="mx-2 inline-block size-1 rounded-full bg-current align-middle"
+            aria-hidden="true"></span>
           <span class="sr-only">,</span>
           <span>{tHome.hero.eyebrow[1]}</span>
         </p>
@@ -216,7 +216,7 @@ const offerSurfaceClasses = {
         {
           tHome.roles.items.map((role, index) => (
             <li
-              class="ec-roles-step flex flex-col gap-3 border-t border-typo-min/20 py-10 transition-colors duration-500 lg:min-h-[26rem] lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-medium"
+              class="ec-roles-step flex flex-col gap-3 border-t border-typo-min/20 py-10 transition-colors duration-500 lg:relative lg:min-h-[26rem] lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-medium"
               data-role={index + 1}
               data-is-active={index === 0 ? "true" : "false"}
             >
@@ -411,6 +411,29 @@ const offerSurfaceClasses = {
 </script>
 
 <style>
+  /* --- Desktop: a dot in the left column where the scene will land next to
+     each role, in the scene's own colour, so the column is never empty. The
+     scene is translucent and would show the dot through, so the dot of the
+     active role fades out while the scene sits on it. --- */
+  @media (width >= 64rem) {
+    .ec-roles-step::before {
+      content: "";
+      position: absolute;
+      top: 13rem;
+      left: calc(-50% - 4rem);
+      width: 0.625rem;
+      height: 0.625rem;
+      translate: -50% -50%;
+      border-radius: 50%;
+      background: --alpha(var(--color-typo-min) / 10%);
+      transition: opacity 500ms;
+    }
+
+    .ec-roles-step[data-is-active="true"]::before {
+      opacity: 0;
+    }
+  }
+
   /* --- The dotted canvas of a design tool, behind the selection frame --- */
   .ec-canvas-grid {
     background-image: radial-gradient(circle, rgb(237 245 225 / 0.45) 1px, transparent 1.5px);

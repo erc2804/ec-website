@@ -47,7 +47,7 @@ const firstPosition = t.position
     <!-- --- How to use the demo: a different job from the lead, so smaller and apart -->
     <p class="mt-4 max-w-[56ch] ec-reveal text-sm text-typo-medium ec-reveal-late">
       {t.instruction}
-      <span class="max-lg:hidden">{t.instructionCurtain}</span>
+      <span class="max-lg:hidden">{" "}{t.instructionCurtain}</span>
     </p>
 
     <!-- --- One grid, arranged in ec-demo-layout below. DOM order: curtain,
@@ -55,7 +55,8 @@ const firstPosition = t.position
          the result right after the button. -->
     <div class="ec-demo-layout mt-12 ec-reveal ec-reveal-late" data-is-blind="false">
       <!-- --- Desktop only: on a phone the curtain would black out the one
-           picture the buttons are about -->
+           picture the buttons are about. The switch says it in plain words,
+           the hint names what VoiceOver calls it. -->
       <div class="ec-demo-settings hidden lg:mt-10 lg:block lg:pt-8">
         <button
           type="button"
@@ -73,6 +74,7 @@ const firstPosition = t.position
             ></span>
           </span>
         </button>
+        <p class="mt-1 text-sm text-typo-medium">{t.blindHint}</p>
       </div>
 
       <!-- --- The picture: only shown, never operated. Nothing in it is
@@ -220,7 +222,7 @@ const firstPosition = t.position
           class="ec-demo-why mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg font-bold text-brand-blue underline-offset-4 hover:underline"
           aria-haspopup="dialog"
         >
-          <IconInfoCircle class="size-5" aria-hidden="true" />
+          <IconInfoCircle class="size-5 -translate-y-0.5" aria-hidden="true" />
           {t.whyButton}
         </button>
       </div>

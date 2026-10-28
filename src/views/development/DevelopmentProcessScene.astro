@@ -1,0 +1,153 @@
+---
+// --- The scene beside the development process, in the picture language of
+// the other pages: one small picture per step, built from the same pieces,
+// that changes as the step changes. data-step on the root (1 to 4) places
+// every piece. Decoration only, the step texts carry the meaning, so it is
+// hidden from assistive technology.
+//
+// 1 Get to know: two speech bubbles between the client and Pixel-Ercan.
+// 2 Read in:     the design card and a code block side by side, Pixel-Ercan
+//                with the magnifier between them.
+// 3 Build:       the code block fills line by line, the card gets its
+//                finished colours, Pixel-Ercan with the code badge.
+// 4 Hand over:   the code block takes the middle with a green check, the
+//                client and Pixel-Ercan sit together below it.
+import { IconCheck, IconCode, IconUser, IconZoomCheck } from "@tabler/icons-astro"
+
+interface Props {
+  step?: 1 | 2 | 3 | 4
+  /** --- Draws the scene smaller, for the low boxes inside the steps --- */
+  isCompact?: boolean
+  class?: string
+}
+
+const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
+
+// --- Same duration and curve as RoleScene, so all pages move alike
+const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+
+// --- The lines of the code block: width, colour, and from which step on
+// they are there (the block fills up while building)
+const codeLines = [
+  { width: "w-3/5", colour: "bg-gray-low/60", from: 2 },
+  { width: "w-4/5", colour: "bg-brand-green-medium/70", from: 2 },
+  { width: "w-2/5", colour: "bg-gray-low/60", from: 3 },
+  { width: "w-3/4", colour: "bg-brand-green-medium/70", from: 3 },
+  { width: "w-1/2", colour: "bg-gray-low/60", from: 3 },
+]
+---
+
+<div
+  class:list={["group relative overflow-hidden", additionalClasses]}
+  data-step={step}
+  aria-hidden="true"
+  inert
+>
+  <div class:list={["absolute inset-0", isCompact ? "scale-[0.62]" : "scale-[0.85]"]}>
+    <!-- --- Step 1: the conversation, in the bubble shape of the inquiry chat -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[-2rem] translate-y-[-3.5rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-bl-sm bg-gray-subtle px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-gray-low"></span>
+      <span class="h-2 w-2/3 rounded-full bg-gray-low"></span>
+    </span>
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[2rem] translate-y-[0.25rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-br-sm bg-brand-green-low px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100 group-data-[step=1]:delay-300",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-brand-green-medium/50"></span>
+      <span class="h-2 w-1/2 rounded-full bg-brand-green-medium/50"></span>
+    </span>
+
+    <!-- --- The design card: on the left from step 2, finished colours from
+         step 3, steps back in step 4 -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-14 -ml-20 flex h-28 w-40 translate-x-[-7rem] flex-col gap-2 rounded-2xl bg-[#f3efe6] p-4 outline outline-1 outline-[#e4ded2] transition-[translate,scale,opacity] group-data-[step=1]:translate-y-[-1rem] group-data-[step=1]:scale-90 group-data-[step=1]:opacity-0 group-data-[step=4]:translate-x-[-12rem] group-data-[step=4]:scale-75 group-data-[step=4]:opacity-40",
+        motion,
+      ]}
+    >
+      <span class="h-2.5 w-2/3 shrink-0 rounded-full bg-[#1c1a17]"></span>
+      <span class="h-5 shrink-0 rounded-lg bg-[#e4ded2]"></span>
+      <span class="h-5 shrink-0 rounded-lg bg-[#e4ded2]"></span>
+      <span class="mt-auto flex items-center justify-between">
+        <span class="h-3.5 w-12 rounded-full bg-[#1c1a17]"></span>
+        <span class="h-3.5 w-7 rounded-full bg-[#e0632f]"></span>
+      </span>
+    </span>
+
+    <!-- --- The code block: on the right from step 2, fills in step 3, takes
+         the middle in step 4 -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-14 -ml-20 flex h-28 w-40 translate-x-[7rem] flex-col justify-center gap-2.5 rounded-2xl bg-[#1f1d1b] px-5 transition-[translate,scale,opacity] group-data-[step=1]:translate-y-[-1rem] group-data-[step=1]:scale-90 group-data-[step=1]:opacity-0 group-data-[step=4]:translate-x-0 group-data-[step=4]:translate-y-[-1.5rem] group-data-[step=4]:scale-110",
+        motion,
+      ]}
+    >
+      {
+        codeLines.map((line) => (
+          <span
+            class:list={[
+              "h-2 origin-left rounded-full transition-[scale,opacity]",
+              line.width,
+              line.colour,
+              line.from === 3 && "scale-x-0 opacity-0 group-data-[step=3]:scale-x-100 group-data-[step=3]:opacity-100 group-data-[step=3]:delay-300 group-data-[step=4]:scale-x-100 group-data-[step=4]:opacity-100",
+              motion,
+            ]}
+          />
+        ))
+      }
+      <!-- the check of the handover -->
+      <span
+        class:list={[
+          "absolute -top-3 -right-3 grid size-8 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=4]:scale-100 group-data-[step=4]:delay-300",
+          motion,
+        ]}
+      >
+        <IconCheck class="size-5" stroke-width={2.5} />
+      </span>
+    </span>
+
+    <!-- --- The client -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 grid size-14 translate-x-[-1.75rem] translate-y-[6.5rem] scale-75 place-items-center rounded-full bg-gray-low/70 text-typo-medium transition-[translate,scale,opacity] group-data-[step=1]:translate-x-[-4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=2]:opacity-0 group-data-[step=3]:opacity-0 group-data-[step=4]:translate-x-[-2.25rem] group-data-[step=4]:translate-y-[5rem] group-data-[step=4]:scale-100",
+        motion,
+      ]}
+    >
+      <IconUser class="size-7" />
+    </span>
+
+    <!-- --- Pixel-Ercan: reads between the two in step 2, codes in step 3,
+         sits with the client in step 4 -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 size-14 translate-x-[1.75rem] translate-y-[6.5rem] scale-75 transition-[translate,scale] group-data-[step=1]:translate-x-[4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=2]:translate-x-0 group-data-[step=2]:translate-y-0 group-data-[step=2]:scale-100 group-data-[step=3]:translate-x-0 group-data-[step=3]:translate-y-0 group-data-[step=3]:scale-100 group-data-[step=4]:translate-x-[2.25rem] group-data-[step=4]:translate-y-[5rem] group-data-[step=4]:scale-100",
+        motion,
+      ]}
+    >
+      <img src="/images/pixelcan.png" alt="" width="56" height="56" class="size-full rounded-full bg-brand-sand" />
+      <span
+        class:list={[
+          "absolute -right-2 -bottom-1 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=2]:scale-100",
+          motion,
+        ]}
+      >
+        <IconZoomCheck class="size-4" stroke-width={2.25} />
+      </span>
+      <span
+        class:list={[
+          "absolute -right-2 -bottom-1 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=3]:scale-100",
+          motion,
+        ]}
+      >
+        <IconCode class="size-4" stroke-width={2.25} />
+      </span>
+    </span>
+  </div>
+</div>
