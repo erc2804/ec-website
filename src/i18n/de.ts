@@ -394,27 +394,30 @@ export const de = {
       // --- What VoiceOver announces for the heading above, shown next to it
       announcement: "Ich mache deine Anwendung barrierefrei. Überschrift, Ebene 1",
       announcementLabel: "Das sagt ein Screenreader zu dieser Überschrift",
-      lead: "Ich prüfe Websites und Web-Anwendungen auf Barrierefreiheit nach WCAG und BFSG. Auf Wunsch behebe ich die Fehler selbst, in Design und Code, und schule dein Team, damit keine neuen dazukommen.",
+      lead: "Ich prüfe deine Website oder App auf Barrierefreiheit nach BFSG: Können auch Menschen mit Behinderung sie ohne Hürden nutzen? Auf Wunsch behebe ich die Fehler selbst, in Design und Code, und schule dein Team, damit keine neuen dazukommen.",
     },
 
     demo: {
       title: "Sieht gleich aus. Klingt anders.",
-      lead: "Menschen, die nicht oder schlecht sehen, nutzen einen Screenreader. Das ist ein Programm, das vorliest, was auf dem Bildschirm ist, auf dem Mac zum Beispiel VoiceOver. Viele Barrieren sieht man deshalb nicht, man hört sie.",
+      lead: "Wer nicht oder schlecht sieht, lässt sich Websites von einem Screenreader vorlesen, auf dem Mac zum Beispiel von VoiceOver. Ist ein Element unsauber entwickelt, liest er Falsches oder gar nichts vor oder erreicht wichtige Buttons gar nicht. Im Zweifel kommt man dann nicht weiter.",
       instruction:
-        "Geh das Formular Element für Element durch und vergleiche, was VoiceOver ansagt. Schalt den Bildschirmvorhang ein, dann wird das Bild schwarz.",
-      outputLabel: "Was VoiceOver sagt",
-      variantLabel: "Umsetzung",
-      variantCommon: "Wie es oft gebaut ist",
-      variantCorrect: "Wie es sein sollte",
-      next: "Nächstes Element",
+        "Geh mit „Zurück“ und „Weiter“ durch das Formular. Zu jedem Element siehst du, was VoiceOver bei einem häufigen Fehler sagt und was, wenn es richtig gebaut ist.",
+      // --- Desktop only, where the curtain switch is shown
+      instructionCurtain: "Mit dem Bildschirmvorhang erlebst du es ohne Bild.",
+      commonLabel: "Häufiger Fehler",
+      correctLabel: "Richtig gebaut",
+      previous: "Zurück",
+      next: "Weiter",
+      whyButton: "Warum ist das ein Problem?",
+      close: "Schließen",
+      // --- Phones: the pill that leads from the picture down to the announcements
+      jump: "Zur Ansage",
       // --- Apple's own name for the VoiceOver mode that turns the screen off
       blind: "Bildschirmvorhang",
-      curtainText: "Jetzt bleibt nur noch, was der Screenreader sagt.",
-      ready: "Noch keine Ansage",
-      readyNote: "Drück „Nächstes Element“ oder klick auf einen Teil des Formulars.",
-      silent: "Keine Ansage, wird übersprungen.",
-      position: "{number} von {total}",
-      liveTemplate: "{position}, {variant}: {caption}. {note}",
+      curtainText: "Jetzt bleibt dir nur noch, was VoiceOver sagt.",
+      silent: "Keine Ansage",
+      position: "Element {number} von {total}",
+      liveTemplate: "{position}: {name}",
       formTitle: "Deine Angaben",
       nameLabel: "Vor- und Nachname",
       nameValue: "Martin Beck",
@@ -424,46 +427,53 @@ export const de = {
       cases: [
         {
           name: "Symbol ohne Bedeutung",
-          fixedName: "Symbol, das übersprungen wird",
-          explanation:
-            "Reine Dekoration, aber im Code nicht so markiert. Also liest der Screenreader den Dateinamen vor.",
-          fix: "Als Dekoration markiert, wird das Symbol einfach übersprungen.",
+          details: [
+            "Das Schild-Symbol ist reine Deko. Fehlt im Code der Hinweis darauf, lesen manche Screenreader stattdessen den Dateinamen vor.",
+            "Solche Ansagen enthalten keine Information. Sie sind Lärm, der das Zuhören mühsamer macht.",
+            "Richtig gebaut bekommt das Bild im Code eine leere Bildbeschreibung (alt=\"\"). Dann überspringt der Screenreader es. Ob ein Bild nur Deko ist, entscheidet, wer die Seite erstellt. Bilder mit Inhalt brauchen eine kurze Beschreibung.",
+          ],
           common: "Bild, icon-shield-blue-2.svg",
           correct: "",
           isCorrectSilent: true,
         },
         {
           name: "Überschrift, die keine ist",
-          fixedName: "Echte Überschrift",
-          explanation:
-            "Sieht aus wie eine Überschrift, ist im Code aber keine. Wer mit Screenreader von Überschrift zu Überschrift springt, findet sie nicht.",
-          fix: "Als Überschrift markiert, findet man sie auch ohne hinzusehen.",
+          details: [
+            "„Deine Angaben“ ist groß geschrieben und sieht aus wie eine Überschrift. Im Code ist es aber nur normaler Text.",
+            "Die meisten Screenreader-Nutzer suchen Inhalte über Überschriften und springen von einer zur nächsten. Das zeigt die große Umfrage von WebAIM unter Screenreader-Nutzern. Fehlt die Überschrift im Code, überspringen sie diesen Abschnitt.",
+            "Richtig gebaut ist es auch im Code eine Überschrift. Wie sie aussieht, bestimmt weiter das Design.",
+          ],
           common: "Deine Angaben",
           correct: "Deine Angaben, Überschrift, Ebene 2",
         },
         {
           name: "Feld ohne Beschriftung",
-          fixedName: "Feld mit Beschriftung",
-          explanation:
-            "Der Text darüber ist nicht mit dem Feld verbunden. Das Feld bleibt namenlos.",
-          fix: "Ist die Beschriftung mit dem Feld verbunden, weiß man, was hier hingehört und dass es Pflicht ist.",
+          details: [
+            "Über dem Feld steht „Vor- und Nachname“. Für das Auge gehört beides zusammen, im Code aber nicht.",
+            "VoiceOver sagt deshalb nur „Textfeld“, ohne Namen. Wer nicht sieht, muss raten, was hinein soll. Auch wer per Sprache steuert, wählt Felder über ihre Beschriftung aus. „Klick auf Vor- und Nachname“ klappt nur, wenn das Feld im Code so heißt.",
+            "Richtig gebaut ist die Beschriftung im Code mit dem Feld verbunden. Dann sagt VoiceOver sie mit an. Nebenbei wird die Beschriftung zur größeren Klickfläche: Ein Klick darauf setzt den Cursor ins Feld.",
+          ],
           common: "Textfeld, Martin Beck",
           correct: "Vor- und Nachname, Pflichtfeld, Textfeld, Martin Beck",
         },
         {
           name: "Fehler nur in Rot",
-          fixedName: "Fehler, der angesagt wird",
-          explanation: "Den Fehler zeigt nur die Farbe. Angesagt wird er nicht.",
-          fix: "Fehler und Hinweis sind mit dem Feld verbunden, also werden sie mit angesagt.",
+          details: [
+            "Das Feld ist rot umrandet, darunter steht in Rot, was fehlt. Wer hinsieht, merkt sofort: Hier stimmt etwas nicht.",
+            "VoiceOver sagt davon nichts. Wer die Farbe nicht wahrnimmt, merkt nicht, dass etwas falsch ist. Das betrifft nicht nur blinde Menschen, sondern auch Menschen mit Farbsehschwäche, mit wenig Sehkraft und viele Ältere.",
+            "Richtig gebaut ist das Feld im Code als fehlerhaft markiert und der Hinweis mit ihm verbunden. Dann sagt VoiceOver beides mit an. Dazu gehört ein Symbol oder ein Wort, damit der Fehler nicht nur an der Farbe hängt.",
+          ],
           common: "E-Mail-Adresse, Textfeld, beck.firma.de",
           correct:
             "E-Mail-Adresse, ungültige Eingabe, Textfeld, beck.firma.de. @ fehlt. Beispiel: name@firma.de",
         },
         {
-          name: "Schaltfläche ohne Namen",
-          fixedName: "Schaltfläche mit Namen",
-          explanation: "Ein Pfeil ist kein Name. Niemand weiß, was der Klick tut.",
-          fix: "Mit Namen ist klar, wohin es geht.",
+          name: "Button ohne Namen",
+          details: [
+            "Der Button zeigt nur ein Symbol, kein Wort. Sehende erraten aus dem Zusammenhang, dass es hier weitergeht.",
+            "Das Symbol kann ein Screenreader nicht deuten, es ist nur eine Grafik. Einen Namen hat der Button im Code nicht. VoiceOver sagt deshalb nur „Taste“. Ob der Klick weiterführt, etwas löscht oder abschickt, erfährt man nicht.",
+            "Richtig gebaut bekommt der Button einen Namen, zum Beispiel „Weiter zur Zusammenfassung“. Der Name muss nicht sichtbar sein, das Design bleibt gleich.",
+          ],
           common: "Taste",
           correct: "Weiter zur Zusammenfassung, Taste",
         },
@@ -473,15 +483,15 @@ export const de = {
     law: {
       title: "Das BFSG in Kürze",
       body: [
-        "Seit dem 28. Juni 2025 müssen viele digitale Angebote für Privatkunden barrierefrei sein. Was das konkret heißt, steht in der europäischen Norm EN 301 549. Ihre neue Fassung baut auf den WCAG 2.2 auf, den internationalen Regeln für barrierefreie Websites und Apps. Danach prüfe ich.",
-        "Kontrolliert wird das von der Marktüberwachungsstelle der Länder, nach Beschwerden und von sich aus. Sie kann Fristen zur Nachbesserung setzen, Bußgelder verhängen und im äußersten Fall das Angebot untersagen.",
+        "Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz, kurz BFSG. Danach müssen viele digitale Angebote für Privatkunden barrierefrei sein. Was das genau heißt, steht in der europäischen Norm EN 301 549. Ihre neue Fassung baut auf den WCAG 2.2 auf, den internationalen Regeln für barrierefreie Websites und Apps. Danach prüfe ich.",
+        "Ob sich jemand daran hält, kontrolliert eine Behörde der Bundesländer, die Marktüberwachungsstelle. Sie wird nach Beschwerden aktiv, aber auch von sich aus. Sie kann eine Frist zum Nachbessern setzen, ein Bußgeld verhängen und im äußersten Fall das Angebot verbieten.",
       ],
       affectedTitle: "Meist betroffen",
       affected:
         "Onlineshops, Online-Banking, Buchungs- und Ticketportale, Vertragsabschlüsse und Apps für Privatkunden",
       notAffectedTitle: "Meist nicht",
       notAffected:
-        "Reine B2B-Angebote und Kleinstunternehmen mit Dienstleistungen, also unter 10 Beschäftigte und höchstens 2 Mio. € Umsatz",
+        "Angebote nur für Firmenkunden und sehr kleine Firmen mit Dienstleistungen, also weniger als 10 Beschäftigte und höchstens 2 Millionen Euro Umsatz im Jahr",
     },
 
     services: {
@@ -490,15 +500,15 @@ export const de = {
       items: [
         {
           title: "Prüfen",
-          text: "Ich prüfe deine Anwendung nach WCAG\u00A02.2, mit Prüftools und von Hand mit Screenreader und Tastatur. Zu jedem Befund bekommst du eine Lösung, mit der dein Team sofort arbeiten kann.",
+          text: "Ich prüfe deine Anwendung nach WCAG\u00A02.2, mit Prüftools und von Hand mit Screenreader und Tastatur. Zu jedem Fehler bekommst du einen Lösungsvorschlag, mit dem dein Team sofort loslegen kann.",
         },
         {
           title: "Beheben",
-          text: "Ich behebe die Fehler selbst, in Figma und direkt in eurem Code, mit euren Komponenten und Werkzeugen. Wird eine Komponente repariert, ist der Fehler überall weg.",
+          text: "Ich behebe die Fehler selbst, in Figma und direkt in eurem Code, mit euren Werkzeugen. Am liebsten in den Bausteinen, aus denen eure Seiten bestehen. Dann ist ein Fehler überall auf einmal weg.",
         },
         {
           title: "Befähigen",
-          text: "Ich zeige deinem Team an euren eigenen Komponenten, worauf es ankommt. Mit Mentoring und Schulungen denkt es Barrierefreiheit von Anfang an mit.",
+          text: "Ich zeige deinem Team an euren eigenen Seiten, worauf es ankommt. Mit Schulungen und Begleitung im Alltag denkt es Barrierefreiheit von Anfang an mit.",
         },
       ],
     },
@@ -520,11 +530,11 @@ export const de = {
         {
           title: "Prüfen",
           text: "Ich gehe die ausgewählten Abläufe Schritt für Schritt durch, so wie deine Kunden sie nutzen.",
-          outcome: "Du bekommst den Bericht.",
+          outcome: "Du bekommst einen Bericht mit allen Fehlern und wie man sie behebt.",
         },
         {
           title: "Besprechen",
-          text: "Wir gehen die Befunde gemeinsam durch: was dringend ist, was schnell geht und was warten kann.",
+          text: "Wir gehen die Fehler gemeinsam durch: was dringend ist, was schnell geht und was warten kann.",
           outcome: "Danach weißt du, was zuerst dran ist, und entscheidest, wer es umsetzt: dein Team oder ich.",
         },
       ],
@@ -557,7 +567,7 @@ export const de = {
         {
           question: "Was ist mit Barrierefreiheits-Plugins?",
           answer:
-            "Plugins und Overlays legen eine Schicht über die Seite, der Code darunter bleibt, wie er ist. Genau dort entstehen die meisten Barrieren. Menschen mit Screenreader bringen ihre Hilfsmittel ohnehin selbst mit und brauchen eine Seite, die richtig gebaut ist.",
+            "Solche Plugins legen nur eine Schicht über die Seite. Der Code darunter bleibt, wie er ist, und genau dort entstehen die meisten Barrieren. Wer einen Screenreader nutzt, bringt seine Hilfsmittel ohnehin selbst mit und braucht eine Seite, die richtig gebaut ist.",
         },
       ],
     },

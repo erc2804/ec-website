@@ -188,17 +188,26 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
         width="573"
         height="573"
         loading="lazy"
-        class="aspect-square w-full max-w-56 ec-reveal rounded-full object-cover md:max-w-64"
+        class="aspect-square w-full max-w-56 ec-reveal rounded-full object-cover max-md:mx-auto md:max-w-64"
       />
       <div>
         <h2 id="oneHandTitle" class="ec-reveal text-heading-1 text-balance">{t.oneHand.title}</h2>
-        <!-- --- Green on the blue clears 6:1, well past the 4.5:1 body text needs -->
+        <!-- --- Highlighted like the roles on the start page: strong for the
+             emphasis, a tinted box so it does not rest on colour alone, regular
+             weight because the font has no bold cut. Green on the blue clears
+             6:1. -->
         <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-min/85 ec-reveal-late">
           {
             t.oneHand.body
               .split("**")
               .map((part, index) =>
-                index % 2 === 1 ? <span class="text-brand-green-medium">{part}</span> : part
+                index % 2 === 1 ? (
+                  <strong class="rounded-sm bg-brand-green-medium/15 [box-decoration-break:clone] px-1 font-normal text-brand-green-medium">
+                    {part}
+                  </strong>
+                ) : (
+                  part
+                )
               )
           }
         </p>

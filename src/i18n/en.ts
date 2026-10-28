@@ -384,26 +384,29 @@ export const en: Translations = {
       title: "I make your application accessible.",
       announcement: "I make your application accessible. Heading level 1",
       announcementLabel: "What a screen reader says about this heading",
-      lead: "I test websites and web applications for accessibility to WCAG and the European Accessibility Act. If you like, I fix the issues myself, in design and code, and train your team so no new ones creep in.",
+      lead: "I check your website or app for accessibility under the European Accessibility Act: can people with disabilities use it without barriers? If you like, I fix the issues myself, in design and code, and train your team so no new ones creep in.",
     },
 
     demo: {
       title: "Looks the same. Sounds different.",
-      lead: "People who are blind or have low vision use a screen reader. It's a program that reads out what's on the screen, on a Mac for example VoiceOver. So many barriers can't be seen, only heard.",
+      lead: "People who can't see well or at all have websites read out to them by a screen reader, on a Mac for example by VoiceOver. If an element is built carelessly, it reads out the wrong thing or nothing at all, or can't even reach important buttons. Then people may get stuck.",
       instruction:
-        "Step through the form element by element and compare what VoiceOver announces. Turn on the Screen Curtain and the picture goes dark.",
-      outputLabel: "What VoiceOver says",
-      variantLabel: "Build",
-      variantCommon: "How it's often built",
-      variantCorrect: "How it should be",
-      next: "Next element",
+        "Use “Back” and “Next” to step through the form. For each element you see what VoiceOver says with a common mistake, and what it says when built right.",
+      // --- Desktop only, where the curtain switch is shown
+      instructionCurtain: "The Screen Curtain lets you try it without the picture.",
+      commonLabel: "Common mistake",
+      correctLabel: "Built right",
+      previous: "Back",
+      next: "Next",
+      whyButton: "Why is this a problem?",
+      close: "Close",
+      // --- Phones: the pill that leads from the picture down to the announcements
+      jump: "To the announcement",
       blind: "Screen Curtain",
-      curtainText: "Now all that's left is what the screen reader says.",
-      ready: "Nothing announced yet",
-      readyNote: "Press “Next element” or click a part of the form.",
-      silent: "Nothing announced, skipped.",
-      position: "{number} of {total}",
-      liveTemplate: "{position}, {variant}: {caption}. {note}",
+      curtainText: "Now all you have is what VoiceOver says.",
+      silent: "Nothing announced",
+      position: "Element {number} of {total}",
+      liveTemplate: "{position}: {name}",
       formTitle: "Your details",
       nameLabel: "Full name",
       nameValue: "Martin Beck",
@@ -413,45 +416,53 @@ export const en: Translations = {
       cases: [
         {
           name: "A symbol that means nothing",
-          fixedName: "A symbol that gets skipped",
-          explanation:
-            "Pure decoration, but not marked as such in the code. So the screen reader reads out the file name.",
-          fix: "Marked as decoration, the symbol is simply skipped.",
+          details: [
+            "The shield symbol is pure decoration. If the code doesn't say so, some screen readers read out the file name instead.",
+            "Announcements like that carry no information. They're noise that makes listening harder.",
+            "Built right, the image gets an empty description in the code (alt=\"\"). Then the screen reader skips it. Whether an image is just decoration is up to whoever creates the page. Images with real content need a short description.",
+          ],
           common: "image, icon-shield-blue-2.svg",
           correct: "",
           isCorrectSilent: true,
         },
         {
           name: "A heading that isn't one",
-          fixedName: "A real heading",
-          explanation:
-            "It looks like a heading but isn't one in the code. Anyone jumping from heading to heading with a screen reader won't find it.",
-          fix: "Marked up as a heading, it can be found without looking.",
+          details: [
+            "“Your details” is set large and looks like a heading. In the code, though, it's just plain text.",
+            "Most screen reader users look for content through headings and jump from one to the next. That's what WebAIM's large survey of screen reader users shows. If the heading is missing in the code, they skip this section.",
+            "Built right, it's a heading in the code too. How it looks is still up to the design.",
+          ],
           common: "Your details",
           correct: "Your details, heading level 2",
         },
         {
           name: "A field without a label",
-          fixedName: "A field with a label",
-          explanation: "The text above isn't connected to the field. The field stays nameless.",
-          fix: "Connected to its label, the field says what goes in and that it's required.",
+          details: [
+            "Above the field it says “Full name”. To the eye, the two belong together, but not in the code.",
+            "So VoiceOver only says “edit text”, with no name. Anyone who can't see has to guess what goes in. People who control the page by voice also pick fields by their label: “click Full name” only works if the field has that name in the code.",
+            "Built right, the label is connected to the field in the code. Then VoiceOver reads it out too. And the label becomes a bigger click area: clicking it puts the cursor in the field.",
+          ],
           common: "edit text, Martin Beck",
           correct: "Full name, required, edit text, Martin Beck",
         },
         {
           name: "An error shown only in red",
-          fixedName: "An error that gets announced",
-          explanation: "Only the color shows the error. Nobody hears it.",
-          fix: "Error and hint are tied to the field, so they're announced with it.",
+          details: [
+            "The field has a red border, and below it, in red, it says what's missing. Anyone looking sees right away that something's wrong.",
+            "VoiceOver says nothing about it. Anyone who can't perceive the color doesn't notice that something's wrong. That's not only blind people, but also people with color blindness, people with low vision and many older people.",
+            "Built right, the field is marked as invalid in the code and the hint is connected to it. Then VoiceOver reads out both. An icon or a word belongs with it, so the error doesn't depend on color alone.",
+          ],
           common: "Email address, edit text, beck.company.com",
           correct:
             "Email address, invalid data, edit text, beck.company.com. The @ is missing. For example: name@company.com",
         },
         {
           name: "A button without a name",
-          fixedName: "A button with a name",
-          explanation: "An arrow isn't a name. Nobody knows what the click does.",
-          fix: "With a name, it's clear where it leads.",
+          details: [
+            "The button only shows a symbol, no word. Sighted people guess from the context that this is how you continue.",
+            "A screen reader can't interpret the symbol, it's just a graphic. And in the code, the button has no name. So VoiceOver only says “button”. Whether the click moves on, deletes something or sends the form, you don't find out.",
+            "Built right, the button gets a name, for example “Continue to summary”. The name doesn't have to be visible, the design stays the same.",
+          ],
           common: "button",
           correct: "Continue to summary, button",
         },
@@ -462,14 +473,14 @@ export const en: Translations = {
       title: "The European Accessibility Act in short",
       body: [
         "Since June 28, 2025, many digital services for consumers in the EU have to be accessible. In Germany that's the BFSG. What it means in practice is set by the European standard EN 301 549. Its new version builds on WCAG 2.2, the international guidelines for accessible websites and apps. That's what I test against.",
-        "Market surveillance authorities check compliance, after complaints and on their own. They can set deadlines for fixes, issue fines and, as a last resort, shut a service down.",
+        "Public authorities check whether companies comply, after complaints and on their own initiative. They can set a deadline for fixes, impose a fine and, as a last resort, stop the service.",
       ],
       affectedTitle: "Usually affected",
       affected:
         "Online shops, online banking, booking and ticketing, contract sign-ups and apps for consumers",
       notAffectedTitle: "Usually not",
       notAffected:
-        "Purely B2B offerings and micro-enterprises providing services, meaning fewer than 10 employees and no more than €2 million in turnover",
+        "Services only for business customers, and very small companies providing services: fewer than 10 employees and no more than €2 million in annual turnover",
     },
 
     services: {
@@ -478,15 +489,15 @@ export const en: Translations = {
       items: [
         {
           title: "Audit",
-          text: "I test your application against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. Every issue comes with a fix your team can work with right away.",
+          text: "I test your application against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. For every issue you get a suggested fix your team can start on right away.",
         },
         {
           title: "Fix",
-          text: "I fix the issues myself, in Figma and right in your code, with your components and tools. Fix a component and the issue is gone everywhere.",
+          text: "I fix the issues myself, in Figma and right in your code, with your tools. Ideally in the building blocks your pages are made of, so an issue is gone everywhere at once.",
         },
         {
           title: "Enable",
-          text: "I show your team what matters, using your own components. Through mentoring and training, they build accessibility in from the start.",
+          text: "I show your team what matters, using your own pages. With training and support in day-to-day work, they build accessibility in from the start.",
         },
       ],
     },
@@ -508,11 +519,11 @@ export const en: Translations = {
         {
           title: "Testing",
           text: "I go through the chosen flows step by step, the way your customers use them.",
-          outcome: "You get the report.",
+          outcome: "You get a report with every issue and how to fix it.",
         },
         {
           title: "Talking it through",
-          text: "We go through the findings together: what's urgent, what's quick and what can wait.",
+          text: "We go through the issues together: what's urgent, what's quick and what can wait.",
           outcome: "Afterwards you know what comes first, and you decide who does it: your team or me.",
         },
       ],
@@ -545,7 +556,7 @@ export const en: Translations = {
         {
           question: "What about accessibility plugins?",
           answer:
-            "Plugins and overlays put a layer on top of the page, but the code underneath stays the same. That's where most barriers come from. People who use a screen reader bring their own tools anyway and need a page that's built right.",
+            "These plugins only put a layer on top of the page. The code underneath stays the same, and that's where most barriers come from. People who use a screen reader bring their own tools anyway and need a page that's built right.",
         },
       ],
     },

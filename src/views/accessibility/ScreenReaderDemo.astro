@@ -1,10 +1,24 @@
 ---
-// --- "Looks the same, sounds different": one ordinary form step, stepped
-// through like a screen reader. Above, what is seen and what is heard; below, one
-// row with every control. The picture is drawn in a neutral style of "some other
-// site", so nothing in it looks like the controls of this page. It is inert; a
-// live region tells a real screen reader what the panel shows.
-import { IconArrowRight, IconEyeOff, IconShieldLock } from "@tabler/icons-astro"
+// --- "Looks the same, sounds different": one ordinary form, element by
+// element. On the left what is seen, with the VoiceOver frame on the current
+// element; on the right what is heard, the common mistake and the right build
+// one under the other, and a dialog that explains the why. "Back" and "Next"
+// are the only controls: the picture is not clickable, so it needs no role,
+// name or keyboard support of its own. The picture is drawn in a neutral style of "some other site" and
+// hidden from screen readers; the panel is real text they can read, and a live
+// region names the element after each step.
+import {
+  IconArrowDown,
+  IconArrowLeft,
+  IconArrowRight,
+  IconCheck,
+  IconChevronRight,
+  IconEyeOff,
+  IconInfoCircle,
+  IconShieldLock,
+  IconVolume,
+  IconX,
+} from "@tabler/icons-astro"
 import Button from "../../components/ui/Button.astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
 import { useTranslations } from "../../i18n"
@@ -16,14 +30,14 @@ const scriptText = {
   silent: t.silent,
   position: t.position,
   liveTemplate: t.liveTemplate,
-  variantCommon: t.variantCommon,
-  variantCorrect: t.variantCorrect,
 }
 
-// --- A switch between two builds, so a radio group: one choice, arrow keys
-// move it, and it changes the readout rather than revealing a separate panel
-const variantClasses =
-  "flex min-h-11 cursor-pointer items-center justify-center rounded-full px-4 py-2 text-center leading-tight text-typo-medium transition-[background-color,color] duration-200 hover:text-typo-high has-checked:bg-brand-blue has-checked:text-typo-min has-focus-visible:outline-4 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-green-high has-focus-visible:outline-solid"
+// --- Rendered with the first element, so the panel is never empty and works
+// without script
+const firstCase = t.cases[0]
+const firstPosition = t.position
+  .replace("{number}", "1")
+  .replace("{total}", String(t.cases.length))
 ---
 
 <section class="bg-gray-min py-20 md:py-28" aria-labelledby="demoTitle">
@@ -31,65 +45,38 @@ const variantClasses =
     <h2 id="demoTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
     <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
     <!-- --- How to use the demo: a different job from the lead, so smaller and apart -->
-    <p class="mt-4 max-w-[56ch] ec-reveal text-typo-medium ec-reveal-late">{t.instruction}</p>
+    <p class="mt-4 max-w-[56ch] ec-reveal text-sm text-typo-medium ec-reveal-late">
+      {t.instruction}
+      <span class="max-lg:hidden">{t.instructionCurtain}</span>
+    </p>
 
-    <!-- --- One grid, arranged in ec-demo-layout below. DOM order is focus order:
-         the build switch, then the curtain, then the step, on phones and desktop
-         alike. -->
+    <!-- --- One grid, arranged in ec-demo-layout below. DOM order: curtain,
+         picture, controls, then the panel they change, so a screen reader reaches
+         the result right after the button. -->
     <div class="ec-demo-layout mt-12 ec-reveal ec-reveal-late" data-is-blind="false">
-      <!-- --- The build switch changes only what is heard, so on desktop it sits
-           right above the announcement -->
-      <fieldset class="ec-demo-variant max-lg:mb-4 lg:mb-8">
-        <legend class="mb-2 pl-1 text-sm text-typo-medium">{t.variantLabel}</legend>
-        <div class="inline-grid grid-cols-2 gap-1 rounded-full border-2 border-gray-low p-1">
-          <label class={variantClasses}>
-            <input type="radio" name="demoVariant" value="common" class="sr-only" checked />
-            {t.variantCommon}
-          </label>
-          <label class={variantClasses}>
-            <input type="radio" name="demoVariant" value="correct" class="sr-only" />
-            {t.variantCorrect}
-          </label>
-        </div>
-      </fieldset>
-
-      <!-- --- The controls for the picture: the curtain, then the step. On desktop
-           one row below the rule; on phones the wrapper dissolves, so the curtain
-           sits above the screen and the step below it. -->
-      <div
-        class="ec-demo-controls lg:mt-10 lg:flex lg:flex-wrap lg:items-center lg:justify-between lg:gap-x-10 lg:gap-y-6 lg:pt-8"
-      >
-        <div class="ec-demo-settings max-lg:mb-6">
-          <button
-            type="button"
-            role="switch"
-            aria-checked="false"
-            class="ec-demo-blind group inline-flex min-h-11 items-center gap-3 text-typo-high"
+      <!-- --- Desktop only: on a phone the curtain would black out the one
+           picture the buttons are about -->
+      <div class="ec-demo-settings hidden lg:mt-10 lg:block lg:pt-8">
+        <button
+          type="button"
+          role="switch"
+          aria-checked="false"
+          class="ec-demo-blind group inline-flex min-h-11 items-center gap-3 text-typo-high"
+        >
+          {t.blind}
+          <span
+            class="relative h-7 w-12 rounded-full border-2 border-typo-medium transition-colors duration-200 group-aria-checked:border-brand-blue group-aria-checked:bg-brand-blue"
+            aria-hidden="true"
           >
-            {t.blind}
             <span
-              class="relative h-7 w-12 rounded-full border-2 border-typo-medium transition-colors duration-200 group-aria-checked:border-brand-blue group-aria-checked:bg-brand-blue"
-              aria-hidden="true"
-            >
-              <span
-                class="absolute top-1 left-1 size-4 rounded-full bg-typo-medium transition-[translate,background-color] duration-200 group-aria-checked:translate-x-5 group-aria-checked:bg-gray-min"
-              ></span>
-            </span>
-          </button>
-        </div>
-
-        <div class="ec-demo-step flex flex-wrap items-center gap-x-5 gap-y-3 max-lg:mt-4">
-          <Button type="button" class="ec-demo-next">
-            {t.next}
-            <IconArrowRight slot="icon-end" class="size-5" />
-          </Button>
-          <span class="ec-demo-position min-w-16 text-typo-medium" aria-hidden="true"></span>
-        </div>
+              class="absolute top-1 left-1 size-4 rounded-full bg-typo-medium transition-[translate,background-color] duration-200 group-aria-checked:translate-x-5 group-aria-checked:bg-gray-min"
+            ></span>
+          </span>
+        </button>
       </div>
 
-      <!-- --- The picture. Tapping a part selects it, the way VoiceOver on an
-           iPhone announces what a finger touches; "Next element" does the same
-           for the keyboard. Behind the curtain it does not react. Nothing in it is focusable, so aria-hidden is enough. -->
+      <!-- --- The picture: only shown, never operated. Nothing in it is
+           focusable or clickable, so aria-hidden is enough. -->
       <div class="ec-demo-stage relative" aria-hidden="true">
         <div class="flex flex-col gap-4 rounded-3xl bg-gray-subtle p-6 sm:p-8">
           <span
@@ -101,7 +88,7 @@ const variantClasses =
 
           <span class="w-fit text-heading-2" data-target="1">{t.formTitle}</span>
 
-          <span class="-mb-2 w-fit text-typo-medium" data-tap="2">
+          <span class="-mb-2 w-fit text-typo-medium">
             {t.nameLabel}<span class="text-status-error-text">*</span>
           </span>
           <span
@@ -111,7 +98,7 @@ const variantClasses =
             {t.nameValue}
           </span>
 
-          <span class="-mb-2 w-fit text-typo-medium" data-tap="3">
+          <span class="-mb-2 w-fit text-typo-medium">
             {t.emailLabel}<span class="text-status-error-text">*</span>
           </span>
           <span class="flex flex-col gap-1.5" data-target="3">
@@ -123,11 +110,12 @@ const variantClasses =
             <span class="text-sm text-status-error-text">{t.emailError}</span>
           </span>
 
+          <!-- --- Deliberately quiet, so it is not taken for the demo's own "Next" -->
           <span
-            class="mt-1 grid size-13 place-items-center rounded-full bg-gray-high text-gray-min"
+            class="mt-1 grid size-11 place-items-center rounded-xl border-2 border-gray-low bg-gray-min text-typo-medium"
             data-target="4"
           >
-            <IconArrowRight class="size-6" />
+            <IconChevronRight class="size-5" />
           </span>
         </div>
 
@@ -143,24 +131,98 @@ const variantClasses =
         </div>
       </div>
 
-      <!-- --- What is heard. Told to a real screen reader through the live region
-           below. -->
-      <p
-        class="ec-demo-label hidden pl-1 text-sm text-typo-medium lg:mb-3 lg:block"
-        aria-hidden="true"
-      >
-        {t.outputLabel}
-      </p>
-
-      <div class="ec-demo-caption max-lg:mt-4" aria-hidden="true">
-        <!-- --- Greyed out until the first step, so the waiting state is not
-             mistaken for an announcement -->
-        <ScreenReaderCaption textId="demoCaption" isSilent>{t.ready}</ScreenReaderCaption>
+      <!-- --- Phones: buttons and the pill under them form one group. Once the
+           picture is a third in view, it docks to the bottom of the screen,
+           each part a floating island with the shadow of the header; scrolled
+           down, it rests under the picture. The pill never covers the buttons
+           and nothing appears or disappears, so the focus order stays the same.
+           Desktop: the group dissolves, the buttons sit in the row below the
+           rule and the pill is not needed. -->
+      <div class="ec-demo-controls" data-is-docked="false">
+      <div class="ec-demo-nav flex items-center justify-center gap-3 lg:mt-10 lg:pt-8">
+        <!-- --- The quiet partner of "Next": grey outline and dark text. The
+             secondary button's green text does not reach 4.5:1 yet (see
+             docs/open-points.md). -->
+        <button
+          type="button"
+          class="ec-demo-previous inline-flex min-h-12 items-center gap-2.5 rounded-full border-2 border-gray-low bg-gray-min px-5 py-3 font-bold text-typo-high transition-colors hover:bg-gray-subtle"
+        >
+          <IconArrowLeft class="size-5" aria-hidden="true" />
+          {t.previous}
+        </button>
+        <Button type="button" class="ec-demo-next">
+          {t.next}
+          <IconArrowRight slot="icon-end" class="size-5" />
+        </Button>
       </div>
 
-      <div class="ec-demo-note mt-8" aria-hidden="true">
-        <p class="ec-demo-name text-heading-2"></p>
-        <p class="ec-demo-text mt-2 max-w-[46ch] text-typo-medium">{t.readyNote}</p>
+
+        <!-- --- A small pill in the look of the VoiceOver caption that leads down
+             to the announcements, and bumps on every new element. A real button:
+             it scrolls to the element's name and puts the focus there. -->
+        <button type="button" class="ec-demo-jump">
+          <IconVolume class="size-5 text-typo-min/70" aria-hidden="true" />
+          {t.jump}
+          <IconArrowDown class="size-5" aria-hidden="true" />
+        </button>
+      </div>
+
+      <!-- --- What is heard: the element, then both builds. The icons carry the
+           verdict besides the colour, the labels say it in words. -->
+      <div class="ec-demo-panel max-lg:mt-8">
+        <p class="ec-demo-position text-sm text-typo-medium">{firstPosition}</p>
+        <h3 class="ec-demo-name mt-1 scroll-mt-28 text-heading-2" tabindex="-1">{firstCase.name}</h3>
+
+        <div class="mt-6 flex flex-col gap-6">
+          {
+            (["common", "correct"] as const).map((variant) => (
+              <div class:list={[variant === "correct" && "ec-demo-correct"]}>
+                <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
+                  <span
+                    class:list={[
+                      "grid size-6 place-items-center rounded-full",
+                      variant === "common"
+                        ? "bg-status-error-bg text-status-error-text"
+                        : "bg-brand-green-low text-brand-blue",
+                    ]}
+                    aria-hidden="true"
+                  >
+                    {variant === "common" ? (
+                      <IconX class="size-4" stroke-width={2.5} />
+                    ) : (
+                      <IconCheck class="size-4" stroke-width={2.5} />
+                    )}
+                  </span>
+                  {variant === "common" ? t.commonLabel : t.correctLabel}
+                </p>
+                <ScreenReaderCaption
+                  textId={`demo-${variant}`}
+                  isSilent={variant === "common" ? firstCase.isCommonSilent : firstCase.isCorrectSilent}
+                  class="mt-3"
+                >
+                  {
+                    (variant === "common" ? firstCase.isCommonSilent : firstCase.isCorrectSilent)
+                      ? t.silent
+                      : variant === "common"
+                        ? firstCase.common
+                        : firstCase.correct
+                  }
+                </ScreenReaderCaption>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- --- The why is extra reading, so it opens in a dialog: unfolding it
+             here would push the buttons below down -->
+        <button
+          type="button"
+          class="ec-demo-why mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg font-bold text-brand-blue underline-offset-4 hover:underline"
+          aria-haspopup="dialog"
+        >
+          <IconInfoCircle class="size-5" aria-hidden="true" />
+          {t.whyButton}
+        </button>
       </div>
 
       <span
@@ -169,6 +231,34 @@ const variantClasses =
     </div>
 
     <p class="sr-only" id="demoAnnouncement" aria-live="polite"></p>
+
+    <!-- --- Native modal dialog: focus moves in, Escape closes, focus returns to
+         the button. Filled with the current element when it opens. -->
+    <dialog class="ec-demo-dialog" aria-labelledby="demoDialogTitle">
+      <!-- --- Title and close button stay put; only the text scrolls. Once it
+           has scrolled, a line marks where the header ends. -->
+      <div class="flex max-h-[inherit] flex-col">
+        <div
+          class="ec-demo-dialog-head flex shrink-0 items-start justify-between gap-6 border-b border-transparent px-6 pt-6 pb-4 transition-colors duration-200 data-[is-scrolled=true]:border-gray-low sm:px-8 sm:pt-8"
+        >
+          <h3 id="demoDialogTitle" class="pt-1 text-heading-2 text-balance">{firstCase.name}</h3>
+          <button
+            type="button"
+            class="ec-demo-dialog-close -mt-1 -mr-2 grid size-11 shrink-0 place-items-center rounded-full text-typo-high transition-colors hover:bg-gray-subtle"
+            aria-label={t.close}
+          >
+            <IconX class="size-6" aria-hidden="true" />
+          </button>
+        </div>
+        <div
+          class="ec-demo-dialog-body flex min-h-0 flex-col gap-4 overflow-y-auto overscroll-contain px-6 pt-4 pb-6 text-typo-medium sm:px-8 sm:pb-8"
+          tabindex="0"
+          aria-labelledby="demoDialogTitle"
+        >
+          {firstCase.details.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
+    </dialog>
   </div>
 </section>
 
@@ -199,15 +289,6 @@ const variantClasses =
     transition: opacity 200ms ease;
   }
 
-  /* --- Only the parts are tappable, and only while they can be seen --- */
-  .ec-demo-stage :is([data-target], [data-tap]) {
-    cursor: pointer;
-  }
-
-  .ec-demo-layout[data-is-blind="true"] .ec-demo-stage :is([data-target], [data-tap]) {
-    cursor: default;
-  }
-
   /* --- Same cell as the picture, painted above it --- */
   .ec-curtain {
     position: relative;
@@ -226,48 +307,26 @@ const variantClasses =
     opacity: 1;
   }
 
-  /* --- Phones: settings above the picture, then the caption and the step right
-     below it, so picture, caption and button fit on one screen.
-     Desktop: what is seen on the left, what is heard on the right with its
-     switch on top, the controls for the picture in one row below. --- */
+  /* --- Phones: curtain, picture, the two buttons right below it, then what is
+     heard. Desktop: what is seen on the left, what is heard on the right, the
+     curtain and the buttons in one row below the rule. The panel keeps the
+     height of its longest element, so that row never jumps. --- */
   .ec-demo-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "variant"
       "settings"
       "screen"
-      "caption"
-      "step"
-      "note";
+      "nav"
+      "panel";
 
     @media (width >= 64rem) {
       grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
-      grid-template-rows: auto auto auto 1fr auto;
       grid-template-areas:
-        "screen variant"
-        "screen label"
-        "screen caption"
-        "screen note"
-        "controls controls";
+        "screen panel"
+        "settings nav";
       column-gap: 4rem;
     }
-  }
-
-  /* --- display only below lg: a scoped display would beat the lg:flex in the
-     markup --- */
-  .ec-demo-controls {
-    @media (width < 64rem) {
-      display: contents;
-    }
-
-    @media (width >= 64rem) {
-      grid-area: controls;
-    }
-  }
-
-  .ec-demo-variant {
-    grid-area: variant;
   }
 
   .ec-demo-settings {
@@ -282,26 +341,112 @@ const variantClasses =
     grid-area: screen;
   }
 
-  .ec-demo-label {
-    grid-area: label;
+  .ec-demo-controls {
+    grid-area: nav;
+
+    @media (width < 64rem) {
+      bottom: calc(1rem + env(safe-area-inset-bottom));
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.875rem;
+      margin-block: 2rem 0.5rem;
+
+      &[data-is-docked="true"] {
+        position: sticky;
+      }
+
+      & :is(button, .ec-button) {
+        box-shadow: var(--shadow-island);
+      }
+    }
+
+    @media (width >= 64rem) {
+      display: contents;
+    }
   }
 
-  .ec-demo-caption {
-    grid-area: caption;
+  .ec-demo-nav {
+    grid-area: nav;
+
+    @media (width >= 64rem) {
+      justify-self: end;
+    }
   }
 
-  .ec-demo-step {
-    grid-area: step;
-  }
-
-  .ec-demo-note {
-    grid-area: note;
+  .ec-demo-panel {
+    grid-area: panel;
   }
 
   .ec-demo-rule {
     grid-column: 1 / -1;
-    grid-row: 5;
+    grid-row: 2;
     align-self: start;
+  }
+
+  .ec-demo-jump {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    border-radius: 9999px;
+    background: rgb(28 28 30 / 0.96);
+    padding: 0.5rem 1.125rem;
+    color: #ffffff;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 14px 36px -14px rgb(0 0 0 / 0.5);
+
+    &[data-is-fresh="true"] {
+      animation: ec-jump-bump 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @media (width >= 64rem) {
+      display: none;
+    }
+  }
+
+  @keyframes ec-jump-bump {
+    40% {
+      scale: 1.08;
+    }
+  }
+
+  /* --- A card like the rest of the site, rising in softly; the page behind
+     dims in the brand blue --- */
+  .ec-demo-dialog {
+    width: min(36rem, calc(100% - 2rem));
+    max-height: min(85dvh, 44rem);
+    overflow: hidden;
+    margin: auto;
+    border: 0;
+    border-radius: 1.5rem;
+    background: var(--color-gray-min);
+    padding: 0;
+    color: inherit;
+    box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.45);
+    opacity: 0;
+    translate: 0 1rem;
+    transition:
+      opacity 250ms ease,
+      translate 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      overlay 250ms allow-discrete,
+      display 250ms allow-discrete;
+
+    &[open] {
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 1rem;
+      }
+    }
+
+    &::backdrop {
+      background: rgb(5 56 107 / 0.35);
+      backdrop-filter: blur(4px);
+    }
   }
 </style>
 
@@ -316,16 +461,24 @@ const variantClasses =
     const stage = demo.querySelector<HTMLElement>(".ec-demo-stage")!
     const cursor = stage.querySelector<HTMLElement>(".ec-vo-cursor")!
     const targets = [...stage.querySelectorAll<HTMLElement>("[data-target]")]
-    const caption = demo.querySelector<HTMLElement>("#demoCaption")!
-    const position = demo.querySelector<HTMLElement>(".ec-demo-position")!
-    const caseName = demo.querySelector<HTMLElement>(".ec-demo-name")!
-    const caseText = demo.querySelector<HTMLElement>(".ec-demo-text")!
+    const panel = demo.querySelector<HTMLElement>(".ec-demo-panel")!
+    const position = panel.querySelector<HTMLElement>(".ec-demo-position")!
+    const caseName = panel.querySelector<HTMLElement>(".ec-demo-name")!
     const announcement = demo.querySelector<HTMLElement>("#demoAnnouncement")!
     const blindSwitch = demo.querySelector<HTMLButtonElement>(".ec-demo-blind")!
-    const variantInputs = [...demo.querySelectorAll<HTMLInputElement>("[name='demoVariant']")]
+    const variants = (["common", "correct"] as const).map((variant) => ({
+      variant,
+      caption: demo.querySelector<HTMLElement>(`#demo-${variant}`)!,
+    }))
+    const jump = demo.querySelector<HTMLElement>(".ec-demo-jump")!
+    const phone = window.matchMedia("(width < 64rem)")
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const dialog = demo.querySelector<HTMLDialogElement>(".ec-demo-dialog")!
+    const dialogTitle = dialog.querySelector<HTMLElement>("#demoDialogTitle")!
+    const dialogBody = dialog.querySelector<HTMLElement>(".ec-demo-dialog-body")!
+    const dialogHead = dialog.querySelector<HTMLElement>(".ec-demo-dialog-head")!
 
-    let index = -1
-    const isCorrect = () => variantInputs.find((input) => input.checked)?.value === "correct"
+    let index = 0
     const fill = (template: string, values: Record<string, string>) =>
       template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "")
 
@@ -341,57 +494,114 @@ const variantClasses =
       cursor.style.height = `${rect.height + gap * 2}px`
     }
 
-    const render = () => {
-      const demoCase = cases[index]
-      if (!demoCase) return
-      const correct = isCorrect()
-      const isSilent = correct
-        ? demoCase.isCorrectSilent === true
-        : demoCase.isCommonSilent === true
-      const spoken = isSilent ? text.silent : correct ? demoCase.correct : demoCase.common
-      const note = correct ? demoCase.fix : demoCase.explanation
+    const render = (demoCase: DemoCase, number: number) => {
       const positionText = fill(text.position, {
-        number: String(index + 1),
+        number: String(number),
         total: String(cases.length),
       })
-
-      caption.textContent = spoken
-      caption.closest(".ec-caption")?.setAttribute("data-is-silent", String(isSilent))
       position.textContent = positionText
-      caseName.textContent = correct ? demoCase.fixedName : demoCase.name
-      caseText.textContent = note
-      announcement.textContent = fill(text.liveTemplate, {
-        position: positionText,
-        variant: correct ? text.variantCorrect : text.variantCommon,
-        // --- The template adds its own full stop after the caption
-        caption: spoken.replace(/\.$/, ""),
-        note,
-      })
+      caseName.textContent = demoCase.name
+      for (const { variant, caption } of variants) {
+        const isSilent =
+          variant === "common" ? demoCase.isCommonSilent === true : demoCase.isCorrectSilent === true
+        caption.textContent = isSilent ? text.silent : demoCase[variant]
+        caption.closest(".ec-caption")?.setAttribute("data-is-silent", String(isSilent))
+      }
+      return positionText
     }
 
     const select = (newIndex: number) => {
-      const isFirst = index < 0
-      index = newIndex
-      if (isFirst) stage.dataset.isPlacing = "true"
+      index = (newIndex + cases.length) % cases.length
       placeCursor()
-      stage.dataset.hasCursor = "true"
-      if (isFirst) requestAnimationFrame(() => delete stage.dataset.isPlacing)
-      render()
+      const positionText = render(cases[index], index + 1)
+      announcement.textContent = fill(text.liveTemplate, {
+        position: positionText,
+        name: cases[index].name,
+      })
+      revealTarget()
+      // --- Phones: a nudge that something new is waiting below
+      if (phone.matches) {
+        delete jump.dataset.isFresh
+        void jump.offsetWidth
+        jump.dataset.isFresh = "true"
+      }
     }
 
-    demo
-      .querySelector(".ec-demo-next")!
-      .addEventListener("click", () => select((index + 1) % cases.length))
+    // --- Phones: the group docks while the picture is at least a third in
+    // view. Once the picture has scrolled past, docking changes nothing: the
+    // group already rests in its place below it.
+    const controls = demo.querySelector<HTMLElement>(".ec-demo-controls")!
+    new IntersectionObserver(
+      ([entry]) => {
+        controls.dataset.isDocked = String(
+          entry.intersectionRatio >= 1 / 3 || entry.boundingClientRect.top < 0
+        )
+      },
+      { threshold: [0, 1 / 3, 1] }
+    ).observe(stage)
 
-    // --- A tap on a part or its label selects it. A tap beside them does nothing,
-    // like VoiceOver on an empty spot.
-    stage.addEventListener("click", (event) => {
-      if (layout.dataset.isBlind === "true") return
-      const tapped = (event.target as HTMLElement).closest<HTMLElement>("[data-target], [data-tap]")
-      if (tapped) select(Number(tapped.dataset.target ?? tapped.dataset.tap))
+    // --- Phones: the docked buttons must never hide the framed element. If it
+    // sits behind them (or under the header), scroll just far enough to show it.
+    const revealTarget = () => {
+      const target = targets[index]
+      if (!phone.matches || !target) return
+      target.style.scrollMarginBottom = `${controls.offsetHeight + 32}px`
+      target.style.scrollMarginTop = "7rem"
+      target.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+      })
+    }
+
+    jump.addEventListener("click", () => {
+      caseName.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth" })
+      caseName.focus({ preventScroll: true })
     })
 
-    variantInputs.forEach((input) => input.addEventListener("change", render))
+    // --- Desktop: the panel keeps the height of its longest element, measured
+    // by rendering each one once, so the buttons in the row below never jump.
+    // Phones have the buttons above the panel, so it simply takes its height.
+    const holdPanelHeight = () => {
+      panel.style.minHeight = ""
+      if (phone.matches) return
+      let tallest = 0
+      cases.forEach((demoCase, caseIndex) => {
+        render(demoCase, caseIndex + 1)
+        tallest = Math.max(tallest, panel.offsetHeight)
+      })
+      panel.style.minHeight = `${tallest}px`
+      render(cases[index], index + 1)
+    }
+
+    demo.querySelector(".ec-demo-next")!.addEventListener("click", () => select(index + 1))
+    demo.querySelector(".ec-demo-previous")!.addEventListener("click", () => select(index - 1))
+
+    demo.querySelector(".ec-demo-why")!.addEventListener("click", () => {
+      const demoCase = cases[index]
+      dialogTitle.textContent = demoCase.name
+      dialogBody.replaceChildren(
+        ...demoCase.details.map((paragraph) => {
+          const element = document.createElement("p")
+          element.textContent = paragraph
+          return element
+        })
+      )
+      dialogBody.scrollTop = 0
+      dialogHead.dataset.isScrolled = "false"
+      dialog.showModal()
+    })
+    dialogBody.addEventListener(
+      "scroll",
+      () => {
+        dialogHead.dataset.isScrolled = String(dialogBody.scrollTop > 0)
+      },
+      { passive: true }
+    )
+    dialog.querySelector(".ec-demo-dialog-close")!.addEventListener("click", () => dialog.close())
+    // --- A click on the dimmed page beside the card closes it too
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close()
+    })
 
     blindSwitch.addEventListener("click", () => {
       const isBlind = blindSwitch.getAttribute("aria-checked") !== "true"
@@ -399,6 +609,22 @@ const variantClasses =
       layout.dataset.isBlind = String(isBlind)
     })
 
-    window.addEventListener("resize", placeCursor)
+    // --- First element framed from the start, without flying in from the corner
+    stage.dataset.isPlacing = "true"
+    placeCursor()
+    stage.dataset.hasCursor = "true"
+    requestAnimationFrame(() => delete stage.dataset.isPlacing)
+    holdPanelHeight()
+
+    // --- The web font changes line breaks, so measure again once it is in
+    document.fonts.ready.then(() => {
+      placeCursor()
+      holdPanelHeight()
+    })
+
+    window.addEventListener("resize", () => {
+      placeCursor()
+      holdPanelHeight()
+    })
   }
 </script>

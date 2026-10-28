@@ -21,6 +21,12 @@ export default defineConfig({
     },
   },
 
+  // --- The dev toolbar floats over the bottom of the page and hides the
+  // demo's bar on phones while checking layouts
+  devToolbar: {
+    enabled: false,
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
