@@ -373,6 +373,208 @@ export const en: Translations = {
     languageLabel: "Language",
   },
 
+  design: {
+    meta: {
+      title: "UI/UX design for web apps and websites | Ercan Cicek",
+      description:
+        "I design interfaces where people find what they need right away, and build them myself if you like. Also for products built with AI. The first call is free, with no strings attached.",
+    },
+
+    hero: {
+      title: "I design products that explain themselves.",
+      selection: "Fill × Hug",
+      // --- The colour token of the heading in the tool's property row, before
+      // and after the click. Token names are English in every language.
+      tokenBefore: "text/tertiary",
+      tokenMiddle: "text/secondary",
+      tokenAfter: "text/primary",
+      lead: "Nobody should have to think about where to click. That's what I take care of: in new products, in existing ones, and in those built with AI that now need the last step.",
+    },
+
+    compare: {
+      title: "Same content. Different product.",
+      lead: "AI tools deliver a working page in minutes. That's a good start, often the best a project can have. But it's a template, and templates look alike: a gradient on top, three cards with icons, two buttons. What's still missing is the decision about what matters on this page.",
+      example:
+        "Here's the home page of a time-tracking tool, the template on the left, fully designed on the right. Nothing was invented, only decided.",
+      before: "AI template",
+      after: "Designed",
+      sliderLabel: "Comparison of the same home page: the AI template on the left, designed on the right",
+      description:
+        "Left: a purple gradient, the heading “Welcome to Klaro”, two buttons of the same size and three cards with the words “Lightning fast”, “Secure” and “Intuitive”. Right: the heading “Track hours without thinking about it”, one sentence, one button and a look into the product next to it.",
+      changes: [
+        {
+          title: "One statement instead of three buzzwords",
+          text: "“Lightning fast, secure, intuitive” could sit above any product. A sentence that says what the tool does sits only above this one.",
+        },
+        {
+          title: "One button instead of two",
+          text: "“Get started” next to “Learn more” says: you decide. One button says: this way.",
+        },
+        {
+          title: "A face of its own",
+          text: "The template belongs to everyone. Type, color and image now belong to this product.",
+        },
+      ],
+    },
+
+    screen: {
+      name: "Klaro",
+      nav: ["Features", "Pricing", "Log in"],
+      aiTitle: "Welcome to Klaro",
+      aiLead: "The modern all-in-one solution for efficient time tracking in your team.",
+      aiPrimary: "Get started",
+      aiSecondary: "Learn more",
+      aiCards: [
+        { title: "Lightning fast", text: "Track your time in seconds, not minutes." },
+        { title: "Secure", text: "Your data is in safe hands with us." },
+        { title: "Intuitive", text: "An interface that needs no explanation." },
+      ],
+      title: "Track hours without thinking about it.",
+      lead: "Klaro books your time to the project you're working in, automatically. For teams that bill their hours.",
+      primary: "Try 14 days for free",
+      note: "No credit card",
+      weekLabel: "This week",
+      weekTotal: "31.5 h",
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      hours: [7.5, 8, 6, 8, 2],
+      todayProject: "Running: Website relaunch",
+    },
+
+    states: {
+      title: "Not just the pretty state.",
+      lead: "Mockups almost always show the ideal case: three short entries, everything loaded, nothing gone wrong. In production a list is empty, still loading, fails or gets text nobody planned for. I design every state, so your team doesn't have to make anything up.",
+      legend: "State",
+      commonLabel: "Only the ideal case designed",
+      designedLabel: "Every state designed",
+      cardTitle: "Projects this week",
+      rows: [
+        { name: "Website relaunch", hours: "12.5 h" },
+        { name: "App redesign", hours: "6 h" },
+        { name: "Pitch deck", hours: "2 h" },
+      ],
+      longName:
+        "Relaunch of the company website including accessibility audit under the EAA (phase 2)",
+      emptyTitle: "No projects yet",
+      emptyText: "Create a project and your hours will show up here.",
+      emptyAction: "Create project",
+      errorRaw: "Error: Request failed with status 500",
+      errorTitle: "The projects couldn't be loaded",
+      errorText: "Your hours are saved. Try again in a moment.",
+      errorAction: "Reload",
+      loading: "Loading…",
+      items: [
+        {
+          key: "normal",
+          label: "Normal",
+          why: "This is how a design gets shown and signed off: three entries, short names, everything there. In this state, both look fine.",
+        },
+        {
+          key: "loading",
+          label: "Loading",
+          why: "On the left, one word on an empty surface. On the right, placeholders show that something is coming and how much. The page feels faster, even though it isn't.",
+        },
+        {
+          key: "empty",
+          label: "Empty",
+          why: "On the left, an empty box that looks like an error. On the right, it says why there's nothing here, with the first step right next to it.",
+        },
+        {
+          key: "error",
+          label: "Error",
+          why: "On the left, a message from the code that helps nobody. On the right, it says what happened, that nothing is lost, and what you can do.",
+        },
+        {
+          key: "long",
+          label: "Long text",
+          why: "On the left, a long name pushes the hours out of view. On the right, it wraps and gets cut after two lines. Real names are longer than the ones in the mockup.",
+        },
+      ],
+    },
+
+    services: {
+      title: "How I can help",
+      lead: "The whole design, or exactly the piece that's missing.",
+      items: [
+        {
+          title: "Design",
+          text: "New products and features, from the first flows to a clickable prototype in Figma. With every state, not just the pretty one.",
+        },
+        {
+          title: "Sharpen",
+          text: "Your product works, maybe from an AI template. It gets a clear order and a face of its own, without starting over.",
+        },
+        {
+          title: "Design system",
+          text: "Colors, type, spacing and building blocks as fixed rules. So Figma and code speak the same language and your team stops reinventing every button.",
+        },
+      ],
+    },
+
+    process: {
+      title: "How it can go",
+      lead: "An example. Every project is different, so we adapt the steps to you.",
+      steps: [
+        {
+          title: "Get to know",
+          text: "You show me your product or your idea and tell me who uses it.",
+          outcome: "Afterwards you know whether I can help.",
+        },
+        {
+          title: "Understand",
+          text: "I go through what users want to do and where they get stuck today.",
+          outcome: "We know which screens matter.",
+        },
+        {
+          title: "Design",
+          text: "I design in Figma, with every state, and show you early drafts along the way.",
+          outcome: "You get a clickable prototype.",
+        },
+        {
+          title: "Hand over",
+          text: "Design, states and tokens go to your team, with an explanation. If you want, I build along.",
+          outcome: "Your team can get going.",
+        },
+      ],
+    },
+
+    oneHand: {
+      title: "Design that can be built",
+      body: "I build frontends myself. So I know **how far a design can go**: far enough to make developers sweat, but **never so far that it won't hold up in code**. And if someone's missing for the build, I'm there.",
+      portraitAlt: "Ercan Cicek",
+    },
+
+    faq: {
+      title: "Frequently asked questions",
+      items: [
+        {
+          question: "Our product was built with AI. Is design still worth it?",
+          answer:
+            "Yes, and the template is a good start for it. The tool takes the basic structure off your hands. What it doesn't take off your hands are the decisions: what matters first, what can go and what your product looks like. We build on what's already there.",
+        },
+        {
+          question: "Do you work with our design system?",
+          answer:
+            "Yes. I work with what's there and extend it where something's missing. If there isn't one yet, we set up the basics together.",
+        },
+        {
+          question: "What does a project cost?",
+          answer:
+            "It depends on scope: how many screens and flows there are and whether a design system is part of it. After a free first call with no strings attached, you get a concrete quote.",
+        },
+        {
+          question: "Is accessibility included?",
+          answer:
+            "Yes, from the start. I plan contrast, font sizes, focus and states right away, so nothing has to be retrofitted later.",
+        },
+      ],
+    },
+
+    contact: {
+      title: "Let's talk about your product.",
+      body: "Send me a link or a few screenshots. On a first call we'll look at it together, free and with no strings attached.",
+    },
+  },
+
   accessibility: {
     meta: {
       title: "Accessibility audits and fixes for the EAA | Ercan Cicek",

@@ -7,6 +7,7 @@ import { IconArrowRight, IconBrandLinkedin, IconMail } from "@tabler/icons-astro
 import Button from "./ui/Button.astro"
 import ContactCard from "./ui/ContactCard.astro"
 import Section from "./ui/Section.astro"
+import ToolCursor from "./ui/ToolCursor.astro"
 import { siteConfig } from "../config/site"
 import { inquiryPath, useTranslations, type Locale } from "../i18n"
 
@@ -18,10 +19,15 @@ interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   topic?: "accessibility" | "design" | "development"
   /** --- Pixel-Ercan's line over the two contact cards --- */
   cardsChat?: string
+  /** --- Pixel-Ercan's tool cursor (the one from the design page) beside the
+       request button; once the block is in view it nudges the button a few
+       times. Decoration only. --- */
+  hasCursor?: boolean
   class?: string
 }
 
-const { title, body, topic, cardsChat, class: additionalClasses, ...attributes } = Astro.props
+const { title, body, topic, cardsChat, hasCursor = false, class: additionalClasses, ...attributes } = Astro.props
+const cursorName = siteConfig.name.split(" ")[0]
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
@@ -33,11 +39,12 @@ const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "
     <div>
       <h2 class="ec-reveal text-display text-balance">{title}</h2>
       <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{body}</p>
-      <div class="mt-9 w-fit ec-reveal ec-reveal-late" data-inquiry-cta>
+      <div class="relative mt-9 w-fit ec-reveal ec-reveal-late" data-inquiry-cta>
         <Button href={inquiryPath(currentLocale, topic)}>
           {t.common.contactCta}
           <IconArrowRight slot="icon-end" class="size-5" />
         </Button>
+        {hasCursor && <ToolCursor name={cursorName} class="ec-contact-cursor top-1/2 left-[calc(100%-0.75rem)] z-10" />}
       </div>
     </div>
     <div
@@ -62,3 +69,72 @@ const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "
     </div>
   </div>
 </Section>
+
+<style>
+  /* --- The cursor rests at the button's lower right corner. Once the block is
+     in view it moves in twice, the way a hand hesitates over a button: a soft
+     approach, a click (the arrow dips), a beat, and a soft drift back. Under five seconds in all, so no pause control
+     is needed (WCAG 2.2.2). --- */
+  [data-inquiry-cta] :global(.ec-contact-cursor) {
+    translate: 0.125rem 0.125rem;
+  }
+
+  [data-inquiry-cta][data-is-nudging="true"] :global(.ec-contact-cursor) {
+    animation: ec-contact-approach 2.4s linear 2;
+  }
+
+  [data-inquiry-cta][data-is-nudging="true"] :global(.ec-contact-cursor .ec-cursor-arrow) {
+    animation: ec-contact-click 2.4s ease-in-out 2;
+  }
+
+  /* --- Each leg has its own curve: a soft arrival, a quiet beat, a soft
+     return. Nothing stops abruptly. --- */
+  @keyframes ec-contact-approach {
+    0% {
+      translate: 0.125rem 0.125rem;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.1, 1);
+    }
+    38%,
+    52% {
+      translate: -0.75rem -0.375rem;
+      animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1);
+    }
+    100% {
+      translate: 0.125rem 0.125rem;
+    }
+  }
+
+  @keyframes ec-contact-click {
+    0%,
+    40%,
+    48%,
+    100% {
+      scale: 1;
+    }
+    43%,
+    45% {
+      scale: 0.8;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-inquiry-cta][data-is-nudging="true"] :global(.ec-contact-cursor),
+    [data-inquiry-cta][data-is-nudging="true"] :global(.ec-contact-cursor .ec-cursor-arrow) {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  for (const cursor of document.querySelectorAll<HTMLElement>(".ec-contact-cursor")) {
+    const button = cursor.parentElement!
+    new IntersectionObserver(
+      ([entry], observer) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        button.dataset.isNudging = "true"
+      },
+      { threshold: 1 }
+    ).observe(button)
+  }
+</script>

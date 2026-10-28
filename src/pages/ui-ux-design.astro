@@ -1,8 +1,16 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
 import DesignPage from "../views/design/DesignPage.astro"
+import { useTranslations } from "../i18n"
+
+const t = useTranslations(Astro.currentLocale).design
 ---
 
-<BaseLayout title="UI/UX-Design | Ercan Cicek" description="Platzhalter." routeKey="design">
+<BaseLayout
+  title={t.meta.title}
+  description={t.meta.description}
+  routeKey="design"
+  hasStructuredData
+>
   <DesignPage />
 </BaseLayout>

@@ -1,0 +1,56 @@
+---
+// --- The questions block of the offer pages: native details, a chevron that
+// turns, and an answer that slides open where the browser can animate to auto
+// heights. White, so it stands apart from the grey contact block below; the
+// answers are grey panels without shadow (white on grey gets a shadow, grey on
+// white does not).
+import { IconChevronDown } from "@tabler/icons-astro"
+import Section from "./ui/Section.astro"
+
+interface Props {
+  title: string
+  items: { question: string; answer: string }[]
+}
+
+const { title, items } = Astro.props
+---
+
+<Section tone="light" aria-labelledby="faqTitle">
+  <h2 id="faqTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
+  <div class="mt-10 flex max-w-3xl ec-reveal flex-col gap-3 ec-reveal-late">
+    {
+      items.map((item) => (
+        <details class="ec-faq group rounded-2xl bg-gray-subtle">
+          <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 rounded-2xl px-6 py-4 text-lead text-typo-high ec-focus-inset [&::-webkit-details-marker]:hidden">
+            {item.question}
+            <span
+              class="grid size-9 shrink-0 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue transition-transform duration-300 group-open:rotate-180"
+              aria-hidden="true"
+            >
+              <IconChevronDown class="size-5" />
+            </span>
+          </summary>
+          <p class="max-w-[60ch] px-6 pb-6 text-typo-medium">{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .ec-faq {
+    interpolate-size: allow-keywords;
+
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        content-visibility 300ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+  }
+</style>

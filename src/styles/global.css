@@ -227,6 +227,15 @@
   margin-inline-start: -0.094em;
 }
 
+/* --- Optical vertical centring for one-line labels in pills and chips.
+   an-regular sits high in its line box (see the font-face note above), so flex
+   centring leaves the letters a hair above the middle. One line, a little more
+   space above than below, and they sit on the optical middle. --- */
+@utility ec-pill-label {
+  line-height: 1;
+  padding-block: 0.5rem 0.375rem;
+}
+
 @utility ec-layout-visual-content {
   margin-inline: auto;
   width: 100%;

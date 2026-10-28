@@ -1,0 +1,47 @@
+---
+// --- The dark "why one person" block of the offer pages: the round portrait and
+// one argument. Words wrapped in ** are highlighted like the roles on the start
+// page: strong for the emphasis, a tinted box so it does not rest on colour
+// alone, regular weight because the font has no bold cut. Green on the blue
+// clears 4.9:1 even on the tint.
+import Section from "./ui/Section.astro"
+
+interface Props {
+  title: string
+  body: string
+  portraitAlt: string
+}
+
+const { title, body, portraitAlt } = Astro.props
+---
+
+<Section tone="dark" aria-labelledby="oneHandTitle">
+  <div class="grid items-center gap-12 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-20">
+    <img
+      src="/images/ercancicek.jpg"
+      alt={portraitAlt}
+      width="573"
+      height="573"
+      loading="lazy"
+      class="aspect-square w-full max-w-56 ec-reveal rounded-full object-cover max-md:mx-auto md:max-w-64"
+    />
+    <div>
+      <h2 id="oneHandTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
+      <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-min/85 ec-reveal-late">
+        {
+          body
+            .split("**")
+            .map((part, index) =>
+              index % 2 === 1 ? (
+                <strong class="rounded-sm bg-brand-green-medium/15 [box-decoration-break:clone] px-1 font-normal text-brand-green-medium">
+                  {part}
+                </strong>
+              ) : (
+                part
+              )
+            )
+        }
+      </p>
+    </div>
+  </div>
+</Section>

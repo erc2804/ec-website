@@ -1,0 +1,181 @@
+---
+// --- The scene above the design process, in the picture language of the
+// start page's RoleScene and the accessibility page's ProcessScene: one small
+// picture per step, built from the same pieces, that changes as the step
+// changes. data-step on the root (1 to 4) places every piece. Decoration
+// only, the step texts carry the meaning, so it is hidden from assistive
+// technology.
+//
+// 1 Get to know: two speech bubbles between the client and Pixel-Ercan.
+// 2 Understand:  a grey wireframe of the product appears, the two parts that
+//                matter are marked.
+// 3 Design:      the wireframe turns into the designed card from the states
+//                demo, its states fan out beside it, Pixel-Ercan holds the
+//                brush.
+// 4 Hand over:   the card moves left, a code block appears on the right with
+//                the same tokens, an arrow between them.
+import { IconArrowRight, IconBrush, IconUser } from "@tabler/icons-astro"
+
+interface Props {
+  step?: 1 | 2 | 3 | 4
+  /** --- Draws the scene smaller, for the low boxes inside the steps --- */
+  isCompact?: boolean
+  class?: string
+}
+
+const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
+
+// --- Same duration and curve as RoleScene, so all pages move alike
+const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+
+// --- The three states beside the designed card: where each one lands and the
+// colour of its dot (empty, loading, error)
+const states = [
+  { position: "group-data-[step=3]:translate-y-[-2.75rem]", dot: "bg-gray-low", delay: "group-data-[step=3]:delay-300" },
+  { position: "group-data-[step=3]:translate-y-0", dot: "bg-brand-blue/60", delay: "group-data-[step=3]:delay-450" },
+  { position: "group-data-[step=3]:translate-y-[2.75rem]", dot: "bg-status-error-text", delay: "group-data-[step=3]:delay-600" },
+]
+
+// --- The lines of the code block: width and colour
+const codeLines = [
+  { width: "w-3/5", colour: "bg-gray-low/60" },
+  { width: "w-4/5", colour: "bg-brand-green-medium/70" },
+  { width: "w-2/5", colour: "bg-gray-low/60" },
+  { width: "w-3/4", colour: "bg-brand-green-medium/70" },
+  { width: "w-1/2", colour: "bg-gray-low/60" },
+]
+---
+
+<div
+  class:list={["group relative overflow-hidden", additionalClasses]}
+  data-step={step}
+  aria-hidden="true"
+  inert
+>
+  <div class:list={["absolute inset-0", isCompact ? "scale-[0.62]" : "scale-[0.85]"]}>
+    <!-- --- Step 1: the conversation, in the bubble shape of the inquiry chat -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[-2rem] translate-y-[-3.5rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-bl-sm bg-gray-subtle px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-gray-low"></span>
+      <span class="h-2 w-2/3 rounded-full bg-gray-low"></span>
+    </span>
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-6 -ml-18 flex h-12 w-36 translate-x-[2rem] translate-y-[0.25rem] scale-90 flex-col justify-center gap-2 rounded-2xl rounded-br-sm bg-brand-green-low px-4 opacity-0 transition-[scale,opacity] group-data-[step=1]:scale-100 group-data-[step=1]:opacity-100 group-data-[step=1]:delay-300",
+        motion,
+      ]}
+    >
+      <span class="h-2 w-full rounded-full bg-brand-green-medium/50"></span>
+      <span class="h-2 w-1/2 rounded-full bg-brand-green-medium/50"></span>
+    </span>
+
+    <!-- --- The product: a wireframe in step 2, the designed card from step 3
+         on. The same element, its colours change. -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-16 -ml-24 flex h-32 w-48 flex-col gap-2 rounded-2xl bg-gray-subtle p-4 outline outline-1 outline-gray-low transition-[translate,scale,opacity,background-color,outline-color] group-data-[step=1]:translate-y-[-1rem] group-data-[step=1]:scale-90 group-data-[step=1]:opacity-0 group-data-[step=3]:translate-x-[-3rem] group-data-[step=3]:bg-[#f3efe6] group-data-[step=3]:outline-[#e4ded2] group-data-[step=4]:translate-x-[-7.5rem] group-data-[step=4]:bg-[#f3efe6] group-data-[step=4]:outline-[#e4ded2]",
+        motion,
+      ]}
+    >
+      <!-- title row -->
+      <span
+        class:list={[
+          "h-2.5 w-2/3 shrink-0 rounded-full bg-gray-low transition-colors group-data-[step=3]:bg-[#1c1a17] group-data-[step=4]:bg-[#1c1a17]",
+          motion,
+        ]}
+      ></span>
+      <!-- the two parts that matter: marked in step 2, designed from step 3 -->
+      {
+        [0, 1].map(() => (
+          <span
+            class:list={[
+              "h-6 shrink-0 rounded-lg bg-gray-low/60 transition-colors group-data-[step=2]:bg-brand-green-low group-data-[step=3]:bg-[#e4ded2] group-data-[step=4]:bg-[#e4ded2]",
+              motion,
+            ]}
+          />
+        ))
+      }
+      <!-- the button: grey pill, then the dark pill of the designed card -->
+      <span
+        class:list={[
+          "mt-auto h-3.5 w-14 rounded-full bg-gray-low transition-colors group-data-[step=3]:bg-[#1c1a17] group-data-[step=4]:bg-[#1c1a17]",
+          motion,
+        ]}
+      ></span>
+      <!-- the accent bar of the designed card -->
+      <span
+        class:list={[
+          "absolute right-4 bottom-4 h-3.5 w-8 rounded-full bg-[#e0632f] opacity-0 transition-opacity group-data-[step=3]:opacity-100 group-data-[step=4]:opacity-100",
+          motion,
+        ]}
+      ></span>
+    </span>
+
+    <!-- --- Step 3: the states fan out beside the card -->
+    {
+      states.map((state) => (
+        <span
+          class:list={[
+            "absolute top-1/2 left-1/2 -mt-4 -ml-12 flex h-8 w-24 translate-x-[4.5rem] scale-75 items-center gap-2 rounded-full bg-gray-min px-3 opacity-0 outline outline-1 outline-gray-low transition-[translate,scale,opacity] group-data-[step=3]:translate-x-[5.5rem] group-data-[step=3]:scale-100 group-data-[step=3]:opacity-100",
+            state.position,
+            state.delay,
+            motion,
+          ]}
+        >
+          <span class:list={["size-2.5 shrink-0 rounded-full", state.dot]} />
+          <span class="h-2 w-full rounded-full bg-gray-low" />
+        </span>
+      ))
+    }
+
+    <!-- --- Step 4: the arrow and the code block with the same tokens -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-4 -ml-4 grid size-8 scale-50 place-items-center rounded-full bg-brand-green-medium text-brand-blue opacity-0 transition-[scale,opacity] group-data-[step=4]:scale-100 group-data-[step=4]:opacity-100 group-data-[step=4]:delay-300",
+        motion,
+      ]}
+    >
+      <IconArrowRight class="size-5" stroke-width={2.25} />
+    </span>
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-16 -ml-24 flex h-32 w-48 translate-x-[9rem] scale-90 flex-col justify-center gap-2.5 rounded-2xl bg-[#1f1d1b] px-5 opacity-0 transition-[translate,scale,opacity] group-data-[step=4]:translate-x-[7.5rem] group-data-[step=4]:scale-100 group-data-[step=4]:opacity-100 group-data-[step=4]:delay-150",
+        motion,
+      ]}
+    >
+      {codeLines.map((line) => <span class:list={["h-2 rounded-full", line.width, line.colour]} />)}
+    </span>
+
+    <!-- --- The client -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 grid size-14 translate-x-[-1.75rem] translate-y-[6.5rem] scale-75 place-items-center rounded-full bg-gray-low/70 text-typo-medium transition-[translate,scale,opacity] group-data-[step=1]:translate-x-[-4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=3]:opacity-0 group-data-[step=4]:opacity-0",
+        motion,
+      ]}
+    >
+      <IconUser class="size-7" />
+    </span>
+
+    <!-- --- Pixel-Ercan, with the brush while he designs -->
+    <span
+      class:list={[
+        "absolute top-1/2 left-1/2 -mt-7 -ml-7 size-14 translate-x-[1.75rem] translate-y-[6.5rem] scale-75 transition-[translate,scale] group-data-[step=1]:translate-x-[4.5rem] group-data-[step=1]:translate-y-[4.5rem] group-data-[step=1]:scale-100 group-data-[step=3]:translate-x-[-12rem] group-data-[step=3]:translate-y-0 group-data-[step=3]:scale-100 group-data-[step=4]:translate-x-0 group-data-[step=4]:translate-y-[4.75rem] group-data-[step=4]:scale-100",
+        motion,
+      ]}
+    >
+      <img src="/images/pixelcan.png" alt="" width="56" height="56" class="size-full rounded-full bg-brand-sand" />
+      <span
+        class:list={[
+          "absolute -right-2 -bottom-1 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=3]:scale-100",
+          motion,
+        ]}
+      >
+        <IconBrush class="size-4" stroke-width={2.25} />
+      </span>
+    </span>
+  </div>
+</div>

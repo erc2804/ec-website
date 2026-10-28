@@ -1,0 +1,186 @@
+---
+// --- "Not just the pretty state": one list from the tool in the states real
+// life brings. Left as it is often built, where only the ideal case was
+// designed; right with every state designed. The explanations follow NN/g's
+// guidance: show system status, empty states that explain and offer the first
+// step, error messages in plain words with a way forward.
+//
+// Every state is rendered on the server and shown or hidden by the control,
+// so both cards are real text a screen reader can compare, and the explanation
+// below is announced when the state changes. On phones the control is a native
+// select (five pills do not fit in a row), from md up the pill group.
+import {
+  IconAlertTriangle,
+  IconCheck,
+  IconChevronDown,
+  IconFolderPlus,
+  IconRefresh,
+  IconX,
+} from "@tabler/icons-astro"
+import SegmentedControl from "../../components/ui/SegmentedControl.astro"
+import Section from "../../components/ui/Section.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).design.states
+const longRows = [{ name: t.longName, hours: t.rows[0].hours }, ...t.rows.slice(1)]
+---
+
+<Section tone="light" aria-labelledby="statesTitle">
+  <div class="ec-states">
+    <h2 id="statesTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+
+    <div class="mt-10 ec-reveal ec-reveal-late md:hidden">
+      <label for="designStateSelect" class="mb-2 block pl-1 text-sm text-typo-medium">{t.legend}</label>
+      <div class="relative w-fit">
+        <select
+          id="designStateSelect"
+          class="ec-states-select min-h-11 cursor-pointer appearance-none rounded-full bg-brand-blue py-2 pr-11 pl-5 font-medium text-typo-min"
+        >
+          {t.items.map((item) => <option value={item.key}>{item.label}</option>)}
+        </select>
+        <IconChevronDown class="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-typo-min" aria-hidden="true" />
+      </div>
+    </div>
+    <SegmentedControl
+      name="designState"
+      legend={t.legend}
+      options={t.items.map((item) => ({ value: item.key, label: item.label }))}
+      class="mt-10 ec-reveal ec-reveal-late max-md:hidden"
+    />
+
+    <div class="mt-8 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-2">
+      <!-- --- Only the ideal case designed -->
+      <div class="rounded-3xl bg-gray-subtle p-5 sm:p-8">
+        <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
+          <span class="grid size-6 place-items-center rounded-full bg-status-error-bg text-status-error-text" aria-hidden="true">
+            <IconX class="size-4" stroke-width={2.5} />
+          </span>
+          {t.commonLabel}
+        </p>
+        <div
+          class="mt-4 min-h-44 rounded-xl border border-[#e4e4e7] bg-white p-4 font-[Inter,ui-sans-serif,system-ui,sans-serif] text-[0.8125rem] text-[#09090b] shadow-[0_1px_2px_rgb(0_0_0/0.05)]"
+        >
+          <p class="text-[0.6875rem] font-semibold">{t.cardTitle}</p>
+
+          <ul data-state="normal" class="ec-state mt-2">
+            {
+              t.rows.map((row) => (
+                <li class="flex justify-between gap-3 border-b border-[#f4f4f5] py-2">
+                  <span>{row.name}</span>
+                  <span class="tabular-nums">{row.hours}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p data-state="loading" class="ec-state mt-3 text-[0.75rem] text-[#71717a]" hidden>{t.loading}</p>
+          <p data-state="empty" class="ec-state" hidden></p>
+          <p data-state="error" class="ec-state mt-3 font-mono text-[0.75rem] text-[#dc2626]" hidden>{t.errorRaw}</p>
+          <ul data-state="long" class="ec-state mt-2" hidden>
+            {
+              longRows.map((row) => (
+                <li class="flex gap-3 border-b border-[#f4f4f5] py-2 whitespace-nowrap">
+                  <span>{row.name}</span>
+                  <span class="tabular-nums">{row.hours}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- --- Every state designed -->
+      <div class="rounded-3xl bg-gray-subtle p-5 sm:p-8">
+        <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
+          <span class="grid size-6 place-items-center rounded-full bg-brand-green-low text-brand-blue" aria-hidden="true">
+            <IconCheck class="size-4" stroke-width={2.5} />
+          </span>
+          {t.designedLabel}
+        </p>
+        <div class="mt-4 min-h-44 rounded-2xl bg-[#f3efe6] p-4 font-[ui-sans-serif,system-ui,sans-serif] text-[0.8125rem] text-[#1c1a17] shadow-sm">
+          <p class="text-[0.6875rem] text-[#5c5750]">{t.cardTitle}</p>
+
+          <ul data-state="normal" class="ec-state mt-2">
+            {
+              t.rows.map((row) => (
+                <li class="flex justify-between gap-4 border-b border-[#e4ded2] py-2">
+                  <span class="font-medium">{row.name}</span>
+                  <span class="shrink-0 tabular-nums">{row.hours}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <ul data-state="loading" class="ec-state mt-2" hidden>
+            {
+              [0.55, 0.4, 0.3].map((width) => (
+                <li class="flex justify-between gap-4 border-b border-[#e4ded2] py-3">
+                  <span class="h-3 animate-pulse rounded-full bg-[#e4ded2]" style={`width: ${width * 100}%`} />
+                  <span class="h-3 w-10 animate-pulse rounded-full bg-[#e4ded2]" />
+                </li>
+              ))
+            }
+          </ul>
+          <div data-state="empty" class="ec-state mt-3 flex flex-col items-start" hidden>
+            <span class="grid size-9 place-items-center rounded-full bg-[#e4ded2]" aria-hidden="true">
+              <IconFolderPlus class="size-4" />
+            </span>
+            <p class="mt-3 font-medium">{t.emptyTitle}</p>
+            <p class="mt-1 text-[0.75rem] text-[#5c5750]">{t.emptyText}</p>
+            <span class="mt-3 inline-flex rounded-full bg-[#1c1a17] px-3.5 py-1.5 text-[0.75rem] font-semibold text-[#f3efe6]">
+              {t.emptyAction}
+            </span>
+          </div>
+          <div data-state="error" class="ec-state mt-3" hidden>
+            <p class="flex items-center gap-2 font-medium text-[#8f2a1d]">
+              <IconAlertTriangle class="size-4 shrink-0" aria-hidden="true" />
+              {t.errorTitle}
+            </p>
+            <p class="mt-1 text-[0.75rem] text-[#5c5750]">{t.errorText}</p>
+            <span class="mt-3 inline-flex items-center gap-1 text-[0.75rem] font-medium underline underline-offset-4">
+              <IconRefresh class="size-3.5" aria-hidden="true" />
+              {t.errorAction}
+            </span>
+          </div>
+          <ul data-state="long" class="ec-state mt-2" hidden>
+            {
+              longRows.map((row) => (
+                <li class="flex justify-between gap-4 border-b border-[#e4ded2] py-2">
+                  <span class="line-clamp-2 font-medium">{row.name}</span>
+                  <span class="shrink-0 tabular-nums">{row.hours}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- Why the right card holds. Announced politely when the state changes. -->
+    <div class="mt-6 max-w-[60ch]" aria-live="polite">
+      {
+        t.items.map((item, index) => (
+          <p class="ec-state text-typo-medium" data-state={item.key} hidden={index !== 0}>
+            {item.why}
+          </p>
+        ))
+      }
+    </div>
+  </div>
+</Section>
+
+<script>
+  // --- Select and pill group show the same choice; whichever one is used
+  // updates the cards and the other control.
+  for (const states of document.querySelectorAll<HTMLElement>(".ec-states")) {
+    const blocks = [...states.querySelectorAll<HTMLElement>(".ec-state")]
+    const select = states.querySelector<HTMLSelectElement>(".ec-states-select")!
+    const inputs = [...states.querySelectorAll<HTMLInputElement>("input[name='designState']")]
+    const show = (value: string) => {
+      for (const block of blocks) block.hidden = block.dataset.state !== value
+      select.value = value
+      for (const input of inputs) input.checked = input.value === value
+    }
+    select.addEventListener("change", () => show(select.value))
+    for (const input of inputs) input.addEventListener("change", () => show(input.value))
+  }
+</script>

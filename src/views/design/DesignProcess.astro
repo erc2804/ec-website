@@ -1,0 +1,107 @@
+---
+// --- "How it can go": four steps, each says what the reader has afterwards.
+// Told like the roles on the start page: on desktop one scene travels down
+// the left column and settles next to the step being read, changing into it
+// as it arrives. Below lg every step carries its own scene, already in its
+// state, so nothing has to move. The steps are a plain ordered list; nothing
+// is operated.
+import DesignProcessScene from "./DesignProcessScene.astro"
+import Section from "../../components/ui/Section.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).design.process
+---
+
+<Section aria-labelledby="processTitle">
+  <div class="ec-design-process">
+    <h2 id="processTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+
+    <div class="mt-10 grid ec-reveal ec-reveal-late lg:mt-16 lg:grid-cols-2 lg:gap-16">
+      <div class="relative hidden lg:block">
+        <DesignProcessScene
+          class="ec-design-process-scene absolute inset-x-0 top-0 h-80 rounded-3xl bg-gray-min shadow-sm transition-[translate] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
+        />
+      </div>
+
+      <ol role="list">
+        {
+          t.steps.map((step, index) => (
+            <li
+              class="ec-design-process-step flex flex-col gap-3 border-t border-gray-low py-10 transition-colors duration-500 lg:min-h-80 lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-high"
+              data-step={index + 1}
+              data-is-active={index === 0 ? "true" : "false"}
+            >
+              <DesignProcessScene
+                step={(index + 1) as 1 | 2 | 3 | 4}
+                isCompact
+                class="mb-4 h-56 rounded-3xl bg-gray-min shadow-sm lg:hidden"
+              />
+              <span class="text-sm font-bold tracking-[0.12em] text-typo-medium" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 class="text-heading-2">{step.title}</h3>
+              <p class="max-w-[46ch] text-typo-medium">{step.text}</p>
+              <p class="max-w-[46ch] text-typo-high">{step.outcome}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</Section>
+
+<script>
+  // --- Same logic as the roles on the start page: the active step is the last
+  // one whose top has passed the middle of the viewport, worked out from the
+  // positions on every frame of scrolling, so it is the same answer in both
+  // directions. The scene moves to it and changes as it lands; move and change
+  // share duration and curve (600ms), so they read as one motion.
+  for (const process of document.querySelectorAll<HTMLElement>(".ec-design-process")) {
+    const scene = process.querySelector<HTMLElement>(".ec-design-process-scene")!
+    const steps = [...process.querySelectorAll<HTMLElement>(".ec-design-process-step")]
+    const desktop = window.matchMedia("(width >= 64rem)")
+    let activeIndex = -1
+
+    const update = (isInstant = false) => {
+      if (!desktop.matches) return
+      const centre = window.innerHeight / 2
+      let index = 0
+      steps.forEach((step, stepIndex) => {
+        if (step.getBoundingClientRect().top <= centre) index = stepIndex
+      })
+      if (index === activeIndex && !isInstant) return
+      activeIndex = index
+      for (const [stepIndex, step] of steps.entries()) {
+        step.dataset.isActive = stepIndex === index ? "true" : "false"
+      }
+
+      const offset = steps[index].getBoundingClientRect().top - steps[0].getBoundingClientRect().top
+      if (isInstant) {
+        // --- No travel on load and after a resize: the scene just is there
+        scene.style.transition = "none"
+        scene.style.translate = `0 ${offset}px`
+        scene.dataset.step = steps[index].dataset.step!
+        void scene.offsetHeight
+        scene.style.transition = ""
+        return
+      }
+      scene.style.translate = `0 ${offset}px`
+      scene.dataset.step = steps[index].dataset.step!
+    }
+
+    let isFramePending = false
+    const requestUpdate = () => {
+      if (isFramePending) return
+      isFramePending = true
+      requestAnimationFrame(() => {
+        isFramePending = false
+        update()
+      })
+    }
+
+    update(true)
+    window.addEventListener("scroll", requestUpdate, { passive: true })
+    window.addEventListener("resize", () => update(true), { passive: true })
+  }
+</script>

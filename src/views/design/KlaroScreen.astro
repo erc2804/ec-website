@@ -1,0 +1,129 @@
+---
+// --- The home page of "Klaro", a fictional time-tracking tool, in two builds
+// of the same content:
+//
+// ai        As AI tools tend to output it: the Tailwind defaults with Inter,
+//           an indigo-to-purple gradient hero, two buttons of equal weight,
+//           three cards with stock icons and words that fit any product.
+// designed  The same page with the same words where they say something: one
+//           headline that names what the tool does, one button, and a look
+//           into the product instead of three promises.
+//
+// Both share size and skeleton (nav, hero, a row below), so one reads as the
+// other made better. Sizes are in cqw, so the page scales with the window it
+// sits in. It is someone else's product, so it uses none of this site's styles.
+import { IconBolt, IconClock, IconShieldCheck, IconSparkles } from "@tabler/icons-astro"
+import type { HTMLAttributes } from "astro/types"
+import { useTranslations } from "../../i18n"
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  variant: "ai" | "designed"
+  class?: string
+}
+
+const { variant, class: additionalClasses, ...attributes } = Astro.props
+const t = useTranslations(Astro.currentLocale).design.screen
+const aiCardIcons = [IconBolt, IconShieldCheck, IconSparkles]
+const maxHours = Math.max(...t.hours)
+---
+
+{
+  variant === "ai" ? (
+    <div
+      class:list={[
+        "@container flex aspect-[16/11] flex-col overflow-hidden bg-white font-[Inter,ui-sans-serif,system-ui,sans-serif] text-[#09090b]",
+        additionalClasses,
+      ]}
+      {...attributes}
+    >
+      <div class="flex items-center gap-[1cqw] px-[3cqw] py-[1.6cqw] text-[1.5cqw]">
+        <span class="grid size-[3.2cqw] place-items-center rounded-[0.7cqw] bg-linear-to-br from-[#6366f1] to-[#a855f7] text-white">
+          <IconClock class="size-[2cqw]" />
+        </span>
+        <span class="text-[1.9cqw] font-semibold">{t.name}</span>
+        <span class="ml-auto flex gap-[2cqw] text-[#3f3f46]">{t.nav.map((item) => <span>{item}</span>)}</span>
+        <span class="rounded-[0.7cqw] bg-[#6366f1] px-[1.4cqw] py-[0.7cqw] text-white">{t.aiPrimary}</span>
+      </div>
+
+      <div class="flex flex-col items-center bg-linear-to-br from-[#eef2ff] via-[#f5f3ff] to-[#fdf4ff] px-[4cqw] pt-[4.5cqw] pb-[4cqw] text-center">
+        <span class="rounded-full border border-[#c7d2fe] bg-white/70 px-[1.4cqw] py-[0.3cqw] text-[1.3cqw] text-[#4f46e5]">
+          ✨ Neu: Version 2.0
+        </span>
+        <p class="mt-[2cqw] bg-linear-to-r from-[#4f46e5] to-[#9333ea] bg-clip-text text-[4.2cqw] leading-tight font-bold tracking-tight text-transparent">
+          {t.aiTitle}
+        </p>
+        <p class="mt-[1.2cqw] max-w-[32ch] text-[1.8cqw] text-[#52525b]">{t.aiLead}</p>
+        <div class="mt-[2.6cqw] flex gap-[1.2cqw] text-[1.6cqw] font-medium">
+          <span class="rounded-[0.8cqw] bg-[#6366f1] px-[2.2cqw] py-[1cqw] text-white">{t.aiPrimary}</span>
+          <span class="rounded-[0.8cqw] border border-[#e4e4e7] bg-white px-[2.2cqw] py-[1cqw]">{t.aiSecondary}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-[2cqw] px-[4cqw] py-[3.2cqw]">
+        {
+          t.aiCards.map((card, index) => {
+            const CardIcon = aiCardIcons[index]
+            return (
+              <div class="rounded-[1.4cqw] border border-[#e4e4e7] p-[2cqw] shadow-[0_1px_3px_rgb(0_0_0/0.06)]">
+                <span class="grid size-[4.2cqw] place-items-center rounded-[1cqw] bg-[#eef2ff] text-[#6366f1]">
+                  <CardIcon class="size-[2.4cqw]" />
+                </span>
+                <p class="mt-[1.4cqw] text-[1.8cqw] font-semibold">{card.title}</p>
+                <p class="mt-[0.4cqw] text-[1.5cqw] leading-snug text-[#71717a]">{card.text}</p>
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  ) : (
+    <div
+      class:list={[
+        "@container flex aspect-[16/11] flex-col overflow-hidden bg-[#f3efe6] font-[ui-sans-serif,system-ui,sans-serif] text-[#1c1a17]",
+        additionalClasses,
+      ]}
+      {...attributes}
+    >
+      <div class="flex items-center px-[4cqw] py-[2cqw] text-[1.6cqw]">
+        <span class="text-[2.1cqw] font-semibold tracking-tight">{t.name}</span>
+        <span class="ml-auto flex gap-[2.6cqw] text-[#5c5750]">{t.nav.map((item) => <span>{item}</span>)}</span>
+      </div>
+
+      <div class="grid flex-1 grid-cols-[1.15fr_1fr] items-center gap-[4cqw] px-[4cqw] pb-[4cqw]">
+        <div>
+          <p class="text-[4.6cqw] leading-[1.08] font-semibold tracking-tight text-balance">{t.title}</p>
+          <p class="mt-[2cqw] max-w-[34ch] text-[1.9cqw] leading-relaxed text-[#5c5750]">{t.lead}</p>
+          <span class="mt-[3cqw] inline-block rounded-full bg-[#1c1a17] px-[2.6cqw] py-[1.4cqw] text-[1.8cqw] font-semibold text-[#f3efe6]">
+            {t.primary}
+          </span>
+          <span class="ml-[2cqw] text-[1.6cqw] text-[#5c5750]">{t.note}</span>
+        </div>
+
+        <!-- --- A look into the product: this week's hours per day -->
+        <div class="rounded-[2.4cqw] bg-white p-[2.8cqw] shadow-[0_12px_30px_-18px_rgb(28_26_23/0.35)]">
+          <p class="flex items-baseline justify-between text-[1.6cqw] text-[#5c5750]">
+            {t.weekLabel}
+            <span class="text-[2.4cqw] font-semibold text-[#1c1a17] tabular-nums">{t.weekTotal}</span>
+          </p>
+          <div class="mt-[2.4cqw] flex items-end gap-[1.4cqw]">
+            {
+              t.hours.map((hours, index) => (
+                <span class="flex flex-1 flex-col items-center gap-[0.8cqw]">
+                  <span
+                    class:list={["w-full rounded-[0.6cqw]", index === 4 ? "bg-[#e0632f]" : "bg-[#1c1a17]"]}
+                    style={`height: ${(hours / maxHours) * 8}cqw`}
+                  />
+                  <span class="text-[1.4cqw] text-[#5c5750]">{t.days[index]}</span>
+                </span>
+              ))
+            }
+          </div>
+          <p class="mt-[2.2cqw] flex items-center gap-[1cqw] text-[1.6cqw] text-[#1c1a17]">
+            <span class="size-[1.2cqw] rounded-full bg-[#e0632f]" />
+            {t.todayProject}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}

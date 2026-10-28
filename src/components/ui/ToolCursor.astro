@@ -1,0 +1,73 @@
+---
+// --- The cursor of a collaborator in a design tool: an arrow with a name tag
+// and Pixel-Ercan's face, in the tool's selection blue. It is decoration for
+// sighted readers, hidden from assistive technology. The component only draws
+// it; where it goes and when it clicks is the job of whoever places it, by
+// moving it with `translate` and dipping the arrow (data-is-pressed).
+interface Props {
+  /** --- The name on the tag --- */
+  name: string
+  class?: string
+}
+
+const { name, class: additionalClasses } = Astro.props
+---
+
+<span class:list={["ec-cursor pointer-events-none absolute top-0 left-0", additionalClasses]} aria-hidden="true">
+  <svg viewBox="0 0 16 16" class="ec-cursor-arrow size-5" fill="none">
+    <path
+      d="M2.5 1.5 L13.5 8.2 L8.6 9.3 L6 14.5 Z"
+      fill="var(--ec-cursor-color)"
+      stroke="#ffffff"
+      stroke-width="1.2"
+      stroke-linejoin="round"></path>
+  </svg>
+  <span class="ec-cursor-name">
+    <img src="/images/pixelcan.png" alt="" width="40" height="40" class="size-5 rounded-full bg-brand-sand" />
+    {name}
+  </span>
+</span>
+
+<style>
+  /* --- Figma's selection blue, a shade darker so the white text on the tag
+     reaches 4.5:1. It quotes the tool, not the brand. --- */
+  .ec-cursor {
+    --ec-cursor-color: #1272c2;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.125rem;
+    /* --- Placed at an edge it must not shrink to the room that is left --- */
+    width: max-content;
+  }
+
+  /* --- The tip of the arrow is the point that lands on things --- */
+  .ec-cursor-arrow {
+    transform-origin: 15% 10%;
+    transition: scale 120ms ease-in-out;
+  }
+
+  .ec-cursor[data-is-pressed="true"] .ec-cursor-arrow {
+    scale: 0.82;
+  }
+
+  .ec-cursor-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+    border-radius: 0.25rem 0.875rem 0.875rem 0.875rem;
+    background: var(--ec-cursor-color);
+    padding: 0.1875rem 0.625rem 0.1875rem 0.25rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: #ffffff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ec-cursor {
+      display: none;
+    }
+  }
+</style>

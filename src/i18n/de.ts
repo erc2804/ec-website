@@ -382,6 +382,213 @@ export const de = {
     languageLabel: "Sprache",
   },
 
+  design: {
+    meta: {
+      title: "UI/UX-Design für Web-Apps und Websites | Ercan Cicek",
+      description:
+        "Ich gestalte Oberflächen, in denen man sofort findet, was man braucht, und baue sie auf Wunsch selbst. Auch für Produkte, die mit KI gebaut wurden. Das erste Gespräch ist unverbindlich und kostenlos.",
+    },
+
+    hero: {
+      title: "Ich gestalte Produkte, die sich von selbst erklären.",
+      // --- The sizing chip on the selection frame around the heading, as Figma
+      // writes it: the frame fills its parent, the height hugs the text
+      selection: "Fill × Hug",
+      // --- The colour token of the heading in the tool's property row, before
+      // and after the click. Token names are English in every language.
+      tokenBefore: "text/tertiary",
+      tokenMiddle: "text/secondary",
+      tokenAfter: "text/primary",
+      lead: "Niemand soll überlegen müssen, wo er klickt. Dafür sorge ich: in neuen Produkten, in bestehenden, und in solchen, die mit KI gebaut wurden und jetzt den letzten Schritt brauchen.",
+    },
+
+    // --- The before/after section with the slider
+    compare: {
+      title: "Gleicher Inhalt. Anderes Produkt.",
+      lead: "KI-Werkzeuge liefern in Minuten eine Seite, die funktioniert. Das ist ein guter Anfang, oft der beste, den ein Projekt haben kann. Nur ist es eine Vorlage, und Vorlagen sehen sich ähnlich: Verlauf oben, drei Karten mit Symbolen, zwei Buttons. Was noch fehlt, ist die Entscheidung, was auf dieser Seite zählt.",
+      example:
+        "Hier die Startseite eines Zeiterfassungs-Tools, links als Vorlage, rechts fertig gestaltet. Nichts wurde dazuerfunden, nur entschieden.",
+      before: "KI-Vorlage",
+      after: "Gestaltet",
+      sliderLabel: "Vergleich derselben Startseite: links die KI-Vorlage, rechts gestaltet",
+      // --- For screen readers, who do not see the two pictures
+      description:
+        "Links: ein lila Verlauf, die Überschrift „Willkommen bei Klaro“, zwei gleich große Buttons und drei Karten mit den Wörtern „Blitzschnell“, „Sicher“ und „Intuitiv“. Rechts: die Überschrift „Stunden erfassen, ohne daran zu denken“, ein Satz dazu, ein Button und daneben ein Blick ins Produkt.",
+      changes: [
+        {
+          title: "Eine Aussage statt drei Schlagworte",
+          text: "„Blitzschnell, sicher, intuitiv“ könnte über jedem Produkt stehen. Ein Satz, der sagt, was das Tool tut, steht nur über diesem.",
+        },
+        {
+          title: "Ein Button statt zwei",
+          text: "„Jetzt starten“ neben „Mehr erfahren“ heißt: Entscheide du. Ein Button heißt: Hier geht es weiter.",
+        },
+        {
+          title: "Ein eigenes Gesicht",
+          text: "Die Vorlage gehört allen. Schrift, Farbe und Bild gehören jetzt zu diesem Produkt.",
+        },
+      ],
+    },
+
+    // --- Texts inside the fictional tool "Klaro" that both demos show
+    screen: {
+      name: "Klaro",
+      nav: ["Funktionen", "Preise", "Login"],
+      aiTitle: "Willkommen bei Klaro",
+      aiLead: "Die moderne All-in-One-Lösung für effiziente Zeiterfassung in deinem Team.",
+      aiPrimary: "Jetzt starten",
+      aiSecondary: "Mehr erfahren",
+      aiCards: [
+        { title: "Blitzschnell", text: "Erfasse deine Zeit in Sekunden, nicht in Minuten." },
+        { title: "Sicher", text: "Deine Daten sind bei uns in sicheren Händen." },
+        { title: "Intuitiv", text: "Eine Oberfläche, die keine Erklärung braucht." },
+      ],
+      title: "Stunden erfassen, ohne daran zu denken.",
+      lead: "Klaro bucht die Zeit automatisch auf das Projekt, in dem du gerade arbeitest. Für Teams, die ihre Stunden abrechnen.",
+      primary: "14 Tage kostenlos testen",
+      note: "Ohne Kreditkarte",
+      weekLabel: "Diese Woche",
+      weekTotal: "31,5 Std.",
+      days: ["Mo", "Di", "Mi", "Do", "Fr"],
+      hours: [7.5, 8, 6, 8, 2],
+      todayProject: "Läuft: Website-Relaunch",
+    },
+
+    states: {
+      title: "Nicht nur der schöne Zustand.",
+      lead: "Entwürfe zeigen fast immer den Idealfall: drei kurze Einträge, alles geladen, nichts schiefgegangen. Im Betrieb ist eine Liste leer, lädt noch, bricht ab oder bekommt Texte, die niemand vorgesehen hat. Ich entwerfe jeden Zustand mit, damit euer Team nichts erfinden muss.",
+      legend: "Zustand",
+      commonLabel: "Nur der Idealfall entworfen",
+      designedLabel: "Jeder Zustand entworfen",
+      cardTitle: "Projekte diese Woche",
+      rows: [
+        { name: "Website-Relaunch", hours: "12,5 Std." },
+        { name: "App-Redesign", hours: "6 Std." },
+        { name: "Pitch-Deck", hours: "2 Std." },
+      ],
+      longName:
+        "Relaunch der Unternehmenswebsite inklusive Barrierefreiheitsprüfung nach BFSG (Phase 2)",
+      emptyTitle: "Noch keine Projekte",
+      emptyText: "Leg ein Projekt an, dann landen deine Stunden hier.",
+      emptyAction: "Projekt anlegen",
+      errorRaw: "Error: Request failed with status 500",
+      errorTitle: "Die Projekte konnten nicht geladen werden",
+      errorText: "Deine Stunden sind gespeichert. Versuch es gleich noch einmal.",
+      errorAction: "Erneut laden",
+      loading: "Loading…",
+      items: [
+        {
+          key: "normal",
+          label: "Normal",
+          why: "So wird ein Entwurf gezeigt und abgenommen: drei Einträge, kurze Namen, alles da. In diesem Zustand sehen beide gut aus.",
+        },
+        {
+          key: "loading",
+          label: "Lädt",
+          why: "Links ein englisches Wort auf leerer Fläche. Rechts zeigen Platzhalter, dass etwas kommt und wie viel. Die Seite wirkt schneller, obwohl sie es nicht ist.",
+        },
+        {
+          key: "empty",
+          label: "Leer",
+          why: "Links ein leerer Kasten, der aussieht wie ein Fehler. Rechts steht, warum hier nichts ist, und der erste Schritt steht gleich daneben.",
+        },
+        {
+          key: "error",
+          label: "Fehler",
+          why: "Links eine Meldung aus dem Code, die niemandem hilft. Rechts steht, was passiert ist, dass nichts verloren ist, und was man tun kann.",
+        },
+        {
+          key: "long",
+          label: "Langer Text",
+          why: "Links schiebt ein langer Name die Stunden aus dem Bild. Rechts bricht er um und wird nach zwei Zeilen gekürzt. Echte Namen sind länger als die im Entwurf.",
+        },
+      ],
+    },
+
+    services: {
+      title: "So kann ich helfen",
+      lead: "Das ganze Design oder genau das Stück, das fehlt.",
+      items: [
+        {
+          title: "Gestalten",
+          text: "Neue Produkte und Funktionen, von den ersten Abläufen bis zum klickbaren Prototyp in Figma. Mit allen Zuständen, nicht nur dem schönen.",
+        },
+        {
+          title: "Nachschärfen",
+          text: "Dein Produkt läuft, vielleicht aus einer KI-Vorlage. Es bekommt eine klare Ordnung und ein eigenes Gesicht, ohne dass ihr von vorn anfangt.",
+        },
+        {
+          title: "Designsystem",
+          text: "Farben, Schrift, Abstände und Bausteine als feste Regeln. Damit Figma und Code dasselbe sprechen und dein Team nicht jeden Button neu erfindet.",
+        },
+      ],
+    },
+
+    process: {
+      title: "So kann es ablaufen",
+      lead: "Ein Beispiel. Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab.",
+      steps: [
+        {
+          title: "Kennenlernen",
+          text: "Du zeigst mir dein Produkt oder deine Idee und erzählst, wer es nutzt.",
+          outcome: "Danach weißt du, ob ich helfen kann.",
+        },
+        {
+          title: "Verstehen",
+          text: "Ich gehe durch, was Nutzer tun wollen und wo sie heute hängen bleiben.",
+          outcome: "Wir wissen, welche Screens zählen.",
+        },
+        {
+          title: "Gestalten",
+          text: "Ich entwerfe in Figma, mit jedem Zustand, und zeige dir früh Zwischenstände.",
+          outcome: "Du bekommst einen klickbaren Prototyp.",
+        },
+        {
+          title: "Übergeben",
+          text: "Entwurf, Zustände und Tokens gehen an dein Team, mit Erklärung. Wenn du willst, baue ich mit.",
+          outcome: "Dein Team kann loslegen.",
+        },
+      ],
+    },
+
+    oneHand: {
+      title: "Design, das sich bauen lässt",
+      body: "Ich entwickle selbst Frontends. Deshalb weiß ich, **wie weit ein Entwurf gehen darf**: so weit, dass Entwickler ins Schwitzen kommen, aber **nie so weit, dass er im Code nicht hält**. Und wenn beim Bauen jemand fehlt, bin ich da.",
+      portraitAlt: "Ercan Cicek",
+    },
+
+    faq: {
+      title: "Häufige Fragen",
+      items: [
+        {
+          question: "Unser Produkt ist mit KI gebaut. Lohnt sich Design dann noch?",
+          answer:
+            "Ja, und die Vorlage ist dafür ein guter Start. Das Werkzeug nimmt dir das Grundgerüst ab. Was es dir nicht abnimmt, sind die Entscheidungen: was zuerst zählt, was weg kann und wie dein Produkt aussieht. Wir bauen auf dem auf, was schon da ist.",
+        },
+        {
+          question: "Arbeitest du mit unserem Designsystem?",
+          answer:
+            "Ja. Ich arbeite mit dem, was da ist, und erweitere es, wo etwas fehlt. Gibt es noch keins, legen wir die Grundlagen gemeinsam an.",
+        },
+        {
+          question: "Was kostet ein Projekt?",
+          answer:
+            "Das hängt vom Umfang ab: wie viele Screens und Abläufe es sind und ob ein Designsystem dazugehört. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
+        },
+        {
+          question: "Ist Barrierefreiheit mit drin?",
+          answer:
+            "Ja, von Anfang an. Kontraste, Schriftgrößen, Fokus und Zustände plane ich direkt mit, so muss später nichts nachgerüstet werden.",
+        },
+      ],
+    },
+
+    contact: {
+      title: "Lass uns über dein Produkt sprechen.",
+      body: "Schick mir einen Link oder ein paar Screenshots. Im ersten Gespräch schauen wir gemeinsam drauf, unverbindlich und kostenlos.",
+    },
+  },
+
   accessibility: {
     meta: {
       title: "Barrierefreiheit prüfen und umsetzen nach BFSG | Ercan Cicek",

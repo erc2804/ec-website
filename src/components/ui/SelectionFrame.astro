@@ -1,0 +1,418 @@
+---
+// --- The selection frame of a design tool around whatever it wraps: a thin
+// blue outline, four corner handles, the sizing chip under it, and at the top
+// right the property row that names the content's colour token. Quoted the
+// way ScreenReaderCaption quotes VoiceOver: decoration for sighted readers,
+// hidden from assistive technology, the content inside stays real.
+//
+// On load it plays a few seconds of work, the way design tools show a
+// collaborator: the content rises in (ec-rise on the wrapper) in the
+// faint tertiary text colour. Pixel-Ercan's cursor glides in and clicks the
+// content, the frame snaps around it. He moves up to the property row and
+// clicks it, a small style picker opens. He picks the primary token: the row
+// changes, the content turns dark, the picker closes, and he drifts off.
+// Under reduced motion there is no cursor and no picker, only the frame and
+// the final state.
+//
+// The cursor's stops are measured by the script, so the path holds at any
+// size of the content.
+interface Props {
+  /** --- What the sizing chip says, as the tool would put it --- */
+  label: string
+  /** --- The name on the cursor's tag --- */
+  cursorName: string
+  /** --- The colour tokens: the row starts on the first, the picker lists all
+       three, the pick is the last --- */
+  tokenBefore: string
+  tokenMiddle: string
+  tokenAfter: string
+  class?: string
+}
+
+import ToolCursor from "./ToolCursor.astro"
+
+const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: additionalClasses } = Astro.props
+---
+
+<span class:list={["ec-selection relative block w-fit", additionalClasses]}>
+  <!-- --- Own wrapper for the colour: the outer one carries ec-rise, and two
+       animations cannot share one element -->
+  <span class="ec-selection-content block">
+    <slot />
+  </span>
+
+  <span class="ec-selection-frame pointer-events-none absolute -inset-x-3 -inset-y-2" aria-hidden="true">
+    <span class="ec-selection-handle -top-1 -left-1" style="--ec-handle-order: 0"></span>
+    <span class="ec-selection-handle -top-1 -right-1" style="--ec-handle-order: 1"></span>
+    <span class="ec-selection-handle -right-1 -bottom-1" style="--ec-handle-order: 2"></span>
+    <span class="ec-selection-handle -bottom-1 -left-1" style="--ec-handle-order: 3"></span>
+    <span class="ec-selection-chip">{label}</span>
+  </span>
+
+  <!-- --- The property row, as the tool's panel shows a fill: a swatch and the
+       token. Both states are in the DOM, one fades into the other. -->
+  <span class="ec-selection-token pointer-events-none" aria-hidden="true">
+    <span class="ec-selection-token-before">
+      <i class="ec-selection-swatch" style="background: var(--color-typo-low)"></i>{tokenBefore}
+    </span>
+    <span class="ec-selection-token-after">
+      <i class="ec-selection-swatch" style="background: var(--color-typo-high)"></i>{tokenAfter}
+    </span>
+  </span>
+
+  <!-- --- The style picker that opens under the row -->
+  <span class="ec-selection-picker pointer-events-none" aria-hidden="true">
+    <span class="ec-selection-option" data-is-current="true">
+      <i class="ec-selection-swatch" style="background: var(--color-typo-low)"></i>{tokenBefore}
+    </span>
+    <span class="ec-selection-option">
+      <i class="ec-selection-swatch" style="background: var(--color-typo-medium)"></i>{tokenMiddle}
+    </span>
+    <span class="ec-selection-option ec-selection-option-target">
+      <i class="ec-selection-swatch" style="background: var(--color-typo-high)"></i>{tokenAfter}
+    </span>
+  </span>
+
+  <ToolCursor name={cursorName} class="ec-selection-cursor" />
+</span>
+
+<style>
+  /* --- Figma's selection blue, a shade darker so the chip text reaches 4.5:1.
+     It quotes the tool, not the brand. --- */
+  .ec-selection {
+    --ec-selection-color: #1272c2;
+    /* --- The timeline, all from the moment the rise of the content has
+       settled: the three clicks, the picker, the exit --- */
+    --ec-start: 500ms;
+    --ec-click-select: calc(var(--ec-start) + 1000ms);
+    --ec-click-row: calc(var(--ec-start) + 1900ms);
+    --ec-click-pick: calc(var(--ec-start) + 2800ms);
+    /* --- Everything is over after 4.2 s: moving content under five seconds
+       needs no pause control (WCAG 2.2.2) --- */
+    --ec-path: 3700ms;
+    /* --- The cursor's stops, set by the script: off the page, on the content,
+       on the property row, on the picked option --- */
+    --ec-p0-x: 12rem;
+    --ec-p0-y: 7rem;
+    --ec-p1-x: 70%;
+    --ec-p1-y: 75%;
+    --ec-p2-x: 100%;
+    --ec-p2-y: 0%;
+    --ec-p3-x: 100%;
+    --ec-p3-y: 10%;
+  }
+
+  /* --- Nothing moves before the script has measured the stops. Chrome
+     snapshots the cursor's keyframes when the animation starts, so the stops
+     have to be in place first. --- */
+  .ec-selection:not([data-is-ready]) :global(*) {
+    animation-name: none;
+  }
+
+  /* --- The content inherits this: grey until the pick, then dark --- */
+  .ec-selection-content {
+    color: var(--color-typo-low);
+    /* Like in Figma: the color flips, it does not fade. */
+    animation: ec-selection-ink 1ms linear calc(var(--ec-click-pick) + 80ms) forwards;
+  }
+
+  .ec-selection-frame {
+    box-shadow: 0 0 0 1.5px var(--ec-selection-color);
+    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select) backwards;
+  }
+
+  .ec-selection-handle {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 1.5px solid var(--ec-selection-color);
+    background: #ffffff;
+    animation: ec-selection-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1)
+      calc(var(--ec-click-select) + 60ms + var(--ec-handle-order) * 45ms) backwards;
+  }
+
+  .ec-selection-chip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: 0.375rem;
+    translate: -50% 0;
+    border-radius: 0.25rem;
+    background: var(--ec-selection-color);
+    padding: 0.125rem 0.375rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: #ffffff;
+    animation: ec-selection-drop 400ms cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--ec-click-select) + 320ms)
+      backwards;
+  }
+
+  /* --- The property row and the picker: the tool's panel, in mono --- */
+  .ec-selection-token,
+  .ec-selection-picker {
+    position: absolute;
+    right: -0.75rem;
+    border: 1px solid var(--color-gray-low);
+    border-radius: 0.375rem;
+    background: var(--color-gray-min);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: var(--color-typo-high);
+    box-shadow: var(--shadow-island);
+  }
+
+  /* --- The row belongs to the selection: it appears with the frame --- */
+  .ec-selection-token {
+    bottom: calc(100% + 1rem);
+    display: grid;
+    padding: 0.25rem 0.5rem;
+    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select) backwards;
+  }
+
+  .ec-selection-token > span,
+  .ec-selection-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .ec-selection-token > span {
+    grid-area: 1 / 1;
+  }
+
+  .ec-selection-swatch {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid rgb(0 0 0 / 0.1);
+    border-radius: 0.1875rem;
+  }
+
+  .ec-selection-token-before {
+    animation: ec-token-out 300ms ease calc(var(--ec-click-pick) + 100ms) forwards;
+  }
+
+  .ec-selection-token-after {
+    opacity: 0;
+    animation: ec-token-in 300ms ease calc(var(--ec-click-pick) + 100ms) forwards;
+  }
+
+  /* --- The picker hangs under the row, opens with the second click, closes
+     with the third --- */
+  .ec-selection-picker {
+    top: calc(-1rem + 0.25rem);
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    opacity: 0;
+    transform-origin: top right;
+    animation:
+      ec-picker-open 200ms cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--ec-click-row) + 60ms) forwards,
+      ec-picker-close 200ms ease calc(var(--ec-click-pick) + 150ms) forwards;
+  }
+
+  .ec-selection-option {
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .ec-selection-option[data-is-current="true"] {
+    background: var(--color-gray-subtle);
+  }
+
+  .ec-selection-option-target {
+    animation: ec-option-hover 150ms ease calc(var(--ec-click-pick) - 150ms) forwards;
+  }
+
+  /* --- The cursor: one path through all three stops, dips at each click,
+     drifts off at the end --- */
+  .ec-selection :global(.ec-selection-cursor) {
+    opacity: 0;
+    animation: ec-cursor-path var(--ec-path) cubic-bezier(0.45, 0, 0.2, 1) var(--ec-start) forwards;
+  }
+
+  .ec-selection :global(.ec-selection-cursor .ec-cursor-arrow) {
+    animation: ec-cursor-clicks var(--ec-path) ease-in-out var(--ec-start) both;
+  }
+
+  /* --- Percentages of the 3700ms path: 1000 select, 1900 row, 2800 pick,
+     3200 leave. The path moves left and top, not translate: Chrome runs
+     translate on the compositor and freezes the var() stops at the start,
+     which put the cursor off its marks. --- */
+  @keyframes ec-cursor-path {
+    0% {
+      opacity: 0;
+      left: var(--ec-p0-x);
+      top: var(--ec-p0-y);
+    }
+    6% {
+      opacity: 1;
+    }
+    27%,
+    36% {
+      opacity: 1;
+      left: var(--ec-p1-x);
+      top: var(--ec-p1-y);
+    }
+    51.4%,
+    59% {
+      left: var(--ec-p2-x);
+      top: var(--ec-p2-y);
+    }
+    75.7%,
+    86.5% {
+      opacity: 1;
+      left: var(--ec-p3-x);
+      top: var(--ec-p3-y);
+    }
+    100% {
+      opacity: 0;
+      left: calc(var(--ec-p3-x) + 3rem);
+      top: calc(var(--ec-p3-y) + 2rem);
+    }
+  }
+
+  @keyframes ec-cursor-clicks {
+    25%,
+    29%,
+    49.4%,
+    53.4%,
+    73.7%,
+    77.7% {
+      scale: 1;
+    }
+    27%,
+    51.4%,
+    75.7% {
+      scale: 0.82;
+    }
+  }
+
+  @keyframes ec-selection-ink {
+    to {
+      color: var(--color-typo-high);
+    }
+  }
+
+  @keyframes ec-selection-snap {
+    from {
+      opacity: 0;
+      scale: 1.02;
+    }
+  }
+
+  @keyframes ec-selection-pop {
+    from {
+      scale: 0;
+    }
+  }
+
+  @keyframes ec-selection-drop {
+    from {
+      opacity: 0;
+      translate: -50% -0.5rem;
+    }
+  }
+
+  @keyframes ec-token-out {
+    to {
+      opacity: 0;
+      translate: 0 -0.25rem;
+    }
+  }
+
+  @keyframes ec-token-in {
+    from {
+      opacity: 0;
+      translate: 0 0.25rem;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes ec-picker-open {
+    from {
+      opacity: 0;
+      scale: 0.96;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes ec-picker-close {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ec-option-hover {
+    to {
+      background: var(--color-brand-blue);
+      color: #ffffff;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ec-selection-content {
+      color: var(--color-typo-high);
+      animation: none;
+    }
+
+    .ec-selection-frame,
+    .ec-selection-handle,
+    .ec-selection-chip,
+    .ec-selection-token {
+      animation: none;
+    }
+
+    .ec-selection-token > .ec-selection-token-before,
+    .ec-selection-picker {
+      display: none;
+    }
+
+    .ec-selection-token-after {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // --- Measure the cursor's stops before the path starts: the tip of the arrow
+  // lands on the last line of the content, on the property row, and on the
+  // picked option. Everything is relative to the wrapper's top left corner.
+  for (const selection of document.querySelectorAll<HTMLElement>(".ec-selection")) {
+    const place = () => {
+      const origin = selection.getBoundingClientRect()
+      const content = selection.querySelector<HTMLElement>(".ec-selection-content")!.getBoundingClientRect()
+      const token = selection.querySelector<HTMLElement>(".ec-selection-token")!.getBoundingClientRect()
+      const option = selection
+        .querySelector<HTMLElement>(".ec-selection-option-target")!
+        .getBoundingClientRect()
+      const at = (name: string, x: number, y: number) => {
+        selection.style.setProperty(`--ec-${name}-x`, `${Math.round(x - origin.left)}px`)
+        selection.style.setProperty(`--ec-${name}-y`, `${Math.round(y - origin.top)}px`)
+      }
+      at("p0", origin.right + 160, origin.bottom + 120)
+      at("p1", content.left + content.width * 0.72, content.top + content.height * 0.8)
+      at("p2", token.left + token.width * 0.55, token.top + token.height * 0.55)
+      at("p3", option.left + option.width * 0.5, option.top + option.height * 0.55)
+    }
+    const start = () => {
+      place()
+      selection.dataset.isReady = "true"
+    }
+    place()
+    // Fonts change the line breaks, so wait for them, but not forever.
+    Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(start)
+    new ResizeObserver(place).observe(selection)
+  }
+</script>
