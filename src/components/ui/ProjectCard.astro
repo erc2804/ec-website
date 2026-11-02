@@ -1,56 +1,89 @@
 ---
-// --- The portfolio card from the previous site: a coloured surface by project
-// type, the mockup lifting on hover, a white strip with name and one sentence
-// on what I did there.
-import type { ProjectType } from "../../data/projects"
+// --- The project card, built like the offer cards on the start page: a
+// coloured panel on top, the colour of the project's main offer, with the
+// mockup cropped at the bottom and lifting on hover; below it a white body
+// with the name as the link, one sentence on the work and, at the bottom, the
+// offers the project touched with the arrow that moves on hover. Only the
+// arrow turns green on hover: the small text would not keep its contrast. The same
+// card on the start page and in the portfolio. Without a picture the panel
+// stands empty.
+//
+// Card pattern from Inclusive Components: the link is the title only, so its
+// name stays short and the title is a real heading. Its ::after stretches over
+// the whole card for the click target. The ring sits on the card, in the
+// card's own shape.
+import { IconArrowRight } from "@tabler/icons-astro"
+import type { Service } from "../../data/projects"
+import { offerSurfaceClasses } from "./offerSurfaceClasses"
 
 interface Props {
   href: string
-  /** --- Ties the summary to the link, so it is read after the name --- */
-  slug: string
   label: string
-  type: ProjectType
-  image: string
+  image?: string
   summary: string
-  /** --- Spoken instead of the visible name, e.g. "Go to project: KONUX" --- */
-  ariaLabel?: string
+  /** --- The project's main offer, colours the panel --- */
+  mainService: Service
+  /** --- All offers the project touched, already translated --- */
+  services: string[]
+  /** --- h3 under a section heading, h2 under the page heading --- */
+  headingLevel?: 2 | 3
   class?: string
 }
 
-const { href, slug, label, type, image, summary, ariaLabel, class: additionalClasses } = Astro.props
-const summaryId = `project-summary-${slug}`
+const {
+  href,
+  label,
+  image,
+  summary,
+  mainService,
+  services,
+  headingLevel = 3,
+  class: additionalClasses,
+} = Astro.props
 
-const surfaceClasses: Record<ProjectType, string> = {
-  web: "bg-brand-green-medium",
-  app: "bg-brand-green-high",
-  shop: "bg-brand-green-low",
-  other: "bg-brand-blue",
-}
+const Heading = `h${headingLevel}` as "h2" | "h3"
 ---
 
-<a
-  href={href}
-  aria-label={ariaLabel}
-  aria-describedby={ariaLabel ? summaryId : undefined}
+<div
   class:list={[
-    "group relative block aspect-[3/4] overflow-hidden rounded-3xl no-underline shadow-sm transition-shadow lg:hover:shadow-lg",
-    surfaceClasses[type],
+    "group relative flex h-full flex-col overflow-hidden rounded-3xl bg-gray-min shadow-sm transition-shadow has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-brand-green-high lg:hover:shadow-lg",
     additionalClasses,
   ]}
 >
-  <img
-    src={image}
-    alt=""
-    width="1413"
-    height="2916"
-    loading="lazy"
-    class="size-full object-contain pt-6 transition-transform lg:group-hover:-translate-y-3"
-  />
   <span
-    class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gray-min px-4 pt-4 pb-5"
-    aria-hidden={ariaLabel ? "true" : undefined}
+    class:list={["relative block aspect-[5/4] overflow-hidden", offerSurfaceClasses[mainService]]}
+    aria-hidden="true"
+    inert
   >
-    <span class="text-heading-2 text-brand-green-high">{label}</span>
-    <span id={summaryId} class="line-clamp-2 text-typo-medium">{summary}</span>
+    {
+      image && (
+        <img
+          src={image}
+          alt=""
+          width="1413"
+          height="2916"
+          loading="lazy"
+          class="absolute inset-x-0 top-7 mx-auto w-[50%] drop-shadow-xl transition-transform duration-300 group-has-[a:focus-visible]:-translate-y-2 lg:group-hover:-translate-y-2"
+        />
+      )
+    }
   </span>
-</a>
+  <div class="flex flex-1 flex-col gap-3 p-6 md:p-7">
+    <Heading class="text-heading-2 text-brand-green-high">
+      <a
+        href={href}
+        class="no-underline outline-none after:absolute after:inset-0 after:content-['']"
+      >
+        {label}
+      </a>
+    </Heading>
+    <p class="text-typo-medium">{summary}</p>
+    <p class="mt-auto flex items-center justify-between gap-3 pt-4 text-sm text-typo-medium">
+      {services.join(", ")}
+      <IconArrowRight
+        class="size-5 shrink-0 transition-[transform,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high"
+        aria-hidden="true"
+      />
+    </p>
+  </div>
+</div>

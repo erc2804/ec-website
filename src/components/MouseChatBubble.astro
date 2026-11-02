@@ -3,19 +3,21 @@
 // over. It only appears inside areas marked data-chat-zone; everywhere else it
 // steps aside, so a new section stays quiet unless it asks for him. He says the
 // nearest data-chat above the cursor: a zone carries a default line for all of
-// it, an element inside with its own line wins there. data-chat-mute
-// sends him away again (e.g. a control someone is operating). While a popover
-// is open he steps aside too. Pointer only: on touch there is
-// no cursor to follow, and a bubble parked in a corner would cost screen space
-// for a gimmick. Decorative throughout, so hidden from assistive technology.
+// it, an element inside with its own line wins there. data-chat-mute sends him
+// away again (e.g. a control someone is operating). While a popover is open, or
+// the cursor is outside the window, he steps aside too. Pointer only: on touch
+// there is no cursor to follow, and a bubble parked in a corner would cost
+// screen space for a gimmick. Decorative throughout, so hidden from assistive
+// technology.
 import { useTranslations } from "../i18n"
 
 const t = useTranslations(Astro.currentLocale).chatBubble
 ---
 
 <div
-  class="ec-chat-bubble pointer-events-none fixed z-50 hidden flex-col items-end gap-1"
+  class="ec-chat-bubble group pointer-events-none fixed z-50 hidden w-max flex-col items-end gap-1"
   data-starter={t.starter}
+  data-is-on-dark="true"
   aria-hidden="true"
   inert
 >
@@ -25,14 +27,18 @@ const t = useTranslations(Astro.currentLocale).chatBubble
     <img src="/images/pixelcan.png" alt="" width="40" height="40" class="size-full" />
   </div>
   <div
-    class="ec-chat-text flex min-h-6 max-w-50 items-center rounded-xl bg-brand-sand px-2 pt-px text-sm text-typo-high opacity-0 transition-opacity duration-500"
+    class="ec-chat-text flex min-h-6 max-w-50 items-center rounded-xl bg-brand-sand px-2 pt-px text-sm text-typo-high opacity-0 [transition:opacity_500ms,background-color_300ms,color_300ms] group-data-[is-on-dark=false]:bg-gray-max/85 group-data-[is-on-dark=false]:text-brand-sand"
   >
     <span class="ec-chat-message"></span>
     <span class="ec-chat-typing hidden items-center gap-1 py-2">
-      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high"></span>
-      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:150ms]"
+      <span
+        class="size-1.5 animate-bounce rounded-full bg-brand-green-high group-data-[is-on-dark=false]:bg-brand-green-medium"
       ></span>
-      <span class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:300ms]"
+      <span
+        class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:150ms] group-data-[is-on-dark=false]:bg-brand-green-medium"
+      ></span>
+      <span
+        class="size-1.5 animate-bounce rounded-full bg-brand-green-high [animation-delay:300ms] group-data-[is-on-dark=false]:bg-brand-green-medium"
       ></span>
     </span>
   </div>
@@ -62,149 +68,155 @@ const t = useTranslations(Astro.currentLocale).chatBubble
     const message = bubble.querySelector<HTMLElement>(".ec-chat-message")!
     const typing = bubble.querySelector<HTMLElement>(".ec-chat-typing")!
 
-    let currentMessage = bubble.dataset.starter ?? ""
-    let isVisible = false
-    let hasArrived = false
-    let isMuted = false
-    let isStarterPinned = true
+    // --- waiting: not arrived yet. starter: the opener is being read and
+    // nothing replaces it. live: he comments on what the cursor is over.
+    let phase: "waiting" | "starter" | "live" = "waiting"
+    let isShown = false
+    let shownMessage = bubble.dataset.starter ?? ""
+    let wantedMessage = shownMessage
     let isTyping = false
-    let pendingMessage: string | null = null
-
-    message.textContent = currentMessage
-
-    let lastPointer: { x: number; y: number } | null = null
+    let typingTimer = 0
+    let pointer: { x: number; y: number } | null = null
+    let hasMoved = false
     let lineZone: HTMLElement | null = null
     let hasElementLine = false
 
-    // --- Shows only inside a zone and leaves everywhere else; inside a zone it
-    // picks up the message of what it is over.
-    const react = (target: EventTarget | null) => {
-      if (!(target instanceof Element)) return
+    message.textContent = shownMessage
 
-      const shouldMute =
-        target.closest("[data-chat-zone]") === null ||
+    // --- The bubble is as wide as its line, never squeezed by the edge. The
+    // clamp uses that width, so he stops short of the left edge instead, and
+    // a longer line arriving there pushes him back in.
+    const place = () => {
+      if (!pointer) return
+      const avatarSize = 40
+      const safeSpace = 12
+      // --- top and right of a fixed element count from the viewport without
+      // its scrollbar, which innerWidth would include
+      const { clientWidth: viewportWidth, clientHeight: viewportHeight } = document.documentElement
+      const maxTop = viewportHeight - bubble.offsetHeight - 64
+      const maxRight = viewportWidth - bubble.offsetWidth - 3
+
+      const top = Math.min(Math.max(80, pointer.y - avatarSize / 2), maxTop)
+      const right = Math.min(
+        Math.max(0, viewportWidth - pointer.x - avatarSize - safeSpace * 2),
+        maxRight
+      )
+
+      bubble.style.top = `${top}px`
+      bubble.style.right = `${right}px`
+    }
+
+    // --- Arriving and leaving are the same motion, one the reverse of the
+    // other. In: the avatar turns and grows, then the line fades in behind it.
+    // Out: the line fades first, then the avatar turns back and shrinks away.
+    const setShown = (shouldShow: boolean) => {
+      if (shouldShow === isShown) return
+      isShown = shouldShow
+      avatar.style.transitionDelay = shouldShow ? "0ms" : "300ms"
+      // --- Listed per transitioned property: only the fade waits, a change of
+      // ground recolours the line at once
+      text.style.transitionDelay = shouldShow ? "300ms, 0ms, 0ms" : "0ms"
+      avatar.classList.toggle("-rotate-90", !shouldShow)
+      avatar.classList.toggle("scale-0", !shouldShow)
+      text.classList.toggle("opacity-0", !shouldShow)
+    }
+
+    const showWantedMessage = () => {
+      window.clearTimeout(typingTimer)
+      isTyping = false
+      shownMessage = wantedMessage
+      message.textContent = shownMessage
+      typing.classList.add("hidden")
+      typing.classList.remove("flex")
+      message.classList.remove("hidden")
+      place()
+    }
+
+    // --- No queue: whatever the cursor points at while he types replaces the
+    // line he is typing, and when the dots end he says only the latest one.
+    const say = (next: string, isInstant: boolean) => {
+      wantedMessage = next
+      if (isInstant) return showWantedMessage()
+      if (isTyping || next === shownMessage) return
+      isTyping = true
+      message.classList.add("hidden")
+      typing.classList.remove("hidden")
+      typing.classList.add("flex")
+      place()
+      typingTimer = window.setTimeout(showWantedMessage, 1000)
+    }
+
+    // --- Everything is read again from what lies under the cursor right now,
+    // so no earlier event can leave him in a stale state. He shows only
+    // inside a zone, and says the nearest data-chat above the cursor.
+    const react = (target: Element | null) => {
+      if (!target) return
+
+      const zone = target.closest<HTMLElement>("[data-chat-zone]")
+      const isMuted =
+        zone === null ||
         target.closest("[data-chat-mute]") !== null ||
         document.querySelector(":popover-open") !== null
 
       // --- Once something inside a zone gave him a line, the zone's own default
       // stays quiet until he leaves the zone. Otherwise every gap between two
       // elements would flip him back and he would be typing all the time.
-      const zone = target.closest<HTMLElement>("[data-chat-zone]")
       const source = target.closest<HTMLElement>("[data-chat]")
       const isZoneDefault = source !== null && source === zone
-      if (shouldMute || zone !== lineZone) {
-        lineZone = shouldMute ? null : zone
+      if (isMuted || zone !== lineZone) {
+        lineZone = isMuted ? null : zone
         hasElementLine = false
       }
       if (source && !isZoneDefault) hasElementLine = true
       const line = isZoneDefault && hasElementLine ? undefined : source?.dataset.chat
 
-      if (shouldMute !== isMuted) {
-        isMuted = shouldMute
-        if (hasArrived) {
-          if (isMuted) leave()
-          else {
-            // --- Coming back, he already knows where he is: the line of this
-            // spot is in place before he fades in, no typing for an old one.
-            if (line && !isStarterPinned) placeMessage(line)
-            arrive()
-          }
-        }
+      // --- Sand on dark ground, and on light ground the dark of the tooltips in
+      // the offer cards, so he stays readable everywhere. ec-on-dark marks the
+      // dark surfaces, the header carries data-is-on-dark over a dark hero.
+      if (!isMuted) {
+        const isOnDark = target.closest(".ec-on-dark, [data-is-on-dark='true']") !== null
+        bubble.dataset.isOnDark = String(isOnDark)
       }
-      if (isMuted) return
 
-      if (line) setMessage(line)
+      if (phase === "waiting") return
+      const isComingBack = !isShown && !isMuted
+      setShown(!isMuted)
+
+      // --- Coming back, he already knows where he is: the line of this spot is
+      // in place before he fades in, no typing for an old one.
+      if (phase === "live" && !isMuted && line) say(line, isComingBack)
     }
 
-    // --- Arriving and leaving are the same motion, one the reverse of the
-    // other. In: the avatar turns and grows, then the line fades in behind it.
-    // Out: the line fades first, then the avatar turns back and shrinks away.
-    const arrive = () => {
-      avatar.style.transitionDelay = "0ms"
-      text.style.transitionDelay = "300ms"
-      avatar.classList.remove("-rotate-90", "scale-0")
-      text.classList.remove("opacity-0")
+    const reactAtPointer = () => {
+      if (pointer) react(document.elementFromPoint(pointer.x, pointer.y))
     }
 
-    const leave = () => {
-      text.style.transitionDelay = "0ms"
-      avatar.style.transitionDelay = "300ms"
-      text.classList.add("opacity-0")
-      avatar.classList.add("-rotate-90", "scale-0")
-    }
-
-    const show = () => {
-      if (isVisible) return
-      isVisible = true
-      // --- Arrives after a moment, and the opener stays long enough to be read
+    // --- Arrives after a moment, and the opener stays long enough to be read.
+    // Anything pointed at before that is gone, not saved for later.
+    const arriveLater = () => {
       window.setTimeout(() => {
-        hasArrived = true
-        if (!isMuted) arrive()
-        window.setTimeout(() => {
-          isStarterPinned = false
-          if (pendingMessage) setMessage(pendingMessage)
-        }, 1500)
+        phase = "starter"
+        reactAtPointer()
+        window.setTimeout(() => (phase = "live"), 1500)
       }, 2000)
     }
 
-    // --- Bumped by placeMessage, so a typing round still running cannot
-    // overwrite the line that was placed after it started
-    let messageRound = 0
-
-    const placeMessage = (next: string) => {
-      messageRound += 1
-      isTyping = false
-      pendingMessage = null
-      currentMessage = next
-      message.textContent = next
-      typing.classList.add("hidden")
-      typing.classList.remove("flex")
-      message.classList.remove("hidden")
-    }
-
-    const setMessage = (next: string) => {
-      if (next === currentMessage) return
-      if (isStarterPinned || isTyping) {
-        pendingMessage = next
-        return
-      }
-      isTyping = true
-      pendingMessage = null
-      const round = messageRound
-      message.classList.add("hidden")
-      typing.classList.remove("hidden")
-      typing.classList.add("flex")
-      window.setTimeout(() => {
-        if (round !== messageRound) return
-        currentMessage = next
-        message.textContent = next
-        typing.classList.add("hidden")
-        typing.classList.remove("flex")
-        message.classList.remove("hidden")
-        isTyping = false
-        if (pendingMessage) setMessage(pendingMessage)
-      }, 1000)
-    }
-
     document.addEventListener("mousemove", (event: MouseEvent) => {
-      const avatarSize = 40
-      const safeSpace = 12
-      const maxTop = window.innerHeight - bubble.offsetHeight - 64
-      const maxRight = window.innerWidth - bubble.offsetWidth - 3
+      pointer = { x: event.clientX, y: event.clientY }
+      place()
+      if (!hasMoved) {
+        hasMoved = true
+        arriveLater()
+      }
+      react(event.target instanceof Element ? event.target : null)
+    })
 
-      const top = Math.min(Math.max(80, event.clientY - avatarSize / 2), maxTop)
-      const right = Math.min(
-        Math.max(0, window.innerWidth - event.clientX - avatarSize - safeSpace * 2),
-        maxRight
-      )
-
-      bubble.style.top = `${top}px`
-      bubble.style.right = `${right}px`
-
-      show()
-
-      lastPointer = { x: event.clientX, y: event.clientY }
-      react(event.target)
+    // --- The cursor left the window: he leaves too instead of waiting at the
+    // edge, and comes back with the next move inside.
+    document.addEventListener("mouseout", (event: MouseEvent) => {
+      if (event.relatedTarget !== null) return
+      pointer = null
+      setShown(false)
     })
 
     // --- Scrolling moves the page under a resting cursor, so a muted section
@@ -213,11 +225,11 @@ const t = useTranslations(Astro.currentLocale).chatBubble
     window.addEventListener(
       "scroll",
       () => {
-        if (!lastPointer || isScrollPending) return
+        if (!pointer || isScrollPending) return
         isScrollPending = true
         requestAnimationFrame(() => {
           isScrollPending = false
-          if (lastPointer) react(document.elementFromPoint(lastPointer.x, lastPointer.y))
+          reactAtPointer()
         })
       },
       { passive: true }

@@ -12,6 +12,8 @@ interface Props {
   hasStructuredData?: boolean
   /** --- Key in the route table. Required for hreflang, since slugs are localised. --- */
   routeKey?: RouteKey
+  /** --- Path below the route, same in both languages --- */
+  subPath?: string
 }
 
 const {
@@ -21,6 +23,7 @@ const {
   isNoindex = false,
   hasStructuredData = false,
   routeKey,
+  subPath = "",
 } = Astro.props
 
 const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
@@ -31,8 +34,12 @@ const shareImageUrl = new URL(shareImage, siteConfig.url).href
 // --- Slugs differ per language, so alternates come from the route table.
 // No key means no reliable counterpart, and hreflang is left out entirely.
 const alternates = routeKey ? routes[routeKey] : undefined
-const germanUrl = alternates ? new URL(alternates.de, siteConfig.url).href : undefined
-const englishUrl = alternates ? new URL(alternates.en, siteConfig.url).href : undefined
+const germanUrl = alternates
+  ? new URL(`${alternates.de}${subPath}`, siteConfig.url).href
+  : undefined
+const englishUrl = alternates
+  ? new URL(`${alternates.en}${subPath}`, siteConfig.url).href
+  : undefined
 
 const personSchema = {
   "@context": "https://schema.org",

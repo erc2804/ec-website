@@ -31,9 +31,21 @@ const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
 // --- The three states beside the designed card: where each one lands and the
 // colour of its dot (empty, loading, error)
 const states = [
-  { position: "group-data-[step=3]:translate-y-[-2.75rem]", dot: "bg-gray-low", delay: "group-data-[step=3]:delay-300" },
-  { position: "group-data-[step=3]:translate-y-0", dot: "bg-brand-blue/60", delay: "group-data-[step=3]:delay-450" },
-  { position: "group-data-[step=3]:translate-y-[2.75rem]", dot: "bg-status-error-text", delay: "group-data-[step=3]:delay-600" },
+  {
+    position: "group-data-[step=3]:translate-y-[-2.75rem]",
+    dot: "bg-gray-low",
+    delay: "group-data-[step=3]:delay-300",
+  },
+  {
+    position: "group-data-[step=3]:translate-y-0",
+    dot: "bg-brand-blue/60",
+    delay: "group-data-[step=3]:delay-450",
+  },
+  {
+    position: "group-data-[step=3]:translate-y-[2.75rem]",
+    dot: "bg-status-error-text",
+    delay: "group-data-[step=3]:delay-600",
+  },
 ]
 
 // --- The lines of the code block: width and colour
@@ -86,8 +98,7 @@ const codeLines = [
         class:list={[
           "h-2.5 w-2/3 shrink-0 rounded-full bg-gray-low transition-colors group-data-[step=3]:bg-[#1c1a17] group-data-[step=4]:bg-[#1c1a17]",
           motion,
-        ]}
-      ></span>
+        ]}></span>
       <!-- the two parts that matter: marked in step 2, designed from step 3 -->
       {
         [0, 1].map(() => (
@@ -104,15 +115,13 @@ const codeLines = [
         class:list={[
           "mt-auto h-3.5 w-14 rounded-full bg-gray-low transition-colors group-data-[step=3]:bg-[#1c1a17] group-data-[step=4]:bg-[#1c1a17]",
           motion,
-        ]}
-      ></span>
+        ]}></span>
       <!-- the accent bar of the designed card -->
       <span
         class:list={[
           "absolute right-4 bottom-4 h-3.5 w-8 rounded-full bg-[#e0632f] opacity-0 transition-opacity group-data-[step=3]:opacity-100 group-data-[step=4]:opacity-100",
           motion,
-        ]}
-      ></span>
+        ]}></span>
     </span>
 
     <!-- --- Step 3: the states fan out beside the card -->
@@ -167,7 +176,13 @@ const codeLines = [
         motion,
       ]}
     >
-      <img src="/images/pixelcan.png" alt="" width="56" height="56" class="size-full rounded-full bg-brand-sand" />
+      <img
+        src="/images/pixelcan.png"
+        alt=""
+        width="56"
+        height="56"
+        class="size-full rounded-full bg-brand-sand"
+      />
       <span
         class:list={[
           "absolute -right-2 -bottom-1 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=3]:scale-100",

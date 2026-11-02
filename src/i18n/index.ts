@@ -60,8 +60,10 @@ export const localeNames = {
   en: { short: "EN", full: "English" },
 } as const satisfies Record<Locale, { short: string; full: string }>
 
-export function localisedPath(route: RouteKey, locale: Locale) {
-  return routes[route][locale]
+// --- subPath for pages below a route, such as a project under the portfolio:
+// the slug is the same in both languages, only the route in front changes.
+export function localisedPath(route: RouteKey, locale: Locale, subPath = "") {
+  return `${routes[route][locale]}${subPath}`
 }
 
 // --- "Projekt anfragen" from an offer page arrives with that topic preselected

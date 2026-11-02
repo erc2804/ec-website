@@ -4,7 +4,7 @@
 
 # --- `netlify dev` starts Astro and serves the functions next to it on :8888
 [dev]
-  command = "pnpm dev"
+  command = "pnpm astro dev"
   targetPort = 4321
   port = 8888
   framework = "#custom"

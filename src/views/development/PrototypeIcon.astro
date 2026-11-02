@@ -1,0 +1,25 @@
+---
+// --- Service icon for turning a prototype into a product: a dashed frame,
+// the sketch, and a solid one overlapping it, the product built from it.
+// Drawn on Tabler's 24 grid with its 2px stroke, so it sits well beside
+// Tabler icons.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<svg
+  class={additionalClasses}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <rect x="3" y="3" width="10" height="10" rx="2" stroke-dasharray="2.5 2.5"></rect>
+  <rect x="11" y="11" width="10" height="10" rx="2"></rect>
+</svg>

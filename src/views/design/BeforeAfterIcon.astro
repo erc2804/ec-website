@@ -1,0 +1,29 @@
+---
+// --- Service icon for reworking: a window split down the middle into before
+// and after, the "before" half tinted. Drawn on Tabler's 24 grid with its
+// 2px stroke, so it sits well beside Tabler icons.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<svg
+  class={additionalClasses}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path
+    d="M5 5h7v14H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"
+    fill="currentColor"
+    fill-opacity="0.3"
+    stroke="none"></path>
+  <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+  <path d="M12 3v18"></path>
+</svg>

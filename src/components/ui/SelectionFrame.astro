@@ -16,6 +16,11 @@
 //
 // The cursor's stops are measured by the script, so the path holds at any
 // size of the content.
+//
+// A small easter egg for the mouse: the corners show resize cursors, and a
+// corner that is dragged gives a few pixels and springs back. The layer is
+// locked. Not on touch, where it would catch the scroll, and not under
+// reduced motion.
 interface Props {
   /** --- What the sizing chip says, as the tool would put it --- */
   label: string
@@ -31,7 +36,14 @@ interface Props {
 
 import ToolCursor from "./ToolCursor.astro"
 
-const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: additionalClasses } = Astro.props
+const {
+  label,
+  cursorName,
+  tokenBefore,
+  tokenMiddle,
+  tokenAfter,
+  class: additionalClasses,
+} = Astro.props
 ---
 
 <span class:list={["ec-selection relative block w-fit", additionalClasses]}>
@@ -41,11 +53,26 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
     <slot />
   </span>
 
-  <span class="ec-selection-frame pointer-events-none absolute -inset-x-3 -inset-y-2" aria-hidden="true">
-    <span class="ec-selection-handle -top-1 -left-1" style="--ec-handle-order: 0"></span>
-    <span class="ec-selection-handle -top-1 -right-1" style="--ec-handle-order: 1"></span>
-    <span class="ec-selection-handle -right-1 -bottom-1" style="--ec-handle-order: 2"></span>
-    <span class="ec-selection-handle -bottom-1 -left-1" style="--ec-handle-order: 3"></span>
+  <span
+    class="ec-selection-frame pointer-events-none absolute -inset-x-3 -inset-y-2"
+    aria-hidden="true"
+  >
+    <span
+      class="ec-selection-handle -top-1 -left-1"
+      style="--ec-handle-order: 0"
+      data-corner="top-left"></span>
+    <span
+      class="ec-selection-handle -top-1 -right-1"
+      style="--ec-handle-order: 1"
+      data-corner="top-right"></span>
+    <span
+      class="ec-selection-handle -right-1 -bottom-1"
+      style="--ec-handle-order: 2"
+      data-corner="bottom-right"></span>
+    <span
+      class="ec-selection-handle -bottom-1 -left-1"
+      style="--ec-handle-order: 3"
+      data-corner="bottom-left"></span>
     <span class="ec-selection-chip">{label}</span>
   </span>
 
@@ -118,7 +145,38 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
 
   .ec-selection-frame {
     box-shadow: 0 0 0 1.5px var(--ec-selection-color);
-    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select) backwards;
+    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select)
+      backwards;
+    /* --- The spring back after a pulled corner, with a small overshoot --- */
+    transition-property: top, right, bottom, left;
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .ec-selection-frame[data-is-pulling="true"] {
+    transition: none;
+  }
+
+  /* --- The corners invite a drag, with a hit area larger than the 8px mark --- */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .ec-selection-handle {
+      pointer-events: auto;
+      touch-action: none;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -0.625rem;
+      }
+    }
+
+    .ec-selection-handle:is([data-corner="top-left"], [data-corner="bottom-right"]) {
+      cursor: nwse-resize;
+    }
+
+    .ec-selection-handle:is([data-corner="top-right"], [data-corner="bottom-left"]) {
+      cursor: nesw-resize;
+    }
   }
 
   .ec-selection-handle {
@@ -145,8 +203,8 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
     line-height: 1.4;
     white-space: nowrap;
     color: #ffffff;
-    animation: ec-selection-drop 400ms cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--ec-click-select) + 320ms)
-      backwards;
+    animation: ec-selection-drop 400ms cubic-bezier(0.2, 0.8, 0.2, 1)
+      calc(var(--ec-click-select) + 320ms) backwards;
   }
 
   /* --- The property row and the picker: the tool's panel, in mono --- */
@@ -170,7 +228,8 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
     bottom: calc(100% + 1rem);
     display: grid;
     padding: 0.25rem 0.5rem;
-    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select) backwards;
+    animation: ec-selection-snap 220ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--ec-click-select)
+      backwards;
   }
 
   .ec-selection-token > span,
@@ -392,8 +451,12 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
   for (const selection of document.querySelectorAll<HTMLElement>(".ec-selection")) {
     const place = () => {
       const origin = selection.getBoundingClientRect()
-      const content = selection.querySelector<HTMLElement>(".ec-selection-content")!.getBoundingClientRect()
-      const token = selection.querySelector<HTMLElement>(".ec-selection-token")!.getBoundingClientRect()
+      const content = selection
+        .querySelector<HTMLElement>(".ec-selection-content")!
+        .getBoundingClientRect()
+      const token = selection
+        .querySelector<HTMLElement>(".ec-selection-token")!
+        .getBoundingClientRect()
       const option = selection
         .querySelector<HTMLElement>(".ec-selection-option-target")!
         .getBoundingClientRect()
@@ -412,7 +475,58 @@ const { label, cursorName, tokenBefore, tokenMiddle, tokenAfter, class: addition
     }
     place()
     // Fonts change the line breaks, so wait for them, but not forever.
-    Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(start)
+    Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(
+      start
+    )
     new ResizeObserver(place).observe(selection)
+
+    // --- The easter egg: a pulled corner moves its two edges, but only a
+    // little and ever less the further it is dragged, like a rubber band. On
+    // release the frame springs back (the transition in the styles).
+    const frame = selection.querySelector<HTMLElement>(".ec-selection-frame")!
+    const canPull = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
+    )
+    const give = (distance: number) =>
+      Math.sign(distance) * 10 * (1 - Math.exp(-Math.abs(distance) / 60))
+
+    for (const handle of frame.querySelectorAll<HTMLElement>("[data-corner]")) {
+      handle.addEventListener("pointerdown", (event) => {
+        if (!canPull.matches || event.button !== 0) return
+        event.preventDefault()
+        handle.setPointerCapture(event.pointerId)
+
+        const [vertical, horizontal] = handle.dataset.corner!.split("-") as [
+          "top" | "bottom",
+          "left" | "right",
+        ]
+        const frameStyle = getComputedStyle(frame)
+        const startVertical = parseFloat(frameStyle[vertical])
+        const startHorizontal = parseFloat(frameStyle[horizontal])
+        frame.dataset.isPulling = "true"
+
+        const drag = new AbortController()
+        handle.addEventListener(
+          "pointermove",
+          (moveEvent) => {
+            const deltaX = moveEvent.clientX - event.clientX
+            const deltaY = moveEvent.clientY - event.clientY
+            const outwardY = vertical === "top" ? -deltaY : deltaY
+            const outwardX = horizontal === "left" ? -deltaX : deltaX
+            frame.style[vertical] = `${startVertical - give(outwardY)}px`
+            frame.style[horizontal] = `${startHorizontal - give(outwardX)}px`
+          },
+          { signal: drag.signal }
+        )
+        const release = () => {
+          drag.abort()
+          delete frame.dataset.isPulling
+          frame.style[vertical] = ""
+          frame.style[horizontal] = ""
+        }
+        handle.addEventListener("pointerup", release, { signal: drag.signal })
+        handle.addEventListener("pointercancel", release, { signal: drag.signal })
+      })
+    }
   }
 </script>

@@ -28,3 +28,9 @@ a crawler that may not fetch the page never sees its noindex.
 
 Each page therefore exists twice as a thin routing file — title, description, route key —
 both rendering the same view. A view may be a whole page composition, not only a section.
+
+**Pages below a route** (the project pages under the portfolio) keep the same slug in both
+languages and pass it as `subPath` next to the `routeKey`: `localisedPath` appends it, the
+language switch and hreflang follow, and the sitemap lists every project from
+`src/data/projects.ts`. The data file holds the project copy in both languages; the
+dictionaries hold only the page's own strings.

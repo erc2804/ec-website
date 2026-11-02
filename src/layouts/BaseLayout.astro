@@ -14,6 +14,8 @@ interface Props {
   isNoindex?: boolean
   hasStructuredData?: boolean
   routeKey?: RouteKey
+  /** --- Path below the route, e.g. "/konux" under the portfolio, for hreflang and the language switch --- */
+  subPath?: string
   /** --- Transparent header with light text, for a page that opens on a dark hero --- */
   isHeaderOnDark?: boolean
   /** --- Applied to <body> --- */
@@ -27,6 +29,7 @@ const {
   isNoindex,
   hasStructuredData,
   routeKey,
+  subPath,
   isHeaderOnDark = false,
   class: additionalClasses,
 } = Astro.props
@@ -50,13 +53,14 @@ const mainId = "main"
       isNoindex={isNoindex}
       hasStructuredData={hasStructuredData}
       routeKey={routeKey}
+      subPath={subPath}
     />
     <slot name="head" />
   </head>
   <body class:list={[additionalClasses]}>
     <SkipLink targetId={mainId} />
 
-    <SiteHeader routeKey={routeKey} isOnDark={isHeaderOnDark} />
+    <SiteHeader routeKey={routeKey} subPath={subPath} isOnDark={isHeaderOnDark} />
 
     <slot />
 

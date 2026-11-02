@@ -1,5 +1,9 @@
 ---
-// --- Before and after of the same page, one on top of the other. A line splits
+// --- Before and after of the same page, one on top of the other: the top of
+// my own home page as an AI model built it from the same content without any
+// design brief (left), and as I designed it (right). Both are the first
+// screen of a 1280 × 960 window, one pair per language. The info button next
+// to "AI-generated" opens a dialog: which model, when, and the prompt. A line splits
 // them and can be dragged; once it is well in view Pixel-Ercan's cursor (the
 // same one as in the hero) comes in, grabs the knob and pulls it left and
 // right, once, so it is clear that it moves. Any touch stops it, and under
@@ -8,8 +12,8 @@
 // The control is a real range input laid over the picture: arrow keys, screen
 // readers and touch work as they do everywhere. The pictures are hidden from
 // screen readers; a sentence tells them what the comparison shows.
-import { IconArrowsHorizontal } from "@tabler/icons-astro"
-import KlaroScreen from "./KlaroScreen.astro"
+import { IconArrowsHorizontal, IconInfoCircle } from "@tabler/icons-astro"
+import Dialog from "../../components/ui/Dialog.astro"
 import ToolCursor from "../../components/ui/ToolCursor.astro"
 import { siteConfig } from "../../config/site"
 import { useTranslations } from "../../i18n"
@@ -21,27 +25,62 @@ interface Props {
 const { class: additionalClasses } = Astro.props
 const t = useTranslations(Astro.currentLocale).design.compare
 const cursorName = siteConfig.name.split(" ")[0]
+const locale = Astro.currentLocale === "en" ? "en" : "de"
 ---
 
 <figure class:list={["ec-compare m-0", additionalClasses]}>
-  <!-- --- Which side is which, above the window so nothing on the pages is covered -->
-  <div class="mb-3 flex justify-between text-sm" aria-hidden="true">
-    <span class="rounded-full bg-gray-min px-3 py-1 text-typo-high shadow-sm">{t.before}</span>
-    <span class="rounded-full bg-brand-blue px-3 py-1 text-typo-min shadow-sm">{t.after}</span>
+  <!-- --- Which side is which, above the window so nothing on the pages is
+       covered. Plain words, no chips: a chip would look like something to click.
+       The words are for the eye (the range input names both sides); the info
+       button is real and reachable, nudged up to the optical middle of the
+       words, which sit high in their line. -->
+  <div class="mb-1 flex items-center justify-between gap-6 font-bold text-typo-high">
+    <span class="flex items-center">
+      <span aria-hidden="true">{t.before}</span>
+      <button
+        type="button"
+        class="grid size-11 -translate-y-[1.5px] place-items-center rounded-full text-typo-medium transition-colors hover:bg-gray-subtle hover:text-typo-high"
+        aria-label={t.originLabel}
+        aria-haspopup="dialog"
+        data-dialog-open="compareOrigin"
+      >
+        <IconInfoCircle class="size-5" aria-hidden="true" />
+      </button>
+    </span>
+    <span class="text-right" aria-hidden="true">{t.after}</span>
   </div>
 
   <!-- --- A browser window: the title bar with three dots, the page below -->
   <div class="overflow-hidden rounded-2xl bg-gray-min shadow-lg ring-1 ring-black/5 select-none">
-    <div class="flex items-center gap-1.5 border-b border-gray-subtle px-4 py-2.5" aria-hidden="true">
+    <div
+      class="flex items-center gap-1.5 border-b border-gray-subtle px-4 py-2.5"
+      aria-hidden="true"
+    >
       <span class="size-2.5 rounded-full bg-gray-low"></span>
       <span class="size-2.5 rounded-full bg-gray-low"></span>
       <span class="size-2.5 rounded-full bg-gray-low"></span>
       <span class="mx-auto h-5 w-2/5 rounded-md bg-gray-subtle"></span>
     </div>
     <div class="relative">
-      <KlaroScreen variant="ai" aria-hidden="true" inert />
+      <img
+        src={`/images/design/compare-ai-${locale}.webp`}
+        alt=""
+        width="1536"
+        height="1152"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
       <div class="ec-compare-after absolute inset-0" aria-hidden="true" inert>
-        <KlaroScreen variant="designed" />
+        <img
+          src={`/images/design/compare-designed-${locale}.webp`}
+          alt=""
+          width="1536"
+          height="1152"
+          loading="lazy"
+          decoding="async"
+          class="block size-full object-cover"
+        />
       </div>
 
       <input
@@ -54,7 +93,10 @@ const cursorName = siteConfig.name.split(" ")[0]
         aria-label={t.sliderLabel}
         aria-describedby="compareDescription"
       />
-      <span class="ec-compare-line pointer-events-none absolute inset-y-0 z-10 w-0.5 bg-white" aria-hidden="true">
+      <span
+        class="ec-compare-line pointer-events-none absolute inset-y-0 z-10 w-0.5 bg-white"
+        aria-hidden="true"
+      >
         <span
           class="ec-compare-knob absolute top-1/2 left-1/2 grid size-11 -translate-1/2 place-items-center rounded-full bg-white text-brand-blue shadow-md"
         >
@@ -65,6 +107,15 @@ const cursorName = siteConfig.name.split(" ")[0]
     </div>
   </div>
   <figcaption id="compareDescription" class="sr-only">{t.description}</figcaption>
+
+  <Dialog id="compareOrigin" title={t.originTitle}>
+    {t.originText.map((paragraph) => <p>{paragraph}</p>)}
+    <h3 class="mt-2 font-bold text-typo-high">{t.promptTitle}</h3>
+    <!-- --- Sent in German for both languages, so it carries lang -->
+    <pre
+      class="rounded-xl bg-gray-subtle p-4 font-mono text-[0.8125rem] leading-relaxed whitespace-pre-wrap text-typo-high"
+      lang="de">{t.prompt}</pre>
+  </Dialog>
 </figure>
 
 <style>
@@ -120,7 +171,8 @@ const cursorName = siteConfig.name.split(" ")[0]
     // tip sits on the knob.
     const cursor = compare.querySelector<HTMLElement>(".ec-compare-cursor")!
     const picture = cursor.parentElement!
-    const ease = (time: number) => (time < 0.5 ? 2 * time * time : 1 - Math.pow(-2 * time + 2, 2) / 2)
+    const ease = (time: number) =>
+      time < 0.5 ? 2 * time * time : 1 - Math.pow(-2 * time + 2, 2) / 2
     const knobPoint = (position: number) => ({
       x: (picture.clientWidth * position) / 100,
       y: picture.clientHeight / 2,
@@ -129,7 +181,13 @@ const cursorName = siteConfig.name.split(" ")[0]
       cursor.style.translate = `${Math.round(x + 2)}px ${Math.round(y + 2)}px`
     }
 
-    type Leg = { duration: number; from: number; to: number; press?: boolean; cursorOnly?: "in" | "out" }
+    type Leg = {
+      duration: number
+      from: number
+      to: number
+      press?: boolean
+      cursorOnly?: "in" | "out"
+    }
     const legs: Leg[] = [
       { duration: 700, from: 50, to: 50, cursorOnly: "in" },
       { duration: 800, from: 50, to: 22, press: true },

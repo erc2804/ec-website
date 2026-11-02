@@ -1,0 +1,26 @@
+---
+// --- Stands in for a screenshot where the client stays unnamed: the outline of
+// a phone with grey blocks for content, so the card keeps the shape of the
+// others without pretending to show a product. Same proportions as the real
+// mockups (1413 x 2916). Decoration only.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<div
+  class:list={[
+    "aspect-[1413/2916] rounded-[14%/7%] border-[0.4em] border-typo-high/60 bg-gray-min px-[9%] pt-[26%] text-[1rem]",
+    additionalClasses,
+  ]}
+  aria-hidden="true"
+>
+  <div class="h-[2.5%] w-2/5 rounded-full bg-gray-low"></div>
+  <div class="mt-[8%] h-[16%] rounded-[8%/4%] bg-gray-subtle"></div>
+  <div class="mt-[8%] h-[2.5%] w-4/5 rounded-full bg-gray-low"></div>
+  <div class="mt-[6%] h-[2.5%] w-3/5 rounded-full bg-gray-low"></div>
+  <div class="mt-[12%] h-[11%] rounded-[8%/6%] bg-gray-subtle"></div>
+  <div class="mt-[6%] h-[11%] rounded-[8%/6%] bg-gray-subtle"></div>
+</div>

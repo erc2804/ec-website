@@ -1,0 +1,108 @@
+---
+// --- A native modal dialog: a title, a close button and a body that scrolls on
+// its own. Any button with data-dialog-open set to the dialog's id opens it.
+// Focus moves in, Escape and a click on the dimmed page beside the card close
+// it, and focus returns to the button. Once the body has scrolled, a line
+// marks where the head ends.
+import { IconX } from "@tabler/icons-astro"
+import { useTranslations } from "../../i18n"
+
+interface Props {
+  id: string
+  title: string
+  class?: string
+}
+
+const { id, title, class: additionalClasses } = Astro.props
+const t = useTranslations(Astro.currentLocale).common
+const titleId = `${id}Title`
+---
+
+<dialog id={id} class:list={["ec-dialog", additionalClasses]} aria-labelledby={titleId}>
+  <div class="flex max-h-[inherit] flex-col">
+    <div
+      class="ec-dialog-head flex shrink-0 items-start justify-between gap-6 border-b border-transparent px-6 pt-6 pb-4 transition-colors duration-200 data-[is-scrolled=true]:border-gray-low sm:px-8 sm:pt-8"
+    >
+      <h2 id={titleId} class="pt-1 text-heading-2 text-balance">{title}</h2>
+      <button
+        type="button"
+        class="ec-dialog-close -mt-1 -mr-2 grid size-11 shrink-0 place-items-center rounded-full text-typo-high transition-colors hover:bg-gray-subtle"
+        aria-label={t.close}
+      >
+        <IconX class="size-6" aria-hidden="true" />
+      </button>
+    </div>
+    <div
+      class="ec-dialog-body flex min-h-0 flex-col gap-4 overflow-y-auto overscroll-contain px-6 pt-4 pb-6 text-typo-medium sm:px-8 sm:pb-8"
+      tabindex="0"
+      aria-labelledby={titleId}
+    >
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .ec-dialog {
+    width: min(36rem, calc(100% - 2rem));
+    max-height: min(85dvh, 44rem);
+    overflow: hidden;
+    margin: auto;
+    border: 0;
+    border-radius: 1.5rem;
+    background: var(--color-gray-min);
+    padding: 0;
+    color: inherit;
+    box-shadow: 0 30px 70px -26px rgb(5 56 107 / 0.45);
+    opacity: 0;
+    translate: 0 1rem;
+    transition:
+      opacity 250ms ease,
+      translate 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      overlay 250ms allow-discrete,
+      display 250ms allow-discrete;
+
+    &[open] {
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 1rem;
+      }
+    }
+
+    &::backdrop {
+      background: rgb(5 56 107 / 0.35);
+      backdrop-filter: blur(4px);
+    }
+  }
+</style>
+
+<script>
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>(".ec-dialog")) {
+    const head = dialog.querySelector<HTMLElement>(".ec-dialog-head")!
+    const body = dialog.querySelector<HTMLElement>(".ec-dialog-body")!
+
+    for (const opener of document.querySelectorAll(`[data-dialog-open="${dialog.id}"]`)) {
+      opener.addEventListener("click", () => {
+        body.scrollTop = 0
+        head.dataset.isScrolled = "false"
+        dialog.showModal()
+      })
+    }
+
+    dialog.querySelector(".ec-dialog-close")!.addEventListener("click", () => dialog.close())
+    // --- A click on the dimmed page beside the card closes it too
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close()
+    })
+    body.addEventListener(
+      "scroll",
+      () => {
+        head.dataset.isScrolled = String(body.scrollTop > 0)
+      },
+      { passive: true }
+    )
+  }
+</script>

@@ -1,0 +1,27 @@
+---
+// --- Service icon for designing: a design tool's selection frame with its four
+// corner handles, the same frame that sits around the page's heading. Drawn
+// on Tabler's 24 grid with its 2px stroke, so it sits well beside Tabler icons.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<svg
+  class={additionalClasses}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path d="M7 5h10M19 7v10M17 19H7M5 17V7"></path>
+  <rect x="3" y="3" width="4" height="4" rx="1"></rect>
+  <rect x="17" y="3" width="4" height="4" rx="1"></rect>
+  <rect x="17" y="17" width="4" height="4" rx="1"></rect>
+  <rect x="3" y="17" width="4" height="4" rx="1"></rect>
+</svg>

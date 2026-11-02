@@ -6,6 +6,7 @@ import type { DemoCase } from "./types"
 
 export const en: Translations = {
   common: {
+    close: "Close",
     opensInNewTab: "(opens in a new tab)",
     contactCta: "Start a project",
     // --- Under "LinkedIn" on the contact cards: what the click brings, not the profile slug
@@ -127,24 +128,22 @@ export const en: Translations = {
   },
 
   chatBubble: {
-    heroZone: "Glad you made it.",
-    offersZone: "Which one do you need?",
-    contactZone: "Looking forward to hearing from you.",
     starter: "How are you doing?",
     firstName: "My name is pronounced Erjan (like in jungle).",
     mainLinks: "Where to next?",
     languageSwitch: "No worries, I speak both languages.",
-    accessibility: "Good choice.",
-    design: "Yes, I do that myself too.",
-    development: "And that as well.",
-    contact: "Go on.",
+    accessibility: "Good choice!",
+    design: "Close to my heart.",
+    development: "// TODO: Add a catchy line",
+    contact: "Looking forward to your message!",
+    legal: "Really?",
   },
 
   home: {
     meta: {
       title: "Accessibility, UI/UX Design and Frontend in Düsseldorf | Ercan Cicek",
       description:
-        "I make websites and apps accessible, design them and build them myself. Independent product engineer in Düsseldorf, Germany, with more than ten years in design and code.",
+        "I make websites accessible, and design and build websites and web apps myself. Independent product engineer in Düsseldorf, Germany, with more than ten years in design and code.",
     },
     hero: {
       eyebrow: ["Product Engineer", "Düsseldorf"],
@@ -157,17 +156,17 @@ export const en: Translations = {
         accessibility: {
           title: "Accessibility",
           teaser:
-            "I audit your website or app against WCAG and the European Accessibility Act, fix the issues in the code myself and show your team what matters.",
+            "I audit your website against WCAG and the European Accessibility Act, fix the issues in the code myself and show your team what matters.",
         },
         design: {
           title: "UI/UX Design",
           teaser:
-            "Interfaces that explain themselves. Also for products built with AI that are ready for a look of their own.",
+            "Interfaces that explain themselves. Also for products built with AI that need a design of their own.",
         },
         development: {
           title: "Frontend Development",
           teaser:
-            "React, Vue, TypeScript. I build what the design means, with every state, not just the pretty one.",
+            "Whatever the technology: I direct the AI so it also builds what the concept doesn't show.",
         },
       },
       more: "Read more",
@@ -189,18 +188,18 @@ export const en: Translations = {
         },
         {
           title: "Join your team",
-          text: "I become **part of your team**. As a designer who knows what can be built, or as a developer who understands what the design is after.",
+          text: "I become **part of your team**. In design, in development, or as the link between the two.",
         },
         {
           title: "Review",
-          text: "You want to know where you stand. I audit your website or app for **accessibility** and, if you like, look at design and code too. You get a **report** your team can work with right away.",
+          text: "You want to know where you stand. I audit your website for **accessibility**, ideally right in your code and your designs in Figma. You get a **report** your team can work with right away.",
         },
         {
           title: "Train",
-          text: "Your team should be able to do it themselves. Through **mentoring and training** in accessibility, design and frontend, so they apply it with confidence in day-to-day work.",
+          text: "Through **mentoring and training**, I teach your team what it needs right now, for example around accessibility or working with AI. That way they apply it with confidence in day-to-day work.",
         },
       ],
-      note: "It often starts with a review and grows from there. If you're not sure what you need, that's a good reason to talk.",
+      note: "We usually start with an accessibility audit, which frequently turns into a long-term collaboration across several areas. We'll figure out the best place for you to start in our first call.",
     },
     quotes: {
       title: "Selected recommendations",
@@ -231,13 +230,45 @@ export const en: Translations = {
     projects: {
       title: "From my portfolio",
       all: "See the portfolio",
-      cardLabel: "Go to project",
     },
     contact: {
-      title: "Tell me what it's about.",
-      body: "Drop me a short note on what you're planning and what it's built with. You'll get an honest assessment, even if it is: you don't need me for this.",
+      title: "Get in touch.",
+      body: "Tell me briefly what it's about, with no strings attached, and we'll find the right solution together.",
       email: "Email",
       linkedin: "LinkedIn",
+    },
+  },
+
+  portfolio: {
+    meta: {
+      title: "Portfolio: web apps, websites and shops | Ercan Cicek",
+      description:
+        "Selected projects since 2016: web apps for industry, HR tech and rail, shops and websites, accessibility audits. With role, period and stack.",
+    },
+    title: "Portfolio",
+    lead: "Selected projects since 2016.",
+    elsewhere: {
+      title: "Other things",
+      lead: "My code on GitHub, Mel-Menu as my first portfolio from 2018, and a few playgrounds.",
+    },
+    project: {
+      back: "Back to portfolio",
+      visit: "Visit {host}",
+      facts: {
+        title: "Facts",
+        period: "Period",
+        role: "Role",
+        employer: "Employer",
+        client: "Client",
+        services: "Services",
+        skills: "Skills",
+      },
+      imageAlt: "{label} on a phone",
+      metaTitle: "{label} | Portfolio | Ercan Cicek",
+    },
+    contact: {
+      title: "Want your project in here?",
+      body: "Tell me what you have in mind. A short call is enough, free, with no strings attached.",
     },
   },
 
@@ -388,64 +419,47 @@ export const en: Translations = {
       tokenBefore: "text/tertiary",
       tokenMiddle: "text/secondary",
       tokenAfter: "text/primary",
-      lead: "Everyone should see right away where to go next. That's what I take care of: in new products, in existing ones, and in those built with AI that now need the last step.",
+      lead: "User-friendly, distinctive design: for new features in existing products and for new products, with or without an AI-generated prototype.",
     },
 
     compare: {
-      title: "Same content. Different product.",
-      lead: "AI tools deliver a working page in minutes. That's a good start, often the best a project can have. But it's a template, and templates look alike: a gradient on top, three cards with icons, two buttons. What's still missing is the decision about what matters on this page.",
+      title: "AI gives you the usual, not the best solution.",
+      lead: "The result works and is a good start. But it's off the rack: the elements look like they do everywhere, the branding doesn't fit, and what makes it yours is missing.",
       example:
-        "Here's the home page of a made-up time-tracking tool, the template on the left, fully designed on the right. The same product, only decided: what comes first, what can go and what to show.",
-      before: "AI template",
-      after: "Designed",
-      sliderLabel: "Comparison of the same home page: the AI template on the left, designed on the right",
+        "An example to make it clear: the top of my own home page, once built by an AI from the same content and once designed by me. I deliberately don't put client sites up against an AI version here. On a call I'm happy to show you examples closer to your project.",
+      before: "AI-generated",
+      after: "Designed by me",
+      // --- For screen readers, who do not see the two pictures
       description:
-        "Left: a purple gradient, the heading “Welcome to Klaro”, two buttons of the same size and three cards with the words “Lightning fast”, “Secure” and “Intuitive”. Right: the heading “Track hours without thinking about it”, one sentence, one button and a look into the product next to it.",
-      changes: [
-        {
-          title: "One statement instead of three buzzwords",
-          text: "“Lightning fast, secure, intuitive” could sit above any product. A sentence that says what the tool does sits only above this one.",
-        },
-        {
-          title: "One button instead of two",
-          text: "“Get started” next to “Learn more” says: you decide. One button says: this way.",
-        },
-        {
-          title: "A face of its own",
-          text: "The template belongs to everyone. Type, color and image now belong to this product.",
-        },
+        "AI-generated: a dark blue background with a grid, the initials “EC.” as the logo, the name in bold white, a blue gradient button and next to it the portrait in a glowing frame with the label “Focus: Accessible Web Products”. Designed by me: dark grey, the logo with the angle brackets, the name large in green and light grey, a green button and a cropped portrait that fills the right half.",
+      // --- The info button next to the AI side and its dialog: where the
+      // picture comes from, and the prompt as it was sent
+      originLabel: "How the AI result was made",
+      originTitle: "How the AI result was made",
+      originText: [
+        "Built by Gemini 3.1 Pro on November 2, 2026, from a single prompt with no other context and no design brief. It shows the result as delivered. For the English page, only the texts were swapped.",
+        "Other prompts and tools give better results too. Without good groundwork and the right prompts, though, they almost always look off the rack.",
       ],
-    },
+      promptTitle: "The prompt (sent in German)",
+      prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.
 
-    screen: {
-      name: "Klaro",
-      nav: ["Features", "Pricing", "Log in"],
-      aiTitle: "Welcome to Klaro",
-      aiLead: "The modern all-in-one solution for efficient time tracking in your team.",
-      aiPrimary: "Get started",
-      aiSecondary: "Learn more",
-      aiCards: [
-        { title: "Lightning fast", text: "Track your time in seconds, not minutes." },
-        { title: "Secure", text: "Your data is in safe hands with us." },
-        { title: "Intuitive", text: "An interface that needs no explanation." },
-      ],
-      title: "Track hours without thinking about it.",
-      lead: "Klaro books your time to the project you're working in, automatically. For teams that bill their hours.",
-      primary: "Try 14 days for free",
-      note: "No credit card",
-      weekLabel: "This week",
-      weekTotal: "31.5 h",
-      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-      hours: [7.5, 8, 6, 8, 2],
-      todayProject: "Running: Website relaunch",
+Inhalte:
+- Navigation: Barrierefreiheit, Design, Entwicklung, Portfolio, Über mich
+- Sprachumschalter: DE | EN
+- Zeile über dem Namen: Product Engineer · Düsseldorf
+- Name: Ercan Cicek
+- Aussage: Design, Code und Barrierefreiheit. Aus einer Hand.
+- Button: Projekt anfragen
+- Hinweis zum Weiterscrollen: Weiter nach unten
+- Das angehängte Foto ist ein Porträt von mir.`,
     },
 
     states: {
-      title: "Not just the pretty state.",
-      lead: "Mockups almost always show the ideal case: three short entries, everything loaded, nothing gone wrong. In production a list is empty, still loading, fails or gets text nobody planned for. I design every state, so your team doesn't have to make anything up.",
+      title: "Every state belongs in the design.",
+      lead: "Designs usually focus on the ideal case. But what about different text lengths, long loading times, empty or overlong lists and errors? I design each of these states too, so your team doesn't have to make anything up.",
       legend: "State",
-      commonLabel: "Only the ideal case designed",
-      designedLabel: "Every state designed",
+      commonLabel: "Not thought through",
+      designedLabel: "Thought through",
       cardTitle: "Projects this week",
       rows: [
         { name: "Website relaunch", hours: "12.5 h" },
@@ -459,87 +473,85 @@ export const en: Translations = {
       emptyAction: "Create project",
       errorRaw: "Error: Request failed with status 500",
       errorTitle: "The projects couldn't be loaded",
-      errorText: "Your hours are saved. Try again in a moment.",
-      errorAction: "Reload",
+      errorText: "Try again in a moment.",
+      errorAction: "Try again",
       loading: "Loading…",
+      loadingTitle: "Loading projects …",
+      loadingSlow: "Taking too long?",
+      loadingAction: "Reload",
       items: [
         {
-          key: "normal",
-          label: "Normal",
-          why: "This is how a design gets shown and signed off: three entries, short names, everything there. In this state, both look fine.",
-        },
-        {
           key: "loading",
-          label: "Loading",
-          why: "On the left, one word on an empty surface. On the right, placeholders show that something is coming and how much. That makes the wait easier.",
+          label: "Loading time",
+          why: "Not thought through: one word on an empty surface. Thought through: it says what's loading, and if it takes too long, there's a way out.",
         },
         {
           key: "empty",
-          label: "Empty",
-          why: "On the left, an empty box that looks like an error. On the right, it says why there's nothing here, with the first step right next to it.",
+          label: "Empty list",
+          why: "Not thought through: an empty box that looks like an error. Thought through: it says why there's nothing here, with the first step right below.",
         },
         {
           key: "error",
           label: "Error",
-          why: "On the left, a message from the code that helps nobody. On the right, it says what happened, that nothing is lost, and what you can do.",
+          why: "Not thought through: a message from the code that helps nobody. Thought through: it says what happened and what you can do.",
         },
         {
           key: "long",
-          label: "Long text",
-          why: "On the left, a long name pushes the hours out of view. On the right, it wraps and gets cut after two lines. Real names are longer than the ones in the mockup.",
+          label: "Long name",
+          why: "Not thought through: a long name pushes the hours out of view. Thought through: it wraps and gets cut after two lines. Real names are longer than the ones in the mockup.",
+        },
+        {
+          key: "normal",
+          label: "Ideal case",
         },
       ],
     },
 
     services: {
       title: "How I can help",
-      lead: "The whole design, or exactly the piece that's missing.",
+      lead: "I design new features or help you with the basic structure of your product.",
       items: [
         {
           title: "Design",
-          text: "New products and features, from the first flows to a clickable prototype in Figma.",
+          text: "New products and features, from the first flows to a clickable prototype in the design tool of your choice, or straight in code.",
         },
         {
-          title: "Sharpen",
-          text: "Your product works, maybe from an AI template. It gets a clear order and a look of its own, without starting over.",
+          title: "Rework",
+          text: "Your product already works, but you want new areas or a design of its own. I build on what's there, without you starting over.",
         },
         {
           title: "Design system",
-          text: "Colors, type, spacing and building blocks as fixed rules. So Figma and code speak the same language and your team stops reinventing every button.",
+          text: "Colors, type, spacing and building blocks as fixed rules. So design and code speak the same language and your team stops reinventing every button.",
         },
       ],
     },
 
     process: {
       title: "How it can go",
-      lead: "An example. Every project is different, so we adapt the steps to you.",
+      lead: "Every project is different, so we shape the process around you. This is what it can look like for a design project, for example.",
       steps: [
         {
           title: "Getting to know each other",
-          text: "You show me your product or your idea and tell me who uses it.",
-          outcome: "Afterwards you know whether I can help.",
+          text: "We get to know each other and talk about your products: who uses them and what it's about.",
         },
         {
-          title: "Understanding",
-          text: "I go through what users want to do and where they get stuck today.",
-          outcome: "We know which screens matter.",
+          title: "Getting oriented",
+          text: "I briefly get familiar with your design system, your users and the existing product.",
         },
         {
           title: "Designing",
-          text: "I design in Figma, with every state, and show you early drafts along the way.",
-          outcome: "You get a clickable prototype.",
+          text: "I design the product or the new feature in the design tool of your choice or directly in code, thinking through everything development needs, such as every state.",
         },
         {
-          title: "Handing over",
-          text: "Design, states and tokens go to your team, with an explanation. If you want, I build along.",
-          outcome: "Your team can get going.",
+          title: "Handover",
+          text: "Design, states and tokens go to your team with an explanation. If you like, I build along right away.",
         },
       ],
     },
 
     oneHand: {
       title: "Design that can be built",
-      body: "I build frontends myself. So I know **how far a design can go**: far enough to make developers sweat, but **never so far that it won't hold up in code**. And if someone's missing for the build, I'm there.",
+      body: "I've been building frontends myself for more than ten years. So I know **how far a design can go**: far enough to make developers sweat, but **never so far that it won't hold up in code**. And if someone's missing for the build, I'm there.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -547,31 +559,31 @@ export const en: Translations = {
       title: "Frequently asked questions",
       items: [
         {
-          question: "Our product was built with AI. Is design still worth it?",
+          question: "Why does a distinctive design matter?",
           answer:
-            "Yes, and the template is a good start for it. The tool takes the basic structure off your hands. What it doesn't take off your hands are the decisions: what matters first, what can go and what your product looks like. We build on what's already there.",
+            "Because people judge a site by its look first. In a [Stanford University study](https://doi.org/10.1145/997078.997097), almost half of all comments on the credibility of websites were about their design. An off-the-rack template looks like many others.",
         },
         {
-          question: "Do you work with our design system?",
+          question: "Can you work directly in our design system?",
           answer:
-            "Yes. I work with what's there and extend it where something's missing. If there isn't one yet, we set up the basics together.",
+            "Yes, gladly, it's usually the most efficient way: I use what's there and add what's missing. If you don't have one yet, we build the basics together.",
         },
         {
-          question: "What does a project cost?",
+          question: "What is your hourly rate?",
           answer:
-            "It depends on scope: how many screens and flows there are and whether a design system is part of it. After a free first call with no strings attached, you get a concrete quote.",
+            "It depends on how many hours you book. On a first call, free and with no strings attached, I'll give you a concrete rate.",
         },
         {
-          question: "Is accessibility included?",
+          question: "Are your designs always accessible?",
           answer:
-            "Yes, from the start. I plan contrast, font sizes, focus and states right away, so nothing has to be retrofitted later.",
+            "If it makes sense for the purpose and you want it, yes, and I recommend it almost every time. For an internal tool only your team uses, the accessibility law usually doesn't require it. Then you decide how far you want to go.",
         },
       ],
     },
 
     contact: {
       title: "Let's talk about your product.",
-      body: "Send me a link or a few screenshots. On a first call we'll look at it together, free, with no strings attached.",
+      body: "On a first call, free and with no strings attached, we look at your product together and talk about how I can support you.",
     },
   },
 
@@ -579,34 +591,32 @@ export const en: Translations = {
     meta: {
       title: "Accessibility audits and fixes for the EAA | Ercan Cicek",
       description:
-        "I audit your website or app against the European Accessibility Act and WCAG 2.2, fix the issues in design and code, and train your team. Based in Düsseldorf. The first call is free, with no strings attached.",
+        "I audit your website against the European Accessibility Act and WCAG 2.2, fix the issues in design and code, and train your team. Based in Düsseldorf. The first call is free, with no strings attached.",
     },
 
     hero: {
       title: "I make your digital products accessible.",
       announcement: "I make your digital products accessible. Heading level 1",
       announcementLabel: "What a screen reader says about this heading",
-      lead: "I check them under the European Accessibility Act: can people with disabilities use them without barriers? If you like, I fix the issues myself, in design and code, and train your team so no new issues creep in.",
+      lead: "I check them against WCAG and the European Accessibility Act. If you like, I fix the issues myself in design and code and train your team so no new ones creep in over time.",
     },
 
     demo: {
-      title: "Looks the same. Sounds different.",
-      lead: "People who can't see well or at all have websites read out to them, on a Mac by VoiceOver. If an element is built carelessly, they hear the wrong thing, nothing, or never reach the button. And then they're stuck.",
+      title: "Looks the same. But what if you can't see well?",
+      lead: "In that case, many people use a screen reader that reads content out loud. To announce everything correctly, it needs clear structure in the code and sometimes extra information, such as whether a field is required or an entry is invalid.",
       instruction:
-        "Use “Back” and “Next” to step through the form. For each element you see what VoiceOver says with a common mistake, and what it says when built right.",
+        "Use “Back” and “Next” to step through the form, or pick an element right in it. For each element you see what a screen reader announces: once with a common mistake, once built right. “Why is this a problem?” explains why the mistake matters.",
       // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "With “Screen off” you try it without the picture, the way VoiceOver users do.",
+      instructionCurtain: "With “Hide form” you try it without the picture.",
       commonLabel: "Common mistake",
       correctLabel: "Built right",
       previous: "Back",
       next: "Next",
       whyButton: "Why is this a problem?",
-      close: "Close",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "To the announcement",
-      blind: "Screen off",
-      blindHint: "VoiceOver calls this the Screen Curtain.",
-      curtainText: "Now all you have is what VoiceOver says.",
+      blind: "Hide form",
+      curtainText: "Now all you have is what the screen reader says.",
       silent: "Nothing announced",
       position: "Element {number} of {total}",
       liveTemplate: "{position}: {name}",
@@ -622,7 +632,7 @@ export const en: Translations = {
           details: [
             "The shield symbol is pure decoration. If the code doesn't say so, some screen readers read out the file name instead.",
             "Announcements like that carry no information. They're noise that makes listening harder.",
-            "Built right, the image gets an empty description in the code (alt=\"\"). Then the screen reader skips it. Whether an image is just decoration is up to whoever creates the page. Images with real content need a short description.",
+            'Built right, the image gets an empty description in the code (`alt=""`). Then the screen reader skips it. Whether an image is just decoration is up to whoever creates the page. Images with relevant content need a short description.',
           ],
           common: "image, icon-shield-blue-2.svg",
           correct: "",
@@ -632,7 +642,7 @@ export const en: Translations = {
           name: "A heading that isn't one",
           details: [
             "“Your details” is set large and looks like a heading. In the code, though, it's just plain text.",
-            "Most screen reader users look for content through headings and jump from one to the next. That's what WebAIM's large survey of screen reader users shows. If the heading is missing in the code, they skip this section.",
+            "Most screen reader users look for content through headings and jump from one to the next. That's what [WebAIM's large survey of screen reader users](https://webaim.org/projects/screenreadersurvey11/) shows. If the heading is missing in the code, they sometimes skip this section.",
             "Built right, it's a heading in the code too. How it looks is still up to the design.",
           ],
           common: "Your details",
@@ -642,8 +652,8 @@ export const en: Translations = {
           name: "A field without a label",
           details: [
             "Above the field it says “Full name”. To the eye, the two belong together, but not in the code.",
-            "So VoiceOver only says “edit text”, with no name. Anyone who can't see has to guess what goes in. People who control the page by voice also pick fields by their label: “click Full name” only works if the field has that name in the code.",
-            "Built right, the label is connected to the field in the code. Then VoiceOver reads it out too. And the label becomes a bigger click area: clicking it puts the cursor in the field.",
+            "So the screen reader only says “edit text”, with no name. Anyone who can't see well has to guess what goes in. It also affects people who find a mouse and keyboard hard to use and control their computer by voice instead, for example with Voice Control on macOS or Voice Access on Windows. They pick a field by saying its label. That only works if the field has that name in the code.",
+            "Built right, the label is connected to the text field in the code. Then the screen reader reads it out too. Thanks to this connection, people can also click the label to activate the field and type into it.",
           ],
           common: "edit text, Martin Beck",
           correct: "Full name, required, edit text, Martin Beck",
@@ -651,9 +661,9 @@ export const en: Translations = {
         {
           name: "An error shown only in red",
           details: [
-            "The field has a red border, and below it, in red, it says what's missing. Anyone looking sees right away that something's wrong.",
-            "VoiceOver says nothing about it. Anyone who can't perceive the color doesn't notice that something's wrong. That's not only blind people, but also people with color blindness, people with low vision and many older people.",
-            "Built right, the field is marked as invalid in the code and the hint is connected to it. Then VoiceOver reads out both. An icon or a word belongs with it, so the error doesn't depend on color alone.",
+            "The field has a red border, and below it, in red, it says what's missing. To most people, that says “error” right away.",
+            "But what if you can't see the red, or can't see it properly? That affects blind people, but also people with color blindness, people with low vision and many older people. And the screen reader says nothing about the error.",
+            "Built right, the field is also marked as invalid in the code, and the hint below it is connected to it. Then the screen reader announces both: there's an error, and here's what to do. An icon or a word belongs with it, so the error doesn't depend on color alone.",
           ],
           common: "Email address, edit text, beck.company.com",
           correct:
@@ -662,9 +672,9 @@ export const en: Translations = {
         {
           name: "A button without a name",
           details: [
-            "The button only shows a symbol, no word. Sighted people guess from the context that this is how you continue.",
-            "A screen reader can't interpret the symbol, it's just a graphic. And in the code, the button has no name. So VoiceOver only says “button”. Whether the click moves on, deletes something or sends the form, you don't find out.",
-            "Built right, the button gets a name, for example “Continue to summary”. The name doesn't have to be visible, the design stays the same.",
+            "The button only shows a symbol. Sighted people guess from the symbol and the context what it does.",
+            "A screen reader can't interpret the symbol, it's just a graphic. And in the code, the button has no name. So the screen reader only says “button”. Whether the click moves on, deletes something or sends the form, you don't find out.",
+            "Built right, the button gets a text in the code that the screen reader reads out, for example “Continue to summary”. The text doesn't have to be visible, the design stays the same.",
           ],
           common: "button",
           correct: "Continue to summary, button",
@@ -681,53 +691,49 @@ export const en: Translations = {
       affectedTitle: "Usually affected",
       affected:
         "Online shops, online banking, booking and ticketing, contract sign-ups and apps for consumers",
-      notAffectedTitle: "Usually not",
+      notAffectedTitle: "Usually not affected",
       notAffected:
         "Services only for business customers, and services from very small companies: fewer than 10 employees and no more than €2 million in annual turnover or balance sheet total (Section 3 BFSG)",
     },
 
     services: {
       title: "How I can help",
-      lead: "It usually starts with an audit. After that, I take on as much as you need.",
+      lead: "We usually start with an audit, which frequently turns into a long-term collaboration. I take on as much as you need.",
       items: [
         {
           title: "Audit",
-          text: "I test your website or app against WCAG\u00A02.2, with testing tools and by hand with a screen reader and keyboard. For every issue you get a suggested fix your team can start on right away. If you like, I also write your accessibility statement.",
+          text: "I test your website against WCAG\u00A02.2, by hand and with tools, some of which I built myself. For every issue you get a suggested fix your team can start on right away.",
         },
         {
           title: "Fix",
-          text: "I fix the issues myself, in Figma and right in your code, with your tools. Ideally in the building blocks your pages are made of, so an issue is gone everywhere at once.",
+          text: "I fix the issues myself, right in the code and in the design, whatever technology you use. I comment on and sum up every change, so your team can follow it and knows what to watch for in the future.",
         },
         {
           title: "Train",
-          text: "I show your team what matters, using your own pages. With training and support in day-to-day work, they build accessibility in from the start.",
+          text: "With training and mentoring, I help your team build accessibility in from the start and keep rounds of fixes small. Also as quality assurance alongside design and development, for example as a step of its own in each sprint review.",
         },
       ],
     },
 
     process: {
       title: "How it can go",
-      lead: "An example. Every project is different, so we shape the process around you.",
+      lead: "Every project is different, so we shape the process around you. This is what it can look like for an audit, for example.",
       steps: [
         {
           title: "Getting to know each other",
-          text: "You tell me what you offer and what it's built with.",
-          outcome: "Afterwards you know whether I can help.",
+          text: "We get to know each other and talk about your products. I help you set the right course.",
         },
         {
-          title: "Setting the scope",
-          text: "We pick the pages and flows that matter, such as search and checkout.",
-          outcome: "You get a quote with a fixed scope.",
+          title: "Defining the tasks",
+          text: "We talk about what's possible for you, with your goals first. That includes price and timeline.",
         },
         {
           title: "Testing",
-          text: "I go through the chosen flows step by step, the way your customers use them.",
-          outcome: "You get a report with every issue and how to fix it.",
+          text: "I test the agreed flows step by step, by hand and with tools, some of which I built myself. The result is a report with a suggested fix for every finding, written for the team that handles it, for developers for example directly as code.",
         },
         {
           title: "Talking it through",
-          text: "We go through the issues together: what's urgent, what's quick and what can wait.",
-          outcome: "Afterwards you know what comes first, and you decide who does it: your team or me.",
+          text: "Either you go through the report yourselves and we answer your questions, or we go through it together. Afterwards your team can get started right away.",
         },
       ],
     },
@@ -743,13 +749,12 @@ export const en: Translations = {
       items: [
         {
           question: "Does the law apply to me?",
-          answer:
-            "Most likely, if consumers buy, book or sign up for something from you online. If you're unsure, we'll look at it together on a first call. This isn't legal advice.",
+          answer: "Most likely, if consumers buy, book or sign up for something from you online.",
         },
         {
           question: "What does an audit cost?",
           answer:
-            "It depends on scope: how many different page types and flows get tested, not how many pages there are. After a free first call, you get a concrete quote.",
+            "It depends on the scope of the audit: how many different pages and flows should be tested, how complex the pages are and what format you want the report in. After a free first call, you get a concrete quote.",
         },
         {
           question: "Aren't automated testing tools enough?",
@@ -765,102 +770,79 @@ export const en: Translations = {
     },
 
     contact: {
-      title: "Let's see where your product stands.",
-      body: "Tell me which website or app it's about. On a first call we'll take a quick look together, and afterwards you'll know what's missing and what to do next. Free, with no strings attached.",
+      title: "Get in touch.",
+      body: "Tell me briefly what it's about, with no strings attached, and we'll find the right solution together.",
     },
   },
   development: {
     meta: {
       title: "Frontend development with React, Vue and TypeScript | Ercan Cicek",
       description:
-        "I build frontends that still hold up in two years: new, in existing code, or as an extra pair of hands for your team. AI writes along, I make the decisions. The first call is free, with no strings attached.",
+        "I build frontends that still hold up in two years: from your prototype, from scratch, or as an extra pair of hands for your team. AI writes along, I make the decisions. The first call is free, with no strings attached.",
     },
 
     hero: {
       title: "Clean code, written by AI, directed by me.",
       lead: "Frontend development is AI-driven today. With more than ten years of experience, I direct the AI so the code scales and the things you don't see are right too.",
       prompt: "Make the heading a real h1.",
-      working: "Updating …",
-    },
-
-    findings: {
-      title: "AI builds fast. And misses what nobody tells it.",
-      lead: "Several large studies are showing this right now. Three of their findings concern frontends directly, and in all three it is not the tool that decides, but who guides it.",
-      items: [
-        {
-          title: "Looks right. Isn't.",
-          text: "More than half of the developers surveyed received code that looked correct and only failed in production. Two thirds are frustrated by solutions that are \"almost right\".",
-          me: "That is why I read and test what the AI delivers before it reaches you. Every component, not a sample.",
-          source: "Sonar, survey of 1,149 developers; Stack Overflow Developer Survey 2025",
-          href: "https://redwerk.com/blog/vibe-coding-report/",
-        },
-        {
-          title: "Accessible only on request. And not even then.",
-          text: "Five AI tools were explicitly asked to build accessible websites. All 15 results failed the lowest WCAG level, with 55 issues per page on average.",
-          me: "I build keyboard use, contrast and screen reader text in from the start and check them the way I do in audits.",
-          source: "AudioEye, September 2026 (vendor study, via VentureBeat)",
-          href: "https://venturebeat.com/ai/we-asked-five-ai-tools-to-build-accessible-websites-all-15-sites-failed",
-        },
-        {
-          title: "It grows, but nobody tidies up.",
-          text: "The share of changes that tidy existing code has fallen from 21 to under 4 percent since 2022. Copied code blocks have almost doubled. Every later change gets more expensive.",
-          me: "I give the AI the structure, components, variables, boundaries, and hold it to them. Then your product stays changeable after the tenth feature.",
-          source: "GitClear, analysis of 623 million code changes 2023 to 2026 (via LeadDev)",
-          href: "https://leaddev.com/ai/code-maintainability-plummets-in-the-ai-coding-era",
-        },
-      ],
-      sourceLabel: "Source",
+      working: "かしこまりました、先輩 …",
     },
 
     services: {
-      title: "How you can bring me in",
-      lead: "New, in existing code, or as an extra pair of hands for your team.",
+      title: "How I can support you",
+      lead: "With a prototype as the starting point, from scratch, or as part of your team. Also as the bridge between design and development, with accessibility in the bag if you like.",
       items: [
         {
-          title: "Build",
+          title: "From prototype to product",
+          text: "You have a prototype, often built with AI, and it should become a real product. I take over where it stands, tidy up where it sticks and keep building. No restart.",
+        },
+        {
+          title: "Build new",
           text: "A new web app or website, from the design to launch. You get code your team can read and change later on its own.",
         },
         {
-          title: "Build on",
-          text: "A product that already exists, often built with AI and grown fast. I tidy up where it sticks and keep building. No restart.",
-        },
-        {
-          title: "Reinforce",
-          text: "Your team needs one more pair of hands for a while. I work in your code and your routines for as long as it takes.",
+          title: "Reinforce your team",
+          text: "Your team needs one more pair of hands for a while. I work in your code and your routines, agree interfaces with the backend and hand over so it carries on without me.",
         },
       ],
     },
 
-    process: {
-      title: "How it can go",
-      lead: "An example. Every project is different, so we adapt the steps to you.",
-      steps: [
+    workingStyle: {
+      title: "What you can count on",
+      lead: "What gets built is up to your product. How I work stays the same.",
+      stack: ["React", "Vue", "Angular", "Next.js", "Astro", "Shopify", "Webflow"],
+      stackYours: "and yours",
+      items: [
         {
-          title: "Getting to know each other",
-          text: "You tell me what should be built and what already exists.",
-          outcome: "Afterwards you know whether I can help.",
+          title: "Your stack, not mine.",
+          text: "Which framework, which language, which CMS: that is the smallest question today. I have built with React, Vue, Angular, Next.js, Astro, Shopify and Webflow, and I read my way into whatever runs at your place. You do not get a change of technology just because I had a favorite.",
         },
         {
-          title: "Reading in",
-          text: "I read the design and the code, if there is any, and clear up what is open before we start.",
-          outcome: "You get an offer with a clear scope.",
+          title: "Precise down to the detail.",
+          text: "A spacing that is off, a missing focus ring, a loading state that jumps: I see it, and I do not let it stand. What the AI delivers, I read and check before it reaches you.",
         },
         {
-          title: "Building",
-          text: "I build in short rounds and show you the state regularly, running, not as a screenshot.",
-          outcome: "You see early whether it fits.",
+          title: "Your own look, not a template.",
+          text: "AI-built interfaces all look alike. I set the direction, with components, tokens and motion of your own, so your product looks like yours. This site came about that way.",
         },
         {
-          title: "Handing over",
-          text: "The code lives in your repository, with an explanation. Your team carries on, or I stay on.",
-          outcome: "It runs, and you can change it.",
+          title: "Built to scale from the start.",
+          text: "Components, variables, clear boundaries: I lay out the structure so the tenth feature comes as easily as the first. Even when the prototype grew fast and messy.",
+        },
+        {
+          title: "At home in your team.",
+          text: "I work in your repository and by your rules, agree interfaces with the backend and hand over so your team can carry on without me. If it helps, I train them.",
+        },
+        {
+          title: "Accessible on request.",
+          text: "Keyboard, screen reader, contrast and focus are planned in when you want them, and checked the way I check in audits.",
         },
       ],
     },
 
     oneHand: {
       title: "Why a developer, when AI writes the code?",
-      body: "Because the code is the last step. Before that, someone decides **what gets built and how it fits your product and your design**. I make those decisions, then let the AI build and **check what it delivers**. Add what a model cannot know: everything that came out after its training. I keep learning it and pass it on.",
+      body: "Because building is no longer the hard part. The hard part is the **decisions before it**: Does this still scale when your idea grows? What happens on a bad connection or when something fails? Does a user see at once what to do? I ask those questions before the AI builds, and **check what it delivers** afterwards. Add what a model cannot know: everything that came out after its training.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -874,12 +856,8 @@ export const en: Translations = {
         },
         {
           question: "When can you start?",
-          answer: "That depends on my workload. Just ask, and I will tell you honestly when it works.",
-        },
-        {
-          question: "Which technologies do you work with?",
           answer:
-            "React, Vue and TypeScript, Astro for websites, Webflow when it should carry on without a developer. Whatever you already use stays. I do not bring a framework just because I like it.",
+            "That depends on my workload. Just ask, and I will tell you honestly when it works.",
         },
         {
           question: "We already have developers. Does that work?",
@@ -888,12 +866,8 @@ export const en: Translations = {
         },
         {
           question: "Do we own the code?",
-          answer: "Yes, from the first line. Everything lives in your repository, with no dependency on me.",
-        },
-        {
-          question: "Is accessibility included?",
           answer:
-            "Yes, from the start. Keyboard, contrast, focus and screen reader text are planned in right away, so nothing has to be retrofitted later.",
+            "Yes, from the first line. Everything lives in your repository, with no dependency on me.",
         },
       ],
     },

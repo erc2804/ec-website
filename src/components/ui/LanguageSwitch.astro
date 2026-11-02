@@ -13,11 +13,13 @@ import { siteConfig } from "../../config/site"
 
 interface Props {
   routeKey: RouteKey
+  /** --- Path below the route, same in both languages --- */
+  subPath?: string
   currentLocale: Locale
   class?: string
 }
 
-const { routeKey, currentLocale, class: additionalClasses } = Astro.props
+const { routeKey, subPath, currentLocale, class: additionalClasses } = Astro.props
 
 const t = useTranslations(currentLocale).nav
 
@@ -49,7 +51,7 @@ const optionClasses =
         ) : (
           <a
             class:list={[optionClasses, "no-underline transition-colors hover:bg-current/10"]}
-            href={localisedPath(routeKey, locale)}
+            href={localisedPath(routeKey, locale, subPath)}
             lang={locale}
             hreflang={locale}
           >

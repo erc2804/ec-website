@@ -5,11 +5,12 @@ import MouseChatBubble from "../../components/MouseChatBubble.astro"
 import RoleScene from "../../components/RoleScene.astro"
 import Button from "../../components/ui/Button.astro"
 import ProjectCard from "../../components/ui/ProjectCard.astro"
+import { offerSurfaceClasses } from "../../components/ui/offerSurfaceClasses"
 import Quote from "../../components/ui/Quote.astro"
 import ScrollCue from "../../components/ui/ScrollCue.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
-import { featuredProjects } from "../../data/projects"
+import { featuredProjects, localised } from "../../data/projects"
 import { localisedPath, useTranslations, type Locale, inquiryPath } from "../../i18n"
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
@@ -25,24 +26,15 @@ const offerKeys = ["accessibility", "design", "development"] as const
 // pictogram: an icon-only button that still announces its name, a selection frame
 // with measurements on a canvas grid (the frame alone is centred, the size
 // label hangs under it without pushing it up), a diff that swaps a magic number for a
-// design token. Surface colours are the previous site's card
-// colours. All of it is decoration: the card text says the same in words.
-const offerSurfaceClasses = {
-  accessibility: "bg-brand-green-medium",
-  design: "ec-canvas-grid bg-brand-green-high",
-  development: "bg-brand-green-low",
-}
+// design token. The surface colours are shared with the project cards. All of
+// it is decoration: the card text says the same in words.
 ---
 
 <main id="main">
   <!-- --- Hero: three quarters of the viewport, so the page visibly goes on.
        The lines rise in on load; on scroll the text drifts up and the photo
        eases in, both driven by the scroll position itself, no script. -->
-  <section
-    class="ec-hero relative overflow-hidden bg-gray-min ec-on-dark"
-    data-chat-zone
-    data-chat={tBubble.heroZone}
-  >
+  <section class="ec-hero relative overflow-hidden bg-gray-min ec-on-dark" data-chat-zone>
     <!-- --- Three layers across the whole section: white ground, the cut-out
          portrait anchored to the right edge of the screen, the dark overlay on
          top. Only the text sits in a centred frame of at most 1920px. -->
@@ -56,7 +48,7 @@ const offerSurfaceClasses = {
         <p class="ec-optical-left ec-rise text-sm tracking-[0.12em] text-brand-sand/70 uppercase">
           <span>{tHome.hero.eyebrow[0]}</span>
           <span
-            class="mx-2 inline-block size-1 rounded-full bg-current align-middle"
+            class="mx-2 inline-block size-1 -translate-px rounded-full bg-current align-middle"
             aria-hidden="true"></span>
           <span class="sr-only">,</span>
           <span>{tHome.hero.eyebrow[1]}</span>
@@ -109,7 +101,7 @@ const offerSurfaceClasses = {
   </section>
 
   <!-- --- The three offers, each with its own page -->
-  <Section data-chat-zone data-chat={tBubble.offersZone}>
+  <Section data-chat-zone>
     <h2 class="ec-reveal text-heading-1">{tHome.offers.title}</h2>
     <ul role="list" class="mt-10 grid ec-reveal gap-8 ec-reveal-late md:grid-cols-2 lg:grid-cols-3">
       <!-- --- Card pattern from Inclusive Components: the link is the title
@@ -165,7 +157,7 @@ const offerSurfaceClasses = {
                   </span>
                 )}
               </span>
-              <span class="flex flex-1 flex-col gap-3 p-6 md:p-7">
+              <div class="flex flex-1 flex-col gap-3 p-6 md:p-7">
                 <h3 class="text-heading-2 text-brand-green-high">
                   <a
                     href={localisedPath(key, currentLocale)}
@@ -176,13 +168,13 @@ const offerSurfaceClasses = {
                 </h3>
                 <p class="text-typo-medium">{tHome.offers.items[key].teaser}</p>
                 <span
-                  class="mt-auto flex items-center gap-2 pt-4 font-bold text-typo-medium transition-colors group-hover:text-brand-green-high group-has-[a:focus-visible]:text-brand-green-high"
+                  class="mt-auto flex items-center gap-2 pt-4 font-bold text-typo-medium"
                   aria-hidden="true"
                 >
                   {tHome.offers.more}
-                  <IconArrowRight class="size-5 transition-transform group-hover:translate-x-1 group-has-[a:focus-visible]:translate-x-1" />
+                  <IconArrowRight class="size-5 transition-[transform,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high" />
                 </span>
-              </span>
+              </div>
             </div>
           </li>
         ))
@@ -306,19 +298,18 @@ const offerSurfaceClasses = {
     </div>
     <ul
       role="list"
-      class="mt-10 grid ec-reveal grid-cols-2 gap-6 ec-reveal-late md:gap-8 xl:grid-cols-4"
+      class="mt-10 grid ec-reveal gap-6 ec-reveal-late sm:grid-cols-2 md:gap-8 lg:grid-cols-3"
     >
       {
         featuredProjects.map((project) => (
           <li>
             <ProjectCard
-              href={localisedPath("portfolio", currentLocale)}
-              slug={project.slug}
-              label={project.label}
-              type={project.type}
+              href={localisedPath("portfolio", currentLocale, `/${project.slug}`)}
+              label={localised(project.label, currentLocale)}
               image={project.image}
               summary={project.summary[currentLocale]}
-              ariaLabel={`${tHome.projects.cardLabel}: ${project.label}`}
+              mainService={project.services[0]}
+              services={project.services.map((service) => t.routeLabels[service])}
             />
           </li>
         ))
@@ -330,9 +321,8 @@ const offerSurfaceClasses = {
   <ContactSection
     title={tHome.contact.title}
     body={tHome.contact.body}
-    cardsChat={tBubble.contact}
     data-chat-zone
-    data-chat={tBubble.contactZone}
+    data-chat={tBubble.contact}
   />
 
   <MouseChatBubble />

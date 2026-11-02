@@ -1,7 +1,8 @@
 ---
-// --- The offer pages' "how I can help": a title, a lead and three white cards
-// on the grey ground, each with an icon, like the offer cards on the start page.
-// Shared, so the pages cannot drift apart.
+// --- The offer pages' "how I can help": a title, a lead and three cards, each
+// with an icon, like the offer cards on the start page. On the grey page ground
+// the cards are white with a shadow; on a light section they are grey without
+// one. Shared, so the pages cannot drift apart.
 import type { IconCheck } from "@tabler/icons-astro"
 import Section from "./ui/Section.astro"
 
@@ -9,14 +10,18 @@ interface Props {
   title: string
   lead: string
   items: { title: string; text: string }[]
-  /** --- One Tabler icon component per item, in the same order --- */
-  icons: (typeof IconCheck)[]
+  /** --- One icon component per item, in the same order: a Tabler icon or a
+       drawn one that takes `class` --- */
+  icons: (typeof IconCheck | ((props: { class?: string }) => unknown))[]
+  tone?: "page" | "light"
 }
 
-const { title, lead, items, icons } = Astro.props
+const { title, lead, items, icons, tone = "page" } = Astro.props
+
+const cardClasses = tone === "light" ? "bg-gray-subtle" : "bg-gray-min shadow-sm"
 ---
 
-<Section aria-labelledby="servicesTitle">
+<Section tone={tone} aria-labelledby="servicesTitle">
   <h2 id="servicesTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
   <p class="mt-5 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{lead}</p>
 
@@ -28,7 +33,10 @@ const { title, lead, items, icons } = Astro.props
         const ServiceIcon = icons[index]
         return (
           <li
-            class="flex ec-reveal flex-col rounded-3xl bg-gray-min p-6 shadow-sm md:row-span-3 md:grid md:grid-rows-subgrid md:p-8"
+            class:list={[
+              "flex ec-reveal flex-col rounded-3xl p-6 md:row-span-3 md:grid md:grid-rows-subgrid md:p-8",
+              cardClasses,
+            ]}
             style={`--ec-reveal-delay: ${index * 110}ms`}
           >
             <span

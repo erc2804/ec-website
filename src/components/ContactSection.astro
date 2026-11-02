@@ -17,8 +17,6 @@ interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   body: string
   /** --- Preselects the topic on the request page --- */
   topic?: "accessibility" | "design" | "development"
-  /** --- Pixel-Ercan's line over the two contact cards --- */
-  cardsChat?: string
   /** --- Pixel-Ercan's tool cursor (the one from the design page) beside the
        request button; once the block is in view it nudges the button a few
        times. Decoration only. --- */
@@ -26,7 +24,14 @@ interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   class?: string
 }
 
-const { title, body, topic, cardsChat, hasCursor = false, class: additionalClasses, ...attributes } = Astro.props
+const {
+  title,
+  body,
+  topic,
+  hasCursor = false,
+  class: additionalClasses,
+  ...attributes
+} = Astro.props
 const cursorName = siteConfig.name.split(" ")[0]
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
@@ -44,13 +49,17 @@ const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "
           {t.common.contactCta}
           <IconArrowRight slot="icon-end" class="size-5" />
         </Button>
-        {hasCursor && <ToolCursor name={cursorName} class="ec-contact-cursor top-1/2 left-[calc(100%-0.75rem)] z-10" />}
+        {
+          hasCursor && (
+            <ToolCursor
+              name={cursorName}
+              class="ec-contact-cursor top-1/2 left-[calc(100%-0.75rem)] z-10"
+            />
+          )
+        }
       </div>
     </div>
-    <div
-      class="flex ec-reveal flex-col gap-6 ec-reveal-late lg:justify-center"
-      data-chat={cardsChat}
-    >
+    <div class="flex ec-reveal flex-col gap-6 ec-reveal-late lg:justify-center">
       <ContactCard
         href={`mailto:${siteConfig.contact.email}`}
         label={t.home.contact.email}

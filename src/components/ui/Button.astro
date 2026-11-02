@@ -4,7 +4,8 @@ import { useTranslations } from "../../i18n"
 
 interface Props {
   href?: string
-  variant?: "primary" | "secondary"
+  /** --- "quiet": grey outline, the calm partner of a primary button --- */
+  variant?: "primary" | "secondary" | "quiet"
   /** --- "compact" for dense rows such as the header --- */
   size?: "regular" | "compact"
   /** --- Ignored when href is set --- */
@@ -38,17 +39,20 @@ const tagProps = href
   ? { href, ...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}) }
   : { type }
 
+// --- Every variant carries the 2px border, the primary one in transparent, so
+// a primary and a quiet button side by side are the same height
 const baseClasses =
-  "ec-button group inline-flex items-center justify-center gap-2.5 rounded-full text-center font-bold no-underline transition-colors hyphens-auto"
+  "ec-button group inline-flex items-center justify-center gap-2.5 rounded-full border-2 text-center font-bold no-underline transition-colors hyphens-auto"
 
 const sizeClasses = {
-  regular: "min-h-12 px-6 py-3",
-  compact: "min-h-11 px-5 py-2.5 text-sm",
+  regular: "min-h-12 px-6 py-2.5",
+  compact: "min-h-11 px-5 py-2 text-sm",
 }
 
 const variantClasses = {
-  primary: "bg-brand-green-medium text-brand-blue hover:bg-brand-green-low",
-  secondary: "border-2 border-brand-green-high text-brand-green-high hover:bg-brand-green-low/25",
+  primary: "border-transparent bg-brand-green-medium text-brand-blue hover:bg-brand-green-low",
+  secondary: "border-brand-green-high text-brand-green-high hover:bg-brand-green-low/25",
+  quiet: "border-gray-low bg-gray-min text-typo-high hover:bg-gray-subtle",
 }
 ---
 
@@ -65,7 +69,10 @@ const variantClasses = {
     )
   }
 
-  <span>
+  <!-- --- an-regular sits high in its line box: nudged down onto the optical
+       middle, without changing the button's size. Works for wrapped labels too,
+       where ec-pill-label's line-height 1 would not. -->
+  <span class="relative top-[0.05em]">
     <slot />
   </span>
 

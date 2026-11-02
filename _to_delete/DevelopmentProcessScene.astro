@@ -96,7 +96,8 @@ const codeLines = [
               "h-2 origin-left rounded-full transition-[scale,opacity]",
               line.width,
               line.colour,
-              line.from === 3 && "scale-x-0 opacity-0 group-data-[step=3]:scale-x-100 group-data-[step=3]:opacity-100 group-data-[step=3]:delay-300 group-data-[step=4]:scale-x-100 group-data-[step=4]:opacity-100",
+              line.from === 3 &&
+                "scale-x-0 opacity-0 group-data-[step=3]:scale-x-100 group-data-[step=3]:opacity-100 group-data-[step=3]:delay-300 group-data-[step=4]:scale-x-100 group-data-[step=4]:opacity-100",
               motion,
             ]}
           />
@@ -131,7 +132,13 @@ const codeLines = [
         motion,
       ]}
     >
-      <img src="/images/pixelcan.png" alt="" width="56" height="56" class="size-full rounded-full bg-brand-sand" />
+      <img
+        src="/images/pixelcan.png"
+        alt=""
+        width="56"
+        height="56"
+        class="size-full rounded-full bg-brand-sand"
+      />
       <span
         class:list={[
           "absolute -right-2 -bottom-1 grid size-7 scale-0 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-transform group-data-[step=2]:scale-100",

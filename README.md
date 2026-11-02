@@ -30,7 +30,7 @@ pnpm dev
 
 | Command             | Description                       |
 | ------------------- | --------------------------------- |
-| `pnpm dev`          | Dev server                        |
+| `pnpm dev`          | `netlify dev` on :8888            |
 | `pnpm build`        | Production build to `dist/`       |
 | `pnpm preview`      | Serve the build locally           |
 | `pnpm format`       | Format everything with Prettier   |

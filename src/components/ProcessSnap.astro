@@ -13,7 +13,7 @@ import Section from "./ui/Section.astro"
 interface Props {
   title: string
   lead: string
-  steps: { title: string; text: string; outcome: string }[]
+  steps: { title: string; text: string }[]
   Scene: (props: { step?: 1 | 2 | 3 | 4; isCompact?: boolean; class?: string }) => unknown
 }
 
@@ -36,7 +36,7 @@ const { title, lead, steps, Scene } = Astro.props
         {
           steps.map((step, index) => (
             <li
-              class="ec-process-snap-step flex flex-col gap-3 border-t border-gray-low py-10 transition-colors duration-500 lg:min-h-80 lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-high"
+              class="ec-process-snap-step flex flex-col gap-3 border-t border-gray-low py-10 transition-colors duration-500 lg:relative lg:min-h-80 lg:justify-center lg:py-12 lg:data-[is-active=true]:border-brand-green-high"
               data-step={index + 1}
               data-is-active={index === 0 ? "true" : "false"}
             >
@@ -50,7 +50,6 @@ const { title, lead, steps, Scene } = Astro.props
               </span>
               <h3 class="text-heading-2">{step.title}</h3>
               <p class="max-w-[46ch] text-typo-medium">{step.text}</p>
-              <p class="max-w-[46ch] text-typo-high">{step.outcome}</p>
             </li>
           ))
         }
@@ -58,6 +57,32 @@ const { title, lead, steps, Scene } = Astro.props
     </div>
   </div>
 </Section>
+
+<style>
+  /* --- Desktop: a dot in the left column where the scene will land next to
+     each step, as on the start page's roles, so the column is never empty.
+     The scene is 20rem tall and lands with its top on the step's top, so the
+     dot sits 10rem down; across the 4rem gap, in the middle of the left
+     column. The dot of the active step fades out under the scene. --- */
+  @media (width >= 64rem) {
+    .ec-process-snap-step::before {
+      content: "";
+      position: absolute;
+      top: 10rem;
+      left: calc(-50% - 4rem);
+      width: 0.625rem;
+      height: 0.625rem;
+      translate: -50% -50%;
+      border-radius: 50%;
+      background: var(--color-gray-low);
+      transition: opacity 500ms;
+    }
+
+    .ec-process-snap-step[data-is-active="true"]::before {
+      opacity: 0;
+    }
+  }
+</style>
 
 <script>
   // --- Same logic as the roles on the start page: the active step is the last

@@ -35,7 +35,8 @@ Copy is part of the work, not filler around it. German is the reference, English
 - The inquiry: never "Vorhaben"; the page asks "Worum geht es?" and says "Dein Projekt".
 - The first call is "unverbindlich und kostenlos", never only "kostenlos".
   In English: "free, with no strings attached".
-- An example is marked as one: "Ein Beispiel. Jedes Projekt ist anders."
+- An example is marked as one: "Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf
+  dich ab. So kann er zum Beispiel … aussehen."
 - Error messages are friendly and clear, without control terms ("Haken raus").
 - An empty state says nothing has happened yet and what one can do, never "Bereit".
 

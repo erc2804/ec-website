@@ -24,7 +24,10 @@ const t = useTranslations(Astro.currentLocale).development.findings
           <p class="text-typo-medium">{item.text}</p>
           <p class="border-l-3 border-brand-green-medium pl-4 text-typo-high">{item.me}</p>
           <p class="mt-auto text-sm text-typo-medium">
-            <a href={item.href} target="_blank" rel="noopener noreferrer">{t.sourceLabel}</a>: {item.source}
+            <a href={item.href} target="_blank" rel="noopener noreferrer">
+              {t.sourceLabel}
+            </a>
+            : {item.source}
           </p>
         </li>
       ))

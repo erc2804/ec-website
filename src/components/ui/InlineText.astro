@@ -1,0 +1,42 @@
+---
+// --- Running text from the translations with two marks: `code` and
+// [text](url). Code gets the mono face on a grey chip; a link opens in a new
+// tab and says so to screen readers. Everything else stays plain text, so a
+// string without marks renders exactly as before.
+import { useTranslations } from "../../i18n"
+
+interface Props {
+  text: string
+}
+
+const { text } = Astro.props
+const t = useTranslations(Astro.currentLocale).common
+
+const markPattern = /(`[^`]+`|\[[^\]]+\]\([^)]+\))/
+const parts = text
+  .split(markPattern)
+  .filter(Boolean)
+  .map((part) => {
+    if (part.startsWith("`")) return { kind: "code" as const, text: part.slice(1, -1) }
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (link) return { kind: "link" as const, text: link[1], href: link[2] }
+    return { kind: "text" as const, text: part }
+  })
+---
+
+{
+  parts.map((part) =>
+    part.kind === "code" ? (
+      <code class="rounded bg-gray-subtle px-1 font-mono text-[0.9em] text-typo-high">
+        {part.text}
+      </code>
+    ) : part.kind === "link" ? (
+      <a href={part.href} target="_blank" rel="noopener noreferrer">
+        {part.text}
+        <span class="sr-only"> {t.opensInNewTab}</span>
+      </a>
+    ) : (
+      part.text
+    )
+  )
+}

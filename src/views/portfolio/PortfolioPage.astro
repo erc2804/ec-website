@@ -1,19 +1,110 @@
 ---
-import Placeholder from "../../components/ui/Placeholder.astro"
+// --- The portfolio: every project as a card, newest first. Below it one row
+// of pill links, GitHub, the first portfolio and the playgrounds, and the
+// contact block. The cards link to the
+// project pages.
+import {
+  IconArrowUpRight,
+  IconBrandCodepen,
+  IconBrandGithub,
+  IconCode,
+  IconDeviceGamepad2,
+  IconMovie,
+} from "@tabler/icons-astro"
+import ContactSection from "../../components/ContactSection.astro"
+import Button from "../../components/ui/Button.astro"
+import ProjectCard from "../../components/ui/ProjectCard.astro"
 import Section from "../../components/ui/Section.astro"
+import { siteConfig } from "../../config/site"
+import { elsewhereLinks, localised, projects, type Project } from "../../data/projects"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale)
+const tPortfolio = t.portfolio
+
+const elsewhereIcons = {
+  github: IconBrandGithub,
+  gamepad: IconDeviceGamepad2,
+  code: IconCode,
+  codepen: IconBrandCodepen,
+  movie: IconMovie,
+}
+
+// --- The offers a project touched, main one first
+const serviceLabels = (project: Project) =>
+  project.services.map((service) => t.routeLabels[service])
 ---
 
 <main id="main" class="pt-header">
   <Section>
-    <h1 class="text-display">Portfolio</h1>
-    <Placeholder class="mt-10">
-      Kartenraster wie bisher (vier Spalten, Mockup, Titel, Typ, Technologien). Vorn die vier neuen
-      Projekte (Industrie-KI, HR-Tech, KONUX, Audits), dann die bestehenden. Projektseiten wie
-      bisher.
-    </Placeholder>
-    <Placeholder label="Archiv" class="mt-8">
-      Eigene Reihe am Ende: Mel-Menu als „2018, mein erstes Portfolio“, dazu Fiddles, Codepens,
-      Lottiefiles.
-    </Placeholder>
+    <h1 class="ec-rise text-display">{tPortfolio.title}</h1>
+    <p class="mt-6 max-w-[52ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:150ms]">
+      {tPortfolio.lead}
+    </p>
+
+    <ul role="list" class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {
+        projects.map((project, index) => {
+          return (
+            <li class="ec-reveal" style={`--ec-reveal-delay: ${(index % 4) * 80}ms`}>
+              <ProjectCard
+                href={localisedPath("portfolio", currentLocale, `/${project.slug}`)}
+                label={localised(project.label, currentLocale)}
+                image={project.image}
+                summary={project.summary[currentLocale]}
+                mainService={project.services[0]}
+                services={serviceLabels(project)}
+                headingLevel={2}
+              />
+            </li>
+          )
+        })
+      }
+    </ul>
   </Section>
+
+  <Section tone="light" aria-labelledby="elsewhereTitle">
+    <h2 id="elsewhereTitle" class="ec-reveal text-heading-1">{tPortfolio.elsewhere.title}</h2>
+    <p class="mt-5 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
+      {tPortfolio.elsewhere.lead}
+    </p>
+
+    <ul role="list" class="mt-8 flex flex-wrap gap-3">
+      {
+        elsewhereLinks.map((item) => {
+          const LinkIcon = elsewhereIcons[item.icon]
+          return (
+            <li>
+              <Button href={item.url} variant="quiet" size="compact" isExternal>
+                <!-- --- The icon sits inside the label, not in the icon slot: it
+                     stays put on hover, only the arrow on the right moves. The
+                     label is nudged down for the optical middle of the letters
+                     (see Button), so both icons are nudged back up by the same
+                     amount and sit geometrically centred like the slot icons. A
+                     block flex, not inline: an inline box would add descender
+                     room below and push everything up. -->
+                <span class="flex items-center gap-2">
+                  <LinkIcon class="relative -top-[0.05em] size-4" aria-hidden="true" />
+                  {item.label}
+                  <!-- --- Hover and focus: an arrow grows out to the right, the
+                       way the language switch unfolds in the header -->
+                  <span
+                    class="grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]"
+                    aria-hidden="true"
+                  >
+                    <span class="min-w-0 overflow-hidden">
+                      <IconArrowUpRight class="relative -top-[0.05em] ml-1.5 size-4 text-brand-green-high" />
+                    </span>
+                  </span>
+                </span>
+              </Button>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </Section>
+
+  <ContactSection title={tPortfolio.contact.title} body={tPortfolio.contact.body} />
 </main>

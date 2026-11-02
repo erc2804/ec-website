@@ -1,0 +1,120 @@
+---
+// --- One project: the client's name as the heading, one line on what it was,
+// the story in a few paragraphs and the link to the live product. On the right
+// the mockup on the panel in the colour of the main offer, as on the card, and under it the facts
+// as a list: when, as what, for whom, which offers, which skills. The facts
+// stay put while the text scrolls. No picture yet: the facts alone.
+import { IconArrowLeft, IconExternalLink } from "@tabler/icons-astro"
+import ContactSection from "../../components/ContactSection.astro"
+import Button from "../../components/ui/Button.astro"
+import Section from "../../components/ui/Section.astro"
+import { offerSurfaceClasses } from "../../components/ui/offerSurfaceClasses"
+import { siteConfig } from "../../config/site"
+import { localised, type Project } from "../../data/projects"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const translations = useTranslations(currentLocale)
+const tPortfolio = translations.portfolio
+const t = tPortfolio.project
+
+const label = localised(project.label, currentLocale)
+const hostname = project.url ? new URL(project.url).hostname.replace(/^www\./, "") : undefined
+
+// --- The facts list. The employer for work in employment, the description of
+// the client where the name stays out; a named client is the heading already.
+const facts: { term: string; value: string }[] = [
+  { term: t.facts.period, value: project.period[currentLocale] },
+  { term: t.facts.role, value: project.role[currentLocale] },
+  ...(project.employer ? [{ term: t.facts.employer, value: project.employer }] : []),
+  ...(project.client ? [{ term: t.facts.client, value: project.client[currentLocale] }] : []),
+  {
+    term: t.facts.services,
+    value: project.services.map((service) => translations.routeLabels[service]).join(", "),
+  },
+  {
+    term: t.facts.skills,
+    value: project.techs.map((tech) => localised(tech.label, currentLocale)).join(", "),
+  },
+]
+---
+
+<main id="main" class="pt-header">
+  <Section>
+    <Button href={localisedPath("portfolio", currentLocale)} variant="quiet" size="compact">
+      <IconArrowLeft slot="icon-start" class="size-4" />
+      {t.back}
+    </Button>
+
+    <div class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-20">
+      <div>
+        <h1 class="ec-rise text-display text-balance">{label}</h1>
+        <p class="mt-4 max-w-[44ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:100ms]">
+          {project.title[currentLocale]}
+        </p>
+
+        <div class="mt-10 flex max-w-[62ch] ec-rise flex-col gap-5 [--ec-rise-delay:200ms]">
+          {
+            project.description[currentLocale].map((paragraph) => (
+              <p class="text-body text-typo-medium">{paragraph}</p>
+            ))
+          }
+        </div>
+
+        {
+          project.url && hostname && (
+            <div class="mt-10 ec-rise [--ec-rise-delay:250ms]">
+              <Button href={project.url} variant="secondary" isExternal>
+                {t.visit.replace("{host}", hostname)}
+                <IconExternalLink slot="icon-end" class="size-5" />
+              </Button>
+            </div>
+          )
+        }
+      </div>
+
+      <aside
+        class="ec-rise [--ec-rise-delay:150ms] lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start"
+        aria-labelledby="factsTitle"
+      >
+        {
+          project.image && (
+            <div class:list={["rounded-3xl p-8", offerSurfaceClasses[project.services[0]]]}>
+              <img
+                src={project.image}
+                alt={t.imageAlt.replace("{label}", label)}
+                width="1413"
+                height="2916"
+                class="mx-auto h-auto w-full max-w-[13rem] drop-shadow-xl"
+              />
+            </div>
+          )
+        }
+        <h2 id="factsTitle" class="sr-only">{t.facts.title}</h2>
+        <dl
+          class:list={[
+            "divide-y divide-gray-low border-y border-gray-low",
+            project.image && "mt-8",
+          ]}
+        >
+          {
+            facts.map((fact) => (
+              <div class="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-4 py-3 text-sm">
+                <dt class="text-typo-medium">{fact.term}</dt>
+                <dd class="text-typo-high">{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
+    </div>
+  </Section>
+
+  <ContactSection title={tPortfolio.contact.title} body={tPortfolio.contact.body} />
+</main>

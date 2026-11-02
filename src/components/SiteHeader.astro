@@ -25,10 +25,12 @@ import {
 
 interface Props {
   routeKey?: RouteKey
+  /** --- Path below the route, passed on to the language switch --- */
+  subPath?: string
   isOnDark?: boolean
 }
 
-const { routeKey, isOnDark = false } = Astro.props
+const { routeKey, subPath, isOnDark = false } = Astro.props
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
@@ -100,7 +102,11 @@ const islandClasses =
               <a
                 href={item.href}
                 class="ec-nav-link relative flex min-h-11 w-fit items-center px-6 py-2 text-lead whitespace-nowrap no-underline ec-focus-inset transition-colors hover:text-gray-max nav:px-4 nav:text-body nav:group-data-[is-on-dark=true]:group-data-[is-scrolled=false]:hover:text-gray-min"
-                aria-current={currentPath === item.href ? "page" : undefined}
+                aria-current={
+                  currentPath === item.href || (item.key === routeKey && subPath)
+                    ? "page"
+                    : undefined
+                }
               >
                 {item.label}
               </a>
@@ -113,7 +119,11 @@ const islandClasses =
         class="mt-4 border-t border-gray-low px-6 pt-4 nav:mt-0 nav:ml-auto nav:border-0 nav:px-0 nav:pt-0"
         data-chat={t.chatBubble.languageSwitch}
       >
-        {routeKey && <LanguageSwitch routeKey={routeKey} currentLocale={currentLocale} />}
+        {
+          routeKey && (
+            <LanguageSwitch routeKey={routeKey} subPath={subPath} currentLocale={currentLocale} />
+          )
+        }
       </div>
 
       {

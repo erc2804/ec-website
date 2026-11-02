@@ -37,15 +37,16 @@ bilingual, built with Astro.
 ## Commands
 
 ```bash
-pnpm dev            # dev server, run by the author in his own terminal
+pnpm dev            # netlify dev, run by the author in his own terminal
 pnpm build          # production build
 pnpm format         # prettier --write .
 pnpm lint           # eslint .
 pnpm check          # astro check
 ```
 
-The inquiry chat needs its Netlify function: `netlify dev` (port 8888, proxies Astro on
-4321). `ANTHROPIC_API_KEY` lives in the gitignored `.env`.
+`pnpm dev` runs `netlify dev`: the site and the inquiry chat's Netlify function on port
+8888, proxying Astro on 4321. `netlify.toml` starts Astro with `pnpm astro dev`; pointing
+it at `pnpm dev` loops. `ANTHROPIC_API_KEY` lives in the gitignored `.env`.
 
 The dev server sometimes keeps serving a component's old CSS after an edit. `touch` the
 `.astro` file and reload; if the new rules are still missing in the served stylesheets,

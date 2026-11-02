@@ -5,6 +5,7 @@
 // answers are grey panels without shadow (white on grey gets a shadow, grey on
 // white does not).
 import { IconChevronDown } from "@tabler/icons-astro"
+import InlineText from "./ui/InlineText.astro"
 import Section from "./ui/Section.astro"
 
 interface Props {
@@ -30,7 +31,9 @@ const { title, items } = Astro.props
               <IconChevronDown class="size-5" />
             </span>
           </summary>
-          <p class="max-w-[60ch] px-6 pb-6 text-typo-medium">{item.answer}</p>
+          <p class="max-w-[60ch] px-6 pb-6 text-typo-medium">
+            <InlineText text={item.answer} />
+          </p>
         </details>
       ))
     }

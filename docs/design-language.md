@@ -16,8 +16,8 @@
 
 Accessibility quotes the VoiceOver caption panel (`ScreenReaderCaption`), design the
 selection frame of Figma (`SelectionFrame`), development the browser's inspector next to
-the terminal in which I instruct the AI (`InspectFrame`). The quote carries the argument, so it sits where it proves something, not
-as a badge on top of a section. A quote has to be right: a tool shown doing something it
+the terminal in which I instruct the AI (`InspectFrame`). The quote carries the argument,
+so it sits where it proves something, not as a badge on top of a section. A quote has to be right: a tool shown doing something it
 does not do is worse than no quote.
 
 Each page tells its own story. The shared pieces (sections, the scenes, Pixel-Ercan, the
@@ -32,6 +32,9 @@ has it.
 - `prefers-reduced-motion` shows the final state at once: no cursor, no retype, no travel.
 - Below `lg` the process scenes stand still: every step carries its own picture, already in
   its state. The tool quotes in the heroes play at every width.
+- A process section only where the steps say something the page does not say elsewhere.
+  The development page has none: six things a client can count on
+  (`WorkingStyleSection`) say how the work goes, whatever the stack.
 
 ## Decoration is never a control
 
@@ -42,8 +45,7 @@ a hidden picture is a control without a purpose.
 
 ## The scenes
 
-One picture language across the site (`RoleScene`, `ProcessScene`, `DesignProcessScene`,
-`DevelopmentProcessScene`): speech bubbles in the shape of the inquiry chat, a grey
+One picture language across the site (`RoleScene`, `ProcessScene`, `DesignProcessScene`): speech bubbles in the shape of the inquiry chat, a grey
 wireframe card for the product, the designed card from the states demo, a dark code block
 with green token lines, the client as a grey user icon, Pixel-Ercan as the round avatar
 with a badge for what he is doing (magnifier, brush, code). Pieces move between states
@@ -51,9 +53,11 @@ with a badge for what he is doing (magnifier, brush, code). Pieces move between 
 
 ## Examples
 
-The product shown is always a generic, fictional one (Klaro, a time tracking tool), never a
-bank or an insurer. A "designed" example must not look like the AI template next to it:
-no gradient hero, no three icon cards, no two buttons side by side.
+A demo product is generic and fictional, never a bank or an insurer. The one real
+exception is the design page's before/after: the top of my own home page, once as an AI
+model built it from the content alone (model, date and prompt shown under it), once as
+designed. A "designed" example must not look like the AI version next to it: no gradient
+hero, no three icon cards, no two buttons side by side.
 
 ## Colour and type
 

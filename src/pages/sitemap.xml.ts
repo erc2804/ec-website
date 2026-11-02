@@ -3,6 +3,7 @@
 // head. Slugs are localised, so the pairs cannot come from the paths (ADR 0007).
 import type { APIRoute } from "astro"
 import { siteConfig } from "../config/site"
+import { projects } from "../data/projects"
 import { routes, unindexedRoutes, type RouteKey } from "../i18n"
 
 const absoluteUrl = (path: string) => new URL(path, siteConfig.url).href
@@ -12,16 +13,23 @@ export const GET: APIRoute = () => {
     (route) => !(unindexedRoutes as readonly RouteKey[]).includes(route)
   )
 
-  const entries = indexedRoutes.flatMap((route) => {
+  // --- A page is a route plus, for the project pages, the slug below it
+  const pages: { route: RouteKey; subPath: string }[] = [
+    ...indexedRoutes.map((route) => ({ route, subPath: "" })),
+    ...projects.map((project) => ({ route: "portfolio" as const, subPath: `/${project.slug}` })),
+  ]
+
+  const entries = pages.flatMap(({ route, subPath }) => {
+    const pathFor = (locale: (typeof siteConfig.locales)[number]) =>
+      absoluteUrl(`${routes[route][locale]}${subPath}`)
     const alternates = [
       ...siteConfig.locales.map(
-        (locale) =>
-          `<xhtml:link rel="alternate" hreflang="${locale}" href="${absoluteUrl(routes[route][locale])}"/>`
+        (locale) => `<xhtml:link rel="alternate" hreflang="${locale}" href="${pathFor(locale)}"/>`
       ),
-      `<xhtml:link rel="alternate" hreflang="x-default" href="${absoluteUrl(routes[route][siteConfig.defaultLocale])}"/>`,
+      `<xhtml:link rel="alternate" hreflang="x-default" href="${pathFor(siteConfig.defaultLocale)}"/>`,
     ].join("")
     return siteConfig.locales.map(
-      (locale) => `<url><loc>${absoluteUrl(routes[route][locale])}</loc>${alternates}</url>`
+      (locale) => `<url><loc>${pathFor(locale)}</loc>${alternates}</url>`
     )
   })
 

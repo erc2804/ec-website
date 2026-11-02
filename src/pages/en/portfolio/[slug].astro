@@ -1,0 +1,23 @@
+---
+import { localised, projects } from "../../../data/projects"
+import { useTranslations } from "../../../i18n"
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import ProjectPage from "../../../views/portfolio/ProjectPage.astro"
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))
+}
+
+const { project } = Astro.props
+const t = useTranslations("en").portfolio.project
+const label = localised(project.label, "en")
+---
+
+<BaseLayout
+  title={t.metaTitle.replace("{label}", label)}
+  description={project.summary.en}
+  routeKey="portfolio"
+  subPath={`/${project.slug}`}
+>
+  <ProjectPage project={project} />
+</BaseLayout>

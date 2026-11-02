@@ -27,8 +27,10 @@ expects 1200×630.
 **English: sales channel or courtesy?** The localised slugs, hreflang and the switcher only
 pay off if the English pages should be found through search.
 
-**Portfolio.** Paused: Curanto, HIT and Welliba came from employment, whether they may be
-shown is undecided. New anonymised projects still need card images.
+**Portfolio.** Built: cards for all 15 projects, a page per project in both languages, the
+row of links to GitHub, Mel-Menu and the playgrounds. Still open: whether the employment projects (Curanto, HIT, Welliba, DB,
+Eckelmann, AON, P&G) may be shown with the employer named, and the pictures for the three
+unnamed projects, which the author delivers; until then their cards show the surface alone.
 
 **Home page, "Weiter, Taste" vignette.** Still needs its animation.
 
@@ -49,15 +51,18 @@ its content changes and repeated identical text.
 
 - **Mobile.** Design and development pages were only reviewed at desktop width. Phone
   check pending for: hero animations,
-  states dropdown, process scenes under `lg`, inspector panel below the heading.
+  states dropdown, the design process scene under `lg`.
 - **English copy** of the design and development pages.
 - **The site's own accessibility.** No audit has been run against this project.
 - **Dark mode.** No decision; the previous project committed to light only.
 
 ## Housekeeping
 
-- `_to_delete/` holds `HeroBuild.astro` and `DeviceFrame.astro`, two discarded hero
-  variants. Remove the folder.
+- `_to_delete/` holds discarded development page pieces: `HeroBuild.astro`,
+  `DeviceFrame.astro`, `DecisionsSection.astro`, `FindingsSection.astro` (the study cards),
+  `ProjectsSection.astro` (three projects as text), `DevelopmentProcessScene.astro` (the
+  process scene) and `DeliverySection.astro` (a pull request card), plus
+  `PhonePlaceholder.astro`, a drawn phone the portfolio no longer needs. Remove the folder.
 
 ## Deliberately not done
 

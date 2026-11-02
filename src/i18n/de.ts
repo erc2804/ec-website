@@ -5,6 +5,7 @@ import type { DemoCase } from "./types"
 
 export const de = {
   common: {
+    close: "Schließen",
     opensInNewTab: "(öffnet in neuem Tab)",
     contactCta: "Projekt anfragen",
     // --- Under "LinkedIn" on the contact cards: what the click brings, not the profile slug
@@ -131,25 +132,22 @@ export const de = {
   },
 
   chatBubble: {
-    heroZone: "Schön, dass du da bist.",
-    offersZone: "Was davon brauchst du?",
-    contactZone: "Ich freu mich auf deine Nachricht.",
     starter: "Wie geht's?",
     firstName: "Mein Name wird Erdschan ausgesprochen (wie bei Dschungel).",
     mainLinks: "Wohin als Nächstes?",
     languageSwitch: "Keine Sorge, ich spreche beide Sprachen.",
-    accessibility: "Gute Wahl.",
-    design: "Ja, das mache ich auch selbst.",
-    development: "Und das auch.",
-    contact: "Trau dich.",
+    accessibility: "Gute Wahl!",
+    design: "Mein Herzensthema.",
+    development: "// TODO: Peppigen Spruch einfügen",
+    contact: "Ich freue mich auf deine Nachricht!",
+    legal: "Wirklich?",
   },
 
   home: {
     meta: {
-      title:
-        "Barrierefreiheit, UI/UX-Design und Frontend in Düsseldorf | Ercan Cicek",
+      title: "Barrierefreiheit, UI/UX-Design und Frontend in Düsseldorf | Ercan Cicek",
       description:
-        "Ich mache Websites und Apps barrierefrei nach BFSG, gestalte sie und baue sie selbst. Selbstständiger Product Engineer in Düsseldorf, über zehn Jahre Design und Code.",
+        "Ich mache Websites barrierefrei nach BFSG und gestalte und baue Websites und Web-Apps selbst. Selbstständiger Product Engineer in Düsseldorf, über zehn Jahre Design und Code.",
     },
     hero: {
       eyebrow: ["Product Engineer", "Düsseldorf"],
@@ -162,17 +160,17 @@ export const de = {
         accessibility: {
           title: "Barrierefreiheit",
           teaser:
-            "Ich prüfe deine Website oder App nach WCAG und BFSG, behebe die Fehler selbst im Code und zeige deinem Team, worauf es ankommt.",
+            "Ich prüfe deine Website nach WCAG und BFSG, behebe die Fehler selbst im Code und zeige deinem Team, worauf es ankommt.",
         },
         design: {
           title: "UI/UX-Design",
           teaser:
-            "Oberflächen, die sich von selbst erklären. Auch für Produkte, die mit KI gebaut wurden und jetzt ein eigenes Gesicht bekommen.",
+            "Oberflächen, die sich von selbst erklären. Auch für Produkte, die mit KI gebaut wurden und ein eigenständiges Design bekommen sollen.",
         },
         development: {
           title: "Frontend-Entwicklung",
           teaser:
-            "React, Vue, TypeScript. Ich baue, was das Design meint, mit allen Zuständen, nicht nur dem schönen.",
+            "Egal mit welcher Technologie: Ich leite die KI so an, dass sie auch baut, was man im Konzept nicht sieht.",
         },
       },
       more: "Mehr dazu",
@@ -194,18 +192,18 @@ export const de = {
         },
         {
           title: "Mitarbeiten",
-          text: "Ich werde **Teil deines Teams**. Als Designer, der weiß, was sich bauen lässt, oder als Entwickler, der versteht, was das Design will.",
+          text: "Ich werde **Teil deines Teams**. Entweder im Design, in der Entwicklung oder als Nahtstelle dazwischen.",
         },
         {
           title: "Prüfen",
-          text: "Du willst wissen, wo du stehst. Ich prüfe deine Website oder App auf **Barrierefreiheit** und schaue mir auf Wunsch auch Design und Code an. Du bekommst einen **Bericht**, mit dem dein Team sofort arbeiten kann.",
+          text: "Du willst wissen, wo du stehst. Ich prüfe deine Website auf **Barrierefreiheit**, am liebsten direkt in eurem Code und eurem Design in Figma. Du bekommst einen **Bericht**, mit dem dein Team sofort arbeiten kann.",
         },
         {
           title: "Schulen",
-          text: "Dein Team soll es selbst können. Mit **Mentoring und Schulungen** zu Barrierefreiheit, Design und Frontend, damit es das Wissen im Alltag sicher anwendet.",
+          text: "Mit **Mentoring und Schulungen** bringe ich deinem Team bei, was es gerade braucht, zum Beispiel rund um Barrierefreiheit oder das Arbeiten mit KI. So wendet es das Wissen im Alltag sicher an.",
         },
       ],
-      note: "Oft beginnt es mit einer Prüfung und wird zu mehr. Wenn du nicht weißt, was du brauchst, ist genau das ein guter Grund für ein Gespräch.",
+      note: "Meist beginnen wir mit einer Prüfung auf Barrierefreiheit, häufig wird daraus eine langfristige Zusammenarbeit in mehreren Bereichen. Wo du am besten einsteigst, klären wir im ersten Gespräch.",
     },
     quotes: {
       title: "Ausgewählte Empfehlungen",
@@ -236,13 +234,45 @@ export const de = {
     projects: {
       title: "Aus meinem Portfolio",
       all: "Zum Portfolio",
-      cardLabel: "Zum Projekt",
     },
     contact: {
-      title: "Erzähl mir, worum es geht.",
-      body: "Schreib mir kurz, was du vorhast und womit es gebaut ist. Du bekommst eine ehrliche Einschätzung, auch wenn sie lautet: Dafür brauchst du mich nicht.",
+      title: "Melde dich bei mir.",
+      body: "Erzähl mir kurz und unverbindlich, worum es geht, und wir finden gemeinsam eine passende Lösung.",
       email: "E-Mail",
       linkedin: "LinkedIn",
+    },
+  },
+
+  portfolio: {
+    meta: {
+      title: "Portfolio: Web-Apps, Websites und Shops | Ercan Cicek",
+      description:
+        "Ausgewählte Projekte seit 2016: Web-Apps für Industrie, HR-Tech und Bahn, Shops und Websites, Barrierefreiheitsprüfungen. Mit Rolle, Zeitraum und Technik.",
+    },
+    title: "Portfolio",
+    lead: "Ausgewählte Projekte seit 2016.",
+    elsewhere: {
+      title: "Sonstiges",
+      lead: "Mein Code auf GitHub, Mel-Menu als mein erstes Portfolio von 2018 und ein paar Spielwiesen.",
+    },
+    project: {
+      back: "Zum Portfolio",
+      visit: "{host} ansehen",
+      facts: {
+        title: "Eckdaten",
+        period: "Zeitraum",
+        role: "Rolle",
+        employer: "Arbeitgeber",
+        client: "Kunde",
+        services: "Leistungen",
+        skills: "Kenntnisse",
+      },
+      imageAlt: "{label} auf dem Handy",
+      metaTitle: "{label} | Portfolio | Ercan Cicek",
+    },
+    contact: {
+      title: "Soll dein Projekt hier stehen?",
+      body: "Erzähl mir, was du vorhast. Ein kurzes Gespräch reicht, unverbindlich und kostenlos.",
     },
   },
 
@@ -399,67 +429,48 @@ export const de = {
       tokenBefore: "text/tertiary",
       tokenMiddle: "text/secondary",
       tokenAfter: "text/primary",
-      lead: "Jeder soll sofort sehen, wo es weitergeht. Dafür sorge ich: in neuen Produkten, in bestehenden, und in solchen, die mit KI gebaut wurden und jetzt den letzten Schritt brauchen.",
+      lead: "Nutzerfreundliches und einzigartiges Design: für neue Features in bestehenden Produkten und für neue Produkte, mit oder ohne KI-generierten Prototyp.",
     },
 
-    // --- The before/after section with the slider
+    // --- The before/after section: the two pages side by side
     compare: {
-      title: "Gleicher Inhalt. Anderes Produkt.",
-      lead: "KI-Werkzeuge liefern in Minuten eine Seite, die funktioniert. Das ist ein guter Anfang, oft der beste, den ein Projekt haben kann. Nur ist es eine Vorlage, und Vorlagen sehen sich ähnlich: Verlauf oben, drei Karten mit Symbolen, zwei Buttons. Was noch fehlt, ist die Entscheidung, was auf dieser Seite zählt.",
+      title: "KI liefert das Übliche, nicht die beste Lösung.",
+      lead: "Das Ergebnis funktioniert und ist ein guter Anfang. Nur ist es von der Stange: Die Elemente sehen aus wie überall, das Branding passt nicht, die Einzigartigkeit fehlt.",
       example:
-        "Hier die Startseite eines erfundenen Zeiterfassungs-Tools, links als Vorlage, rechts fertig gestaltet. Dasselbe Produkt, nur entschieden: was zuerst zählt, was weg kann und was man zeigt.",
-      before: "KI-Vorlage",
-      after: "Gestaltet",
-      sliderLabel: "Vergleich derselben Startseite: links die KI-Vorlage, rechts gestaltet",
+        "Ein Beispiel zur Verdeutlichung: der obere Bereich meiner eigenen Startseite, einmal von einer KI aus denselben Inhalten gebaut und einmal von mir gestaltet. Kundenseiten stelle ich hier bewusst keiner KI-Version gegenüber. Im Gespräch zeige ich dir gern Beispiele, die näher an deinem Projekt sind.",
+      before: "KI-generiert",
+      after: "Von mir gestaltet",
       // --- For screen readers, who do not see the two pictures
       description:
-        "Links: ein lila Verlauf, die Überschrift „Willkommen bei Klaro“, zwei gleich große Buttons und drei Karten mit den Wörtern „Blitzschnell“, „Sicher“ und „Intuitiv“. Rechts: die Überschrift „Stunden erfassen, ohne daran zu denken“, ein Satz dazu, ein Button und daneben ein Blick ins Produkt.",
-      changes: [
-        {
-          title: "Eine Aussage statt drei Schlagworte",
-          text: "„Blitzschnell, sicher, intuitiv“ könnte über jedem Produkt stehen. Ein Satz, der sagt, was das Tool tut, steht nur über diesem.",
-        },
-        {
-          title: "Ein Button statt zwei",
-          text: "„Jetzt starten“ neben „Mehr erfahren“ heißt: Entscheide du. Ein Button heißt: Hier geht es weiter.",
-        },
-        {
-          title: "Ein eigenes Gesicht",
-          text: "Die Vorlage gehört allen. Schrift, Farbe und Bild gehören jetzt zu diesem Produkt.",
-        },
+        "KI-generiert: dunkelblauer Hintergrund mit Gitter, das Kürzel „EC.“ als Logo, der Name in weißer Fettschrift, ein blauer Button mit Farbverlauf und daneben das Porträtfoto in einem leuchtenden Rahmen mit dem Zusatz „Fokus: Accessible Web Products“. Von mir gestaltet: dunkles Grau, das Logo mit den spitzen Klammern, der Name groß in Grün und Hellgrau, ein grüner Button und ein angeschnittenes Porträt, das die rechte Hälfte füllt.",
+      // --- The info button next to the AI side and its dialog: where the
+      // picture comes from, and the prompt as it was sent
+      originLabel: "So ist das KI-Ergebnis entstanden",
+      originTitle: "So ist das KI-Ergebnis entstanden",
+      originText: [
+        "Gebaut von Gemini 3.1 Pro am 2. November 2026, aus einem einzigen Prompt ohne weiteren Kontext und ohne Designvorgaben. Gezeigt ist das gelieferte Ergebnis, unverändert.",
+        "Mit anderen Prompts und Werkzeugen kommen auch bessere Ergebnisse heraus. Ohne gute Vorarbeit und passende Prompts wirken sie jedoch so gut wie immer wie von der Stange.",
       ],
-    },
+      promptTitle: "Der Prompt",
+      prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.
 
-    // --- Texts inside the fictional tool "Klaro" that both demos show
-    screen: {
-      name: "Klaro",
-      nav: ["Funktionen", "Preise", "Login"],
-      aiTitle: "Willkommen bei Klaro",
-      aiLead: "Die moderne All-in-One-Lösung für effiziente Zeiterfassung in deinem Team.",
-      aiPrimary: "Jetzt starten",
-      aiSecondary: "Mehr erfahren",
-      aiCards: [
-        { title: "Blitzschnell", text: "Erfasse deine Zeit in Sekunden, nicht in Minuten." },
-        { title: "Sicher", text: "Deine Daten sind bei uns in sicheren Händen." },
-        { title: "Intuitiv", text: "Eine Oberfläche, die keine Erklärung braucht." },
-      ],
-      title: "Stunden erfassen, ohne daran zu denken.",
-      lead: "Klaro bucht die Zeit automatisch auf das Projekt, in dem du gerade arbeitest. Für Teams, die ihre Stunden abrechnen.",
-      primary: "14 Tage kostenlos testen",
-      note: "Ohne Kreditkarte",
-      weekLabel: "Diese Woche",
-      weekTotal: "31,5 Std.",
-      days: ["Mo", "Di", "Mi", "Do", "Fr"],
-      hours: [7.5, 8, 6, 8, 2],
-      todayProject: "Läuft: Website-Relaunch",
+Inhalte:
+- Navigation: Barrierefreiheit, Design, Entwicklung, Portfolio, Über mich
+- Sprachumschalter: DE | EN
+- Zeile über dem Namen: Product Engineer · Düsseldorf
+- Name: Ercan Cicek
+- Aussage: Design, Code und Barrierefreiheit. Aus einer Hand.
+- Button: Projekt anfragen
+- Hinweis zum Weiterscrollen: Weiter nach unten
+- Das angehängte Foto ist ein Porträt von mir.`,
     },
 
     states: {
-      title: "Nicht nur der schöne Zustand.",
-      lead: "Entwürfe zeigen fast immer den Idealfall: drei kurze Einträge, alles geladen, nichts schiefgegangen. Im Betrieb ist eine Liste leer, lädt noch, bricht ab oder bekommt Texte, die niemand vorgesehen hat. Ich entwerfe jeden Zustand mit, damit euer Team nichts erfinden muss.",
+      title: "Ins Design gehören alle Zustände.",
+      lead: "Entwürfe konzentrieren sich meist auf den Idealfall. Aber was ist mit unterschiedlichen Textlängen, langen Ladezeiten, leeren oder überlangen Listen und Fehlern? Ich entwerfe jeden dieser Zustände mit, damit euer Team nichts erfinden muss.",
       legend: "Zustand",
-      commonLabel: "Nur der Idealfall entworfen",
-      designedLabel: "Jeder Zustand entworfen",
+      commonLabel: "Nicht mitgedacht",
+      designedLabel: "Mitgedacht",
       cardTitle: "Projekte diese Woche",
       rows: [
         { name: "Website-Relaunch", hours: "12,5 Std." },
@@ -473,87 +484,85 @@ export const de = {
       emptyAction: "Projekt anlegen",
       errorRaw: "Error: Request failed with status 500",
       errorTitle: "Die Projekte konnten nicht geladen werden",
-      errorText: "Deine Stunden sind gespeichert. Versuch es gleich noch einmal.",
-      errorAction: "Erneut laden",
+      errorText: "Versuch es gleich noch einmal.",
+      errorAction: "Erneut versuchen",
       loading: "Loading…",
+      loadingTitle: "Projekte werden geladen …",
+      loadingSlow: "Dauert es zu lange?",
+      loadingAction: "Neu laden",
       items: [
         {
-          key: "normal",
-          label: "Normal",
-          why: "So wird ein Entwurf gezeigt und abgenommen: drei Einträge, kurze Namen, alles da. In diesem Zustand sehen beide gut aus.",
-        },
-        {
           key: "loading",
-          label: "Lädt",
-          why: "Links ein englisches Wort auf leerer Fläche. Rechts zeigen Platzhalter, dass etwas kommt und wie viel. So wartet man ruhiger.",
+          label: "Ladezeit",
+          why: "Nicht mitgedacht: ein englisches Wort auf leerer Fläche. Mitgedacht: Hier steht, was gerade lädt, und falls es dauert, gibt es einen Ausweg.",
         },
         {
           key: "empty",
-          label: "Leer",
-          why: "Links ein leerer Kasten, der aussieht wie ein Fehler. Rechts steht, warum hier nichts ist, und der erste Schritt steht gleich daneben.",
+          label: "Leere Liste",
+          why: "Nicht mitgedacht: ein leerer Kasten, der aussieht wie ein Fehler. Mitgedacht: Hier steht, warum nichts da ist, und der erste Schritt gleich darunter.",
         },
         {
           key: "error",
           label: "Fehler",
-          why: "Links eine Meldung aus dem Code, die niemandem hilft. Rechts steht, was passiert ist, dass nichts verloren ist, und was man tun kann.",
+          why: "Nicht mitgedacht: eine Meldung aus dem Code, die niemandem hilft. Mitgedacht: Hier steht, was passiert ist und was man tun kann.",
         },
         {
           key: "long",
-          label: "Langer Text",
-          why: "Links schiebt ein langer Name die Stunden aus dem Bild. Rechts bricht er um und wird nach zwei Zeilen gekürzt. Echte Namen sind länger als die im Entwurf.",
+          label: "Langer Name",
+          why: "Nicht mitgedacht: Ein langer Name schiebt die Stunden aus dem Bild. Mitgedacht: Er bricht um und wird nach zwei Zeilen gekürzt. Echte Namen sind länger als die im Entwurf.",
+        },
+        {
+          key: "normal",
+          label: "Idealfall",
         },
       ],
     },
 
     services: {
       title: "So kann ich helfen",
-      lead: "Das ganze Design oder genau das Stück, das fehlt.",
+      lead: "Ich gestalte neue Features oder unterstütze euch beim grundsätzlichen Aufbau eures Produkts.",
       items: [
         {
           title: "Gestalten",
-          text: "Neue Produkte und Funktionen, von den ersten Abläufen bis zum klickbaren Prototyp in Figma.",
+          text: "Neue Produkte und Funktionen, von den ersten Abläufen bis zum klickbaren Prototyp im Designtool eurer Wahl, gern auch direkt als Code.",
         },
         {
-          title: "Nachschärfen",
-          text: "Dein Produkt läuft, vielleicht aus einer KI-Vorlage. Es bekommt eine klare Ordnung und einen eigenen Auftritt, ohne dass ihr von vorn anfangt.",
+          title: "Überarbeiten",
+          text: "Dein Produkt funktioniert bereits, ihr wollt aber neue Bereiche oder ein eigenständiges Design. Ich baue auf dem auf, was da ist, ohne dass ihr von vorn anfangt.",
         },
         {
           title: "Designsystem",
-          text: "Farben, Schrift, Abstände und Bausteine als feste Regeln. Damit Figma und Code dasselbe sprechen und dein Team nicht jeden Button neu erfindet.",
+          text: "Farben, Schrift, Abstände und Bausteine als feste Regeln. Damit Design und Code dieselbe Sprache sprechen und dein Team nicht jeden Button neu erfindet.",
         },
       ],
     },
 
     process: {
       title: "So kann es ablaufen",
-      lead: "Ein Beispiel. Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab.",
+      lead: "Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab. So kann er zum Beispiel für ein Designprojekt aussehen.",
       steps: [
         {
           title: "Kennenlernen",
-          text: "Du zeigst mir dein Produkt oder deine Idee und erzählst, wer es nutzt.",
-          outcome: "Danach weißt du, ob ich helfen kann.",
+          text: "Wir lernen uns kennen und sprechen über eure Produkte: wer sie nutzt und worum es geht.",
         },
         {
-          title: "Verstehen",
-          text: "Ich gehe durch, was Nutzer tun wollen und wo sie heute hängen bleiben.",
-          outcome: "Wir wissen, welche Screens zählen.",
+          title: "Einordnen",
+          text: "Ich mache mich kurz mit eurem Designsystem, euren Nutzern und dem bestehenden Produkt vertraut.",
         },
         {
           title: "Gestalten",
-          text: "Ich entwerfe in Figma, mit jedem Zustand, und zeige dir früh Zwischenstände.",
-          outcome: "Du bekommst einen klickbaren Prototyp.",
+          text: "Ich entwerfe das Produkt oder das neue Feature im Designtool eurer Wahl oder direkt im Code und denke dabei alles mit, was die Entwicklung braucht, etwa jeden Zustand.",
         },
         {
-          title: "Übergeben",
-          text: "Entwurf, Zustände und Tokens gehen an dein Team, mit Erklärung. Wenn du willst, baue ich mit.",
-          outcome: "Dein Team kann loslegen.",
+          title: "Übergabe",
+          text: "Entwurf, Zustände und Tokens gehen mit Erklärung an dein Team. Auf Wunsch baue ich direkt mit.",
         },
       ],
     },
 
     oneHand: {
       title: "Design, das sich bauen lässt",
-      body: "Ich entwickle selbst Frontends. Deshalb weiß ich, **wie weit ein Entwurf gehen darf**: so weit, dass Entwickler ins Schwitzen kommen, aber **nie so weit, dass er im Code nicht hält**. Und wenn beim Bauen jemand fehlt, bin ich da.",
+      body: "Ich entwickle seit über zehn Jahren selbst Frontends. Deshalb weiß ich, **wie weit ein Entwurf gehen darf**: so weit, dass Entwickler ins Schwitzen kommen, aber **nie so weit, dass er im Code nicht hält**. Und wenn beim Bauen jemand fehlt, bin ich da.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -561,31 +570,31 @@ export const de = {
       title: "Häufige Fragen",
       items: [
         {
-          question: "Unser Produkt ist mit KI gebaut. Lohnt sich Design dann noch?",
+          question: "Wozu Einzigartigkeit im Design?",
           answer:
-            "Ja, und die Vorlage ist dafür ein guter Start. Das Werkzeug nimmt dir das Grundgerüst ab. Was es dir nicht abnimmt, sind die Entscheidungen: was zuerst zählt, was weg kann und wie dein Produkt aussieht. Wir bauen auf dem auf, was schon da ist.",
+            "Weil Menschen eine Seite zuerst nach ihrem Aussehen beurteilen. In einer [Studie der Stanford University](https://doi.org/10.1145/997078.997097) drehte sich fast die Hälfte aller Kommentare zur Glaubwürdigkeit von Websites um das Design. Eine Vorlage von der Stange sieht aus wie viele andere.",
         },
         {
-          question: "Arbeitest du mit unserem Designsystem?",
+          question: "Kannst du direkt in unserem Designsystem arbeiten?",
           answer:
-            "Ja. Ich arbeite mit dem, was da ist, und erweitere es, wo etwas fehlt. Gibt es noch keins, legen wir die Grundlagen gemeinsam an.",
+            "Ja, gern, das ist meist am effizientesten: Ich nutze, was da ist, und ergänze, was fehlt. Habt ihr noch keins, bauen wir die Grundlagen zusammen auf.",
         },
         {
-          question: "Was kostet ein Projekt?",
+          question: "Wie hoch ist dein Stundensatz?",
           answer:
-            "Das hängt vom Umfang ab: wie viele Screens und Abläufe es sind und ob ein Designsystem dazugehört. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
+            "Das kommt auf das Buchungsvolumen an. Im unverbindlichen und kostenlosen Erstgespräch nenne ich dir einen konkreten Satz.",
         },
         {
-          question: "Ist Barrierefreiheit mit drin?",
+          question: "Sind deine Designs immer barrierefrei?",
           answer:
-            "Ja, von Anfang an. Kontraste, Schriftgrößen, Fokus und Zustände plane ich direkt mit, so muss später nichts nachgerüstet werden.",
+            "Wenn es für den Zweck sinnvoll ist und ihr es wollt, ja, und ich empfehle es fast immer. Bei einem internen Tool, das nur euer Team nutzt, schreibt das BFSG in der Regel nichts vor. Dann entscheidet ihr, wie weit ihr gehen wollt.",
         },
       ],
     },
 
     contact: {
       title: "Lass uns über dein Produkt sprechen.",
-      body: "Schick mir einen Link oder ein paar Screenshots. Im ersten Gespräch schauen wir gemeinsam drauf, unverbindlich und kostenlos.",
+      body: "Im ersten Gespräch schauen wir uns euer Produkt gemeinsam an, unverbindlich und kostenlos, und besprechen, wie ich euch unterstützen kann.",
     },
   },
 
@@ -593,37 +602,33 @@ export const de = {
     meta: {
       title: "Barrierefreiheit prüfen und umsetzen nach BFSG | Ercan Cicek",
       description:
-        "Ich prüfe deine Website oder App nach BFSG und WCAG 2.2, behebe die Fehler in Design und Code und schule dein Team. Aus Düsseldorf. Erstes Gespräch unverbindlich und kostenlos.",
+        "Ich prüfe deine Website nach BFSG und WCAG 2.2, behebe die Fehler in Design und Code und schule dein Team. Aus Düsseldorf. Erstes Gespräch unverbindlich und kostenlos.",
     },
 
     hero: {
       title: "Ich mache deine digitalen Produkte barrierefrei.",
-      // --- What VoiceOver announces for the heading above, shown next to it
+      // --- What a screen reader announces for the heading above, shown next to it
       announcement: "Ich mache deine digitalen Produkte barrierefrei. Überschrift, Ebene 1",
       announcementLabel: "Das sagt ein Screenreader zu dieser Überschrift",
-      lead: "Ich prüfe sie nach BFSG: Können auch Menschen mit Behinderung sie ohne Hürden nutzen? Auf Wunsch behebe ich die Fehler selbst, in Design und Code, und schule dein Team, damit keine neuen Fehler dazukommen.",
+      lead: "Ich prüfe sie nach WCAG und BFSG. Auf Wunsch behebe ich die Fehler selbst in Design und Code und schule dein Team, damit langfristig keine neuen dazukommen.",
     },
 
     demo: {
-      title: "Sieht gleich aus. Klingt anders.",
-      lead: "Wer nicht oder schlecht sieht, lässt sich Websites vorlesen, auf dem Mac von VoiceOver. Ist ein Element unsauber gebaut, hört man Falsches, nichts, oder kommt gar nicht erst an den Button. Und dann nicht weiter.",
+      title: "Sieht gleich aus. Aber was, wenn man schlecht sehen kann?",
+      lead: "In diesem Fall nutzen viele einen Screenreader, der Inhalte vorliest. Damit er alles richtig ansagt, braucht er klare Strukturen im Code und manchmal zusätzliche Angaben, etwa ob ein Feld Pflicht ist oder eine Eingabe falsch.",
       instruction:
-        "Geh mit „Zurück“ und „Weiter“ durchs Formular. Zu jedem Element steht da, was VoiceOver bei einem häufigen Fehler sagt, und was, wenn es richtig gebaut ist.",
+        "Geh mit „Zurück“ und „Weiter“ durch das Formular oder wähl ein Element direkt darin aus. Zu jedem Element siehst du, was ein Screenreader ansagt: einmal mit einem typischen Fehler, einmal richtig gebaut. Warum der Fehler stört, erklärt „Warum ist das ein Problem?“.",
       // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "Mit „Bildschirm aus“ erlebst du es ohne Bild, so wie VoiceOver-Nutzer.",
+      instructionCurtain: "Mit „Formular unsichtbar“ erlebst du es ohne Bild.",
       commonLabel: "Häufiger Fehler",
       correctLabel: "Richtig gebaut",
       previous: "Zurück",
       next: "Weiter",
       whyButton: "Warum ist das ein Problem?",
-      close: "Schließen",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "Zur Ansage",
-      // --- The switch in plain words; VoiceOver's own name for the mode,
-      // Screen Curtain, is named in the hint under it
-      blind: "Bildschirm aus",
-      blindHint: "Bei VoiceOver heißt das Bildschirmvorhang.",
-      curtainText: "Jetzt bleibt dir nur noch, was VoiceOver sagt.",
+      blind: "Formular unsichtbar",
+      curtainText: "Jetzt bleibt dir nur noch, was der Screenreader sagt.",
       silent: "Keine Ansage",
       position: "Element {number} von {total}",
       liveTemplate: "{position}: {name}",
@@ -639,7 +644,7 @@ export const de = {
           details: [
             "Das Schild-Symbol ist reine Deko. Fehlt im Code der Hinweis darauf, lesen manche Screenreader stattdessen den Dateinamen vor.",
             "Solche Ansagen enthalten keine Information. Sie sind Lärm, der das Zuhören mühsamer macht.",
-            "Richtig gebaut bekommt das Bild im Code eine leere Bildbeschreibung (alt=\"\"). Dann überspringt der Screenreader es. Ob ein Bild nur Deko ist, entscheidet, wer die Seite erstellt. Bilder mit Inhalt brauchen eine kurze Beschreibung.",
+            'Richtig gebaut bekommt das Bild im Code eine leere Bildbeschreibung (`alt=""`). Dann überspringt der Screenreader es. Ob ein Bild nur Deko ist, entscheidet, wer die Seite erstellt. Bilder mit relevantem Inhalt brauchen eine kurze Beschreibung.',
           ],
           common: "Bild, icon-shield-blue-2.svg",
           correct: "",
@@ -649,7 +654,7 @@ export const de = {
           name: "Überschrift, die keine ist",
           details: [
             "„Deine Angaben“ ist groß geschrieben und sieht aus wie eine Überschrift. Im Code ist es aber nur normaler Text.",
-            "Die meisten Screenreader-Nutzer suchen Inhalte über Überschriften und springen von einer zur nächsten. Das zeigt die große Umfrage von WebAIM unter Screenreader-Nutzern. Fehlt die Überschrift im Code, überspringen sie diesen Abschnitt.",
+            "Die meisten Screenreader-Nutzer suchen Inhalte über Überschriften und springen von einer zur nächsten. Das zeigt die große [Umfrage von WebAIM](https://webaim.org/projects/screenreadersurvey11/) unter Screenreader-Nutzern. Fehlt die Überschrift im Code, überspringen sie manchmal diesen Abschnitt.",
             "Richtig gebaut ist es auch im Code eine Überschrift. Wie sie aussieht, bestimmt weiter das Design.",
           ],
           common: "Deine Angaben",
@@ -659,8 +664,8 @@ export const de = {
           name: "Feld ohne Beschriftung",
           details: [
             "Über dem Feld steht „Vor- und Nachname“. Für das Auge gehört beides zusammen, im Code aber nicht.",
-            "VoiceOver sagt deshalb nur „Textfeld“, ohne Namen. Wer nicht sieht, muss raten, was hinein soll. Auch wer per Sprache steuert, wählt Felder über ihre Beschriftung aus. „Klick auf Vor- und Nachname“ klappt nur, wenn das Feld im Code so heißt.",
-            "Richtig gebaut ist die Beschriftung im Code mit dem Feld verbunden. Dann sagt VoiceOver sie mit an. Nebenbei wird die Beschriftung zur größeren Klickfläche: Ein Klick darauf setzt den Cursor ins Feld.",
+            "Der Screenreader sagt deshalb nur „Textfeld“, ohne Namen. Wer nicht (gut) sehen kann, muss raten, was hinein soll. Es trifft auch Menschen, die Maus und Tastatur schlecht bedienen können und ihren Computer stattdessen per Sprache steuern, etwa mit der Sprachsteuerung von macOS oder dem Sprachzugriff von Windows. Sie wählen ein Feld aus, indem sie seine Beschriftung aussprechen. Das klappt nur, wenn das Feld im Code so heißt.",
+            "Richtig gebaut ist die Beschriftung per Code mit dem Textfeld verbunden. Dann sagt der Screenreader sie mit an. Durch diese Verbindung kann man außerdem auf die Beschriftung klicken, um das Feld zu aktivieren und etwas einzutippen.",
           ],
           common: "Textfeld, Martin Beck",
           correct: "Vor- und Nachname, Pflichtfeld, Textfeld, Martin Beck",
@@ -668,9 +673,9 @@ export const de = {
         {
           name: "Fehler nur in Rot",
           details: [
-            "Das Feld ist rot umrandet, darunter steht in Rot, was fehlt. Wer hinsieht, merkt sofort: Hier stimmt etwas nicht.",
-            "VoiceOver sagt davon nichts. Wer die Farbe nicht wahrnimmt, merkt nicht, dass etwas falsch ist. Das betrifft nicht nur blinde Menschen, sondern auch Menschen mit Farbsehschwäche, mit wenig Sehkraft und viele Ältere.",
-            "Richtig gebaut ist das Feld im Code als fehlerhaft markiert und der Hinweis mit ihm verbunden. Dann sagt VoiceOver beides mit an. Dazu gehört ein Symbol oder ein Wort, damit der Fehler nicht nur an der Farbe hängt.",
+            "Das Feld ist rot umrandet, darunter steht in Rot, was fehlt. Für die meisten heißt das sofort: Fehler.",
+            "Aber was, wenn man das Rot nicht oder nicht richtig sieht? Das betrifft blinde Menschen, aber auch Menschen mit Farbsehschwäche, mit wenig Sehkraft und viele Ältere. Und der Screenreader sagt vom Fehler nichts.",
+            "Richtig gebaut ist das Feld auch im Code als fehlerhaft markiert, und der Hinweis darunter ist mit ihm verbunden. Dann sagt der Screenreader beides an: Hier ist ein Fehler, und das ist zu tun. Dazu gehört ein Symbol oder ein Wort, damit der Fehler nicht nur an der Farbe hängt.",
           ],
           common: "E-Mail-Adresse, Textfeld, beck.firma.de",
           correct:
@@ -679,9 +684,9 @@ export const de = {
         {
           name: "Button ohne Namen",
           details: [
-            "Der Button zeigt nur ein Symbol, kein Wort. Sehende erraten aus dem Zusammenhang, dass es hier weitergeht.",
-            "Das Symbol kann ein Screenreader nicht deuten, es ist nur eine Grafik. Einen Namen hat der Button im Code nicht. VoiceOver sagt deshalb nur „Taste“. Ob der Klick weiterführt, etwas löscht oder abschickt, erfährt man nicht.",
-            "Richtig gebaut bekommt der Button einen Namen, zum Beispiel „Weiter zur Zusammenfassung“. Der Name muss nicht sichtbar sein, das Design bleibt gleich.",
+            "Der Button zeigt nur ein Symbol. Sehende erraten aus dem Symbol und dem Zusammenhang, was er tut.",
+            "Das Symbol kann ein Screenreader nicht deuten, es ist nur eine Grafik. Einen Namen hat der Button im Code nicht. Der Screenreader sagt deshalb nur „Taste“. Ob der Klick weiterführt, etwas löscht oder abschickt, erfährt man nicht.",
+            "Richtig gebaut bekommt der Button im Code einen Text, den der Screenreader vorliest, zum Beispiel „Weiter zur Zusammenfassung“. Der Text muss nicht sichtbar sein, das Design bleibt gleich.",
           ],
           common: "Taste",
           correct: "Weiter zur Zusammenfassung, Taste",
@@ -698,53 +703,49 @@ export const de = {
       affectedTitle: "Meist betroffen",
       affected:
         "Onlineshops, Online-Banking, Buchungs- und Ticketportale, Vertragsabschlüsse und Apps für Privatkunden",
-      notAffectedTitle: "Meist nicht",
+      notAffectedTitle: "Meist nicht betroffen",
       notAffected:
         "Angebote nur für Firmenkunden und Dienstleistungen sehr kleiner Firmen: weniger als 10 Beschäftigte und höchstens 2 Millionen Euro Jahresumsatz oder Bilanzsumme (§ 3 BFSG)",
     },
 
     services: {
       title: "So kann ich helfen",
-      lead: "Meist beginnt es mit einer Prüfung. Danach übernehme ich so viel, wie du brauchst.",
+      lead: "Meist beginnen wir mit einer Prüfung, häufig wird daraus eine langfristige Zusammenarbeit. Ich übernehme so viel, wie du brauchst.",
       items: [
         {
           title: "Prüfen",
-          text: "Ich prüfe deine Website oder App nach WCAG\u00A02.2, mit Prüftools und von Hand mit Screenreader und Tastatur. Zu jedem Fehler bekommst du einen Lösungsvorschlag, mit dem dein Team sofort loslegen kann. Auf Wunsch schreibe ich auch die Barrierefreiheitserklärung.",
+          text: "Ich prüfe deine Website nach WCAG\u00A02.2, von Hand und mit Werkzeugen, die ich teils selbst entwickelt habe. Zu jedem Fehler bekommst du einen Lösungsvorschlag, mit dem dein Team sofort loslegen kann.",
         },
         {
           title: "Beheben",
-          text: "Ich behebe die Fehler selbst, in Figma und direkt in eurem Code, mit euren Werkzeugen. Am liebsten in den Bausteinen, aus denen eure Seiten bestehen. Dann ist ein Fehler überall auf einmal weg.",
+          text: "Ich behebe die Fehler direkt selbst, im Code und im Design, egal mit welcher Technologie ihr arbeitet. Jede Änderung kommentiere ich und fasse sie zusammen, damit dein Team sie nachvollziehen kann und weiß, worauf es künftig achten muss.",
         },
         {
           title: "Schulen",
-          text: "Ich zeige deinem Team an euren eigenen Seiten, worauf es ankommt. Mit Schulungen und Begleitung im Alltag denkt es Barrierefreiheit von Anfang an mit.",
+          text: "Mit Schulungen und Mentoring helfe ich deinem Team, Barrierefreiheit von Anfang an mitzudenken und Korrekturschleifen klein zu halten. Gern auch als Qualitätssicherung während Design und Entwicklung, zum Beispiel als eigener Schritt im Review jedes Sprints.",
         },
       ],
     },
 
     process: {
       title: "So kann es ablaufen",
-      lead: "Ein Beispiel. Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab.",
+      lead: "Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab. So kann er zum Beispiel für eine Prüfung aussehen.",
       steps: [
         {
           title: "Kennenlernen",
-          text: "Du erzählst mir, was du anbietest und womit es gebaut ist.",
-          outcome: "Danach weißt du, ob ich helfen kann.",
+          text: "Wir lernen uns kennen und sprechen über eure Produkte. Ich helfe dir, die Weichen richtig zu stellen.",
         },
         {
-          title: "Umfang festlegen",
-          text: "Wir wählen die Seiten und Abläufe, auf die es ankommt, etwa Suche und Bestellung.",
-          outcome: "Du bekommst ein Angebot mit festem Umfang.",
+          title: "Aufgaben definieren",
+          text: "Wir besprechen, was für euch möglich ist, mit euren Zielen im Vordergrund. Dazu gehören auch Preis und Zeitrahmen.",
         },
         {
           title: "Prüfen",
-          text: "Ich gehe die ausgewählten Abläufe Schritt für Schritt durch, so wie deine Kunden sie nutzen.",
-          outcome: "Du bekommst einen Bericht mit allen Fehlern und wie man sie behebt.",
+          text: "Ich prüfe die festgelegten Abläufe Schritt für Schritt von Hand und mit Werkzeugen, die ich teils selbst entwickelt habe. Am Ende steht ein Bericht mit einem Lösungsvorschlag zu jedem Befund, verständlich für den jeweiligen Fachbereich, für Entwickler zum Beispiel direkt als Code.",
         },
         {
           title: "Besprechen",
-          text: "Wir gehen die Fehler gemeinsam durch: was dringend ist, was schnell geht und was warten kann.",
-          outcome: "Danach weißt du, was zuerst dran ist, und entscheidest, wer es umsetzt: dein Team oder ich.",
+          text: "Entweder ihr geht den Bericht selbst durch und wir klären eure Fragen, oder wir gehen ihn gemeinsam durch. Danach kann dein Team direkt loslegen.",
         },
       ],
     },
@@ -761,12 +762,12 @@ export const de = {
         {
           question: "Bin ich überhaupt BFSG-pflichtig?",
           answer:
-            "Sehr wahrscheinlich, wenn Privatkunden bei dir online etwas kaufen, buchen oder einen Vertrag abschließen. Im Zweifel schauen wir uns das im ersten Gespräch zusammen an. Eine Rechtsberatung ersetzt das nicht.",
+            "Sehr wahrscheinlich, wenn Privatkunden bei dir online etwas kaufen, buchen oder einen Vertrag abschließen.",
         },
         {
           question: "Was kostet eine Prüfung?",
           answer:
-            "Das hängt vom Umfang ab: wie viele unterschiedliche Seitentypen und Abläufe geprüft werden, nicht wie viele Unterseiten es gibt. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
+            "Das hängt vom Umfang der Prüfung ab: wie viele unterschiedliche Seiten und Abläufe geprüft werden sollen, wie komplex die Seiten sind und in welchem Format ihr euch den Bericht wünscht. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
         },
         {
           question: "Reichen automatische Prüftools nicht aus?",
@@ -782,15 +783,15 @@ export const de = {
     },
 
     contact: {
-      title: "Lass uns schauen, wo dein Produkt steht.",
-      body: "Sag mir, um welche Website oder App es geht. Im ersten Gespräch schauen wir kurz gemeinsam drauf, und danach weißt du, was fehlt und was als Nächstes dran ist. Unverbindlich und kostenlos.",
+      title: "Melde dich bei mir.",
+      body: "Erzähl mir kurz und unverbindlich, worum es geht, und wir finden gemeinsam eine passende Lösung.",
     },
   },
   development: {
     meta: {
       title: "Frontend-Entwicklung mit React, Vue und TypeScript | Ercan Cicek",
       description:
-        "Ich baue Frontends, die auch in zwei Jahren noch halten: neu, in Bestehendem oder als Verstärkung für dein Team. KI schreibt mit, die Entscheidungen treffe ich. Das erste Gespräch ist unverbindlich und kostenlos.",
+        "Ich baue Frontends, die auch in zwei Jahren noch halten: aus deinem Prototyp, neu oder als Verstärkung für dein Team. KI schreibt mit, die Entscheidungen treffe ich. Das erste Gespräch ist unverbindlich und kostenlos.",
     },
 
     hero: {
@@ -799,87 +800,66 @@ export const de = {
       // --- The terminal next to the heading: what I tell the AI, what it
       // shows while it works, and its answer
       prompt: "Mach die Überschrift zu einem echten h1.",
-      working: "Ändere …",
-    },
-
-    findings: {
-      title: "KI baut schnell. Und übersieht, was man ihr nicht sagt.",
-      lead: "Das zeigen gerade mehrere große Auswertungen. Drei Punkte davon betreffen Frontends direkt, und bei allen dreien entscheidet nicht das Werkzeug, sondern wer es führt.",
-      items: [
-        {
-          title: "Sieht richtig aus, ist es nicht.",
-          text: "Mehr als die Hälfte der befragten Entwickler hat Code bekommen, der korrekt wirkte und erst im Betrieb versagte. Zwei Drittel ärgern sich über Lösungen, die „fast richtig“ sind.",
-          me: "Darum lese und teste ich, was die KI liefert, bevor es zu dir geht. Jede Komponente, nicht stichprobenartig.",
-          source: "Sonar, Befragung von 1.149 Entwicklern; Stack Overflow Developer Survey 2025",
-          href: "https://redwerk.com/blog/vibe-coding-report/",
-        },
-        {
-          title: "Barrierefrei nur auf Nachfrage. Und selbst dann nicht.",
-          text: "Fünf KI-Werkzeuge sollten ausdrücklich barrierefreie Websites bauen. Alle 15 Ergebnisse scheiterten schon an der niedrigsten WCAG-Stufe, im Schnitt mit 55 Fehlern pro Seite.",
-          me: "Ich baue Tastaturbedienung, Kontraste und Screenreader-Texte von Anfang an ein und prüfe sie, wie ich es bei Audits mache.",
-          source: "AudioEye, September 2026 (Studie des Anbieters, via VentureBeat)",
-          href: "https://venturebeat.com/ai/we-asked-five-ai-tools-to-build-accessible-websites-all-15-sites-failed",
-        },
-        {
-          title: "Es wächst, aber niemand räumt auf.",
-          text: "Der Anteil der Änderungen, die bestehenden Code ordnen, ist seit 2022 von 21 auf unter 4 Prozent gefallen. Kopierte Codeblöcke haben sich fast verdoppelt. So wird jede spätere Änderung teurer.",
-          me: "Ich gebe der KI die Struktur vor, Komponenten, Variablen, Grenzen, und halte sie ein. Dann bleibt dein Produkt auch nach dem zehnten Feature änderbar.",
-          source: "GitClear, Auswertung von 623 Mio. Code-Änderungen 2023 bis 2026 (via LeadDev)",
-          href: "https://leaddev.com/ai/code-maintainability-plummets-in-the-ai-coding-era",
-        },
-      ],
-      sourceLabel: "Quelle",
+      working: "かしこまりました、先輩 …",
     },
 
     services: {
-      title: "So kannst du mich einsetzen",
-      lead: "Neu, in Bestehendem oder als Verstärkung für dein Team.",
+      title: "So kann ich euch unterstützen",
+      lead: "Mit einem Prototyp als Vorlage, ganz von vorn oder als Teil eures Teams. Gern auch als Brücke zwischen Design und Entwicklung, auf Wunsch mit Barrierefreiheit im Gepäck.",
       items: [
         {
-          title: "Bauen",
+          title: "Vom Prototyp zum Produkt",
+          text: "Du hast einen Prototyp, oft mit KI gebaut, und er soll ein richtiges Produkt werden. Ich übernehme den Stand, räume auf, wo es klemmt, und baue weiter. Ohne Neustart.",
+        },
+        {
+          title: "Neu bauen",
           text: "Eine neue Web-App oder Website, vom Entwurf bis zum Start. Du bekommst Code, den dein Team später selbst lesen und ändern kann.",
         },
         {
-          title: "Weiterbauen",
-          text: "Ein Produkt, das es schon gibt, oft mit KI gebaut und schnell gewachsen. Ich räume auf, wo es klemmt, und baue weiter. Ohne Neustart.",
-        },
-        {
-          title: "Verstärken",
-          text: "Dein Team braucht eine Zeit lang eine Hand mehr. Ich arbeite in eurem Code und in euren Abläufen mit, so lange es nötig ist.",
+          title: "Im Team verstärken",
+          text: "Dein Team braucht eine Zeit lang eine Hand mehr. Ich arbeite in eurem Code und euren Abläufen mit, stimme Schnittstellen mit dem Backend ab und übergebe so, dass es ohne mich weitergeht.",
         },
       ],
     },
 
-    process: {
-      title: "So kann es ablaufen",
-      lead: "Ein Beispiel. Jedes Projekt ist anders, deshalb stimmen wir den Ablauf auf dich ab.",
-      steps: [
+    workingStyle: {
+      title: "Womit du rechnen kannst",
+      lead: "Was gebaut wird, entscheidet dein Produkt. Wie ich arbeite, bleibt gleich.",
+      // --- The technologies as chips under the first point; the last chip
+      // stands for whatever the client runs
+      stack: ["React", "Vue", "Angular", "Next.js", "Astro", "Shopify", "Webflow"],
+      stackYours: "und eures",
+      items: [
         {
-          title: "Kennenlernen",
-          text: "Du erzählst mir, was gebaut werden soll und was es schon gibt.",
-          outcome: "Danach weißt du, ob ich helfen kann.",
+          title: "Dein Stack, nicht meiner.",
+          text: "Welches Framework, welche Sprache, welches CMS: Das ist heute die kleinste Frage. Ich habe mit React, Vue, Angular, Next.js, Astro, Shopify und Webflow gebaut, und in das, was bei dir läuft, lese ich mich ein. Du bekommst keinen Technologiewechsel, nur weil ich einen Favoriten hätte.",
         },
         {
-          title: "Einlesen",
-          text: "Ich lese Entwurf und Code, falls es ihn schon gibt, und kläre, was offen ist, bevor es losgeht.",
-          outcome: "Du bekommst ein Angebot mit klarem Umfang.",
+          title: "Genau bis ins Detail.",
+          text: "Ein Abstand, der nicht stimmt, ein Fokusrahmen, der fehlt, ein Ladezustand, der springt: Das sehe ich, und das lasse ich nicht stehen. Was die KI liefert, lese und prüfe ich, bevor es zu dir geht.",
         },
         {
-          title: "Bauen",
-          text: "Ich baue in kurzen Abschnitten und zeige dir regelmäßig den Stand, lauffähig, nicht als Screenshot.",
-          outcome: "Du siehst früh, ob es passt.",
+          title: "Eigen statt Vorlage.",
+          text: "KI-gebaute Oberflächen sehen sich alle ähnlich. Ich gebe die Richtung vor, mit eigenen Komponenten, Tokens und Bewegung, damit dein Produkt aussieht wie deins. Diese Seite ist so entstanden.",
         },
         {
-          title: "Übergeben",
-          text: "Der Code liegt in eurem Repository, mit Erklärung. Dein Team macht weiter, oder ich bleibe dran.",
-          outcome: "Es läuft, und ihr könnt es ändern.",
+          title: "Skalierbar von Anfang an.",
+          text: "Komponenten, Variablen, klare Grenzen: Ich lege die Struktur so an, dass das zehnte Feature so leicht dazukommt wie das erste. Auch wenn der Prototyp schnell und unordentlich gewachsen ist.",
+        },
+        {
+          title: "In deinem Team zu Hause.",
+          text: "Ich arbeite in eurem Repository und nach euren Regeln, stimme Schnittstellen mit dem Backend ab und übergebe so, dass dein Team ohne mich weiterkommt. Wenn es hilft, schule ich es.",
+        },
+        {
+          title: "Barrierefrei auf Wunsch.",
+          text: "Tastatur, Screenreader, Kontraste und Fokus plane ich mit ein, wenn du es willst, und prüfe sie so, wie ich es in Audits mache.",
         },
       ],
     },
 
     oneHand: {
       title: "Wozu noch ein Entwickler, wenn KI den Code schreibt?",
-      body: "Weil der Code der letzte Schritt ist. Vorher entscheidet jemand, **was gebaut wird und wie es zu deinem Produkt und deinem Design passt**. Diese Entscheidungen treffe ich, dann lasse ich die KI bauen und **prüfe, was sie liefert**. Dazu kommt, was ein Modell nicht wissen kann: alles, was nach seinem Training erschienen ist. Das lerne ich laufend und gebe es weiter.",
+      body: "Weil Umsetzen nicht mehr der schwierige Teil ist. Schwierig sind die **Entscheidungen davor**: Skaliert das noch, wenn deine Idee wächst? Was passiert bei schlechtem Internet oder im Fehlerfall? Versteht ein Nutzer sofort, was er tun soll? Diese Fragen stelle ich, bevor die KI baut, und **prüfe danach, was sie liefert**. Dazu kommt, was ein Modell nicht wissen kann: alles, was nach seinem Training erschienen ist.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -893,12 +873,8 @@ export const de = {
         },
         {
           question: "Wann kannst du anfangen?",
-          answer: "Das hängt von meiner Auslastung ab. Frag einfach, dann sage ich dir ehrlich, wann es geht.",
-        },
-        {
-          question: "Mit welchen Technologien arbeitest du?",
           answer:
-            "React, Vue und TypeScript, Astro für Websites, Webflow, wenn es ohne Entwickler weitergehen soll. Was bei dir schon im Einsatz ist, bleibt. Ich bringe kein Framework mit, nur weil ich es mag.",
+            "Das hängt von meiner Auslastung ab. Frag einfach, dann sage ich dir ehrlich, wann es geht.",
         },
         {
           question: "Wir haben schon Entwickler. Passt das?",
@@ -907,12 +883,8 @@ export const de = {
         },
         {
           question: "Gehört uns der Code?",
-          answer: "Ja, von der ersten Zeile an. Alles liegt in eurem Repository, ohne Abhängigkeit von mir.",
-        },
-        {
-          question: "Ist Barrierefreiheit mit drin?",
           answer:
-            "Ja, von Anfang an. Tastatur, Kontraste, Fokus und Screenreader-Texte plane ich direkt mit, so muss später nichts nachgerüstet werden.",
+            "Ja, von der ersten Zeile an. Alles liegt in eurem Repository, ohne Abhängigkeit von mir.",
         },
       ],
     },

@@ -1,8 +1,11 @@
 ---
+import { useTranslations } from "../i18n"
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PortfolioPage from "../views/portfolio/PortfolioPage.astro"
+
+const t = useTranslations("de").portfolio.meta
 ---
 
-<BaseLayout title="Portfolio | Ercan Cicek" description="Platzhalter." routeKey="portfolio">
+<BaseLayout title={t.title} description={t.description} routeKey="portfolio">
   <PortfolioPage />
 </BaseLayout>

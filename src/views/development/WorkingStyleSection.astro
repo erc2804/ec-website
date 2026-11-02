@@ -1,0 +1,46 @@
+---
+// --- The long form of "how you can bring me in": six things a client can
+// count on, whatever gets built. Title and lead stay in the left column while
+// the points scroll by on the right, a list with thin lines, no cards. The one
+// picture is the row of technology chips under the first point, ending in a
+// chip for whatever the client already runs.
+import Section from "../../components/ui/Section.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).development.workingStyle
+---
+
+<Section aria-labelledby="workingStyleTitle">
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-20">
+    <div class="lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start">
+      <h2 id="workingStyleTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+      <p class="mt-5 max-w-[32ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+    </div>
+
+    <ul role="list" class="divide-y divide-gray-low border-y border-gray-low">
+      {
+        t.items.map((item, index) => (
+          <li
+            class="ec-reveal py-8 first:pt-0 lg:py-10"
+            style={`--ec-reveal-delay: ${index * 80}ms`}
+          >
+            <h3 class="text-heading-2 text-balance">{item.title}</h3>
+            <p class="mt-3 max-w-[56ch] text-typo-medium">{item.text}</p>
+            {index === 0 && (
+              <ul role="list" class="mt-5 flex flex-wrap gap-2" aria-label={t.stack.join(", ")}>
+                {t.stack.map((technology) => (
+                  <li class="rounded-full bg-gray-min px-3 py-1 text-sm text-typo-high shadow-sm">
+                    {technology}
+                  </li>
+                ))}
+                <li class="rounded-full bg-brand-green-low px-3 py-1 text-sm text-brand-blue">
+                  {t.stackYours}
+                </li>
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>

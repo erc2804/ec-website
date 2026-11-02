@@ -1,0 +1,27 @@
+---
+// --- Service icon for joining a team: a branch flowing into the main line,
+// my work landing in the team's code. Drawn on Tabler's 24 grid with its 2px
+// stroke, so it sits well beside Tabler icons.
+interface Props {
+  class?: string
+}
+
+const { class: additionalClasses } = Astro.props
+---
+
+<svg
+  class={additionalClasses}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <circle cx="6" cy="5" r="2"></circle>
+  <circle cx="6" cy="19" r="2"></circle>
+  <circle cx="18" cy="7" r="2"></circle>
+  <path d="M6 7v10"></path>
+  <path d="M18 9v1a5 5 0 0 1-5 5H8"></path>
+</svg>

@@ -1,20 +1,22 @@
 ---
 // --- Development offer page. The heading sits in the browser's inspector,
 // the way the design page's heading sits in a design tool's selection frame.
-// Then what the studies say about AI-written code and what I do about it,
-// how someone can bring me in, how it can go, why a developer at all when AI
-// writes the code, the usual questions, and the contact block.
+// Then how someone can bring me in, the long form of that (six things a client
+// can count on, whatever the stack), why a developer at all when AI writes the
+// code, the usual questions, and the contact block. No step-by-step process
+// here: the six points say how the work goes.
 //
-// Services, the one-hand block, the questions, the process and the contact
-// block are the shared components of the offer pages.
-import { IconArrowRight, IconHammer, IconStack2, IconUsersPlus } from "@tabler/icons-astro"
-import DevelopmentProcessScene from "./DevelopmentProcessScene.astro"
-import FindingsSection from "./FindingsSection.astro"
+// Services, the one-hand block, the questions and the contact block are the
+// shared components of the offer pages.
+import { IconArrowRight } from "@tabler/icons-astro"
+import MergeIcon from "./MergeIcon.astro"
+import PrototypeIcon from "./PrototypeIcon.astro"
+import TerminalIcon from "./TerminalIcon.astro"
 import InspectFrame from "./InspectFrame.astro"
+import WorkingStyleSection from "./WorkingStyleSection.astro"
 import ContactSection from "../../components/ContactSection.astro"
 import FaqSection from "../../components/FaqSection.astro"
 import OneHandSection from "../../components/OneHandSection.astro"
-import ProcessSnap from "../../components/ProcessSnap.astro"
 import ServicesSection from "../../components/ServicesSection.astro"
 import Button from "../../components/ui/Button.astro"
 import { siteConfig } from "../../config/site"
@@ -24,9 +26,11 @@ const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Local
 const t = useTranslations(currentLocale).development
 const tCommon = useTranslations(currentLocale).common
 
-// --- One icon per service, in the order of the copy: building, building on,
-// reinforcing
-const serviceIcons = [IconHammer, IconStack2, IconUsersPlus]
+// --- One icon per service, in the order of the copy: prototype to product,
+// building new, reinforcing the team
+// --- Drawn for this page: the prototype becoming the product, the hero's
+// terminal, a branch merging into the team's code
+const serviceIcons = [PrototypeIcon, TerminalIcon, MergeIcon]
 ---
 
 <main id="main">
@@ -36,11 +40,7 @@ const serviceIcons = [IconHammer, IconStack2, IconUsersPlus]
     <div
       class="ec-layout-visual-content pt-[calc(var(--spacing-header)+4rem)] pb-20 md:pt-[calc(var(--spacing-header)+6rem)] md:pb-28"
     >
-      <InspectFrame
-        prompt={t.hero.prompt}
-        working={t.hero.working}
-        class="ec-rise"
-      >
+      <InspectFrame prompt={t.hero.prompt} working={t.hero.working} class="ec-rise">
         <h1 class="max-w-[16ch] text-display text-balance">{t.hero.title}</h1>
       </InspectFrame>
       <p class="mt-10 max-w-[52ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:150ms]">
@@ -55,21 +55,15 @@ const serviceIcons = [IconHammer, IconStack2, IconUsersPlus]
     </div>
   </section>
 
-  <FindingsSection />
-
   <ServicesSection
     title={t.services.title}
     lead={t.services.lead}
     items={t.services.items}
     icons={serviceIcons}
+    tone="light"
   />
 
-  <ProcessSnap
-    title={t.process.title}
-    lead={t.process.lead}
-    steps={t.process.steps}
-    Scene={DevelopmentProcessScene}
-  />
+  <WorkingStyleSection />
 
   <OneHandSection
     title={t.oneHand.title}
