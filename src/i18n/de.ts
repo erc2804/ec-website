@@ -440,6 +440,9 @@ export const de = {
         "Ein Beispiel zur Verdeutlichung: der obere Bereich meiner eigenen Startseite, einmal von einer KI aus denselben Inhalten gebaut und einmal von mir gestaltet. Kundenseiten stelle ich hier bewusst keiner KI-Version gegenüber. Im Gespräch zeige ich dir gern Beispiele, die näher an deinem Projekt sind.",
       before: "KI-generiert",
       after: "Von mir gestaltet",
+      // --- One line under each picture, what it comes down to
+      beforeNote: "Sieht schick aus, aber wie jede andere generierte Seite.",
+      afterNote: "Gibt es so nur einmal: Farben, Schrift und Bild gehören zu mir.",
       // --- For screen readers, who do not see the two pictures
       description:
         "KI-generiert: dunkelblauer Hintergrund mit Gitter, das Kürzel „EC.“ als Logo, der Name in weißer Fettschrift, ein blauer Button mit Farbverlauf und daneben das Porträtfoto in einem leuchtenden Rahmen mit dem Zusatz „Fokus: Accessible Web Products“. Von mir gestaltet: dunkles Grau, das Logo mit den spitzen Klammern, der Name groß in Grün und Hellgrau, ein grüner Button und ein angeschnittenes Porträt, das die rechte Hälfte füllt.",
@@ -449,7 +452,7 @@ export const de = {
       originTitle: "So ist das KI-Ergebnis entstanden",
       originText: [
         "Gebaut von Gemini 3.1 Pro am 2. November 2026, aus einem einzigen Prompt ohne weiteren Kontext und ohne Designvorgaben. Gezeigt ist das gelieferte Ergebnis, unverändert.",
-        "Mit anderen Prompts und Werkzeugen kommen auch bessere Ergebnisse heraus. Ohne gute Vorarbeit und passende Prompts wirken sie jedoch so gut wie immer wie von der Stange.",
+        "Mit anderen Prompts und Werkzeugen kommen auch bessere Ergebnisse heraus. Ohne gute Vorarbeit und passende Prompts wirken sie jedoch so gut wie immer wie von der Stange. Dabei helfe ich euch gern.",
       ],
       promptTitle: "Der Prompt",
       prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.

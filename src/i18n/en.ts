@@ -429,6 +429,8 @@ export const en: Translations = {
         "An example to make it clear: the top of my own home page, once built by an AI from the same content and once designed by me. I deliberately don't put client sites up against an AI version here. On a call I'm happy to show you examples closer to your project.",
       before: "AI-generated",
       after: "Designed by me",
+      beforeNote: "Looks sleek, but like any other generated site.",
+      afterNote: "One of a kind: the colors, type and image are mine.",
       // --- For screen readers, who do not see the two pictures
       description:
         "AI-generated: a dark blue background with a grid, the initials “EC.” as the logo, the name in bold white, a blue gradient button and next to it the portrait in a glowing frame with the label “Focus: Accessible Web Products”. Designed by me: dark grey, the logo with the angle brackets, the name large in green and light grey, a green button and a cropped portrait that fills the right half.",
@@ -438,7 +440,7 @@ export const en: Translations = {
       originTitle: "How the AI result was made",
       originText: [
         "Built by Gemini 3.1 Pro on November 2, 2026, from a single prompt with no other context and no design brief. It shows the result as delivered. For the English page, only the texts were swapped.",
-        "Other prompts and tools give better results too. Without good groundwork and the right prompts, though, they almost always look off the rack.",
+        "Other prompts and tools give better results too. Without good groundwork and the right prompts, though, they almost always look off the rack. I'm happy to help you with that.",
       ],
       promptTitle: "The prompt (sent in German)",
       prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.
