@@ -19,11 +19,23 @@ pay off if the English pages should be found through search.
 
 **Home page, "Weiter, Taste" vignette.** Still needs its animation.
 
-**Live region helper.** Several live regions exist now (demo, chat log, inquiry status).
-Open is whether they share an `announce()` helper that handles the region existing before
-its content changes and repeated identical text.
-
 ## Next up
+
+**Move the Netlify project to this repository.** The live site still builds from
+`website-gatsby`. In order: stop auto publishing, link the project to `ec-website`
+(branch `main`), set `ANTHROPIC_API_KEY` as a secret for Production, Deploy Previews
+and Branch deploys, build, then test the deploy's own link before publishing: a URL
+without trailing slash (`/barrierefreiheit` must load without a redirect, from
+`build.format: "file"`), an old URL (`/de/portfolio/konux` must 301 to the new one),
+`/app-ads.txt`, the app privacy pages, one real form submission, both chats. If
+anything is off, the last Gatsby deploy can be published again from the deploy list.
+
+**Live regions through one helper** (ADR 0012): build `announce()`, move every live
+region onto it, then check each with VoiceOver and NVDA.
+
+**After launch.** Search Console: submit the new sitemap, remove the old one (no change
+of address needed, the domain stays). Bing Webmaster Tools: import from Search Console,
+submit the sitemap. Watch rankings for the first weeks.
 
 **Focus order in the screen reader demo** (accessibility page) feels off: from
 "Weiter" the next stop is "Warum ist das ein Problem?". Check the order against the
@@ -43,13 +55,3 @@ visual layout (WCAG 2.4.3, Focus Order) and decide where the button belongs.
   keyboard, reflow at 320px, text spacing, contrast); the screen reader check on a real
   device is the open part (see above).
 - **Dark mode.** No decision; the previous project committed to light only.
-
-## Housekeeping
-
-- `src/components/ui/Placeholder.astro` is unused since the about page was built.
-
-## Deliberately not done
-
-**No `llms.txt`.** Google's generative AI search guidance (May 2026) calls it unnecessary.
-
-**No `onDark` button variant** until a button sits on a dark surface.

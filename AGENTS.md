@@ -24,7 +24,8 @@ bilingual, built with Astro.
   build. When asked for ideas, write text and build nothing.
 - **Never commit or push.** The author does all git work and runs
   `pnpm format && pnpm lint && pnpm check && pnpm build` himself before a commit.
-- Files are never deleted from the project; move them to `_to_delete/` and say so.
+- Files that are no longer needed are deleted, not parked. Name every deleted file in
+  the report.
 
 ## Stack
 

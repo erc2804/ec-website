@@ -57,13 +57,22 @@ page it renders on.
 
 ## Accessibility
 
-The site is built to WCAG 2.2 AA. A few things are structural rather than incidental:
+The site is built to WCAG 2.2 AA and largely meets it. Its status, how it was tested and
+the known exceptions are in the
+[accessibility statement](https://ercancicek.com/barrierefreiheitserklaerung). A few
+things are structural rather than incidental:
 
-- Visible focus is defined once in the base layer and applies to every interactive element
-- `prefers-reduced-motion` is respected throughout
-- Anything interactive is a real `<button>` or `<a>`, so mouse, touch and keyboard share
-  one code path
-- Decorative elements never carry information that is missing from the surrounding text
+- One focus style, defined in the base layer. Components may move it (drawn inside an
+  element, a lighter colour on dark ground) but never remove it
+- `prefers-reduced-motion` is respected: animations end in their final state, and the
+  speech bubble that follows the pointer stays off
+- Controls are native elements (`<button>`, `<a>`, form fields, `<summary>`), so mouse,
+  touch and keyboard share one path. Pointer extras only repeat what a control already
+  does: a click on the screen reader demo's picture selects what Back and Next select,
+  a click beside an open dialog closes it like Escape. The exception is Mel-Menu, a game
+  from 2018, named in the statement
+- Decorative elements are hidden from assistive technology and carry nothing the
+  surrounding text does not say
 
 Conventions and working practices are documented in [`AGENTS.md`](AGENTS.md).
 
