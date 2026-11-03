@@ -1,0 +1,41 @@
+---
+// --- ProfilePage JSON-LD for the about page (Google's type for a page about
+// one person: developers.google.com/search/docs/appearance/structured-data/profile-page).
+// Every value is also visible on the page; structured data that claims more
+// than the page shows breaks Google's guidelines.
+import { siteConfig } from "../../config/site"
+import { localisedPath, useTranslations, type Locale } from "../../i18n"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).about
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  url: new URL(localisedPath("about", currentLocale), siteConfig.url).href,
+  name: t.meta.title,
+  inLanguage: currentLocale,
+  mainEntity: {
+    "@type": "Person",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    image: new URL("/images/ercancicek.jpg", siteConfig.url).href,
+    jobTitle: "Product Engineer",
+    description: t.lead,
+    email: siteConfig.contact.email,
+    workLocation: { "@type": "Place", name: "Düsseldorf" },
+    alumniOf: { "@type": "CollegeOrUniversity", name: "FH Aachen" },
+    knowsLanguage: ["de", "tr", "en", "ja"],
+    knowsAbout: [
+      "UI/UX design",
+      "Frontend development",
+      "Web accessibility",
+      "WCAG 2.2",
+      "Barrierefreiheitsstärkungsgesetz",
+    ],
+    sameAs: siteConfig.profiles.map((profile) => profile.url),
+  },
+}
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />

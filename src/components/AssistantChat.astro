@@ -1,0 +1,369 @@
+---
+// --- Pixel-Ercan's chat, in the chat look of the previous site: avatar with an
+// online dot, bubbles with a corner tail, the input with its send button, a
+// status line for working and errors, and the AI disclosure. The conversation
+// scrolls in its own area on wide screens; on narrow ones only the latest
+// exchange stays open. The page brings its texts and what it does with an
+// answer through createAssistantChat (assistantChat.ts). Without scripting the
+// chat is not shown at all.
+import { IconArrowDown, IconSend } from "@tabler/icons-astro"
+import { siteConfig } from "../config/site"
+import { localisedPath, useTranslations, type Locale } from "../i18n"
+import { fieldClasses } from "./ui/fieldClasses"
+import type { Ground } from "./ui/surfaceOnGround"
+
+interface Props {
+  text: {
+    /** --- Rendered as the chat's own h2; without it the page heads the chat --- */
+    title?: string
+    intro: string
+    disclosure: string
+    placeholder: string
+    replyPlaceholder: string
+    errors: { busy: string; budget: string; tooLong: string; error: string }
+  }
+  /** --- The surface it sits on (ui/surfaceOnGround.ts): the scroll edges and
+       the avatar ring fade into it --- */
+  ground?: Ground
+  class?: string
+}
+
+const { text, ground = "page", class: additionalClasses } = Astro.props
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).assistantChat
+const Tag = text.title ? "section" : "div"
+
+// --- Everything the script says, in one place
+const scriptText = {
+  ...t,
+  placeholder: text.placeholder,
+  replyPlaceholder: text.replyPlaceholder,
+  email: siteConfig.contact.email,
+  phone: siteConfig.contact.phone,
+  phoneDisplay: siteConfig.contact.phoneDisplay,
+  errors: { ...t.errors, ...text.errors },
+}
+---
+
+<Tag
+  class:list={["ec-assistant flex flex-col gap-5", additionalClasses]}
+  data-ground={ground}
+  data-text={JSON.stringify(scriptText)}
+>
+  {text.title && <h2 class="text-heading-2">{text.title}</h2>}
+
+  <div class="ec-log-frame group/log relative">
+    <!-- --- On narrow screens only the latest exchange stays open; this
+         brings the earlier messages back, in the page flow -->
+    <button
+      type="button"
+      class="ec-show-earlier mb-4 hidden min-h-11 text-sm font-bold text-brand-blue underline underline-offset-4 lg:hidden"
+      aria-expanded="false"
+      aria-controls="assistantLog"></button>
+    <div
+      id="assistantLog"
+      class="ec-assistant-log flex flex-col gap-4 lg:max-h-[min(44svh,26rem)] lg:overflow-y-auto lg:py-1"
+      role="log"
+      aria-live="polite"
+      aria-relevant="additions"
+      aria-label={t.logLabel}
+      tabindex="0"
+    >
+      <div class="ec-entry" data-from="assistant">
+        <span class="ec-avatar" aria-hidden="true">
+          <img src="/images/pixelcan.png" alt="" width="640" height="640" />
+        </span>
+        <p class="ec-bubble">
+          <span class="sr-only">{t.speakerAssistant}:</span>{" "}
+          {text.intro}
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="ec-to-newest absolute bottom-1 left-1/2 hidden size-11 -translate-x-1/2 place-items-center rounded-full bg-gray-min text-brand-green-high shadow-island"
+      aria-label={t.toNewest}
+    >
+      <IconArrowDown class="size-5" aria-hidden="true" />
+    </button>
+
+    <!-- --- Scroll hints instead of a scrollbar: soft shadows at an edge with
+         more beyond it, and a slim thumb that shows where you are -->
+    <span
+      class="ec-log-shadow pointer-events-none absolute inset-x-0 top-0 h-10 opacity-0 transition-opacity duration-200 ease-[ease] group-data-[shadow-top=true]/log:opacity-100"
+      data-edge="top"
+      aria-hidden="true"></span>
+    <span
+      class="ec-log-shadow pointer-events-none absolute inset-x-0 bottom-0 h-10 opacity-0 transition-opacity duration-200 ease-[ease] group-data-[shadow-bottom=true]/log:opacity-100"
+      data-edge="bottom"
+      aria-hidden="true"></span>
+    <span
+      class="ec-log-thumb pointer-events-none absolute top-0 -right-3.5 w-1 rounded-full bg-gray-low opacity-0 transition-opacity duration-200 ease-[ease] group-data-[is-scrollable=true]/log:opacity-100"
+      aria-hidden="true"></span>
+  </div>
+
+  <!-- --- Buttons the page offers between the conversation and the input -->
+  <slot name="choices" />
+
+  <form class="ec-assistant-form relative" novalidate>
+    <label for="assistantInput" class="sr-only">{t.inputLabel}</label>
+    <!-- --- py makes one line exactly as tall as the send button area, so a
+         single line sits centred; the script grows the field with its text.
+         The AI notice is read with the field and again with the send button,
+         so nobody sends a message without having heard it. -->
+    <textarea
+      id="assistantInput"
+      rows="1"
+      maxlength="2000"
+      class:list={[
+        "block w-full resize-none py-[calc((4rem_-_1.6em)/2_-_2px)] pr-18 pl-5",
+        fieldClasses,
+      ]}
+      placeholder={text.placeholder}
+      aria-describedby="assistantDisclosure"></textarea>
+    <button
+      type="submit"
+      class="absolute right-2 bottom-2 grid size-12 place-items-center rounded-full bg-brand-green-medium text-brand-blue transition-[background-color,scale] hover:scale-105 hover:bg-brand-green-low"
+      aria-label={t.send}
+      aria-describedby="assistantDisclosure"
+    >
+      <IconSend class="size-5" aria-hidden="true" />
+    </button>
+  </form>
+
+  <p
+    id="assistantStatus"
+    class="-mt-2 text-sm font-bold text-typo-medium empty:hidden"
+    aria-live="polite"
+  >
+  </p>
+
+  <div class="flex flex-col items-start gap-3">
+    <p id="assistantDisclosure" class="text-[0.8125rem] leading-normal text-typo-medium">
+      {text.disclosure}{" "}
+      <a href={localisedPath("privacy", currentLocale)}>{t.privacyLink}</a>
+    </p>
+    <button
+      type="button"
+      class="ec-assistant-reset hidden min-h-11 text-sm font-bold text-typo-medium underline underline-offset-4 hover:text-typo-high"
+    >
+      {t.reset}
+    </button>
+  </div>
+
+  <template id="assistantEntryTemplate">
+    <div class="ec-entry" data-from="assistant">
+      <span class="ec-avatar" aria-hidden="true">
+        <img src="/images/pixelcan.png" alt="" width="640" height="640" />
+      </span>
+      <p class="ec-bubble"></p>
+    </div>
+  </template>
+</Tag>
+
+<style>
+  /* --- The chat needs scripting; without it the panel would be a dead end --- */
+  @media (scripting: none) {
+    .ec-assistant {
+      display: none;
+    }
+  }
+
+  /* --- The colours are mixed with the ground to solid tones, so bubble and
+     tail never overlap into a darker seam --- */
+  .ec-assistant {
+    --ec-chat-ground: var(--color-gray-subtle);
+    --ec-bubble-assistant: color-mix(in srgb, var(--color-gray-low) 60%, var(--ec-chat-ground));
+    --ec-bubble-user: color-mix(in srgb, var(--color-brand-blue) 85%, var(--ec-chat-ground));
+  }
+
+  .ec-assistant[data-ground="light"] {
+    --ec-chat-ground: var(--color-gray-min);
+  }
+
+  /* --- Narrow screens: earlier messages fold away instead of making the page
+     ever longer; desktop scrolls the conversation in its own area --- */
+  @media (width < 64rem) {
+    .ec-assistant-log[data-is-collapsed="true"] > :global(.is-earlier) {
+      display: none;
+    }
+  }
+
+  .ec-assistant-log {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* --- Scroll shadows: the ground fading over the content at an edge where
+     more follows, with a soft shade along the edge itself. Position and
+     fading are utilities on the elements; the two gradients have none. --- */
+  .ec-log-shadow[data-edge="top"] {
+    background:
+      radial-gradient(farthest-side at 50% 0, rgb(5 56 107 / 0.12), transparent),
+      linear-gradient(var(--ec-chat-ground), transparent);
+  }
+
+  .ec-log-shadow[data-edge="bottom"] {
+    background:
+      radial-gradient(farthest-side at 50% 100%, rgb(5 56 107 / 0.12), transparent),
+      linear-gradient(transparent, var(--ec-chat-ground));
+  }
+
+  .ec-assistant :global(.ec-entry) {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"]) {
+    justify-content: flex-end;
+    padding-inline: 3.75rem 0.75rem;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"]) {
+    padding-inline-end: 1.5rem;
+  }
+
+  .ec-assistant :global(.ec-avatar) {
+    position: relative;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .ec-assistant :global(.ec-avatar img) {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--color-gray-low);
+    object-fit: cover;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  }
+
+  .ec-assistant :global(.ec-avatar::before) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgb(from var(--color-brand-green-high) r g b / 0.2);
+  }
+
+  .ec-assistant :global(.ec-avatar::after) {
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 2px solid var(--ec-chat-ground);
+    border-radius: 9999px;
+    background: var(--color-brand-green-medium);
+  }
+
+  .ec-assistant :global(.ec-bubble) {
+    position: relative;
+    border-radius: 0.75rem;
+    padding: 0.8rem 1.25rem;
+    line-height: 1.55;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"] .ec-bubble) {
+    margin-top: 0.25rem;
+    border-top-left-radius: 0;
+    background: var(--ec-bubble-assistant);
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="assistant"] .ec-bubble::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 100%;
+    border-right: 0.75rem solid var(--ec-bubble-assistant);
+    border-bottom: 0.75rem solid transparent;
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"] .ec-bubble) {
+    border-top-right-radius: 0;
+    background: var(--ec-bubble-user);
+    color: var(--color-typo-min);
+  }
+
+  .ec-assistant :global(.ec-entry[data-from="user"] .ec-bubble::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border-left: 0.75rem solid var(--ec-bubble-user);
+    border-bottom: 0.75rem solid transparent;
+  }
+
+  .ec-assistant :global(.ec-typing) {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 3.1rem;
+  }
+
+  .ec-assistant :global(.ec-typing span) {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-brand-green-high);
+    animation: ec-typing-dot 1s ease-in-out infinite;
+  }
+
+  .ec-assistant :global(.ec-typing span:nth-child(2)) {
+    animation-delay: 150ms;
+  }
+
+  .ec-assistant :global(.ec-typing span:nth-child(3)) {
+    animation-delay: 300ms;
+  }
+
+  @keyframes ec-typing-dot {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: none;
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(-0.2rem);
+    }
+  }
+
+  /* --- A link in one of Pixel-Ercan's answers: a page of this site, Ercan's
+     email address or phone number (renderReply in assistantChat.ts) --- */
+  .ec-assistant :global(.ec-bubble a) {
+    color: var(--color-brand-blue);
+    font-weight: 700;
+  }
+
+  /* --- Answers to tap, the same pill on every page that offers them --- */
+  .ec-assistant :global(.ec-choice) {
+    min-height: 2.75rem;
+    border: 2px solid var(--color-brand-green-high);
+    border-radius: 9999px;
+    padding: 0.5rem 1.1rem;
+    color: var(--color-brand-blue);
+    font-weight: 700;
+    text-align: start;
+    transition: background-color 180ms ease;
+  }
+
+  /* --- Pills sit 0.5rem apart, and the base ring (4px wide, 4px out) would
+     reach the next one. 2px out keeps it clear of the neighbour. --- */
+  .ec-assistant :global(.ec-choice:focus-visible) {
+    outline-offset: 2px;
+  }
+
+  .ec-assistant :global(.ec-choice:hover) {
+    background: rgb(from var(--color-brand-green-low) r g b / 0.35);
+  }
+</style>

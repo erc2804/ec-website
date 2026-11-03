@@ -1,6 +1,13 @@
 ---
 // --- Contact tile from the previous site: icon on the left, label and address
 // stacked on the right. The icon comes in through the slot.
+// With copyText the tile gets a copy button at its right end: a mailto: link
+// does nothing when no mail program is set up. A button cannot sit inside a
+// link, so the tile becomes a wrapper holding the link and the button side by
+// side. After a click a check replaces the icon and "Email address copied"
+// shows above the button for two seconds, in a status region that screen
+// readers announce.
+import { IconCheck, IconCopy } from "@tabler/icons-astro"
 import { useTranslations } from "../../i18n"
 
 interface Props {
@@ -8,27 +15,93 @@ interface Props {
   label: string
   address: string
   isExternal?: boolean
+  /** --- What the copy button puts on the clipboard; no button without it --- */
+  copyText?: string
   class?: string
 }
 
-const { href, label, address, isExternal = false, class: additionalClasses } = Astro.props
+const { href, label, address, isExternal = false, copyText, class: additionalClasses } = Astro.props
 const t = useTranslations(Astro.currentLocale).common
+
+const surfaceClasses = "rounded-3xl bg-gray-min shadow-sm transition-shadow lg:hover:shadow-lg"
+const linkClasses = "flex items-center gap-4 rounded-3xl px-6 py-4 text-typo-medium no-underline"
 ---
 
-<a
-  href={href}
-  class:list={[
-    "flex items-center gap-4 rounded-3xl bg-gray-min px-6 py-4 text-typo-medium no-underline shadow-sm transition-shadow lg:hover:shadow-lg",
-    additionalClasses,
-  ]}
-  {...isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {}}
->
-  <span class="grid size-10 shrink-0 place-items-center text-brand-green-medium [&>svg]:size-full">
-    <slot />
-  </span>
-  <span class="flex flex-col">
-    <span>{label}</span>
-    <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
-    {isExternal && <span class="sr-only">{t.opensInNewTab}</span>}
-  </span>
-</a>
+{
+  copyText ? (
+    <div class:list={["ec-copy relative flex items-center", surfaceClasses, additionalClasses]}>
+      <a href={href} class:list={[linkClasses, "min-w-0 flex-1 pr-2"]}>
+        <span class="grid size-10 shrink-0 place-items-center text-brand-green-medium [&>svg]:size-full">
+          <slot />
+        </span>
+        <span class="flex min-w-0 flex-col">
+          <span>{label}</span>
+          <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
+        </span>
+      </a>
+      <button
+        type="button"
+        class="ec-copy-button mr-4 grid size-11 shrink-0 place-items-center rounded-full text-typo-medium transition-colors hover:bg-gray-subtle hover:text-typo-high"
+        data-copy-text={copyText}
+        data-copied={t.copied}
+        data-copy-failed={t.copyFailed}
+        aria-label={t.copyEmail}
+      >
+        <IconCopy class="ec-copy-idle size-5" aria-hidden="true" />
+        <IconCheck class="ec-copy-done hidden size-5 text-brand-green-deep" aria-hidden="true" />
+      </button>
+      {/* --- Shown above the button and read by screen readers; it stays in
+           the page while empty, so a screen reader knows the region before
+           its text arrives */}
+      <span
+        class="ec-copy-status pointer-events-none absolute -top-4 right-2 rounded-full bg-gray-max px-3 py-1 text-xs font-bold whitespace-nowrap text-gray-min empty:opacity-0"
+        role="status"
+      />
+    </div>
+  ) : (
+    <a
+      href={href}
+      class:list={[linkClasses, surfaceClasses, additionalClasses]}
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      <span class="grid size-10 shrink-0 place-items-center text-brand-green-medium [&>svg]:size-full">
+        <slot />
+      </span>
+      <span class="flex flex-col">
+        <span>{label}</span>
+        <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
+        {isExternal && <span class="sr-only">{t.opensInNewTab}</span>}
+      </span>
+    </a>
+  )
+}
+
+<script>
+  // --- Copy, then say so for two seconds. The clipboard needs a secure
+  // context; where it refuses, the status says it did not work, and the address
+  // stays readable on the tile.
+  for (const button of document.querySelectorAll<HTMLButtonElement>(".ec-copy-button")) {
+    const status = button.parentElement!.querySelector<HTMLElement>(".ec-copy-status")!
+    const idleIcon = button.querySelector(".ec-copy-idle")!
+    const doneIcon = button.querySelector(".ec-copy-done")!
+    let resetTimer: number | undefined
+
+    button.addEventListener("click", async () => {
+      window.clearTimeout(resetTimer)
+      let isCopied = true
+      try {
+        await navigator.clipboard.writeText(button.dataset.copyText!)
+      } catch {
+        isCopied = false
+      }
+      idleIcon.classList.toggle("hidden", isCopied)
+      doneIcon.classList.toggle("hidden", !isCopied)
+      status.textContent = isCopied ? button.dataset.copied! : button.dataset.copyFailed!
+      resetTimer = window.setTimeout(() => {
+        status.textContent = ""
+        idleIcon.classList.remove("hidden")
+        doneIcon.classList.add("hidden")
+      }, 2000)
+    })
+  }
+</script>

@@ -51,7 +51,7 @@ const sizeClasses = {
 
 const variantClasses = {
   primary: "border-transparent bg-brand-green-medium text-brand-blue hover:bg-brand-green-low",
-  secondary: "border-brand-green-high text-brand-green-high hover:bg-brand-green-low/25",
+  secondary: "border-brand-green-high text-brand-green-deep hover:bg-brand-green-low/25",
   quiet: "border-gray-low bg-gray-min text-typo-high hover:bg-gray-subtle",
 }
 ---
@@ -69,10 +69,7 @@ const variantClasses = {
     )
   }
 
-  <!-- --- an-regular sits high in its line box: nudged down onto the optical
-       middle, without changing the button's size. Works for wrapped labels too,
-       where ec-pill-label's line-height 1 would not. -->
-  <span class="relative top-[0.05em]">
+  <span>
     <slot />
   </span>
 

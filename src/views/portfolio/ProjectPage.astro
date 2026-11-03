@@ -1,17 +1,19 @@
 ---
 // --- One project: the client's name as the heading, one line on what it was,
 // the story in a few paragraphs and the link to the live product. On the right
-// the mockup on the panel in the colour of the main offer, as on the card, and under it the facts
-// as a list: when, as what, for whom, which offers, which skills. The facts
-// stay put while the text scrolls. No picture yet: the facts alone.
-import { IconArrowLeft, IconExternalLink } from "@tabler/icons-astro"
+// the mockup on the light green panel of the card, and under it the facts as
+// a list: when, as what, for whom, which offers, which skills. Not sticky:
+// mockup and facts together are taller than a laptop window. The mockup's alt
+// text comes with the project.
+import { IconArrowLeft, IconWorld } from "@tabler/icons-astro"
 import ContactSection from "../../components/ContactSection.astro"
-import Button from "../../components/ui/Button.astro"
+import ExternalLinkButton from "../../components/ui/ExternalLinkButton.astro"
+import InlineText from "../../components/ui/InlineText.astro"
 import Section from "../../components/ui/Section.astro"
-import { offerSurfaceClasses } from "../../components/ui/offerSurfaceClasses"
 import { siteConfig } from "../../config/site"
 import { localised, type Project } from "../../data/projects"
 import { localisedPath, useTranslations, type Locale } from "../../i18n"
+import { fill } from "../../i18n/fill"
 
 interface Props {
   project: Project
@@ -47,10 +49,18 @@ const facts: { term: string; value: string }[] = [
 
 <main id="main" class="pt-header">
   <Section>
-    <Button href={localisedPath("portfolio", currentLocale)} variant="quiet" size="compact">
-      <IconArrowLeft slot="icon-start" class="size-4" />
+    <!-- --- Styled like "More" on the start page's offer cards, the arrow
+         pointing back -->
+    <a
+      href={localisedPath("portfolio", currentLocale)}
+      class="group inline-flex min-h-11 items-center gap-2 font-bold text-typo-medium no-underline"
+    >
+      <IconArrowLeft
+        class="size-5 transition-[translate,color] group-hover:-translate-x-1 group-hover:text-brand-green-high group-focus-visible:-translate-x-1 group-focus-visible:text-brand-green-high"
+        aria-hidden="true"
+      />
       {t.back}
-    </Button>
+    </a>
 
     <div class="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-20">
       <div>
@@ -62,7 +72,9 @@ const facts: { term: string; value: string }[] = [
         <div class="mt-10 flex max-w-[62ch] ec-rise flex-col gap-5 [--ec-rise-delay:200ms]">
           {
             project.description[currentLocale].map((paragraph) => (
-              <p class="text-body text-typo-medium">{paragraph}</p>
+              <p class="text-body text-typo-medium">
+                <InlineText text={paragraph} />
+              </p>
             ))
           }
         </div>
@@ -70,25 +82,23 @@ const facts: { term: string; value: string }[] = [
         {
           project.url && hostname && (
             <div class="mt-10 ec-rise [--ec-rise-delay:250ms]">
-              <Button href={project.url} variant="secondary" isExternal>
-                {t.visit.replace("{host}", hostname)}
-                <IconExternalLink slot="icon-end" class="size-5" />
-              </Button>
+              <ExternalLinkButton
+                href={project.url}
+                label={fill(t.visit, { host: hostname })}
+                icon={IconWorld}
+              />
             </div>
           )
         }
       </div>
 
-      <aside
-        class="ec-rise [--ec-rise-delay:150ms] lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start"
-        aria-labelledby="factsTitle"
-      >
+      <div class="ec-rise [--ec-rise-delay:150ms] lg:self-start">
         {
           project.image && (
-            <div class:list={["rounded-3xl p-8", offerSurfaceClasses[project.services[0]]]}>
+            <div class="rounded-3xl bg-brand-green-low p-8">
               <img
-                src={project.image}
-                alt={t.imageAlt.replace("{label}", label)}
+                src={project.image.src}
+                alt={project.image.alt[currentLocale]}
                 width="1413"
                 height="2916"
                 class="mx-auto h-auto w-full max-w-[13rem] drop-shadow-xl"
@@ -96,7 +106,7 @@ const facts: { term: string; value: string }[] = [
             </div>
           )
         }
-        <h2 id="factsTitle" class="sr-only">{t.facts.title}</h2>
+        <h2 class="sr-only">{t.facts.title}</h2>
         <dl
           class:list={[
             "divide-y divide-gray-low border-y border-gray-low",
@@ -107,12 +117,14 @@ const facts: { term: string; value: string }[] = [
             facts.map((fact) => (
               <div class="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-4 py-3 text-sm">
                 <dt class="text-typo-medium">{fact.term}</dt>
-                <dd class="text-typo-high">{fact.value}</dd>
+                <dd class="text-typo-high">
+                  <InlineText text={fact.value} />
+                </dd>
               </div>
             ))
           }
         </dl>
-      </aside>
+      </div>
     </div>
   </Section>
 

@@ -1,8 +1,6 @@
 // --- All portfolio projects in one place. The start page, the portfolio page and
 // the project pages read from here; the text lives next to its project in both
 // languages, so a new project is one entry and nothing else. Newest first.
-// Every card and project page uses the same light green surface: a colour per
-// project kind said nothing a reader could use.
 import type { Locale } from "../i18n"
 
 /** --- The three offers, in the order the site presents them --- */
@@ -19,9 +17,11 @@ export type Project = {
   isFeatured: boolean
   /** --- The live product, if there is one to link to --- */
   url?: string
-  /** --- Missing for clients that stay unnamed: the card draws a placeholder phone --- */
-  image?: string
-  /** --- What I did there, the main offer first: it colours the card --- */
+  /** --- The phone mockup. alt says what the phone shows: the product, only the
+   * logo, or a blurred sketch when the client stays unnamed. The card shows it
+   * without alt, next to its own text --- */
+  image?: { src: string; alt: Localised<string> }
+  /** --- What I did there, in the order the card lists them --- */
   services: Service[]
   period: Localised<string>
   role: Localised<string>
@@ -47,11 +47,21 @@ export function localised<T>(value: T | Localised<T>, locale: Locale): T {
   return value as T
 }
 
+// --- The phone of a client that stays unnamed shows a blurred sketch with a lock
+const confidentialImageAlt: Localised<string> = {
+  de: "Unscharfe Skizze des Produkts auf einem Handy. Der Kunde bleibt vertraulich.",
+  en: "A blurred sketch of the product on a phone. The client stays confidential.",
+}
+
 export const projects: Project[] = [
   {
     slug: "industrial-ai",
     label: { de: "Industrial-AI-Startup", en: "Industrial AI startup" },
     isFeatured: false,
+    image: {
+      src: "/images/projects/industrial-ai.png",
+      alt: confidentialImageAlt,
+    },
     services: ["development", "design"],
     period: { de: "Seit Februar 2026", en: "Since February 2026" },
     role: {
@@ -98,6 +108,10 @@ export const projects: Project[] = [
     slug: "hr-tech",
     label: { de: "HR-Tech-Startup", en: "HR tech startup" },
     isFeatured: true,
+    image: {
+      src: "/images/projects/hr-tech.png",
+      alt: confidentialImageAlt,
+    },
     services: ["development", "design"],
     period: { de: "Seit Juni 2025", en: "Since June 2025" },
     role: {
@@ -146,7 +160,13 @@ export const projects: Project[] = [
     label: "KONUX",
     isFeatured: true,
     url: "https://konux.com/",
-    image: "/images/projects/konux.png",
+    image: {
+      src: "/images/projects/konux.png",
+      alt: {
+        de: "Das Logo von KONUX auf einem Handy.",
+        en: "The KONUX logo on a phone.",
+      },
+    },
     services: ["development", "design"],
     period: { de: "April 2025 bis Februar 2026", en: "April 2025 to February 2026" },
     role: {
@@ -191,6 +211,10 @@ export const projects: Project[] = [
     slug: "accessibility-audits",
     label: { de: "Banken und Behörden", en: "Banks and public bodies" },
     isFeatured: true,
+    image: {
+      src: "/images/projects/accessibility-audits.png",
+      alt: confidentialImageAlt,
+    },
     services: ["accessibility"],
     period: { de: "Seit Dezember 2024", en: "Since December 2024" },
     role: { de: "Barrierefreiheitsexperte", en: "Accessibility specialist" },
@@ -234,10 +258,16 @@ export const projects: Project[] = [
     label: "Curanto",
     isFeatured: false,
     url: "https://www.curanto.de/",
-    image: "/images/projects/curanto.png",
+    image: {
+      src: "/images/projects/curanto.png",
+      alt: {
+        de: "Die Startseite von Curanto auf dem Handy: Container bestellen in drei Schritten, Wo, Was und Wann.",
+        en: "Curanto's home page on a phone: ordering a container in three steps, where, what and when.",
+      },
+    },
     services: ["development", "design", "accessibility"],
     period: { de: "November 2023 bis November 2024", en: "November 2023 to November 2024" },
-    role: { de: "Head of UI/UX und Frontend", en: "Head of UI/UX and Frontend" },
+    role: { de: "[Head of UI/UX]{lang=en} und Frontend", en: "Head of UI/UX and Frontend" },
     employer: "ORT Interactive",
     summary: {
       de: "Ein Webshop, den Partner unter eigenem Namen nutzen: Design-System, Frontend und Teamleitung.",
@@ -250,7 +280,7 @@ export const projects: Project[] = [
     description: {
       de: [
         "Curanto vermietet Container und Toiletten. Der Shop ist eine Eigenentwicklung mit Nuxt und Statamic: ein Designsystem mit Tailwind, feste Komponenten und selbsterklärende CMS-Module, die der Kunde selbst zusammensetzt und schnell an neue Anforderungen anpasst. Der ganze Shop lässt sich per iFrame und in Self-Service-Terminals einbetten.",
-        "Als Head of UI/UX und Frontend habe ich Design und Entwicklung verantwortet und beide Teams fachlich und disziplinarisch geführt. Serverseitiges Rendern und sauberes SEO steigern die Verkäufe seitdem stetig. Dazu habe ich den Kunden zu Barrierefreiheit nach WCAG beraten und die ersten barrierefreien Elemente begleitet.",
+        "Als [Head of UI/UX]{lang=en} und Frontend habe ich Design und Entwicklung verantwortet und beide Teams fachlich und disziplinarisch geführt. Serverseitiges Rendern und sauberes SEO steigern die Verkäufe seitdem stetig. Dazu habe ich den Kunden zu Barrierefreiheit nach WCAG beraten und die ersten barrierefreien Elemente begleitet.",
       ],
       en: [
         "Curanto rents out containers and toilets. The shop is a custom build with Nuxt and Statamic: a design system with Tailwind, fixed components and self-explanatory CMS modules the client assembles himself and adapts quickly to new requirements. The whole shop can be embedded via iframe and in self-service terminals.",
@@ -282,7 +312,13 @@ export const projects: Project[] = [
     label: "HIT",
     isFeatured: false,
     url: "https://www.hit.de/",
-    image: "/images/projects/hit.png",
+    image: {
+      src: "/images/projects/hit.png",
+      alt: {
+        de: "Die Wochenangebote von HIT auf dem Handy, als Produktkarten mit Aktionspreis.",
+        en: "HIT's weekly offers on a phone, as product cards with sale prices.",
+      },
+    },
     services: ["development", "design", "accessibility"],
     period: { de: "Januar 2023 bis November 2023", en: "January 2023 to November 2023" },
     role: {
@@ -333,10 +369,16 @@ export const projects: Project[] = [
     label: "PŸUR",
     isFeatured: false,
     url: "https://www.pyur.com/",
-    image: "/images/projects/pyur.png",
+    image: {
+      src: "/images/projects/pyur.png",
+      alt: {
+        de: "Die Startseite von PŸUR auf dem Handy: ein Internet-Tarif mit großem Preis und einem WLAN-Router.",
+        en: "PŸUR's home page on a phone: an internet plan with a large price and a Wi-Fi router.",
+      },
+    },
     services: ["design"],
     period: { de: "Oktober 2022 bis Dezember 2022", en: "October 2022 to December 2022" },
-    role: { de: "Head of UX", en: "Head of UX" },
+    role: { de: "[Head of UX]{lang=en}", en: "Head of UX" },
     summary: {
       de: "Den Umstieg von Adobe XD auf Figma geleitet, ein neues Design-System aufgebaut und das Team geschult.",
       en: "Led the move from Adobe XD to Figma, built a new design system and trained the team.",
@@ -347,7 +389,7 @@ export const projects: Project[] = [
     },
     description: {
       de: [
-        "Für PŸUR habe ich als Head of UX im Design- und Entwicklungsteam von Acolad Digital die Weiterentwicklung der Website geleitet. Den Umstieg von Adobe XD auf Figma habe ich angestoßen und koordiniert: alle Designelemente übertragen, ein neues Designsystem aufgebaut und das Team in Figma und modernen Design-Standards geschult.",
+        "Für PŸUR habe ich als [Head of UX]{lang=en} im Design- und Entwicklungsteam von Acolad Digital die Weiterentwicklung der Website geleitet. Den Umstieg von Adobe XD auf Figma habe ich angestoßen und koordiniert: alle Designelemente übertragen, ein neues Designsystem aufgebaut und das Team in Figma und modernen Design-Standards geschult.",
         "Wichtig war mir, alle beim Umstieg mitzunehmen, damit das neue Werkzeug für jeden verständlich und effizient ist. Für neue Features habe ich dem Kunden Lösungswege vorgestellt und ihn bei der Entscheidung begleitet. Technisch läuft die Seite auf Adobe Experience Manager mit HTML-, CSS- und JavaScript-Modulen.",
       ],
       en: [
@@ -370,10 +412,16 @@ export const projects: Project[] = [
     label: "Welliba",
     isFeatured: false,
     url: "https://www.welliba.com/",
-    image: "/images/projects/welliba_app.png",
+    image: {
+      src: "/images/projects/welliba_app.png",
+      alt: {
+        de: "Der Startbildschirm der Welliba-App: der Welliba-Index als Zahl und auf einer Skala, darunter Aktivitäten.",
+        en: "The Welliba app's home screen: the Welliba Index as a number and on a scale, activities below.",
+      },
+    },
     services: ["design", "accessibility"],
     period: { de: "September 2021 bis Oktober 2022", en: "September 2021 to October 2022" },
-    role: { de: "Senior UI/UX Engineer", en: "Senior UI/UX Engineer" },
+    role: { de: "[Senior UI/UX Engineer]{lang=en}", en: "Senior UI/UX Engineer" },
     employer: "Welliba",
     summary: {
       de: "Die ganze Produktplattform gestaltet, von der App bis zu den Web-Apps, und das Entwicklerteam begleitet.",
@@ -386,7 +434,7 @@ export const projects: Project[] = [
     description: {
       de: [
         "Welliba ist ein Startup aus Hamburg, gegründet von Führungskräften meiner früheren Arbeitsstelle bei AON Assessment Solutions. Die Plattform erfasst laufend das Wohlbefinden von Mitarbeitenden und gibt dem Unternehmen daraus KPIs an die Hand.",
-        "Als UI/UX Engineer habe ich die Produktplattform von Grund auf konzipiert und gestaltet: eine Flutter-App und mehrere React-Web-Apps für Nutzer und Kunden, das Corporate Design und alle Oberflächen in Figma, aufgebaut als wiederverwendbare Module auf einem eigenen Designsystem. Mit meinem Hintergrund als Frontend-Entwickler habe ich die Entwickler durch die Umsetzung geführt und mit Code-Snippets unterstützt. Alle Produkte sind skalierbar und barrierefrei und heute aktiv in Nutzung.",
+        "Als [UI/UX Engineer]{lang=en} habe ich die Produktplattform von Grund auf konzipiert und gestaltet: eine Flutter-App und mehrere React-Web-Apps für Nutzer und Kunden, das Corporate Design und alle Oberflächen in Figma, aufgebaut als wiederverwendbare Module auf einem eigenen Designsystem. Mit meinem Hintergrund als Frontend-Entwickler habe ich die Entwickler durch die Umsetzung geführt und mit Code-Snippets unterstützt. Alle Produkte sind skalierbar und barrierefrei und heute aktiv in Nutzung.",
       ],
       en: [
         "Welliba is a startup from Hamburg, founded by executives from my previous workplace, AON Assessment Solutions. The platform continuously measures employees' well-being and turns it into KPIs for the company.",
@@ -415,7 +463,13 @@ export const projects: Project[] = [
     label: "Müller Oswald",
     isFeatured: false,
     url: "https://mueller-oswald.shop/",
-    image: "/images/projects/pvoswald.png",
+    image: {
+      src: "/images/projects/pvoswald.png",
+      alt: {
+        de: "Der Webshop des Weinguts Müller-Oswald auf dem Handy, mit einem Banner für Wein-Gutscheine.",
+        en: "The Müller-Oswald winery's web shop on a phone, with a banner for wine vouchers.",
+      },
+    },
     services: ["development", "design"],
     period: { de: "März 2021 bis September 2021", en: "March 2021 to September 2021" },
     role: {
@@ -454,7 +508,13 @@ export const projects: Project[] = [
     label: "kindeskinder",
     isFeatured: false,
     url: "https://kindeskinder.biz/",
-    image: "/images/projects/kindeskinder.png",
+    image: {
+      src: "/images/projects/kindeskinder.png",
+      alt: {
+        de: "Die Startseite von kindeskinder auf dem Handy, mit einer Bildergalerie der Gewürzmischungen.",
+        en: "The kindeskinder home page on a phone, with an image carousel of the spice blends.",
+      },
+    },
     services: ["development", "design", "accessibility"],
     period: { de: "September 2020 bis November 2020", en: "September 2020 to November 2020" },
     role: {
@@ -493,7 +553,13 @@ export const projects: Project[] = [
     label: "Deutsche Bahn",
     isFeatured: false,
     url: "https://db-engineering-consulting.com/de/news/vorausschauende-instandhaltung/",
-    image: "/images/projects/db.png",
+    image: {
+      src: "/images/projects/db.png",
+      alt: {
+        de: "Das Logo der Deutschen Bahn auf einem Handy.",
+        en: "The Deutsche Bahn logo on a phone.",
+      },
+    },
     services: ["development", "design"],
     period: { de: "September 2019 bis August 2021", en: "September 2019 to August 2021" },
     role: {
@@ -536,7 +602,13 @@ export const projects: Project[] = [
     label: "Eckelmann",
     isFeatured: false,
     url: "https://edp.eckelmann.de/edp/maa/object?id=14462",
-    image: "/images/projects/eckelmann.png",
+    image: {
+      src: "/images/projects/eckelmann.png",
+      alt: {
+        de: "Das Logo von Eckelmann auf einem Handy.",
+        en: "The Eckelmann logo on a phone.",
+      },
+    },
     services: ["development", "design"],
     period: { de: "April 2019 bis Juni 2019", en: "April 2019 to June 2019" },
     role: { de: "Frontend-Entwicklung und UX", en: "Frontend development and UX" },
@@ -573,7 +645,13 @@ export const projects: Project[] = [
     label: "P&G (AON)",
     isFeatured: false,
     url: "https://www.pgcareers.com/global/en/interactive-assessments",
-    image: "/images/projects/pg.png",
+    image: {
+      src: "/images/projects/pg.png",
+      alt: {
+        de: "Das Logo von P&G auf einem Handy.",
+        en: "The P&G logo on a phone.",
+      },
+    },
     services: ["development", "design", "accessibility"],
     period: { de: "März 2018 bis März 2019", en: "March 2018 to March 2019" },
     role: { de: "Konzeption und Entwicklung", en: "Concept and development" },
@@ -614,7 +692,13 @@ export const projects: Project[] = [
     label: "AON",
     isFeatured: false,
     url: "https://assessment.aon.com/",
-    image: "/images/projects/aon.png",
+    image: {
+      src: "/images/projects/aon.png",
+      alt: {
+        de: "Das Logo von Aon auf einem Handy.",
+        en: "The Aon logo on a phone.",
+      },
+    },
     services: ["development", "design", "accessibility"],
     period: { de: "Januar 2016 bis März 2018", en: "January 2016 to March 2018" },
     role: { de: "Konzeption und Entwicklung", en: "Concept and development" },
@@ -653,7 +737,13 @@ export const projects: Project[] = [
     label: "CasualVocab",
     isFeatured: false,
     url: "https://apps.apple.com/de/app/casualvocab-widget-japanese/id1622203836?l=en",
-    image: "/images/projects/casualvocab.png",
+    image: {
+      src: "/images/projects/casualvocab.png",
+      alt: {
+        de: "Die Übungsseite von CasualVocab: Ein Ring zeigt, dass 24 von 27 Wörtern gelernt sind.",
+        en: "CasualVocab's practice screen: a ring shows 24 of 27 words learned.",
+      },
+    },
     services: ["development", "design"],
     period: { de: "November 2021 bis Juni 2022", en: "November 2021 to June 2022" },
     role: {
@@ -701,7 +791,7 @@ export type ElsewhereLink = {
 
 export const elsewhereLinks: ElsewhereLink[] = [
   { label: "GitHub", url: "https://github.com/erc2804", icon: "github" },
-  { label: "Mel-Menu, 2018", url: "https://ercancicek.com/mel-menu", icon: "gamepad" },
+  { label: "Mel-Menu", url: "https://ercancicek.com/mel-menu", icon: "gamepad" },
   { label: "JSFiddle", url: "https://jsfiddle.net/u/erc2804/fiddles/", icon: "code" },
   { label: "CodePen", url: "https://codepen.io/erc2804", icon: "codepen" },
   { label: "LottieFiles", url: "https://lottiefiles.com/erc2804", icon: "movie" },

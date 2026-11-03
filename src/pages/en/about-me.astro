@@ -1,8 +1,13 @@
 ---
+import { useTranslations } from "../../i18n"
 import BaseLayout from "../../layouts/BaseLayout.astro"
 import AboutPage from "../../views/about/AboutPage.astro"
+import ProfileSchema from "../../views/about/ProfileSchema.astro"
+
+const t = useTranslations("en").about.meta
 ---
 
-<BaseLayout title="About me | Ercan Cicek" description="Placeholder." routeKey="about">
+<BaseLayout title={t.title} description={t.description} routeKey="about">
+  <ProfileSchema slot="head" />
   <AboutPage />
 </BaseLayout>

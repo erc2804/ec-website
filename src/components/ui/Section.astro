@@ -3,7 +3,7 @@
 // compose pages out of these so vertical rhythm and widths stay in one place.
 import type { HTMLAttributes } from "astro/types"
 
-// --- Any other attribute (data-chat, aria-labelledby …) passes through to the
+// --- Any other attribute (data-chat …) passes through to the
 // outer element
 interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   as?: "section" | "div"

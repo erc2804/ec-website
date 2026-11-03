@@ -1,0 +1,38 @@
+---
+// --- A link to another site as a quiet pill: an icon, the label, and on hover
+// or focus an arrow that grows out to the right, the way the language switch
+// unfolds in the header. The icon stays put, only the arrow moves. Used for the
+// row of links under the portfolio and for a project's live site.
+import { IconArrowUpRight, type IconCheck } from "@tabler/icons-astro"
+import Button from "./Button.astro"
+
+interface Props {
+  href: string
+  label: string
+  /** --- A Tabler icon component, drawn before the label --- */
+  icon: typeof IconCheck
+  class?: string
+}
+
+const { href, label, icon: Icon, class: additionalClasses } = Astro.props
+---
+
+<Button href={href} variant="quiet" size="compact" isExternal class={additionalClasses}>
+  {
+    /* --- The icon sits inside the label, not in the icon slot: it stays put on
+       hover. A block flex, not inline: an inline box would add descender room
+       below and push everything up. */
+  }
+  <span class="flex items-center gap-2">
+    <Icon class="size-4" aria-hidden="true" />
+    {label}
+    <span
+      class="grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]"
+      aria-hidden="true"
+    >
+      <span class="min-w-0 overflow-hidden">
+        <IconArrowUpRight class="ml-1.5 size-4 text-brand-green-high" />
+      </span>
+    </span>
+  </span>
+</Button>

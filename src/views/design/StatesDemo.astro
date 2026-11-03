@@ -1,20 +1,24 @@
 ---
 // --- "Every state belongs in the design": one list in the states real life
 // brings, drawn as wireframes so the point is the structure, not a look. One
-// card where the state was not thought through, one where it was; each card
-// is named by a heading, and the explanation names the cards, never "left"
-// or "right", which only holds on wide screens. The ideal case comes last and
-// needs no words. Nothing moves on its own: the loading ring only hints. The explanations follow NN/g's
-// guidance: show system status, empty states that explain and offer the first
-// step, error messages in plain words with a way forward.
+// card designed for the ideal case only, one with every state; the labels say
+// what was designed, not a verdict, so the ideal case, where both look the
+// same, still makes sense. Each card carries its own caption, so nothing
+// has to say "left" or "right", which only holds on wide screens. Nothing moves on its own: the
+// loading ring only hints. The explanations follow NN/g's guidance: show
+// system status, empty states that explain and offer the first step, error
+// messages in plain words with a way forward.
 //
-// Every state is rendered on the server and shown or hidden by the control,
-// so both cards are real text a screen reader can compare, and the explanation
-// below is announced when the state changes. On phones the control is a native
-// select (five pills do not fit in a row), from md up the pill group.
+// For a screen reader each card is one picture (role="img"): its label as the
+// name, its caption below as the description, so nobody has to read wireframe
+// text that is cut off or hidden on purpose. Cards and captions keep the
+// height of their tallest state, so switching never moves the page. Both
+// captions are announced when the visitor changes the state. On phones the control is a native select
+// (five pills do not fit in a row), from md up the pill group.
 import { IconAlertTriangle, IconChevronDown } from "@tabler/icons-astro"
 import SegmentedControl from "../../components/ui/SegmentedControl.astro"
 import Section from "../../components/ui/Section.astro"
+import InlineText from "../../components/ui/InlineText.astro"
 import { useTranslations } from "../../i18n"
 
 const t = useTranslations(Astro.currentLocale).design.states
@@ -22,11 +26,14 @@ const longRows = [{ name: t.longName, hours: t.rows[0].hours }, ...t.rows.slice(
 // --- The control starts on the first state; every block outside it starts hidden
 const initialState = t.items[0].key
 const isHidden = (state: string) => state !== initialState
+
+// --- The id of a card's caption in a state
+const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state}-${card}`
 ---
 
-<Section tone="light" aria-labelledby="statesTitle">
+<Section>
   <div class="ec-states">
-    <h2 id="statesTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
     <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
 
     <div class="mt-10 ec-reveal ec-reveal-late md:hidden">
@@ -55,143 +62,176 @@ const isHidden = (state: string) => state !== initialState
 
     <div class="mt-8 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-2">
       <!-- --- Only the ideal case designed -->
-      <div class="flex flex-col rounded-3xl bg-gray-subtle p-5 sm:p-8">
-        <h3 class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
-          <span class="size-2.5 rounded-full border-2 border-typo-medium" aria-hidden="true"></span>
-          {t.commonLabel}
-        </h3>
-        <div class="ec-wireframe mt-4 flex-1 overflow-hidden">
-          <p class="text-xs text-typo-medium">{t.cardTitle}</p>
-
-          <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
-            {
-              t.rows.map((row) => (
-                <li class="flex justify-between gap-3 border-b border-gray-low py-2 last:border-b-0">
-                  <span>{row.name}</span>
-                  <span class="tabular-nums">{row.hours}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <p
-            data-state="loading"
-            class="ec-state mt-3 text-xs text-typo-medium"
-            hidden={isHidden("loading")}
-            lang="en"
-          >
-            {t.loading}
+      <div class="flex flex-col gap-3">
+        <div
+          class="flex flex-col"
+          role="img"
+          aria-labelledby="statesCommonLabel"
+          aria-describedby={whyId(initialState, "common")}
+          data-card="common"
+        >
+          <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
+            <span class="size-2.5 rounded-full border-2 border-typo-medium"></span>
+            <span id="statesCommonLabel">{t.commonLabel}</span>
           </p>
-          <p data-state="empty" class="ec-state" hidden={isHidden("empty")}></p>
-          <p
-            data-state="error"
-            class="ec-state mt-3 font-mono text-xs text-typo-high"
-            hidden={isHidden("error")}
-            lang="en"
-          >
-            {t.errorRaw}
-          </p>
-          <ul data-state="long" class="ec-state mt-2" hidden={isHidden("long")}>
-            {
-              longRows.map((row) => (
-                <li class="flex gap-3 border-b border-gray-low py-2 whitespace-nowrap last:border-b-0">
-                  <span>{row.name}</span>
-                  <span class="tabular-nums">{row.hours}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
+          <div class="ec-wireframe mt-4 flex-1 overflow-hidden">
+            <p class="text-xs text-typo-medium">{t.cardTitle}</p>
 
-      <!-- --- Every state designed -->
-      <div class="flex flex-col rounded-3xl bg-gray-subtle p-5 sm:p-8">
-        <h3 class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
-          <span class="size-2.5 rounded-full bg-brand-green-high" aria-hidden="true"></span>
-          {t.designedLabel}
-        </h3>
-        <div class="ec-wireframe mt-4 flex-1">
-          <p class="text-xs text-typo-medium">{t.cardTitle}</p>
-
-          <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
-            {
-              t.rows.map((row) => (
-                <li class="flex justify-between gap-4 border-b border-gray-low py-2 last:border-b-0">
-                  <span>{row.name}</span>
-                  <span class="shrink-0 tabular-nums">{row.hours}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <div
-            data-state="loading"
-            class="ec-state flex flex-col items-center py-6 text-center"
-            hidden={isHidden("loading")}
-          >
-            <span
-              class="size-5 rotate-45 rounded-full border-2 border-gray-low border-t-typo-high"
-              aria-hidden="true"></span>
-            <p class="mt-3 font-bold">{t.loadingTitle}</p>
-            <p class="mt-1 text-xs text-typo-medium">
-              {t.loadingSlow}{" "}
-              <span class="underline underline-offset-4">{t.loadingAction}</span>
+            <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
+              {
+                t.rows.map((row) => (
+                  <li class="flex justify-between gap-3 border-b border-gray-low py-2 last:border-b-0">
+                    <span>{row.name}</span>
+                    <span class="tabular-nums">{row.hours}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <p
+              data-state="loading"
+              class="ec-state mt-3 text-xs text-typo-medium"
+              hidden={isHidden("loading")}
+              lang="en"
+            >
+              {t.loading}
             </p>
+            <p data-state="empty" class="ec-state" hidden={isHidden("empty")}></p>
+            <p
+              data-state="error"
+              class="ec-state mt-3 font-mono text-xs text-typo-high"
+              hidden={isHidden("error")}
+              lang="en"
+            >
+              {t.errorRaw}
+            </p>
+            <ul data-state="long" class="ec-state mt-2" hidden={isHidden("long")}>
+              {
+                longRows.map((row) => (
+                  <li class="flex gap-3 border-b border-gray-low py-2 whitespace-nowrap last:border-b-0">
+                    <span>{row.name}</span>
+                    <span class="tabular-nums">{row.hours}</span>
+                  </li>
+                ))
+              }
+            </ul>
           </div>
-          <div
-            data-state="empty"
-            class="ec-state flex flex-col items-center py-6 text-center"
-            hidden={isHidden("empty")}
-          >
-            <p class="font-bold">{t.emptyTitle}</p>
-            <p class="mt-1 max-w-[28ch] text-xs text-typo-medium">{t.emptyText}</p>
-            <span class="mt-4 inline-flex rounded-md border border-typo-high px-3 py-1 text-xs">
-              {t.emptyAction}
-            </span>
-          </div>
-          <div
-            data-state="error"
-            class="ec-state mt-3 flex gap-3 rounded-lg border border-gray-low p-3"
-            hidden={isHidden("error")}
-          >
-            <IconAlertTriangle class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-            <div>
-              <p class="font-bold">{t.errorTitle}</p>
-              <p class="mt-1 text-xs text-typo-medium">{t.errorText}</p>
-              <span class="mt-2 inline-flex text-xs underline underline-offset-4">
-                {t.errorAction}
-              </span>
-            </div>
-          </div>
-          <ul data-state="long" class="ec-state mt-2" hidden={isHidden("long")}>
-            {
-              longRows.map((row) => (
-                <li class="flex justify-between gap-4 border-b border-gray-low py-2 last:border-b-0">
-                  <span class="line-clamp-2">{row.name}</span>
-                  <span class="shrink-0 tabular-nums">{row.hours}</span>
-                </li>
-              ))
-            }
-          </ul>
         </div>
-      </div>
-    </div>
 
-    <!-- --- Why the right card holds. Announced politely when the state changes. -->
-    <div class="mt-6 max-w-[60ch]" aria-live="polite">
-      {
-        t.items.map(
-          (item) =>
-            "why" in item && (
-              <p
-                class="ec-state text-typo-medium"
+        <!-- --- The caption of this card, one line per state. Read as the card's
+             description (aria-describedby), so it is hidden from browsing itself. -->
+        <p class="ec-states-caption text-sm text-typo-medium" aria-hidden="true">
+          {
+            t.items.map((item) => (
+              <span
+                id={whyId(item.key, "common")}
+                class="ec-state"
                 data-state={item.key}
                 hidden={isHidden(item.key)}
               >
-                {item.why}
+                <InlineText text={item.why.common} />
+              </span>
+            ))
+          }
+        </p>
+      </div>
+      <!-- --- Every state designed -->
+      <div class="flex flex-col gap-3">
+        <div
+          class="flex flex-col"
+          role="img"
+          aria-labelledby="statesDesignedLabel"
+          aria-describedby={whyId(initialState, "designed")}
+          data-card="designed"
+        >
+          <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
+            <span class="size-2.5 rounded-full bg-brand-green-high"></span>
+            <span id="statesDesignedLabel">{t.designedLabel}</span>
+          </p>
+          <div class="ec-wireframe mt-4 flex-1">
+            <p class="text-xs text-typo-medium">{t.cardTitle}</p>
+
+            <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
+              {
+                t.rows.map((row) => (
+                  <li class="flex justify-between gap-4 border-b border-gray-low py-2 last:border-b-0">
+                    <span>{row.name}</span>
+                    <span class="shrink-0 tabular-nums">{row.hours}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <div
+              data-state="loading"
+              class="ec-state flex flex-col items-center py-6 text-center"
+              hidden={isHidden("loading")}
+            >
+              <span
+                class="size-5 rotate-45 rounded-full border-2 border-gray-low border-t-typo-high"
+                aria-hidden="true"></span>
+              <p class="mt-3 font-bold">{t.loadingTitle}</p>
+              <p class="mt-1 text-xs text-typo-medium">
+                {t.loadingSlow}{" "}
+                <span class="underline underline-offset-4">{t.loadingAction}</span>
               </p>
-            )
-        )
-      }
+            </div>
+            <div
+              data-state="empty"
+              class="ec-state flex flex-col items-center py-6 text-center"
+              hidden={isHidden("empty")}
+            >
+              <p class="font-bold">{t.emptyTitle}</p>
+              <p class="mt-1 max-w-[28ch] text-xs text-typo-medium">{t.emptyText}</p>
+              <span class="mt-4 inline-flex rounded-md border border-typo-high px-3 py-1 text-xs">
+                {t.emptyAction}
+              </span>
+            </div>
+            <div
+              data-state="error"
+              class="ec-state mt-3 flex gap-3 rounded-lg border border-gray-low p-3"
+              hidden={isHidden("error")}
+            >
+              <IconAlertTriangle class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <div>
+                <p class="font-bold">{t.errorTitle}</p>
+                <p class="mt-1 text-xs text-typo-medium">{t.errorText}</p>
+                <span class="mt-2 inline-flex text-xs underline underline-offset-4">
+                  {t.errorAction}
+                </span>
+              </div>
+            </div>
+            <ul data-state="long" class="ec-state mt-2" hidden={isHidden("long")}>
+              {
+                longRows.map((row) => (
+                  <li class="flex justify-between gap-4 border-b border-gray-low py-2 last:border-b-0">
+                    <span class="line-clamp-2">{row.name}</span>
+                    <span class="shrink-0 tabular-nums">{row.hours}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+        <!-- --- The caption of this card, one line per state. Read as the card's
+             description (aria-describedby), so it is hidden from browsing itself. -->
+        <p class="ec-states-caption text-sm text-typo-medium" aria-hidden="true">
+          {
+            t.items.map((item) => (
+              <span
+                id={whyId(item.key, "designed")}
+                class="ec-state"
+                data-state={item.key}
+                hidden={isHidden(item.key)}
+              >
+                <InlineText text={item.why.designed} />
+              </span>
+            ))
+          }
+        </p>
+      </div>
     </div>
+    <!-- --- Says both captions when the state changes; filled by the script only
+         then, so browsing does not meet the captions a second time -->
+    <p class="ec-states-announcer sr-only" aria-live="polite"></p>
   </div>
 </Section>
 
@@ -217,9 +257,15 @@ const isHidden = (state: string) => state !== initialState
     const select = states.querySelector<HTMLSelectElement>(".ec-states-select")!
     const inputs = [...states.querySelectorAll<HTMLInputElement>("input[name='designState']")]
     let current = select.value
+    const cards = [...states.querySelectorAll<HTMLElement>("[data-card]")]
+    const announcer = states.querySelector<HTMLElement>(".ec-states-announcer")!
     const show = (value: string) => {
       current = value
       for (const block of blocks) block.hidden = block.dataset.state !== value
+      // --- Each card is described by its caption for the current state
+      for (const card of cards) {
+        card.setAttribute("aria-describedby", `statesWhy-${value}-${card.dataset.card}`)
+      }
       select.value = value
       for (const input of inputs) input.checked = input.value === value
     }
@@ -227,15 +273,21 @@ const isHidden = (state: string) => state !== initialState
     // --- Both cards keep the height of the tallest state, measured by showing
     // each one once, so the cards stay level and the page does not jump when
     // the state changes. Measured again when the width changes the wrapping.
-    const wireframes = [...states.querySelectorAll<HTMLElement>(".ec-wireframe")]
-    const holdHeight = () => {
-      for (const wireframe of wireframes) wireframe.style.minHeight = ""
+    // --- The captions likewise, so a longer line never pushes the page.
+    const holdTallest = (elements: HTMLElement[]) => {
+      for (const element of elements) element.style.minHeight = ""
       let tallest = 0
       for (const input of inputs) {
         show(input.value)
-        for (const wireframe of wireframes) tallest = Math.max(tallest, wireframe.offsetHeight)
+        for (const element of elements) tallest = Math.max(tallest, element.offsetHeight)
       }
-      for (const wireframe of wireframes) wireframe.style.minHeight = `${tallest}px`
+      for (const element of elements) element.style.minHeight = `${tallest}px`
+    }
+    const wireframes = [...states.querySelectorAll<HTMLElement>(".ec-wireframe")]
+    const captions = [...states.querySelectorAll<HTMLElement>(".ec-states-caption")]
+    const holdHeight = () => {
+      holdTallest(wireframes)
+      holdTallest(captions)
     }
     const settle = () => {
       const value = current
@@ -252,7 +304,20 @@ const isHidden = (state: string) => state !== initialState
       settle()
     }).observe(states)
 
-    select.addEventListener("change", () => show(select.value))
-    for (const input of inputs) input.addEventListener("change", () => show(input.value))
+    // --- A choice by the visitor: show it and say both captions
+    const choose = (value: string) => {
+      show(value)
+      announcer.textContent = cards
+        .map((card) => {
+          const label = document.getElementById(card.getAttribute("aria-labelledby")!)!.textContent
+          const caption = document.getElementById(
+            card.getAttribute("aria-describedby")!
+          )!.textContent
+          return `${label}: ${caption?.trim()}`
+        })
+        .join(" ")
+    }
+    select.addEventListener("change", () => choose(select.value))
+    for (const input of inputs) input.addEventListener("change", () => choose(input.value))
   }
 </script>

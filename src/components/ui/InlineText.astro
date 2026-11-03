@@ -1,9 +1,14 @@
 ---
-// --- Running text from the translations with two marks: `code` and
-// [text](url). Code gets the mono face on a grey chip; a link opens in a new
-// tab and says so to screen readers. Everything else stays plain text, so a
-// string without marks renders exactly as before.
+// --- Running text from the translations with the marks of src/i18n/marks.ts.
+// Code gets the mono face on a grey chip. A link to another site (http or
+// https) opens in a new tab and says so to screen readers; a page of this site,
+// a mailto: or a tel: link opens in place. A part in another language gets its
+// lang, and the plain text around it gets the page's lang back: VoiceOver
+// otherwise keeps the foreign voice for the rest of the line.
+// Everything else stays plain text, so a string without marks renders as
+// plain text.
 import { useTranslations } from "../../i18n"
+import { inlineMarkPattern, languageMark, linkMark } from "../../i18n/marks"
 
 interface Props {
   text: string
@@ -11,17 +16,20 @@ interface Props {
 
 const { text } = Astro.props
 const t = useTranslations(Astro.currentLocale).common
+const pageLanguage = Astro.currentLocale
 
-const markPattern = /(`[^`]+`|\[[^\]]+\]\([^)]+\))/
 const parts = text
-  .split(markPattern)
+  .split(inlineMarkPattern)
   .filter(Boolean)
   .map((part) => {
     if (part.startsWith("`")) return { kind: "code" as const, text: part.slice(1, -1) }
-    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    const link = part.match(linkMark)
     if (link) return { kind: "link" as const, text: link[1], href: link[2] }
+    const language = part.match(languageMark)
+    if (language) return { kind: "language" as const, text: language[1], lang: language[2] }
     return { kind: "text" as const, text: part }
   })
+const hasLanguagePart = parts.some((part) => part.kind === "language")
 ---
 
 {
@@ -30,11 +38,17 @@ const parts = text
       <code class="rounded bg-gray-subtle px-1 font-mono text-[0.9em] text-typo-high">
         {part.text}
       </code>
+    ) : part.kind === "language" ? (
+      <span lang={part.lang}>{part.text}</span>
+    ) : part.kind === "link" && !/^https?:/.test(part.href) ? (
+      <a href={part.href}>{part.text}</a>
     ) : part.kind === "link" ? (
       <a href={part.href} target="_blank" rel="noopener noreferrer">
         {part.text}
         <span class="sr-only"> {t.opensInNewTab}</span>
       </a>
+    ) : hasLanguagePart ? (
+      <span lang={pageLanguage}>{part.text}</span>
     ) : (
       part.text
     )

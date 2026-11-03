@@ -1,10 +1,9 @@
 ---
 // --- Development offer page. The heading sits in the browser's inspector,
 // the way the design page's heading sits in a design tool's selection frame.
-// Then how someone can bring me in, the long form of that (six things a client
-// can count on, whatever the stack), why a developer at all when AI writes the
-// code, the usual questions, and the contact block. No step-by-step process
-// here: the six points say how the work goes.
+// Then how someone can bring me in, why vibe coding alone is not enough (a
+// prototype under the developer tools), why a developer at all when AI writes
+// the code, the usual questions, and the contact block. No process section here (docs/design-language.md, Motion).
 //
 // Services, the one-hand block, the questions and the contact block are the
 // shared components of the offer pages.
@@ -13,7 +12,7 @@ import MergeIcon from "./MergeIcon.astro"
 import PrototypeIcon from "./PrototypeIcon.astro"
 import TerminalIcon from "./TerminalIcon.astro"
 import InspectFrame from "./InspectFrame.astro"
-import WorkingStyleSection from "./WorkingStyleSection.astro"
+import VibeCodingSection from "./VibeCodingSection.astro"
 import ContactSection from "../../components/ContactSection.astro"
 import FaqSection from "../../components/FaqSection.astro"
 import OneHandSection from "../../components/OneHandSection.astro"
@@ -63,7 +62,7 @@ const serviceIcons = [PrototypeIcon, TerminalIcon, MergeIcon]
     tone="light"
   />
 
-  <WorkingStyleSection />
+  <VibeCodingSection />
 
   <OneHandSection
     title={t.oneHand.title}

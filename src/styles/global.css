@@ -1,22 +1,34 @@
 @import "tailwindcss";
 
-/* --- The font files carry adjusted vertical metrics (ascent 790, descent 210,
-   no line gap; originally 756, 244 and 200). The original put more room above
-   the letters than below, so text sat high in every button, chip and input.
-   Changed in the files rather than with ascent-override, which Safari ignores.
-   ?v=2 makes browsers fetch the changed files. --- */
+/* --- The site's one typeface, "an", in two cuts. Both files carry adjusted
+   vertical metrics (ascent 840, descent 160, no line gap; originally 756, 244
+   and 200), so the letters sit on the optical middle of every line box:
+   buttons, chips and inputs need no correction of their own. Changed in the
+   files rather than with ascent-override, which Safari ignores. Bump ?v=
+   whenever a file changes, so browsers fetch it again. WOFF2 only: every
+   current browser reads it. --- */
 @font-face {
-  font-family: "an-regular";
-  src:
-    url("/fonts/an-regular.woff2?v=2") format("woff2"),
-    url("/fonts/an-regular.woff?v=2") format("woff");
-  font-weight: normal;
+  font-family: "an";
+  src: url("/fonts/an-regular.woff2?v=3") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Demi stands in for every bold weight --- */
+@font-face {
+  font-family: "an";
+  src: url("/fonts/an-demi.woff2?v=1") format("woff2");
+  font-weight: 600 700;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
   --color-brand-green-high: #379683;
+  /* --- The brand green for text below large size: #379683 reaches only 3.26:1
+     on the page ground, WCAG 1.4.3 asks 4.5:1. This one reaches 5.18:1. --- */
+  --color-brand-green-deep: #2a7263;
   --color-brand-green-medium: #5cdb95;
   --color-brand-green-low: #aeebc1;
   --color-brand-blue: #05386b;
@@ -29,18 +41,24 @@
      colour, for surfaces that should read as the same tone --- */
   --color-gray-dark: color-mix(in srgb, var(--color-gray-max) 75%, var(--color-gray-min));
   --color-gray-low: #d1d5db;
+  /* --- Borders that make a field recognisable as a field: 3:1 against white
+     and the page ground (WCAG 1.4.11); gray-low reaches only 1.47:1 --- */
+  --color-gray-medium: #868d97;
   --color-gray-subtle: #f3f4f6;
   --color-gray-min: #ffffff;
 
   --color-typo-high: #332a2a;
   --color-typo-medium: #645454;
   --color-typo-low: #b6a0a0;
+  /* --- Placeholder text counts as text (WCAG 1.4.3): 4.5:1 on white, the page
+     ground and the sand of a field Pixel-Ercan filled. typo-low reaches 2.2:1. --- */
+  --color-typo-placeholder: #7d6a6a;
   --color-typo-min: #f3f4f6;
 
   --color-status-error-text: #b3261e;
   --color-status-error-bg: #fdecea;
 
-  --font-sans: "an-regular", system-ui, sans-serif;
+  --font-sans: "an", system-ui, sans-serif;
   --tracking-ec: 0.04375rem;
   --tracking-ec-tight: 0.0375rem;
 
@@ -131,9 +149,8 @@
 }
 
 /* --- Text styles. One class per role, carrying size, line height, tracking and
-   weight. Headings stay at the regular weight, as on the previous site:
-   an-regular has no bold cut, so 700 is drawn by the browser, and Safari
-   draws it visibly smeared at heading sizes. Sizes step once at md instead of
+   weight. Headings stay at the regular weight, as on the previous site; the
+   Demi cut is for buttons and labels. Sizes step once at md instead of
    scaling with the viewport, so every rendered size is one that was actually
    looked at. --- */
 @utility text-display {
@@ -201,9 +218,14 @@
 /* --- Dark surfaces. The default focus ring (green-high) reaches only 2.9:1 on
    the hero grey and less on the blue, below the 3:1 a focus indicator needs.
    On dark ground the ring switches to the light green, which clears it with
-   room to spare. Set on the surface; everything inside inherits it. --- */
+   room to spare. --ec-indicator-color is the bar under the current page and
+   the current language: it shows a state, so it needs 3:1 against its ground
+   (WCAG 1.4.11). Blue on light ground (11.8:1 on white), sand on dark, the
+   colours of the logo's slash on each. Set on the surface; everything inside
+   inherits it. --- */
 @utility ec-on-dark {
   --ec-focus-color: var(--color-brand-green-medium);
+  --ec-indicator-color: var(--color-brand-sand);
 }
 
 /* --- Focus ring drawn inside the element instead of around it. For controls
@@ -218,22 +240,13 @@
   }
 }
 
-/* --- Optical left alignment. an-regular leaves 0.094em of empty space before
+/* --- Optical left alignment. The typeface leaves 0.094em of empty space before
    the stem of its capitals (measured with canvas actualBoundingBoxLeft). It
    grows with the font size, so a 96px line starts visibly further right than a
    16px line in the same box. Pulling every line back by that amount lines up
    the letters instead of the boxes. --- */
 @utility ec-optical-left {
   margin-inline-start: -0.094em;
-}
-
-/* --- Optical vertical centring for one-line labels in pills and chips.
-   an-regular sits high in its line box (see the font-face note above), so flex
-   centring leaves the letters a hair above the middle. One line, a little more
-   space above than below, and they sit on the optical middle. --- */
-@utility ec-pill-label {
-  line-height: 1;
-  padding-block: 0.5rem 0.375rem;
 }
 
 @utility ec-layout-visual-content {

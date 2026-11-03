@@ -8,8 +8,9 @@ export const siteConfig = {
   defaultLocale: "de",
   locales: ["de", "en"] as const,
 
-  // --- TODO: 806x801, Open Graph expects 1200x630
-  defaultShareImage: "/og-default.png",
+  // --- 1200x630, the size Open Graph previews expect: the home hero in small,
+  // one per language because the claim is text. Alt text: common.shareImageAlt.
+  defaultShareImage: { de: "/og-default.png", en: "/og-default-en.png" },
 
   contact: {
     email: "contact@ercancicek.com",
@@ -29,6 +30,11 @@ export const siteConfig = {
   profiles: [{ platform: "linkedin", url: "https://www.linkedin.com/in/ercancicek" }],
 
   areaServed: ["Düsseldorf", "Ratingen", "Köln", "Nordrhein-Westfalen"],
+
+  // --- First day free for a new project. The about page and Pixel-Ercan read it;
+  // once the day has passed, both say "on request" (src/data/availability.ts).
+  // Change it here and nowhere else.
+  availableFrom: "2026-12-01",
 } as const
 
 export type SiteConfig = typeof siteConfig

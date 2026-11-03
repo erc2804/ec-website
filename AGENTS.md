@@ -44,7 +44,7 @@ pnpm lint           # eslint .
 pnpm check          # astro check
 ```
 
-`pnpm dev` runs `netlify dev`: the site and the inquiry chat's Netlify function on port
+`pnpm dev` runs `netlify dev`: the site and Pixel-Ercan's two Netlify functions (request page, about page) on port
 8888, proxying Astro on 4321. `netlify.toml` starts Astro with `pnpm astro dev`; pointing
 it at `pnpm dev` loops. `ANTHROPIC_API_KEY` lives in the gitignored `.env`.
 

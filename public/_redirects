@@ -1,0 +1,34 @@
+# --- The previous site (Gatsby, until 2026) put every page under /de/ or /en/.
+# Its addresses are linked from search results, profiles, the App Store and the
+# Chrome Web Store, so each one leads straight to its new page with a 301.
+# Google: keep such redirects "for as long as possible, generally at least
+# 1 year" (Site moves with URL changes). Netlify matches a rule with and without
+# the trailing slash, so one line covers both. The first matching rule wins:
+# the specific lines come before the :slug ones. The old blog has no new
+# counterpart and is left to answer 404 on purpose.
+
+# --- German
+/de                               /                                   301
+/de/about-me                      /ueber-mich                         301
+/de/portfolio                     /portfolio                          301
+/de/portfolio/muller-oswald       /portfolio/mueller-oswald           301
+/de/portfolio/pandg-aon           /portfolio/procter-gamble           301
+/de/portfolio/:slug               /portfolio/:slug                    301
+/de/imprint                       /impressum                          301
+/de/privacy                       /datenschutz                        301
+/de/casualvocab-privacy           /datenschutz/casualvocab            301
+/de/startwithwaiaria-privacy      /datenschutz/start-with-wai-aria    301
+
+# --- English: most addresses stay, only the renamed ones move
+/en/portfolio/muller-oswald       /en/portfolio/mueller-oswald        301
+/en/portfolio/pandg-aon           /en/portfolio/procter-gamble        301
+/en/imprint                       /en/legal-notice                    301
+/en/casualvocab-privacy           /en/privacy/casualvocab             301
+/en/startwithwaiaria-privacy      /en/privacy/start-with-wai-aria     301
+
+# --- Without a language: the old site guessed it from the browser
+/about-me                         /ueber-mich                         301
+/imprint                          /impressum                          301
+/privacy                          /datenschutz                        301
+/casualvocab-privacy              /datenschutz/casualvocab            301
+/startwithwaiaria-privacy         /datenschutz/start-with-wai-aria    301

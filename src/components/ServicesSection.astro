@@ -5,6 +5,7 @@
 // one. Shared, so the pages cannot drift apart.
 import type { IconCheck } from "@tabler/icons-astro"
 import Section from "./ui/Section.astro"
+import { surfaceOnGroundClasses, type Ground } from "./ui/surfaceOnGround"
 
 interface Props {
   title: string
@@ -13,16 +14,16 @@ interface Props {
   /** --- One icon component per item, in the same order: a Tabler icon or a
        drawn one that takes `class` --- */
   icons: (typeof IconCheck | ((props: { class?: string }) => unknown))[]
-  tone?: "page" | "light"
+  tone?: Ground
 }
 
 const { title, lead, items, icons, tone = "page" } = Astro.props
 
-const cardClasses = tone === "light" ? "bg-gray-subtle" : "bg-gray-min shadow-sm"
+const cardClasses = surfaceOnGroundClasses[tone]
 ---
 
-<Section tone={tone} aria-labelledby="servicesTitle">
-  <h2 id="servicesTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
+<Section tone={tone}>
+  <h2 class="ec-reveal text-heading-1 text-balance">{title}</h2>
   <p class="mt-5 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{lead}</p>
 
   <!-- --- Subgrid rows, so icon, title and text line up across the three

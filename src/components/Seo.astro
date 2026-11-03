@@ -1,12 +1,13 @@
 ---
 import { siteConfig } from "../config/site"
-import { routes, type RouteKey } from "../i18n"
+import { routes, useTranslations, type RouteKey } from "../i18n"
 
 interface Props {
   title: string
   description: string
-  /** --- Absolute path, e.g. "/og-accessibility.png" --- */
-  shareImage?: string
+  /** --- 1200x630, absolute path, e.g. "/og-accessibility.png", with its alt
+       text; without it the language's default image --- */
+  shareImage?: { src: string; alt: string }
   isNoindex?: boolean
   /** --- Person and ProfessionalService JSON-LD. Landing and service pages only. --- */
   hasStructuredData?: boolean
@@ -19,7 +20,7 @@ interface Props {
 const {
   title,
   description,
-  shareImage = siteConfig.defaultShareImage,
+  shareImage,
   isNoindex = false,
   hasStructuredData = false,
   routeKey,
@@ -29,7 +30,11 @@ const {
 const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
 
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href
-const shareImageUrl = new URL(shareImage, siteConfig.url).href
+const { src: shareImageSrc, alt: shareImageAlt } = shareImage ?? {
+  src: siteConfig.defaultShareImage[currentLocale === "en" ? "en" : "de"],
+  alt: useTranslations(currentLocale).common.shareImageAlt,
+}
+const shareImageUrl = new URL(shareImageSrc, siteConfig.url).href
 
 // --- Slugs differ per language, so alternates come from the route table.
 // No key means no reliable counterpart, and hreflang is left out entirely.
@@ -137,12 +142,16 @@ const serviceSchema = {
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={shareImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={shareImageAlt} />
 <meta property="og:locale" content={currentLocale === "en" ? "en_US" : "de_DE"} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={shareImageUrl} />
+<meta name="twitter:image:alt" content={shareImageAlt} />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

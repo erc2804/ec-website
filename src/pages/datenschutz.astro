@@ -7,5 +7,10 @@ const t = useTranslations(Astro.currentLocale).legal.privacy
 ---
 
 <BaseLayout title={t.meta.title} description={t.meta.description} routeKey="privacy">
-  <LegalPage title={t.title} lead={t.lead} sections={t.sections} />
+  <LegalPage
+    title={t.title}
+    lead={t.lead}
+    sections={t.sections}
+    status={{ heading: t.statusHeading, date: t.statusDate }}
+  />
 </BaseLayout>

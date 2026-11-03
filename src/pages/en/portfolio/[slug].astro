@@ -1,6 +1,7 @@
 ---
 import { localised, projects } from "../../../data/projects"
 import { useTranslations } from "../../../i18n"
+import { fill } from "../../../i18n/fill"
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import ProjectPage from "../../../views/portfolio/ProjectPage.astro"
 
@@ -14,7 +15,7 @@ const label = localised(project.label, "en")
 ---
 
 <BaseLayout
-  title={t.metaTitle.replace("{label}", label)}
+  title={fill(t.metaTitle, { label })}
   description={project.summary.en}
   routeKey="portfolio"
   subPath={`/${project.slug}`}

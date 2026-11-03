@@ -1,35 +1,214 @@
 ---
-import Placeholder from "../../components/ui/Placeholder.astro"
+// --- The about page, built like a project page: who I am in one sentence, the
+// story in four paragraphs with links to the stations, and beside it the round
+// portrait and the facts. Not sticky: the column is too long to stay put.
+// The facts are short, verifiable lines on purpose, the part search engines
+// and AI search quote, but set as a few labelled groups rather than a table,
+// so they read like a profile, not a CV. Availability leads, with the online dot of
+// Pixel-Ercan's avatar. Then Pixel-Ercan, the chat from the request page,
+// answering questions about me; then the contact block.
+import AssistantChat from "../../components/AssistantChat.astro"
+import ContactSection from "../../components/ContactSection.astro"
+import InlineText from "../../components/ui/InlineText.astro"
 import Section from "../../components/ui/Section.astro"
+import { siteConfig } from "../../config/site"
+import { availableFromMonth, isAvailableNow } from "../../data/availability"
+import { useTranslations, type Locale } from "../../i18n"
+import { fill } from "../../i18n/fill"
+
+const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
+const t = useTranslations(currentLocale).about
+const facts = t.facts
+// --- The section heads the chat here, so the chat gets no title of its own
+const { title: assistantTitle, lead: assistantLead, ...assistantText } = t.assistant
+
+// --- "Verfügbar ab Dezember 2026", or "Verfügbar auf Anfrage" once that day
+// has come. The build decides first; the script checks again in the browser,
+// since a static page can outlive the month it was built in
+// (src/data/availability.ts).
+const availability = isAvailableNow()
+  ? facts.availableNow
+  : fill(facts.availability, { date: availableFromMonth(currentLocale) })
+
+const termClasses = "text-sm text-typo-medium"
 ---
 
 <main id="main" class="pt-header">
   <Section>
-    <h1 class="text-display">Über mich</h1>
-    <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <Placeholder>
-        Kurzfassung des LinkedIn-Info-Textes: Product Engineer, Barrierefreiheit, KI-gestützt. Vier
-        kurze Absätze, keine Werkzeugliste im Fließtext.
-      </Placeholder>
-      <img
-        src="/images/ercancicek.jpg"
-        alt="Ercan Cicek"
-        width="320"
-        height="320"
-        class="size-40 rounded-full object-cover object-[40%] md:size-64 lg:size-80"
-      />
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-20">
+      <div>
+        <h1 class="max-w-[16ch] ec-rise text-display text-balance">
+          <InlineText text={t.title} />
+        </h1>
+        <p class="mt-6 max-w-[44ch] ec-rise text-lead text-typo-medium [--ec-rise-delay:100ms]">
+          {t.lead}
+        </p>
+
+        <div class="mt-10 flex max-w-[62ch] ec-rise flex-col gap-5 [--ec-rise-delay:200ms]">
+          {
+            t.story.map((paragraph) => (
+              <p class="text-body text-typo-medium">
+                <InlineText text={paragraph} />
+              </p>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="ec-rise [--ec-rise-delay:150ms] lg:self-start">
+        <img
+          src="/images/ercancicek.jpg"
+          alt={t.portraitAlt}
+          width="573"
+          height="573"
+          class="aspect-square w-full max-w-56 rounded-full object-cover"
+        />
+        <h2 class="sr-only">{facts.title}</h2>
+        <p class="mt-8 flex items-center gap-2.5 font-bold text-typo-high">
+          <span class="size-2.5 shrink-0 rounded-full bg-brand-green-medium" aria-hidden="true"
+          ></span>
+          <span data-available-now={facts.availableNow}>{availability}</span>
+        </p>
+        <p class="mt-1 pl-5 text-sm text-typo-medium">{facts.availabilityNote}</p>
+
+        <dl class="mt-8 flex flex-col gap-6">
+          <div>
+            <dt class={termClasses}>{facts.workplace.term}</dt>
+            <dd class="mt-1 text-typo-high">{facts.workplace.value}</dd>
+          </div>
+          <div>
+            <dt class={termClasses}>{facts.languages.term}</dt>
+            <dd class="mt-1">
+              <ul role="list" class="flex flex-col gap-1">
+                {
+                  facts.languages.items.map((language) => (
+                    <li class="text-typo-high">
+                      {language.name} <span class="text-typo-medium">({language.level})</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt class={termClasses}>{facts.industries.term}</dt>
+            <dd class="mt-2">
+              <ul role="list" class="flex flex-wrap gap-2">
+                {
+                  facts.industries.items.map((industry) => (
+                    <li class="rounded-full border border-gray-low px-3 py-1 text-sm text-typo-high">
+                      {industry}
+                    </li>
+                  ))
+                }
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt class={termClasses}>{facts.background.term}</dt>
+            <dd class="mt-1">
+              <ul role="list" class="flex flex-col gap-1">
+                {
+                  facts.background.items.map((line) => (
+                    <li class="text-typo-high">
+                      <InlineText text={line} />
+                    </li>
+                  ))
+                }
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </div>
     </div>
-    <Placeholder class="mt-10" label="Fakten für Suche und KI-Suche">
-      Ein kurzer Absatz mit belegbaren Fakten, damit Google und KI-Suchen zitieren können, wer ich
-      bin. Entwurf: „Seit 2018 bin ich selbstständig. Meine Projekte der letzten Jahre kamen aus
-      Industrie, HR-Tech, Banken, öffentlichen Einrichtungen und E-Commerce.“ Englisch: „I've been
-      independent since 2018. My recent projects came from manufacturing, HR tech, banking, the
-      public sector and e-commerce.“ Weitere Fakten laut LinkedIn: Webentwicklung seit 2016, Studium
-      Kommunikations- und Multimediadesign 2012 bis 2015, Deutsch und Englisch (C1), vor Ort, hybrid
-      oder remote in Düsseldorf und Umgebung. Danach die Seite von der Startseite aus verlinken.
-    </Placeholder>
-    <Placeholder class="mt-10">
-      Kontaktkarten (E-Mail, LinkedIn) wie bisher. Der KI-Teil wird später entschieden.
-    </Placeholder>
   </Section>
+
+  <Section tone="light">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-20">
+      <div>
+        <h2 class="ec-reveal text-heading-1 text-balance">{assistantTitle}</h2>
+        <p class="mt-6 max-w-[44ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
+          {assistantLead}
+        </p>
+      </div>
+
+      <AssistantChat
+        text={assistantText}
+        ground="light"
+        class="ec-about-assistant ec-reveal ec-reveal-late"
+      >
+        <!-- --- The visitor's words to tap, so they sit on the visitor's side -->
+        <ul
+          slot="choices"
+          role="list"
+          class="ec-about-suggestions flex flex-wrap justify-end gap-2"
+          aria-label={t.assistant.suggestionsLabel}
+        >
+          {
+            t.assistant.suggestions.map((question) => (
+              <li>
+                <button type="button" class="ec-choice" data-question={question}>
+                  {question}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </AssistantChat>
+      <noscript>
+        <p class="text-lead text-typo-medium">
+          <InlineText
+            text={t.assistant.noScript.replace(
+              "{email}",
+              `[${siteConfig.contact.email}](mailto:${siteConfig.contact.email})`
+            )}
+          />
+        </p>
+      </noscript>
+    </div>
+  </Section>
+
+  <ContactSection title={t.contact.title} body={t.contact.body} />
 </main>
+
+<script>
+  import { ChatError, createAssistantChat, postToAssistant } from "../../components/assistantChat"
+  import { isAvailableNow } from "../../data/availability"
+
+  // --- The availability, checked again against today's date
+  const availability = document.querySelector<HTMLElement>("[data-available-now]")
+  if (availability && isAvailableNow()) {
+    availability.textContent = availability.dataset.availableNow ?? ""
+  }
+
+  const assistant = document.querySelector<HTMLElement>(".ec-about-assistant")!
+  const suggestions = assistant.querySelector<HTMLElement>(".ec-about-suggestions")!
+  const locale = document.documentElement.lang === "en" ? "en" : "de"
+
+  // --- The suggestions start the conversation; once it runs they step aside
+  const setSuggestionsVisible = (isVisible: boolean) => {
+    suggestions.classList.toggle("hidden", !isVisible)
+  }
+
+  const chat = createAssistantChat(assistant, {
+    respond: async (messages) => {
+      const result = (await postToAssistant("/api/about-assist", { locale, messages })) as {
+        reply?: unknown
+      }
+      if (typeof result?.reply !== "string" || !result.reply) throw new ChatError("garbled")
+      return { reply: result.reply }
+    },
+    // --- They step aside as soon as a question is on its way, and come back
+    // if the first one fails
+    onAsk: () => setSuggestionsVisible(false),
+    onError: () => setSuggestionsVisible(!chat.hasConversation()),
+    onReset: () => setSuggestionsVisible(true),
+  })
+
+  suggestions.querySelectorAll<HTMLButtonElement>("[data-question]").forEach((button) =>
+    button.addEventListener("click", () => {
+      chat.ask(button.dataset.question!)
+      chat.input.focus()
+    })
+  )
+</script>

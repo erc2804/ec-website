@@ -11,7 +11,7 @@ import ToolCursor from "./ui/ToolCursor.astro"
 import { siteConfig } from "../config/site"
 import { inquiryPath, useTranslations, type Locale } from "../i18n"
 
-// --- Any other attribute (data-chat-zone, aria-labelledby …) goes to the section
+// --- Any other attribute (data-chat-zone …) goes to the section
 interface Props extends Omit<HTMLAttributes<"section">, "class"> {
   title: string
   body: string
@@ -40,7 +40,7 @@ const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "
 ---
 
 <Section class={additionalClasses} {...attributes}>
-  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20">
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-20">
     <div>
       <h2 class="ec-reveal text-display text-balance">{title}</h2>
       <p class="mt-6 max-w-[52ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{body}</p>
@@ -64,6 +64,7 @@ const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "
         href={`mailto:${siteConfig.contact.email}`}
         label={t.home.contact.email}
         address={siteConfig.contact.email}
+        copyText={siteConfig.contact.email}
       >
         <IconMail aria-hidden="true" />
       </ContactCard>

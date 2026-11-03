@@ -7,7 +7,16 @@ export const de = {
   common: {
     close: "Schließen",
     opensInNewTab: "(öffnet in neuem Tab)",
+    // --- The copy button on the email tile (ui/ContactCard.astro)
+    copyEmail: "E-Mail-Adresse kopieren",
+    copied: "E-Mail-Adresse kopiert",
+    copyFailed: "Kopieren hat nicht geklappt",
+    // --- The default preview image when a page is shared (public/og-default.png)
+    shareImageAlt:
+      "Ercan Cicek, Porträt. Daneben sein Name und: Design, Code und Barrierefreiheit. Aus einer Hand.",
     contactCta: "Projekt anfragen",
+    // --- Under a card whose title is the link: shown, and handed to the link as its description
+    more: "Mehr dazu",
     // --- Under "LinkedIn" on the contact cards: what the click brings, not the profile slug
     linkedinInvite: "Vernetz dich mit mir",
   },
@@ -24,6 +33,8 @@ export const de = {
     imprint: "Impressum",
     privacy: "Datenschutz",
     accessibilityStatement: "Barrierefreiheitserklärung",
+    casualvocabPrivacy: "Datenschutz CasualVocab",
+    startWithWaiAriaPrivacy: "Datenschutz Start with WAI-ARIA",
   },
 
   footer: {
@@ -65,26 +76,139 @@ export const de = {
 
     privacy: {
       meta: {
-        title: "Datenschutz | Ercan Cicek",
+        title: "Datenschutzerklärung | Ercan Cicek",
         description:
-          "Diese Website erhebt keine personenbezogenen Daten, setzt keine Cookies und wertet nichts aus.",
+          "Welche Daten beim Besuch dieser Website anfallen, wer sie bekommt und welche Rechte du hast. Keine Cookies, kein Tracking.",
       },
-      title: "Datenschutz",
-      lead: "Ich nehme den Schutz deiner persönlichen Daten sehr ernst. Auf dieser Website werden keine personenbezogenen Daten erhoben oder verarbeitet. Es werden keine Cookies verwendet, und es erfolgt keine Sammlung oder Auswertung von Nutzerdaten.",
+      // --- Soft hyphen at the compound seam: as one word it overflows the
+      // viewport on a phone. Not in meta.title, where it would reach the tab.
+      title: "Datenschutz­erklärung",
+      lead: "Hier steht, welche Daten beim Besuch dieser Website anfallen, wer sie bekommt und welche Rechte du hast. Kurz vorweg: keine Cookies, kein Tracking, keine Werbung. Daten fallen nur an, damit die Seite bei dir ankommt, und wenn du mir schreibst: über das Formular, per E-Mail oder im Chat mit Pixel-Ercan.",
       sections: [
         {
-          heading: "Externe Inhalte",
+          heading: "Verantwortlich",
           body: [
-            "Die Website enthält möglicherweise externe Inhalte wie eingebettete Fotos und Videos, die Daten an Dritte übermitteln könnten. Du kannst die Nutzung solcher externen Dienste über die Einstellungen deines Browsers steuern.",
+            "Verantwortlich für die Datenverarbeitung auf dieser Website ist:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}"] },
+            "Du erreichst mich unter {email} oder {phone}.",
           ],
         },
         {
-          heading: "Kontakt",
+          heading: "Hosting bei Netlify",
           body: [
-            "Bei Fragen zu dieser Datenschutzerklärung kannst du dich gerne an mich wenden: {email}",
+            "Die Website liegt bei:",
+            { address: ["Netlify, Inc.", "101 2nd Street", "San Francisco, CA 94105, USA"] },
+            "Wenn du eine Seite aufrufst, verarbeitet Netlify, was technisch nötig ist, damit sie bei dir ankommt:",
+            {
+              list: [
+                "deine IP-Adresse",
+                "Datum und Uhrzeit des Aufrufs",
+                "die aufgerufene Adresse",
+                "Angaben zu Browser und Betriebssystem",
+              ],
+            },
+            "Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse ist, die Website sicher und zuverlässig auszuliefern.",
+            "Netlify verarbeitet die Daten in meinem Auftrag (Art. 28 DSGVO). Der Vertrag dazu ist Teil der Nutzungsbedingungen von Netlify. Die Daten können in den USA verarbeitet werden. Abgesichert ist das über die Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO), die Teil dieses Vertrags sind. Netlify speichert die Protokolle nur so lange, wie es für Betrieb und Sicherheit nötig ist. Mehr dazu in der [Datenschutzerklärung von Netlify](https://www.netlify.com/privacy/).",
+          ],
+        },
+        {
+          heading: "Cookies und Speicher im Browser",
+          body: [
+            "Diese Website setzt keine Cookies und nutzt keine Analyse- oder Trackingdienste. Schriften und Bilder kommen von dieser Website selbst, nichts wird von anderen Anbietern nachgeladen.",
+            "Eine Ausnahme: Wenn du die Sprechblase von Pixel-Ercan mit Escape schließt, merkt sich dein Browser das im Sitzungsspeicher (sessionStorage), damit sie auf der nächsten Seite nicht wieder auftaucht. Der Eintrag sagt nur, dass sie ausgeblendet ist, verlässt deinen Browser nicht und ist weg, sobald du den Tab schließt. Weil er für diese von dir gewünschte Funktion unbedingt erforderlich ist, braucht er keine Einwilligung (§ 25 Abs. 2 Nr. 2 TDDDG).",
+          ],
+        },
+        {
+          heading: "Projektanfrage über das Formular",
+          body: [
+            "Wenn du mir über das Formular eine Anfrage schickst, verarbeite ich, was du einträgst:",
+            {
+              list: [
+                "worum es geht und deine Beschreibung",
+                "deine E-Mail-Adresse",
+                "wenn du sie angibst: deinen Namen, deine Telefonnummer und ob ich dich anrufen soll",
+              ],
+            },
+            "Beschreibung und E-Mail-Adresse brauche ich, um dir antworten zu können. Ohne sie lässt sich das Formular nicht abschicken.",
+            "Ich nutze die Angaben, um deine Anfrage zu beantworten und ein mögliches Projekt mit dir zu besprechen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, weil es um Schritte vor einem möglichen Vertrag geht, die du selbst anstößt.",
+            "Das Formular läuft über Netlify Forms. Netlify speichert die Anfrage für mich und prüft sie mit dem Spamfilter Akismet von Automattic, Inc. (USA). Für Auftragsverarbeitung und Übermittlung in die USA gilt dasselbe wie beim Hosting.",
+            "Ich lösche die Anfrage bei Netlify, sobald ich sie bearbeitet habe. Wird daraus ein Auftrag, bewahre ich die Unterlagen so lange auf, wie es gesetzliche Aufbewahrungspflichten verlangen, etwa nach § 147 der Abgabenordnung.",
+          ],
+        },
+        {
+          heading: "E-Mail und Telefon",
+          body: [
+            "Wenn du mir schreibst oder mich anrufst, verarbeite ich deine Angaben, um dir zu antworten. Geht es um ein Projekt, ist die Rechtsgrundlage Art. 6 Abs. 1 lit. b DSGVO, sonst Art. 6 Abs. 1 lit. f DSGVO: mein berechtigtes Interesse, Fragen zu beantworten. Für Löschung und Aufbewahrung gilt dasselbe wie beim Formular.",
+            "Mein E-Mail-Postfach liegt bei:",
+            { address: ["STRATO GmbH", "Otto-Ostrowski-Straße 7", "10249 Berlin"] },
+            "STRATO verarbeitet die E-Mails in meinem Auftrag (Art. 28 DSGVO) innerhalb der EU und löscht die Protokolle des Mailservers nach spätestens sechs Monaten.",
+          ],
+        },
+        {
+          heading: "Pixel-Ercan, der KI-Assistent",
+          body: [
+            "Auf den Seiten [Projekt anfragen](/projekt-anfragen) und [Über mich](/ueber-mich) kannst du mit Pixel-Ercan schreiben. Er ist eine KI. Damit er antworten kann, schickt die Website deine Nachrichten und den bisherigen Verlauf des Chats an den KI-Dienst Anthropic. Beim Projektformular geht außerdem mit, was schon im Formular steht, damit er es ergänzen kann. Der Chat beginnt erst, wenn du selbst eine Nachricht abschickst.",
+            "Anbieter ist:",
+            {
+              address: [
+                "Anthropic Ireland, Limited",
+                "6th Floor, South Bank House",
+                "Barrow Street",
+                "Dublin 4, D04 TR29, Irland",
+              ],
+            },
+            "Anthropic verarbeitet die Daten in meinem Auftrag (Art. 28 DSGVO), der Vertrag dazu ist Teil der Geschäftsbedingungen von Anthropic. Die Daten werden auch in den USA verarbeitet. Abgesichert ist das über die Standardvertragsklauseln der EU-Kommission, die Teil dieses Vertrags sind.",
+            "Anthropic nutzt die Inhalte nicht, um seine Modelle zu trainieren, und löscht sie nach spätestens 30 Tagen. Länger, bis zu zwei Jahre, bleiben sie nur, wenn die automatischen Sicherheitssysteme von Anthropic eine Nachricht als Verstoß gegen die Nutzungsrichtlinien markieren, oder wenn ein Gesetz es verlangt. Details stehen im [Privacy Center von Anthropic](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-personal-data).",
+            "Ich selbst speichere die Chats nicht. Der Verlauf liegt nur in deinem geöffneten Tab und ist weg, wenn du die Seite verlässt. Damit niemand die Chats mit automatisierten Anfragen überlastet, zählt Netlify die Anfragen pro IP-Adresse und lässt höchstens zwölf pro Minute durch.",
+            "Rechtsgrundlage ist beim Projektformular Art. 6 Abs. 1 lit. b DSGVO, weil Pixel-Ercan dir hilft, deine Anfrage zu stellen. Auf der Seite Über mich ist es Art. 6 Abs. 1 lit. f DSGVO: mein berechtigtes Interesse, deine Fragen zu mir und meiner Arbeit zu beantworten.",
+            "Pixel-Ercan entscheidet nichts über dich. Was er ins Formular einträgt, kannst du ändern, und abgeschickt wird nur, was du selbst abschickst.",
+          ],
+        },
+        {
+          heading: "Deine Rechte",
+          body: [
+            "Du hast das Recht auf:",
+            {
+              list: [
+                "Auskunft über deine Daten (Art. 15 DSGVO)",
+                "Berichtigung (Art. 16 DSGVO)",
+                "Löschung (Art. 17 DSGVO)",
+                "Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+                "Datenübertragbarkeit, also deine Daten in einem gängigen Format (Art. 20 DSGVO)",
+              ],
+            },
+            "Schreib mir dafür an {email}.",
+          ],
+        },
+        {
+          heading: "Widerspruchsrecht",
+          body: [
+            "Verarbeite ich Daten auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO, kannst du jederzeit widersprechen, wenn sich die Gründe aus deiner besonderen Situation ergeben (Art. 21 DSGVO). Dann verarbeite ich diese Daten nicht weiter, außer es gibt zwingende schutzwürdige Gründe, die deine Interessen überwiegen, oder die Verarbeitung dient der Durchsetzung von Rechtsansprüchen.",
+          ],
+        },
+        {
+          heading: "Beschwerde bei der Aufsichtsbehörde",
+          body: [
+            "Du kannst dich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO). Für mich zuständig ist:",
+            {
+              address: [
+                "Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen",
+                "Postfach 20 04 44",
+                "40102 Düsseldorf",
+                "[ldi.nrw.de](https://www.ldi.nrw.de)",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Links zu anderen Websites",
+          body: [
+            "Links zu anderen Websites, etwa zu LinkedIn, sind einfache Links. Erst wenn du einen öffnest, verlässt du diese Website, und es gilt die Datenschutzerklärung des jeweiligen Anbieters.",
           ],
         },
       ],
+      statusHeading: "Stand dieser Erklärung",
+      statusDate: "3. November 2026",
     },
 
     accessibilityStatement: {
@@ -107,32 +231,180 @@ export const de = {
           ],
         },
         {
-          heading: "Stand der Vereinbarkeit",
+          heading: "Erstellung dieser Erklärung",
           body: [
-            "Die Website ist nach WCAG 2.2 Stufe AA gebaut und wird daran geprüft. Getestet wird mit der Tastatur und mit Screenreader, ergänzt um automatische Werkzeuge.",
+            "Ich habe die Erklärung am 18. August 2026 erstellt und zuletzt am 3. November 2026 überprüft. Grundlage ist eine Selbstbewertung nach den Prüfschritten des BITV-Tests für WCAG 2.2. Geprüft habe ich mit:",
+            {
+              list: [
+                "der Tastatur, ohne Maus",
+                "dem Screenreader VoiceOver",
+                "einer Bildschirmbreite von 320 Pixeln und vergrößerten Textabständen",
+                "gemessenen Kontrasten für Texte, Rahmen und Fokus",
+                "automatischen Werkzeugen wie Lighthouse",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Wie barrierefrei ist die Website?",
+          body: [
+            "Die Website ist nach WCAG 2.2 Stufe AA gebaut und erfüllt die Anforderungen weitgehend. Die bekannten Ausnahmen stehen im nächsten Abschnitt.",
             "Als Kleinstunternehmen bin ich zu dieser Erklärung nicht verpflichtet. Sie ist freiwillig.",
           ],
         },
         {
-          heading: "Bekannte Einschränkungen",
+          heading: "Diese Bereiche sind noch nicht vollständig barrierefrei",
           body: [
-            "Die interaktive Demo auf der Seite zur Barrierefreiheit zeigt Abschriften von Screenreader-Ansagen. Damit ein echter Screenreader nicht vorliest, was ein Screenreader vorlesen würde, sind diese Panels ausgeblendet und werden stattdessen als eine zusammenhängende Ansage über eine Live-Region ausgegeben.",
+            {
+              list: [
+                "Die Sprechblase von Pixel-Ercan folgt auf dem Desktop dem Mauszeiger. Deshalb lässt sie sich mit der Maus nicht erreichen (WCAG 1.4.13). Mit Escape blendest du sie für den Rest des Besuchs aus. Sie zeigt nur kurze Sprüche, du verpasst also nichts.",
+                "Mel-Menu, ein kleines Spiel von 2018, ist nicht barrierefrei. Es lässt sich nur mit Maus oder Finger bedienen. Es führt zu Seiten, die du auch über die Navigation erreichst.",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Bewusste Entscheidungen",
+          body: [
+            "Die grünen Buttons heben sich vom weißen und grauen Hintergrund mit weniger als 3:1 Kontrast ab. WCAG verlangt das hier nicht: Ein Button braucht keine kontrastreiche Fläche oder Umrandung, wenn ihn etwas anderes als Button erkennbar macht, zum Beispiel seine Beschriftung, seine Position oder der Zusammenhang ([W3C, Understanding 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)). Die dunkelblaue Schrift auf dem Grün hat 6,7:1, und die Buttons stehen dort, wo man sie erwartet: am Ende eines Abschnitts oder Formulars und oben rechts in der Navigation.",
+          ],
+        },
+        {
+          heading: "Inhalte anderer Anbieter",
+          body: [
+            "Links zu anderen Websites, etwa zu LinkedIn, GitHub oder CodePen, führen zu Angeboten, deren Barrierefreiheit ich nicht beeinflussen kann.",
           ],
         },
         {
           heading: "Barriere melden",
           body: [
-            "Wenn dir etwas auffällt, das dich blockiert, schreib mir. Ich antworte und sage dir, wann es behoben ist.",
+            "Wenn dir etwas auffällt, das dich blockiert, schreib mir an {email} oder ruf mich an unter {phone}. Ich antworte und sage dir, wann es behoben ist.",
           ],
         },
       ],
       statusHeading: "Stand dieser Erklärung",
-      statusDate: "18. August 2026",
+      statusDate: "3. November 2026",
+    },
+
+    // --- The apps' privacy policies, taken over from the previous site
+    casualvocabPrivacy: {
+      meta: {
+        title: "Datenschutzerklärung CasualVocab | Ercan Cicek",
+        description:
+          "Welche Daten die App CasualVocab Widget - Japanese verarbeitet und wer sie bekommt.",
+      },
+      title: "Datenschutz\u00ADerklärung CasualVocab",
+      lead: "Ich habe die App CasualVocab Widget - Japanese als kostenlosen Dienst entwickelt. Hier steht, welche Daten bei der Nutzung anfallen, wofür sie genutzt werden und wer sie bekommt.",
+      sections: [
+        {
+          heading: "Verantwortlich",
+          body: [
+            "Verantwortlich für die App ist:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}"] },
+            "Du erreichst mich unter {email}.",
+          ],
+        },
+        {
+          heading: "Erhebung und Nutzung von Daten",
+          body: [
+            "Die App selbst erhebt keine personenbezogenen Daten. Die Dienste Firebase und AdMob, die sie nutzt, können aber personenbezogene Daten verarbeiten, um ihre Leistung zu erbringen. Ich nutze oder teile deine Daten nur so, wie es hier beschrieben ist.",
+          ],
+        },
+        {
+          heading: "Dienste anderer Anbieter",
+          body: [
+            "Die App nutzt diese Dienste von Google:",
+            {
+              list: [
+                "Firebase erfasst Geräteinformationen und Nutzungsdaten der App, um Leistung und Funktion zu verbessern. Mehr dazu in der [Datenschutzerklärung von Firebase](https://firebase.google.com/support/privacy).",
+                "AdMob blendet Werbung ein, auch personalisierte, und nutzt dafür Cookies und vergleichbare Kennungen. Mehr dazu in der [Datenschutzerklärung von AdMob](https://support.google.com/admob/answer/6128543?hl=de).",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Protokolldaten",
+          body: [
+            "Bei einem Fehler kann Firebase Protokolldaten erfassen: die IP-Adresse deines Geräts, den Gerätenamen, die Version des Betriebssystems, die Konfiguration der App, Nutzungsstatistiken sowie Datum und Uhrzeit der Nutzung.",
+          ],
+        },
+        {
+          heading: "Cookies",
+          body: [
+            "Die App selbst setzt keine Cookies. Firebase und AdMob können Cookies für Analyse, Werbung und die Verbesserung ihrer Dienste nutzen. In den Einstellungen deines Geräts kannst du das einschränken. Manche Funktionen der App arbeiten dann eventuell nicht mehr richtig.",
+          ],
+        },
+        {
+          heading: "Sicherheit",
+          body: [
+            "Ich schütze deine Daten mit üblichen technischen Mitteln. Keine Übertragung oder Speicherung im Internet ist aber vollkommen sicher.",
+          ],
+        },
+        {
+          heading: "Links zu anderen Websites",
+          body: [
+            "Die App kann Links zu Websites enthalten, die ich nicht betreibe. Für deren Inhalte und Datenschutz bin ich nicht verantwortlich. Bitte lies dort die jeweilige Datenschutzerklärung.",
+          ],
+        },
+        {
+          heading: "Kinder",
+          body: [
+            "Die App richtet sich nicht an Kinder unter 13 Jahren, und ich erhebe keine Daten von Kindern. Erfahre ich, dass ein Kind unter 13 Jahren personenbezogene Daten übermittelt hat, lösche ich sie sofort.",
+          ],
+        },
+        {
+          heading: "Änderungen",
+          body: [
+            "Ich kann diese Datenschutzerklärung anpassen. Änderungen stehen auf dieser Seite, zusammen mit dem Datum der letzten Aktualisierung.",
+          ],
+        },
+        {
+          heading: "Kontakt",
+          body: ["Bei Fragen zu dieser Datenschutzerklärung schreib mir an {email}."],
+        },
+      ],
+      statusHeading: "Stand dieser Erklärung",
+      statusDate: "3. November 2026, gültig seit 22. Juni 2022",
+    },
+
+    startWithWaiAriaPrivacy: {
+      meta: {
+        title: "Datenschutzerklärung Start with WAI-ARIA | Ercan Cicek",
+        description:
+          "Die Browser-Erweiterung Start with WAI-ARIA erhebt keine personenbezogenen Daten.",
+      },
+      title: "Datenschutz\u00ADerklärung Start with WAI-ARIA",
+      lead: "Die Browser-Erweiterung Start with WAI-ARIA erhebt keine personenbezogenen Daten. Alles läuft lokal in deinem Browser.",
+      sections: [
+        {
+          heading: "Verantwortlich",
+          body: [
+            "Verantwortlich für die Erweiterung ist:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}"] },
+            "Du erreichst mich unter {email}.",
+          ],
+        },
+        {
+          heading: "Was lokal gespeichert wird",
+          body: [
+            "Die Berechtigung „storage“ nutzt die Erweiterung nur, um deine Einstellungen in deinem Browser zu speichern, zum Beispiel das Farbschema oder ausgeblendete Patterns.",
+            "Es werden keine Daten an Server oder andere Anbieter übertragen.",
+          ],
+        },
+        {
+          heading: "Kontakt",
+          body: ["Bei Fragen zu dieser Datenschutzerklärung schreib mir an {email}."],
+        },
+      ],
+      statusHeading: "Stand dieser Erklärung",
+      statusDate: "3. November 2026",
     },
   },
 
   chatBubble: {
     starter: "Wie geht's?",
+    // --- His last line after Escape, before he leaves for the rest of the visit
+    dismissed: "Alles klar, ich bin weg.",
     firstName: "Mein Name wird Erdschan ausgesprochen (wie bei Dschungel).",
     mainLinks: "Wohin als Nächstes?",
     languageSwitch: "Keine Sorge, ich spreche beide Sprachen.",
@@ -140,7 +412,36 @@ export const de = {
     design: "Mein Herzensthema.",
     development: "// TODO: Peppigen Spruch einfügen",
     contact: "Ich freue mich auf deine Nachricht!",
-    legal: "Wirklich?",
+  },
+
+  // --- Pixel-Ercan's chat, the same on the request page and the about page.
+  // The page brings its own title, intro and the errors that end in a way out.
+  assistantChat: {
+    logLabel: "Unterhaltung mit Pixel-Ercan",
+    speakerYou: "Du",
+    speakerAssistant: "Pixel-Ercan",
+    inputLabel: "Deine Nachricht an Pixel-Ercan",
+    send: "Senden",
+    working: "Pixel-Ercan schreibt …",
+    privacyLink: "Mehr dazu in der Datenschutzerklärung",
+    showEarlierOne: "1 frühere Nachricht anzeigen",
+    showEarlierMany: "{count} frühere Nachrichten anzeigen",
+    hideEarlier: "Frühere Nachrichten ausblenden",
+    toNewest: "Zur neuesten Nachricht",
+    reset: "Chat neu starten",
+    errors: {
+      stillWorking:
+        "Pixel-Ercan schreibt noch. Schick deine Nachricht, sobald seine Antwort da ist.",
+      empty: "Schreib Pixel-Ercan erst ein paar Worte, dann legt er los.",
+      offline:
+        "Du bist gerade offline. Sobald du wieder Netz hast, schick deine Nachricht noch mal. Sie steht noch im Feld.",
+      timeout:
+        "Pixel-Ercan braucht gerade ungewöhnlich lange. Schick deine Nachricht gleich noch mal, sie steht noch im Feld.",
+      tooFast:
+        "Pixel-Ercan kommt kaum hinterher. Warte einen Moment und schick deine Nachricht dann noch mal.",
+      garbled:
+        "Pixel-Ercan hat sich gerade verhaspelt. Schick deine Nachricht noch mal, sie steht noch im Feld.",
+    },
   },
 
   home: {
@@ -150,7 +451,7 @@ export const de = {
         "Ich mache Websites barrierefrei nach BFSG und gestalte und baue Websites und Web-Apps selbst. Selbstständiger Product Engineer in Düsseldorf, über zehn Jahre Design und Code.",
     },
     hero: {
-      eyebrow: ["Product Engineer", "Düsseldorf"],
+      eyebrow: ["[Product Engineer]{lang=en}", "Düsseldorf"],
       claim: ["Design, Code und Barrierefreiheit.", "Aus einer Hand."],
       scrollCue: "Weiter nach unten",
     },
@@ -173,7 +474,6 @@ export const de = {
             "Egal mit welcher Technologie: Ich leite die KI so an, dass sie auch baut, was man im Konzept nicht sieht.",
         },
       },
-      more: "Mehr dazu",
       vignettes: {
         accessibilityCaption: "Weiter, Taste",
         designSizeBefore: "128 × 56",
@@ -253,7 +553,7 @@ export const de = {
     lead: "Ausgewählte Projekte seit 2016.",
     elsewhere: {
       title: "Sonstiges",
-      lead: "Mein Code auf GitHub, Mel-Menu als mein erstes Portfolio von 2018 und ein paar Spielwiesen.",
+      lead: "Mein Code auf GitHub, Mel-Menu als mein erstes Portfolio von 2016 und ein paar Spielwiesen.",
     },
     project: {
       back: "Zum Portfolio",
@@ -267,12 +567,11 @@ export const de = {
         services: "Leistungen",
         skills: "Kenntnisse",
       },
-      imageAlt: "{label} auf dem Handy",
       metaTitle: "{label} | Portfolio | Ercan Cicek",
     },
     contact: {
-      title: "Soll dein Projekt hier stehen?",
-      body: "Erzähl mir, was du vorhast. Ein kurzes Gespräch reicht, unverbindlich und kostenlos.",
+      title: "Melde dich bei mir.",
+      body: "Erzähl mir kurz und unverbindlich, worum es geht, und wir finden gemeinsam eine passende Lösung.",
     },
   },
 
@@ -283,39 +582,30 @@ export const de = {
         "Erzähl mir, worum es geht: Barrierefreiheit, Design oder Entwicklung. Füll das Formular selbst aus oder lass dir von Pixel-Ercan helfen. Antwort normalerweise in zwei Werktagen.",
     },
     title: "Projekt anfragen",
-    lead: "Erzähl mir, worum es geht. Ein paar Sätze reichen. Füll das Formular selbst aus oder lass dir von Pixel-Ercan helfen. Er trägt alles für dich ein.",
+    lead: "Erzähl mir gerne, wobei ich dich unterstützen darf. Auch eine vage Idee reicht. Füll das Formular selbst aus oder lass dir von Pixel-Ercan (meinem KI-Assistenten) helfen.",
     assistant: {
       title: "Mit Pixel-Ercan ausfüllen",
       intro:
         "Hi, ich bin Pixel-Ercan. Erzähl mir von deinem Projekt, und ich trage alles für dich ins Formular ein.",
       disclosure:
         "Pixel-Ercan ist eine KI. Damit er eintragen kann, geht dein Text an den KI-Dienst Anthropic. Abgeschickt wird nur, was du selbst abschickst.",
-      privacyLink: "Mehr dazu in der Datenschutzerklärung",
-      logLabel: "Unterhaltung mit Pixel-Ercan",
-      speakerYou: "Du",
-      speakerAssistant: "Pixel-Ercan",
-      inputLabel: "Deine Nachricht an Pixel-Ercan",
       placeholder:
         "Hi Ercan, wir sind ein Onlineshop für Fahrradteile und müssen bis Juni barrierefrei sein. Kannst du prüfen, wo wir stehen? Ich bin Lena, erreichbar unter lena@beispiel.de",
       replyPlaceholder: "Deine Antwort …",
-      send: "Senden",
       callbackYes: "Ja, gern",
       callbackNo: "Nein, E-Mail reicht",
       callbackYesMessage: "Ja, ruf mich gern an.",
       callbackNoMessage: "Nein, eine E-Mail reicht.",
-      working: "Pixel-Ercan schreibt …",
-      empty: "Schreib Pixel-Ercan erst ein paar Worte, dann legt er los.",
       filled: "Eingetragen: {fields}",
       toForm: "Ansehen",
-      showEarlierOne: "1 frühere Nachricht anzeigen",
-      showEarlierMany: "{count} frühere Nachrichten anzeigen",
-      hideEarlier: "Frühere Nachrichten ausblenden",
-      toNewest: "Zur neuesten Nachricht",
-      reset: "Chat neu starten",
-      error:
-        "Das hat gerade nicht geklappt. Versuch es gleich noch mal oder füll das Formular selbst aus.",
-      busy: "Gerade ist viel los. Versuch es in einer Minute noch mal oder füll das Formular selbst aus.",
-      tooLong: "Der Chat ist schon ziemlich lang. Ergänze den Rest bitte direkt im Formular.",
+      errors: {
+        busy: "Bei Pixel-Ercan ist gerade viel los. Versuch es in einer Minute noch mal oder füll das Formular selbst aus.",
+        budget:
+          "So viele Leute haben mit Pixel-Ercan geschrieben, dass er für diesen Monat Feierabend macht. Danke für dein Interesse! Füll das Formular bitte selbst aus, das geht genauso schnell.",
+        tooLong: "Der Chat ist schon ziemlich lang. Ergänze den Rest bitte direkt im Formular.",
+        error:
+          "Das ist ein Fehler, mit dem nicht mal Pixel-Ercan gerechnet hat. Versuch es noch mal oder füll das Formular selbst aus.",
+      },
       tag: "von Pixel-Ercan",
       fieldNames: {
         topics: "Thema",
@@ -404,6 +694,78 @@ export const de = {
     },
   },
 
+  about: {
+    meta: {
+      title: "Über Ercan Cicek | Product Engineer in Düsseldorf",
+      description:
+        "Ercan Cicek ist selbstständiger Product Engineer in Düsseldorf. Er gestaltet digitale Produkte, entwickelt ihr Frontend und macht sie barrierefrei. Studium an der FH Aachen, seitdem in Design und Entwicklung.",
+    },
+    title: "Ich bin Ercan, [Product Engineer]{lang=en} aus Düsseldorf.",
+    lead: "Ich gestalte digitale Produkte, baue ihr Frontend und sorge dafür, dass alle Menschen sie benutzen können.",
+    portraitAlt: "Porträt von Ercan Cicek",
+    story: [
+      "Als [Product Engineer]{lang=en} gestalte ich digitale Produkte und setze sie im Frontend selbst um. Je nach Projekt mache ich beides oder nur eines davon.",
+      "Seit 2016 arbeite ich in Design und Entwicklung und habe Teams in beiden Bereichen geleitet. Weil ich beide Seiten aus eigener Arbeit kenne, kann ich an vielen Stellen helfen: bei Bewerbungstests für [AON](/portfolio/aon), bei DIANA, der Software, mit der die [Deutsche Bahn](/portfolio/deutsche-bahn) Störungen an Weichen früh erkennt, bei der Produktplattform von [Welliba](/portfolio/welliba) oder beim Webshop von [Curanto](/portfolio/curanto), wo ich Design und Frontend geleitet habe.",
+      "Mein zweiter Schwerpunkt ist [Barrierefreiheit](/barrierefreiheit), also digitale Produkte so zu bauen, dass alle Menschen sie benutzen können. Ich prüfe nach WCAG und BFSG, behebe die Fehler selbst im Design und im Code und schule Teams, damit sie Barrierefreiheit von Anfang an mitdenken.",
+      "Heute arbeite ich KI-gestützt, im Design, im Code und bei der Barrierefreiheit. Die KI erledigt die Fleißarbeit, die Entscheidungen treffe ich: was das Produkt braucht, wer es benutzt und was passiert, wenn etwas schiefgeht. So bekommst du eine Lösung, die sich nach deinen Nutzern richtet, im Tempo der KI.",
+    ],
+    facts: {
+      title: "Kurz gesagt",
+      availability: "Verfügbar ab {date}",
+      availableNow: "Verfügbar auf Anfrage",
+      availabilityNote: "Kann sich kurzfristig ändern, frag einfach.",
+      workplace: { term: "Arbeitet", value: "Von Düsseldorf aus, remote, hybrid oder vor Ort" },
+      languages: {
+        term: "Spricht",
+        items: [
+          { name: "Deutsch und Türkisch", level: "Muttersprachen" },
+          { name: "Englisch", level: "verhandlungssicher" },
+          { name: "Japanisch", level: "erweiterte Grundkenntnisse" },
+        ],
+      },
+      industries: {
+        term: "Erfahrung in",
+        items: ["Industrie", "HR-Tech", "Banken", "öffentlichen Einrichtungen", "E-Commerce"],
+      },
+      background: {
+        term: "Hintergrund",
+        items: [
+          "[Communication and Multimedia Design]{lang=en} (B.Sc.), FH Aachen, bis 2015",
+          "Selbstständig seit 2018",
+        ],
+      },
+    },
+    assistant: {
+      title: "Frag Pixel-Ercan.",
+      lead: "Pixel-Ercan kennt meine Projekte, meine Arbeitsweise und auch ein bisschen Persönliches. Frag ihn, was du wissen willst.",
+      intro: "Hi, ich bin Pixel-Ercan. Frag mich, was du über Ercan wissen willst.",
+      disclosure:
+        "Pixel-Ercan ist eine KI. Damit er antworten kann, geht deine Frage an den KI-Dienst Anthropic.",
+      placeholder: "Zum Beispiel: Hat Ercan schon mit Startups gearbeitet?",
+      replyPlaceholder: "Deine nächste Frage …",
+      suggestionsLabel: "Fragen zum Antippen",
+      noScript: "Pixel-Ercan braucht JavaScript. Schreib mir gern direkt an {email}.",
+      suggestions: [
+        "Ab wann hat Ercan Zeit?",
+        "Arbeitet Ercan auch remote?",
+        "Warum ist Ercan Barrierefreiheit so wichtig?",
+      ],
+      errors: {
+        busy: "Bei Pixel-Ercan ist gerade viel los. Versuch es in einer Minute noch mal oder schreib mir direkt an {email}.",
+        budget:
+          "So viele Leute haben mit Pixel-Ercan geschrieben, dass er für diesen Monat Feierabend macht. Danke für dein Interesse! Schreib mir direkt an {email}, ich antworte dir persönlich.",
+        tooLong:
+          "Der Chat ist schon ziemlich lang. Starte ihn neu oder schreib mir direkt an {email}.",
+        error:
+          "Das ist ein Fehler, mit dem nicht mal Pixel-Ercan gerechnet hat. Versuch es noch mal oder schreib mir direkt an {email}.",
+      },
+    },
+    contact: {
+      title: "Lern mich persönlich kennen.",
+      body: "Ein kurzes Gespräch sagt mehr als jede Seite. Unverbindlich und kostenlos.",
+    },
+  },
+
   nav: {
     toHome: "Zur Startseite",
     label: "Hauptnavigation",
@@ -432,48 +794,12 @@ export const de = {
       lead: "Nutzerfreundliches und einzigartiges Design: für neue Features in bestehenden Produkten und für neue Produkte, mit oder ohne KI-generierten Prototyp.",
     },
 
-    // --- The before/after section: the two pages side by side
-    compare: {
-      title: "KI liefert das Übliche, nicht die beste Lösung.",
-      lead: "Das Ergebnis funktioniert und ist ein guter Anfang. Nur ist es von der Stange: Die Elemente sehen aus wie überall, das Branding passt nicht, die Einzigartigkeit fehlt.",
-      example:
-        "Ein Beispiel zur Verdeutlichung: der obere Bereich meiner eigenen Startseite, einmal von einer KI aus denselben Inhalten gebaut und einmal von mir gestaltet. Kundenseiten stelle ich hier bewusst keiner KI-Version gegenüber. Im Gespräch zeige ich dir gern Beispiele, die näher an deinem Projekt sind.",
-      before: "KI-generiert",
-      after: "Von mir gestaltet",
-      // --- One line under each picture, what it comes down to
-      beforeNote: "Sieht schick aus, aber wie jede andere generierte Seite.",
-      afterNote: "Gibt es so nur einmal: Farben, Schrift und Bild gehören zu mir.",
-      // --- For screen readers, who do not see the two pictures
-      description:
-        "KI-generiert: dunkelblauer Hintergrund mit Gitter, das Kürzel „EC.“ als Logo, der Name in weißer Fettschrift, ein blauer Button mit Farbverlauf und daneben das Porträtfoto in einem leuchtenden Rahmen mit dem Zusatz „Fokus: Accessible Web Products“. Von mir gestaltet: dunkles Grau, das Logo mit den spitzen Klammern, der Name groß in Grün und Hellgrau, ein grüner Button und ein angeschnittenes Porträt, das die rechte Hälfte füllt.",
-      // --- The info button next to the AI side and its dialog: where the
-      // picture comes from, and the prompt as it was sent
-      originLabel: "So ist das KI-Ergebnis entstanden",
-      originTitle: "So ist das KI-Ergebnis entstanden",
-      originText: [
-        "Gebaut von Gemini 3.1 Pro am 2. November 2026, aus einem einzigen Prompt ohne weiteren Kontext und ohne Designvorgaben. Gezeigt ist das gelieferte Ergebnis, unverändert.",
-        "Mit anderen Prompts und Werkzeugen kommen auch bessere Ergebnisse heraus. Ohne gute Vorarbeit und passende Prompts wirken sie jedoch so gut wie immer wie von der Stange. Dabei helfe ich euch gern.",
-      ],
-      promptTitle: "Der Prompt",
-      prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.
-
-Inhalte:
-- Navigation: Barrierefreiheit, Design, Entwicklung, Portfolio, Über mich
-- Sprachumschalter: DE | EN
-- Zeile über dem Namen: Product Engineer · Düsseldorf
-- Name: Ercan Cicek
-- Aussage: Design, Code und Barrierefreiheit. Aus einer Hand.
-- Button: Projekt anfragen
-- Hinweis zum Weiterscrollen: Weiter nach unten
-- Das angehängte Foto ist ein Porträt von mir.`,
-    },
-
     states: {
       title: "Ins Design gehören alle Zustände.",
       lead: "Entwürfe konzentrieren sich meist auf den Idealfall. Aber was ist mit unterschiedlichen Textlängen, langen Ladezeiten, leeren oder überlangen Listen und Fehlern? Ich entwerfe jeden dieser Zustände mit, damit euer Team nichts erfinden muss.",
       legend: "Zustand",
-      commonLabel: "Nicht mitgedacht",
-      designedLabel: "Mitgedacht",
+      commonLabel: "Nur Idealfall",
+      designedLabel: "Alle Zustände",
       cardTitle: "Projekte diese Woche",
       rows: [
         { name: "Website-Relaunch", hours: "12,5 Std." },
@@ -497,26 +823,48 @@ Inhalte:
         {
           key: "loading",
           label: "Ladezeit",
-          why: "Nicht mitgedacht: ein englisches Wort auf leerer Fläche. Mitgedacht: Hier steht, was gerade lädt, und falls es dauert, gibt es einen Ausweg.",
+          why: {
+            common:
+              "Auf leerer Fläche steht nur „[Loading…]{lang=en}“, ein englisches Wort ohne Ausweg.",
+            designed:
+              "Ein Ladekreis, dazu „Projekte werden geladen …“ und, falls es dauert, „Neu laden“.",
+          },
         },
         {
           key: "empty",
           label: "Leere Liste",
-          why: "Nicht mitgedacht: ein leerer Kasten, der aussieht wie ein Fehler. Mitgedacht: Hier steht, warum nichts da ist, und der erste Schritt gleich darunter.",
+          why: {
+            common: "Unter der Überschrift ein leerer Kasten, der aussieht wie ein Fehler.",
+            designed:
+              "„Noch keine Projekte“, ein Satz, warum, und gleich darunter „Projekt anlegen“.",
+          },
         },
         {
           key: "error",
           label: "Fehler",
-          why: "Nicht mitgedacht: eine Meldung aus dem Code, die niemandem hilft. Mitgedacht: Hier steht, was passiert ist und was man tun kann.",
+          why: {
+            common:
+              "Nur die Meldung aus dem Code: „[Error: Request failed with status 500]{lang=en}“.",
+            designed:
+              "„Die Projekte konnten nicht geladen werden“, dazu, was man tun kann, und „Erneut versuchen“.",
+          },
         },
         {
           key: "long",
           label: "Langer Name",
-          why: "Nicht mitgedacht: Ein langer Name schiebt die Stunden aus dem Bild. Mitgedacht: Er bricht um und wird nach zwei Zeilen gekürzt. Echte Namen sind länger als die im Entwurf.",
+          why: {
+            common: "Der lange Name läuft über den Rand und schiebt die Stunden aus dem Bild.",
+            designed:
+              "Der Name bricht um und wird nach zwei Zeilen gekürzt, die Stunden bleiben sichtbar. Echte Namen sind länger als die im Entwurf.",
+          },
         },
         {
           key: "normal",
           label: "Idealfall",
+          why: {
+            common: "Drei Projekte mit ihren Stunden, alles passt.",
+            designed: "Sieht genauso aus. Den Unterschied machen die anderen Zustände.",
+          },
         },
       ],
     },
@@ -572,11 +920,6 @@ Inhalte:
     faq: {
       title: "Häufige Fragen",
       items: [
-        {
-          question: "Wozu Einzigartigkeit im Design?",
-          answer:
-            "Weil Menschen eine Seite zuerst nach ihrem Aussehen beurteilen. In einer [Studie der Stanford University](https://doi.org/10.1145/997078.997097) drehte sich fast die Hälfte aller Kommentare zur Glaubwürdigkeit von Websites um das Design. Eine Vorlage von der Stange sieht aus wie viele andere.",
-        },
         {
           question: "Kannst du direkt in unserem Designsystem arbeiten?",
           answer:
@@ -811,58 +1154,57 @@ Inhalte:
       lead: "Mit einem Prototyp als Vorlage, ganz von vorn oder als Teil eures Teams. Gern auch als Brücke zwischen Design und Entwicklung, auf Wunsch mit Barrierefreiheit im Gepäck.",
       items: [
         {
-          title: "Vom Prototyp zum Produkt",
+          title: "Prototyp ausbauen",
           text: "Du hast einen Prototyp, oft mit KI gebaut, und er soll ein richtiges Produkt werden. Ich übernehme den Stand, räume auf, wo es klemmt, und baue weiter. Ohne Neustart.",
         },
         {
-          title: "Neu bauen",
+          title: "Neu entwickeln",
           text: "Eine neue Web-App oder Website, vom Entwurf bis zum Start. Du bekommst Code, den dein Team später selbst lesen und ändern kann.",
         },
         {
-          title: "Im Team verstärken",
+          title: "Im Team mitarbeiten",
           text: "Dein Team braucht eine Zeit lang eine Hand mehr. Ich arbeite in eurem Code und euren Abläufen mit, stimme Schnittstellen mit dem Backend ab und übergebe so, dass es ohne mich weitergeht.",
         },
       ],
     },
 
-    workingStyle: {
-      title: "Womit du rechnen kannst",
-      lead: "Was gebaut wird, entscheidet dein Produkt. Wie ich arbeite, bleibt gleich.",
-      // --- The technologies as chips under the first point; the last chip
-      // stands for whatever the client runs
-      stack: ["React", "Vue", "Angular", "Next.js", "Astro", "Shopify", "Webflow"],
-      stackYours: "und eures",
-      items: [
+    // --- Why vibe coding alone is not enough, for people who don't write code:
+    // three things a prototype often lacks, each in plain words, once as it
+    // tends to go and once what a product needs. Only the security card holds
+    // a figure, and it links its source.
+    vibeCoding: {
+      title: "Warum Vibe-Coding allein nicht reicht.",
+      lead: "Vibe-Coding heißt: Software mit KI bauen, ohne den Code zu lesen, den sie schreibt. Für den Anfang ist das großartig: Jeder kann sofort ausprobieren, was er sich vorstellt, und Design und Entwicklung bekommen die beste Vorlage, die man sich wünschen kann. Ein fertiges Produkt ist es aber noch nicht.",
+      cards: [
         {
-          title: "Dein Stack, nicht meiner.",
-          text: "Welches Framework, welche Sprache, welches CMS: Das ist heute die kleinste Frage. Ich habe mit React, Vue, Angular, Next.js, Astro, Shopify und Webflow gebaut, und in das, was bei dir läuft, lese ich mich ein. Du bekommst keinen Technologiewechsel, nur weil ich einen Favoriten hätte.",
+          key: "data",
+          title: "Daten schützen",
+          prototype:
+            "Im Prototyp sieht oft jeder alles. [Matt Palmer hat 2025](https://mattpalmer.io/posts/statement-on-CVE-2025-48757/) 1.645 Apps aus dem KI-Baukasten Lovable geprüft: Bei 170 konnte jeder fremde Daten lesen.",
+          product: "Ein Produkt zeigt jedem nur seine eigenen Daten.",
         },
         {
-          title: "Genau bis ins Detail.",
-          text: "Ein Abstand, der nicht stimmt, ein Fokusrahmen, der fehlt, ein Ladezustand, der springt: Das sehe ich, und das lasse ich nicht stehen. Was die KI liefert, lese und prüfe ich, bevor es zu dir geht.",
+          key: "errors",
+          title: "Fehler abfangen",
+          prototype:
+            "Geht etwas schief, bleibt die Seite oft einfach leer, und niemand weiß, warum.",
+          product: "Ein Produkt sagt, was los ist, und hilft weiter.",
         },
         {
-          title: "Eigen statt Vorlage.",
-          text: "KI-gebaute Oberflächen sehen sich alle ähnlich. Ich gebe die Richtung vor, mit eigenen Komponenten, Tokens und Bewegung, damit dein Produkt aussieht wie deins. Diese Seite ist so entstanden.",
-        },
-        {
-          title: "Skalierbar von Anfang an.",
-          text: "Komponenten, Variablen, klare Grenzen: Ich lege die Struktur so an, dass das zehnte Feature so leicht dazukommt wie das erste. Auch wenn der Prototyp schnell und unordentlich gewachsen ist.",
-        },
-        {
-          title: "In deinem Team zu Hause.",
-          text: "Ich arbeite in eurem Repository und nach euren Regeln, stimme Schnittstellen mit dem Backend ab und übergebe so, dass dein Team ohne mich weiterkommt. Wenn es hilft, schule ich es.",
-        },
-        {
-          title: "Barrierefrei auf Wunsch.",
-          text: "Tastatur, Screenreader, Kontraste und Fokus plane ich mit ein, wenn du es willst, und prüfe sie so, wie ich es in Audits mache.",
+          key: "growth",
+          title: "Mitwachsen",
+          prototype:
+            "Mit zehn Testkunden läuft alles. Mit tausenden wird es zäh, und jede neue Funktion dauert länger.",
+          product: "Ein Produkt bleibt schnell und verständlich, auch wenn es wächst.",
         },
       ],
+      sources:
+        "Die Definition von Vibe-Coding stammt von [Simon Willison](https://simonwillison.net/2025/Mar/19/vibe-coding/), den Begriff hat [Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383) im Februar 2025 geprägt.",
     },
 
     oneHand: {
       title: "Wozu noch ein Entwickler, wenn KI den Code schreibt?",
-      body: "Weil Umsetzen nicht mehr der schwierige Teil ist. Schwierig sind die **Entscheidungen davor**: Skaliert das noch, wenn deine Idee wächst? Was passiert bei schlechtem Internet oder im Fehlerfall? Versteht ein Nutzer sofort, was er tun soll? Diese Fragen stelle ich, bevor die KI baut, und **prüfe danach, was sie liefert**. Dazu kommt, was ein Modell nicht wissen kann: alles, was nach seinem Training erschienen ist.",
+      body: "Weil Umsetzen nicht mehr der schwierige Teil ist. Schwierig sind die **Entscheidungen davor**: Skaliert das noch, wenn deine Idee wächst? Was passiert bei schlechtem Internet oder im Fehlerfall? Versteht ein Nutzer sofort, was er tun soll? Diese Fragen stelle ich, bevor die KI baut, und **prüfe danach, was sie liefert**.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -870,30 +1212,35 @@ Inhalte:
       title: "Häufige Fragen",
       items: [
         {
-          question: "Was kostet das?",
+          question: "Mit welchen Frameworks arbeitest du?",
           answer:
-            "Das hängt vom Umfang ab: wie viele Screens und Abläufe es sind und ob ich neu baue oder in Bestehendem arbeite. Nach einem unverbindlichen und kostenlosen Erstgespräch bekommst du ein konkretes Angebot.",
+            "Mit dem, was bei euch läuft. Welches Framework, welche Sprache, welches CMS: Das ist heute die kleinste Frage. Ich lese mich ein, und einen Technologiewechsel gibt es nur, wenn er euch wirklich etwas bringt.",
         },
         {
-          question: "Wann kannst du anfangen?",
+          question: "Schreibst du den Code selbst oder die KI?",
           answer:
-            "Das hängt von meiner Auslastung ab. Frag einfach, dann sage ich dir ehrlich, wann es geht.",
+            "Beides. Die KI sorgt für die Menge, ich für die Qualität: Ich gebe Architektur und Regeln vor, dirigiere sie und schreibe selbst, wo es darauf ankommt. Ein Vibe-Coder bin ich nicht. Es geht nichts raus, was ich nicht verstanden und geprüft habe.",
         },
         {
-          question: "Wir haben schon Entwickler. Passt das?",
+          question: "Unser Prototyp ist mit KI gebaut. Kannst du darauf aufbauen?",
           answer:
-            "Ja. Ich arbeite in eurem Repository, nach euren Regeln und mit euren Werkzeugen. Wenn ich gehe, bleibt kein Code zurück, den nur ich verstehe.",
+            "Meistens ja. Ich schaue mir zuerst den Code an und sage dir ehrlich, was bleiben kann und was neu gebaut werden sollte.",
         },
         {
-          question: "Gehört uns der Code?",
+          question: "Machst du auch das Backend?",
           answer:
-            "Ja, von der ersten Zeile an. Alles liegt in eurem Repository, ohne Abhängigkeit von mir.",
+            "Die Grundlagen, ja. Mit KI lässt sich heute alles schreiben, aber nicht alles sollte man so schreiben: Ein Backend gehört in erfahrene Hände, genau wie ein Frontend. Mit eurem Backend stimme ich die Schnittstellen eng ab, auf Wunsch gebe ich die Endpunkte vor, die das Frontend braucht, bis zur Struktur von Anfrage und Antwort.",
+        },
+        {
+          question: "Wie hoch ist dein Stundensatz?",
+          answer:
+            "Das kommt auf das Buchungsvolumen an. Im unverbindlichen und kostenlosen Erstgespräch nenne ich dir einen konkreten Satz.",
         },
       ],
     },
 
     contact: {
-      title: "Melde dich, wenn ich helfen kann.",
+      title: "Lass uns sprechen.",
       body: "Egal, ob das Projekt schon läuft oder gerade erst eine Idee ist. Ein kurzes Gespräch reicht, unverbindlich und kostenlos.",
     },
   },

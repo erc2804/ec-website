@@ -25,6 +25,7 @@ import Dialog from "../../components/ui/Dialog.astro"
 import InlineText from "../../components/ui/InlineText.astro"
 import ScreenReaderCaption from "../../components/ui/ScreenReaderCaption.astro"
 import { useTranslations } from "../../i18n"
+import { fill } from "../../i18n/fill"
 
 const t = useTranslations(Astro.currentLocale).accessibility.demo
 
@@ -38,12 +39,12 @@ const scriptText = {
 // --- Rendered with the first element, so the panel is never empty and works
 // without script
 const firstCase = t.cases[0]
-const firstPosition = t.position.replace("{number}", "1").replace("{total}", String(t.cases.length))
+const firstPosition = fill(t.position, { number: "1", total: String(t.cases.length) })
 ---
 
-<section class="bg-gray-min py-20 md:py-28" aria-labelledby="demoTitle">
+<section class="bg-gray-min py-20 md:py-28">
   <div class="ec-demo ec-layout-visual-content" data-text={JSON.stringify(scriptText)}>
-    <h2 id="demoTitle" class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
     <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
     <!-- --- How to use the demo: a different job from the lead, so smaller and apart -->
     <p class="mt-4 max-w-[56ch] ec-reveal text-sm text-typo-medium ec-reveal-late">
@@ -407,6 +408,7 @@ const firstPosition = t.position.replace("{number}", "1").replace("{total}", Str
 </style>
 
 <script>
+  import { fill } from "../../i18n/fill"
   import type { DemoCase } from "../../i18n/types"
 
   const demo = document.querySelector<HTMLElement>(".ec-demo")
@@ -434,8 +436,6 @@ const firstPosition = t.position.replace("{number}", "1").replace("{total}", Str
     const detailTemplates = [...demo.querySelectorAll<HTMLTemplateElement>(".ec-demo-details")]
 
     let index = 0
-    const fill = (template: string, values: Record<string, string>) =>
-      template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "")
 
     // --- The cursor sits a little outside the part it frames
     const placeCursor = () => {

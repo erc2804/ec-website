@@ -1,11 +1,11 @@
 ---
-// --- Design offer page. Its argument is shown, not told, in two demos: the
-// before/after with the top of my own home page, once as an AI built it
-// and once as I designed it (see the difference), and the states (it holds up
-// in real life). The heading sits in
-// a design tool's selection frame, the way the accessibility page's heading
-// sits next to its VoiceOver caption. Then what I do, why
-// design and code from one person, the usual questions.
+// --- Design offer page. Its argument is shown, not told: the states demo (it
+// holds up in real life), right after what I do and before how it can go. The
+// heading sits in a design tool's selection frame, the way the accessibility
+// page's heading sits next to its VoiceOver caption. Then why design and code
+// from one person, the usual questions. Section grounds alternate: grey hero,
+// white services, grey states, white process, dark one-hand block, white
+// questions, grey contact.
 //
 // Services, the one-hand block, the questions and the contact block are shared
 // with the accessibility page on purpose: they answer the same questions there.
@@ -13,7 +13,6 @@
 import { IconArrowRight } from "@tabler/icons-astro"
 import BeforeAfterIcon from "./BeforeAfterIcon.astro"
 import BuildingBlocksIcon from "./BuildingBlocksIcon.astro"
-import CompareSideBySide from "./CompareSideBySide.astro"
 import SelectionIcon from "./SelectionIcon.astro"
 import DesignProcessScene from "./DesignProcessScene.astro"
 import StatesDemo from "./StatesDemo.astro"
@@ -23,7 +22,6 @@ import OneHandSection from "../../components/OneHandSection.astro"
 import ProcessSnap from "../../components/ProcessSnap.astro"
 import ServicesSection from "../../components/ServicesSection.astro"
 import Button from "../../components/ui/Button.astro"
-import Section from "../../components/ui/Section.astro"
 import SelectionFrame from "../../components/ui/SelectionFrame.astro"
 import { siteConfig } from "../../config/site"
 import { inquiryPath, useTranslations, type Locale } from "../../i18n"
@@ -67,23 +65,12 @@ const serviceIcons = [SelectionIcon, BeforeAfterIcon, BuildingBlocksIcon]
     </div>
   </section>
 
-  <!-- --- The core of the work: the argument and the browser window with the
-       two pages. The pictures speak for themselves. -->
-  <Section tone="light" aria-labelledby="compareTitle">
-    <h2 id="compareTitle" class="ec-reveal text-heading-1 text-balance">{t.compare.title}</h2>
-    <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">
-      {t.compare.lead}
-    </p>
-    <p class="mt-4 max-w-[56ch] ec-reveal text-typo-medium ec-reveal-late">{t.compare.example}</p>
-
-    <CompareSideBySide class="mt-12 ec-reveal ec-reveal-late" />
-  </Section>
-
   <ServicesSection
     title={t.services.title}
     lead={t.services.lead}
     items={t.services.items}
     icons={serviceIcons}
+    tone="light"
   />
 
   <StatesDemo />
@@ -93,6 +80,7 @@ const serviceIcons = [SelectionIcon, BeforeAfterIcon, BuildingBlocksIcon]
     lead={t.process.lead}
     steps={t.process.steps}
     Scene={DesignProcessScene}
+    tone="light"
   />
 
   <OneHandSection

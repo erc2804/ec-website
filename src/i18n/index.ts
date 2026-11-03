@@ -29,6 +29,13 @@ export const routes = {
     de: "/barrierefreiheitserklaerung",
     en: "/en/accessibility-statement",
   },
+  // --- Privacy policies of the apps, linked from the App Store and the Chrome
+  // Web Store; the old site's addresses redirect here (public/_redirects)
+  casualvocabPrivacy: { de: "/datenschutz/casualvocab", en: "/en/privacy/casualvocab" },
+  startWithWaiAriaPrivacy: {
+    de: "/datenschutz/start-with-wai-aria",
+    en: "/en/privacy/start-with-wai-aria",
+  },
 } as const
 
 export type RouteKey = keyof typeof routes
@@ -44,8 +51,13 @@ export const mainNavRoutes = [
 ] as const satisfies readonly RouteKey[]
 
 // --- Pages rendered with isNoindex. They stay out of the sitemap; robots.txt
-// still lets crawlers in, or they would never see the noindex.
-export const unindexedRoutes = ["inquirySent"] as const satisfies readonly RouteKey[]
+// still lets crawlers in, or they would never see the noindex. The app privacy
+// pages are for the stores' links, not for search, as on the old site.
+export const unindexedRoutes = [
+  "inquirySent",
+  "casualvocabPrivacy",
+  "startWithWaiAriaPrivacy",
+] as const satisfies readonly RouteKey[]
 
 export const footerRoutes = [
   "imprint",

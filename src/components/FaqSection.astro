@@ -16,8 +16,8 @@ interface Props {
 const { title, items } = Astro.props
 ---
 
-<Section tone="light" aria-labelledby="faqTitle">
-  <h2 id="faqTitle" class="ec-reveal text-heading-1 text-balance">{title}</h2>
+<Section tone="light">
+  <h2 class="ec-reveal text-heading-1 text-balance">{title}</h2>
   <div class="mt-10 flex max-w-3xl ec-reveal flex-col gap-3 ec-reveal-late">
     {
       items.map((item) => (

@@ -3,42 +3,26 @@
 // sends anything: the visitor sends the form through Netlify Forms. The API key
 // lives in the environment, never in the browser.
 
-// --- Provided by the Netlify runtime (and by `netlify dev` locally)
-declare const Netlify: { env: { get(name: string): string | undefined } }
+import {
+  emailPattern,
+  topicKeys,
+  type FieldKey,
+  type FormState,
+  type TopicKey,
+} from "../../src/data/inquiry"
+import { useTranslations } from "../../src/i18n"
+import { callModel, cleanText, json, readRequest, type Locale } from "../lib/assistant"
 
-const model = "claude-haiku-5-5"
-const maxMessages = 24
-const maxMessageLength = 2000
-const maxConversationLength = 12000
-
-const topicKeys = ["accessibility", "design", "development", "other"] as const
-type TopicKey = (typeof topicKeys)[number]
-type FieldKey = "topics" | "goal" | "name" | "email" | "phone" | "callback"
-type Locale = "de" | "en"
-
-type ChatMessage = { role: "user" | "assistant"; content: string }
-
-type FormState = {
-  topics: TopicKey[]
-  goal: string
-  name: string
-  email: string
-  phone: string
-  callback: boolean
-}
+const limits = { maxMessages: 24, maxMessageLength: 2000, maxConversationLength: 12000 }
 
 // --- What Pixel-Ercan asks next follows from the form, not from the model's
 // mood. The model names its step; if that is not the step the form calls for,
 // its reply is replaced by the plain line for the right step.
-type Step = "goal" | "details" | "contact" | "callback" | "done"
+const stepKeys = ["goal", "details", "contact", "callback", "done"] as const
+type Step = (typeof stepKeys)[number]
 
-const allowedOrigins = [
-  /^https:\/\/(www\.)?ercancicek\.com$/,
-  /^https:\/\/[a-z0-9-]+\.netlify\.app$/,
-  /^http:\/\/localhost:\d+$/,
-]
-
-const submitLabel: Record<Locale, string> = { de: "Anfrage abschicken", en: "Send request" }
+// --- The send button's own label, so the closing line names it exactly
+const submitLabel = (locale: Locale) => useTranslations(locale).inquiry.form.submit
 
 const fallbackReplies: Record<Locale, Record<Step, string>> = {
   de: {
@@ -47,7 +31,7 @@ const fallbackReplies: Record<Locale, Record<Step, string>> = {
       "Magst du noch ein, zwei Sätze dazuschreiben? Zum Beispiel, was genau entstehen oder besser werden soll und bis wann. Damit kann Ercan viel besser einschätzen, wie er helfen kann.",
     contact: "Unter welcher E-Mail-Adresse erreicht Ercan dich?",
     callback: "Soll Ercan dich zurückrufen?",
-    done: "Alles eingetragen. Schau kurz drüber und schick die Anfrage dann über den Button „Anfrage abschicken“ ab.",
+    done: `Alles eingetragen. Schau kurz drüber und schick die Anfrage dann über den Button „${submitLabel("de")}“ ab.`,
   },
   en: {
     goal: "Tell me briefly about your project: what should be built or improved?",
@@ -55,7 +39,7 @@ const fallbackReplies: Record<Locale, Record<Step, string>> = {
       "Could you add a sentence or two? For example, what exactly should be built or improved and by when. That helps Ercan see much better how he can help.",
     contact: "Which email address can Ercan reach you at?",
     callback: "Would you like Ercan to call you back?",
-    done: "All filled in. Take a quick look, then send the request with the button “Send request”.",
+    done: `All filled in. Take a quick look, then send the request with the button “${submitLabel("en")}”.`,
   },
 }
 
@@ -66,8 +50,6 @@ const sendAnywayNote: Record<Locale, string> = {
   en: "If you'd rather not add more, you can send the request as it is.",
 }
 const isThinGoal = (goal: string) => goal.split(/\s+/).filter(Boolean).length < 12
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const systemPrompt = (
   locale: Locale,
@@ -97,7 +79,7 @@ How to reply:
   2. goal very thin (a few words like "I need a design", nothing about what should be built or improved, for what or by when) and you have not asked for more detail yet in this conversation: ask once, kindly, for one or two more sentences, naming what would help. Asked already: ${askedSteps.includes("details") ? "yes" : "no"}.
   3. no valid email: ask how Ercan can reach them (email, and their name too if it is empty). Keep asking until there is an email, however many turns it takes.
   4. a phone number but the visitor has not said whether they want a call back: ask that.
-  5. nothing open: no question. Say it is all filled in, they should take a quick look and then send the request with the button "${submitLabel[locale]}".
+  5. nothing open: no question. Say it is all filled in, they should take a quick look and then send the request with the button "${submitLabel(locale)}".
 - Set step to what you ask about: "goal", "details", "contact", "callback", or "done".
 - Keep the form consistent. When the visitor corrects what they need (for example "development, not design"), change the topics and rewrite the goal in the same reply so it says the corrected thing. A goal must never contradict the topics. Write the goal as the current state of the project, not as a history of corrections: "Ich brauche Unterstützung bei der Entwicklung", not "Ich brauche Entwicklung statt Design". Leave out remarks about the conversation itself, like "I don't know more yet".
 - Never ask for a phone number or a topic. Apart from the one request for more detail in point 2, never ask follow-up questions about the project. Ercan asks those personally.
@@ -123,21 +105,12 @@ const tool = {
           callback: { type: "boolean" },
         },
       },
-      step: { type: "string", enum: ["goal", "details", "contact", "callback", "done"] },
+      step: { type: "string", enum: stepKeys },
       reply: { type: "string", description: "Pixel-Ercan's next message to the visitor" },
     },
     required: ["changed", "step", "reply"],
   },
 }
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-  })
-
-const cleanText = (value: unknown, maxLength: number) =>
-  typeof value === "string" ? value.trim().slice(0, maxLength) : ""
 
 const cleanTopics = (value: unknown) =>
   Array.isArray(value)
@@ -159,73 +132,28 @@ const readForm = (value: unknown): FormState => {
 const digitsOf = (value: string) => value.replace(/\D/g, "")
 
 export default async (request: Request) => {
-  if (request.method !== "POST") return json({ error: "method" }, 405)
-
-  const origin = request.headers.get("origin") ?? ""
-  if (!allowedOrigins.some((pattern) => pattern.test(origin))) return json({ error: "origin" }, 403)
-
-  const apiKey = Netlify.env.get("ANTHROPIC_API_KEY")
-  if (!apiKey) return json({ error: "config" }, 500)
-
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return json({ error: "input" }, 400)
-  }
-
-  const locale: Locale = body.locale === "en" ? "en" : "de"
-  const messages: ChatMessage[] = (Array.isArray(body.messages) ? body.messages : [])
-    .filter(
-      (message): message is ChatMessage =>
-        typeof message?.content === "string" &&
-        (message.role === "user" || message.role === "assistant")
-    )
-    .map((message) => ({ role: message.role, content: message.content.slice(0, maxMessageLength) }))
-
-  if (!messages.length || messages.at(-1)?.role !== "user") return json({ error: "input" }, 400)
-  const conversationLength = messages.reduce((sum, message) => sum + message.content.length, 0)
-  if (messages.length > maxMessages || conversationLength > maxConversationLength) {
-    return json({ error: "too-long" }, 413)
-  }
+  const read = await readRequest(request, limits)
+  if (read instanceof Response) return read
+  const { locale, messages, body, apiKey } = read
 
   const form = readForm(body.form)
-  const stepKeys: Step[] = ["goal", "details", "contact", "callback", "done"]
   const askedSteps = (Array.isArray(body.askedSteps) ? body.askedSteps : []).filter(
     (step): step is Step => stepKeys.includes(step)
   )
 
-  let response: Response
-  try {
-    response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: 800,
-        system: systemPrompt(locale, form, askedSteps),
-        messages,
-        tools: [tool],
-        tool_choice: { type: "tool", name: tool.name },
-      }),
-      signal: AbortSignal.timeout(25000),
-    })
-  } catch {
-    return json({ error: "upstream" }, 502)
-  }
+  const data = await callModel(apiKey, {
+    max_tokens: 800,
+    system: systemPrompt(locale, form, askedSteps),
+    messages,
+    tools: [tool],
+    tool_choice: { type: "tool", name: tool.name },
+  })
+  if (data instanceof Response) return data
 
-  if (response.status === 429 || response.status === 529) return json({ error: "busy" }, 503)
-  if (!response.ok) return json({ error: "upstream" }, 502)
-
-  const data = await response.json()
   const toolUse = Array.isArray(data?.content)
     ? data.content.find((block: { type?: string }) => block.type === "tool_use")
     : null
-  if (!toolUse?.input) return json({ error: "upstream" }, 502)
+  if (!toolUse?.input) return json({ error: "garbled" }, 502)
 
   const output = toolUse.input as Record<string, unknown>
   const proposed = (output.changed ?? {}) as Record<string, unknown>
@@ -297,7 +225,9 @@ export default async (request: Request) => {
   })
 }
 
-// --- Per visitor: enough for a real conversation, too few to run up a bill
+// --- Per visitor: enough for a real conversation, too few to run up a bill.
+// Netlify reads this object from the source as a literal, so it is written out
+// in each function and not shared through netlify/lib.
 export const config = {
   path: "/api/inquiry-assist",
   rateLimit: {

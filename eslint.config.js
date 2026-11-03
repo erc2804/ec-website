@@ -5,7 +5,16 @@ import prettier from "eslint-config-prettier"
 
 export default [
   // --- .netlify holds what `netlify dev` builds and bundles, not our code
-  { ignores: ["dist/**", ".astro/**", ".netlify/**", "node_modules/**"] },
+  {
+    ignores: [
+      "dist/**",
+      ".astro/**",
+      ".netlify/**",
+      "node_modules/**",
+      // --- Mel-Menu, the 2018 game page, taken over as it was
+      "public/melScripts/**",
+    ],
+  },
 
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -16,7 +16,8 @@
 
 Accessibility quotes the VoiceOver caption panel (`ScreenReaderCaption`), design the
 selection frame of Figma (`SelectionFrame`), development the browser's inspector next to
-the terminal in which I instruct the AI (`InspectFrame`). The quote carries the argument,
+the terminal in which I instruct the AI (`InspectFrame`), the about page Pixel-Ercan's chat
+(`AssistantChat`), the same one that fills in the request form. The quote carries the argument,
 so it sits where it proves something, not as a badge on top of a section. A quote has to be right: a tool shown doing something it
 does not do is worse than no quote.
 
@@ -33,8 +34,8 @@ has it.
 - Below `lg` the process scenes stand still: every step carries its own picture, already in
   its state. The tool quotes in the heroes play at every width.
 - A process section only where the steps say something the page does not say elsewhere.
-  The development page has none: six things a client can count on
-  (`WorkingStyleSection`) say how the work goes, whatever the stack.
+  The development page has none: how I work with AI next to vibe coding
+  (`AiWorkflowSection`) says how the work goes, moment by moment.
 
 ## Decoration is never a control
 
@@ -61,16 +62,23 @@ hero, no three icon cards, no two buttons side by side.
 
 ## Colour and type
 
-- `brand-green-medium` for the one action on a page, `brand-green-high` for links and
-  marks, `brand-blue` for the dark blocks. Single words in running text are highlighted in
+- `brand-green-medium` for the one action on a page, `brand-green-high` for links, marks,
+  borders and large text, `brand-green-deep` for green text below large size (4.5:1),
+  `brand-blue` for the dark blocks. Single words in running text are highlighted in
   green with a tinted box, so the emphasis does not rest on colour alone.
-- Greys from `gray-min` (white) over `gray-subtle` (the page) to `gray-low` (lines). White
+- Greys from `gray-min` (white) over `gray-subtle` (the page) to `gray-low` (lines) and
+  `gray-medium` (borders that identify a field, 3:1). White
   on grey gets `shadow-sm`, grey on white gets none. Two neighbouring sections never share a
   background.
-- One typeface, `an-regular`, one weight. Hierarchy comes from size and colour
-  (`typo-high`, `typo-medium`, `typo-low`).
+- Text fields and toggle pills look the same everywhere, on grey and on white: a white
+  field with a 2px `gray-medium` border (`ui/fieldClasses.ts`). The border is what marks
+  the field, so it keeps 3:1 against both grounds.
+- One typeface, `an`: regular for everything, its Demi cut where the code asks for bold
+  (buttons, labels). Headings stay regular. Hierarchy comes from size and colour
+  (`typo-high`, `typo-medium`, `typo-low`). Placeholders use `typo-placeholder`, which
+  keeps 4.5:1; `typo-low` is for decoration only.
 - Pills for buttons and chips, large radii on cards, the round portrait. Text sits
-  optically centred in every pill (`ec-pill-label`).
+  optically centred in every pill through the font's own metrics (docs/styling.md).
 
 ## What is on the site
 

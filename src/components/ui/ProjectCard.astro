@@ -1,47 +1,38 @@
 ---
 // --- The project card, built like the offer cards on the start page: a
-// coloured panel on top, the colour of the project's main offer, with the
-// mockup cropped at the bottom and lifting on hover; below it a white body
-// with the name as the link, one sentence on the work and, at the bottom, the
-// offers the project touched with the arrow that moves on hover. Only the
-// arrow turns green on hover: the small text would not keep its contrast. The same
-// card on the start page and in the portfolio. Without a picture the panel
-// stands empty.
+// light green panel on top, the same for every project, with the mockup
+// cropped at the bottom and lifting on hover; below it a white body with the
+// name as the link, one sentence on the work and, at the bottom, "More" with
+// the arrow that moves on hover. Only the arrow turns green on hover: the text
+// would not keep its contrast. The offers a project touched stay on its own
+// page. The same card on the start page and in the portfolio. Without a
+// picture the panel stands empty.
 //
 // Card pattern from Inclusive Components: the link is the title only, so its
 // name stays short and the title is a real heading. Its ::after stretches over
-// the whole card for the click target. The ring sits on the card, in the
-// card's own shape.
+// the whole card for the click target, lifted with z-10 so the arrow, which
+// moves on hover, cannot paint above it and swallow the click. "More" is only
+// shown; aria-describedby hands it to the link, as on the start page's offer
+// cards. The ring sits on the card, in the card's own shape.
 import { IconArrowRight } from "@tabler/icons-astro"
-import type { Service } from "../../data/projects"
-import { offerSurfaceClasses } from "./offerSurfaceClasses"
+import { useTranslations } from "../../i18n"
 
 interface Props {
   href: string
   label: string
   image?: string
   summary: string
-  /** --- The project's main offer, colours the panel --- */
-  mainService: Service
-  /** --- All offers the project touched, already translated --- */
-  services: string[]
   /** --- h3 under a section heading, h2 under the page heading --- */
   headingLevel?: 2 | 3
   class?: string
 }
 
-const {
-  href,
-  label,
-  image,
-  summary,
-  mainService,
-  services,
-  headingLevel = 3,
-  class: additionalClasses,
-} = Astro.props
+const { href, label, image, summary, headingLevel = 3, class: additionalClasses } = Astro.props
 
 const Heading = `h${headingLevel}` as "h2" | "h3"
+const t = useTranslations(Astro.currentLocale).common
+// --- One card per project on a page, so the project's slug keeps the id unique
+const moreId = `${href.split("/").pop()}More`
 ---
 
 <div
@@ -51,7 +42,7 @@ const Heading = `h${headingLevel}` as "h2" | "h3"
   ]}
 >
   <span
-    class:list={["relative block aspect-[5/4] overflow-hidden", offerSurfaceClasses[mainService]]}
+    class="relative block aspect-[5/4] overflow-hidden bg-brand-green-low"
     aria-hidden="true"
     inert
   >
@@ -72,18 +63,22 @@ const Heading = `h${headingLevel}` as "h2" | "h3"
     <Heading class="text-heading-2 text-brand-green-high">
       <a
         href={href}
-        class="no-underline outline-none after:absolute after:inset-0 after:content-['']"
+        class="no-underline outline-none after:absolute after:inset-0 after:z-10 after:content-['']"
+        aria-describedby={moreId}
       >
         {label}
       </a>
     </Heading>
     <p class="text-typo-medium">{summary}</p>
-    <p class="mt-auto flex items-center justify-between gap-3 pt-4 text-sm text-typo-medium">
-      {services.join(", ")}
+    <span
+      id={moreId}
+      class="mt-auto flex items-center gap-2 pt-4 font-bold text-typo-medium"
+      aria-hidden="true"
+    >
+      {t.more}
       <IconArrowRight
-        class="size-5 shrink-0 transition-[transform,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high"
-        aria-hidden="true"
+        class="size-5 transition-[translate,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high"
       />
-    </p>
+    </span>
   </div>
 </div>

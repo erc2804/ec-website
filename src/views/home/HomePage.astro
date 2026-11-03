@@ -4,14 +4,15 @@ import ContactSection from "../../components/ContactSection.astro"
 import MouseChatBubble from "../../components/MouseChatBubble.astro"
 import RoleScene from "../../components/RoleScene.astro"
 import Button from "../../components/ui/Button.astro"
+import InlineText from "../../components/ui/InlineText.astro"
 import ProjectCard from "../../components/ui/ProjectCard.astro"
-import { offerSurfaceClasses } from "../../components/ui/offerSurfaceClasses"
 import Quote from "../../components/ui/Quote.astro"
 import ScrollCue from "../../components/ui/ScrollCue.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
 import { featuredProjects, localised } from "../../data/projects"
 import { localisedPath, useTranslations, type Locale, inquiryPath } from "../../i18n"
+import { offerSurfaceClasses } from "./offerSurfaceClasses"
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
@@ -37,29 +38,43 @@ const offerKeys = ["accessibility", "design", "development"] as const
   <section class="ec-hero relative overflow-hidden bg-gray-min ec-on-dark" data-chat-zone>
     <!-- --- Three layers across the whole section: white ground, the cut-out
          portrait anchored to the right edge of the screen, the dark overlay on
-         top. Only the text sits in a centred frame of at most 1920px. -->
-    <div class="relative mx-auto min-h-[min(78svh,56rem)] w-full max-w-[120rem]">
+         top. Only the text sits in a centred frame of at most 1920px.
+         As tall as the window, so the scroll cue sits at its bottom edge, up to
+         67.5rem (1080px) so a very tall screen does not stretch it. From md at
+         least 44rem: in a low window the text keeps its distance to the
+         navigation and to the cue, and the hero runs past the window instead. -->
+    <div
+      class="relative mx-auto min-h-[min(100svh,67.5rem)] w-full max-w-[120rem] md:min-h-[clamp(44rem,100svh,67.5rem)]"
+    >
       <div
-        class="ec-hero-content relative z-30 flex min-h-[min(78svh,56rem)] flex-col justify-center gap-8 px-6 pt-header pb-24 md:px-14 xl:px-32 2xl:px-52"
+        class="ec-hero-content relative z-30 flex min-h-[min(100svh,67.5rem)] flex-col justify-center gap-8 px-6 pt-header pb-24 md:min-h-[clamp(44rem,100svh,67.5rem)] md:px-14 xl:px-32 2xl:px-52"
       >
         <!-- --- The dot between the two parts is drawn, not typed: a typed one
              gets read out or swallowed by a screen reader. A hidden comma gives
              the spoken version its pause. -->
         <p class="ec-optical-left ec-rise text-sm tracking-[0.12em] text-brand-sand/70 uppercase">
-          <span>{tHome.hero.eyebrow[0]}</span>
+          <span><InlineText text={tHome.hero.eyebrow[0]} /></span>
           <span
             class="mx-2 inline-block size-1 -translate-px rounded-full bg-current align-middle"
             aria-hidden="true"></span>
           <span class="sr-only">,</span>
-          <span>{tHome.hero.eyebrow[1]}</span>
+          <!-- --- The page language again after the English job title -->
+          <span lang={currentLocale}>{tHome.hero.eyebrow[1]}</span>
         </p>
 
         <h1
           class="ec-optical-left ec-rise text-5xl tracking-[0.125rem] uppercase [--ec-rise-delay:120ms] md:text-7xl xl:text-8xl"
         >
-          <span class="text-brand-green-medium" data-chat={tBubble.firstName}>Ercan</span>
-          {" "}
-          <span class="text-brand-sand">Cicek</span>
+          <!-- --- Two coloured spans and the space between them are three items
+               to VoiceOver in Safari ("Ercan, space, Cicek"). The name is said
+               once as plain text, in its own case (the heading is set in capitals,
+               which some readers spell out); the coloured version is only for the eye. -->
+          <span class="sr-only normal-case">{siteConfig.name}</span>
+          <span aria-hidden="true">
+            <span class="text-brand-green-medium" data-chat={tBubble.firstName}>Ercan</span>
+            {" "}
+            <span class="text-brand-sand">Cicek</span>
+          </span>
         </h1>
 
         <p
@@ -106,8 +121,12 @@ const offerKeys = ["accessibility", "design", "development"] as const
     <ul role="list" class="mt-10 grid ec-reveal gap-8 ec-reveal-late md:grid-cols-2 lg:grid-cols-3">
       <!-- --- Card pattern from Inclusive Components: the link is the title
            only, so its name stays short and the title is a real heading.
-           Its ::after stretches over the whole card for the click target.
-           The ring sits on the card, in the card's own shape. -->
+           Its ::after stretches over the whole card for the click target,
+           lifted with z-10: the arrow moves on hover, a moved element paints
+           above a plain ::after and would swallow the click.
+           The ring sits on the card, in the card's own shape. "More" is only
+           shown, not a link: aria-describedby hands it to the link, so a screen
+           reader says "Accessibility, link, more" like the card reads. -->
       {
         offerKeys.map((key) => (
           <li data-chat={tBubble[key]} class="md:last:odd:col-span-2 lg:last:odd:col-span-1">
@@ -161,18 +180,20 @@ const offerKeys = ["accessibility", "design", "development"] as const
                 <h3 class="text-heading-2 text-brand-green-high">
                   <a
                     href={localisedPath(key, currentLocale)}
-                    class="no-underline outline-none after:absolute after:inset-0 after:content-['']"
+                    class="no-underline outline-none after:absolute after:inset-0 after:z-10 after:content-['']"
+                    aria-describedby={`${key}OfferMore`}
                   >
                     {tHome.offers.items[key].title}
                   </a>
                 </h3>
                 <p class="text-typo-medium">{tHome.offers.items[key].teaser}</p>
                 <span
+                  id={`${key}OfferMore`}
                   class="mt-auto flex items-center gap-2 pt-4 font-bold text-typo-medium"
                   aria-hidden="true"
                 >
-                  {tHome.offers.more}
-                  <IconArrowRight class="size-5 transition-[transform,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high" />
+                  {t.common.more}
+                  <IconArrowRight class="size-5 transition-[translate,color] group-hover:translate-x-1 group-hover:text-brand-green-high group-has-[a:focus-visible]:translate-x-1 group-has-[a:focus-visible]:text-brand-green-high" />
                 </span>
               </div>
             </div>
@@ -306,10 +327,8 @@ const offerKeys = ["accessibility", "design", "development"] as const
             <ProjectCard
               href={localisedPath("portfolio", currentLocale, `/${project.slug}`)}
               label={localised(project.label, currentLocale)}
-              image={project.image}
+              image={project.image?.src}
               summary={project.summary[currentLocale]}
-              mainService={project.services[0]}
-              services={project.services.map((service) => t.routeLabels[service])}
             />
           </li>
         ))

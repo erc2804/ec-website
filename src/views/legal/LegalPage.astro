@@ -1,19 +1,39 @@
 ---
-// --- No heading level badge on a legal text: there it would be decoration.
+// --- A legal text: title, lead, sections, an optional date.
+// No heading level badge here: on a legal text it would be decoration.
+// A section is a run of blocks: a paragraph (a string), a bullet list
+// ({ list }) or a postal address, one line each ({ address }). Every line
+// carries the marks of InlineText (links, lang) and placeholders for the
+// provider's details, filled from siteConfig, so a translation never holds a
+// stale copy of the address, the email or the phone number:
+//   {legalName} {street} {postalCode} {city}   plain text
+//   {email} {phone}                            a mailto: or tel: link
+import InlineText from "../../components/ui/InlineText.astro"
 import { siteConfig } from "../../config/site"
+import { fill } from "../../i18n/fill"
+
+export type LegalBlock =
+  string | { readonly list: readonly string[] } | { readonly address: readonly string[] }
 
 interface Props {
   title: string
   lead: string
-  sections: readonly { heading: string; body: readonly string[] }[]
+  sections: readonly { heading: string; body: readonly LegalBlock[] }[]
   status?: { heading: string; date: string }
 }
 
 const { title, lead, sections, status } = Astro.props
 
-// --- {email} in a paragraph becomes a mailto link, so the address lives in
-// siteConfig alone and a translation never carries a stale copy of it.
-const contactEmail = siteConfig.contact.email
+const { address, contact, legalName } = siteConfig
+const providerDetails = {
+  legalName,
+  street: address.street,
+  postalCode: address.postalCode,
+  city: address.city,
+  email: `[${contact.email}](mailto:${contact.email})`,
+  phone: `[${contact.phoneDisplay}](tel:${contact.phone})`,
+}
+const filled = (line: string) => fill(line, providerDetails)
 ---
 
 <main
@@ -31,18 +51,33 @@ const contactEmail = siteConfig.contact.email
       <section class="mt-14 ec-reveal">
         <h2 class="text-heading-2">{entry.heading}</h2>
 
-        <div class="mt-4 flex flex-col gap-4">
-          {entry.body.map((paragraph) => {
-            const [beforeEmail, afterEmail] = paragraph.split("{email}")
-
-            return (
-              <p class="text-body text-typo-medium">
-                {beforeEmail}
-                {afterEmail !== undefined && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
-                {afterEmail}
+        <div class="mt-4 flex flex-col gap-4 text-body text-typo-medium">
+          {entry.body.map((block) =>
+            typeof block === "string" ? (
+              <p>
+                <InlineText text={filled(block)} />
               </p>
+            ) : "list" in block ? (
+              <ul role="list" class="flex flex-col gap-2">
+                {block.list.map((item) => (
+                  <li class="flex gap-3 before:mt-[0.7em] before:size-1.5 before:shrink-0 before:rounded-full before:bg-current before:content-['']">
+                    <span>
+                      <InlineText text={filled(item)} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <address class="not-italic">
+                {block.address.map((line, index) => (
+                  <>
+                    {index > 0 && <br />}
+                    <InlineText text={filled(line)} />
+                  </>
+                ))}
+              </address>
             )
-          })}
+          )}
         </div>
       </section>
     ))

@@ -73,8 +73,8 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
 
   <!-- --- The law: prose on the left, the answer to "does this apply to me" on
        the right -->
-  <Section tone="light" aria-labelledby="lawTitle">
-    <h2 id="lawTitle" class="ec-reveal text-heading-1 text-balance">{t.law.title}</h2>
+  <Section tone="light">
+    <h2 class="ec-reveal text-heading-1 text-balance">{t.law.title}</h2>
     <div
       class="mt-10 grid ec-reveal gap-x-16 gap-y-10 ec-reveal-late lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]"
     >
@@ -115,10 +115,10 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
        afterwards. On desktop the VoiceOver frame from the demo glides to the step
        being read, and the scene in the sticky column (ProcessScene) changes into
        it. Below lg every step carries its own scene, already in its state. The visual "01" is hidden from screen readers, the list numbers them. -->
-  <Section aria-labelledby="processTitle">
+  <Section>
     <div class="ec-process grid gap-12 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-20">
       <div class="lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start">
-        <h2 id="processTitle" class="ec-reveal text-heading-1 text-balance">{t.process.title}</h2>
+        <h2 class="ec-reveal text-heading-1 text-balance">{t.process.title}</h2>
         <p class="mt-5 ec-reveal text-lead text-typo-medium ec-reveal-late">{t.process.lead}</p>
         <ProcessScene
           class="ec-process-scene mt-10 hidden h-80 rounded-3xl bg-gray-min shadow-sm lg:block"

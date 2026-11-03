@@ -1,0 +1,52 @@
+---
+// --- Why vibe coding alone is not enough, written for people who don't write
+// code: three cards, each one thing a prototype often lacks. The upper line
+// says how it tends to go, the line with the filled dot what a product needs;
+// the dot is the one of the design page's states demo for the designed side.
+// Only the security card holds a figure, and its source is linked in the text.
+import { IconAlertTriangle, IconLock, IconTrendingUp } from "@tabler/icons-astro"
+import InlineText from "../../components/ui/InlineText.astro"
+import Section from "../../components/ui/Section.astro"
+import { useTranslations } from "../../i18n"
+
+const t = useTranslations(Astro.currentLocale).development.vibeCoding
+const cardIcons = { data: IconLock, errors: IconAlertTriangle, growth: IconTrendingUp }
+---
+
+<Section>
+  <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
+  <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
+
+  <ul role="list" class="mt-12 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-3">
+    {
+      t.cards.map((card) => {
+        const CardIcon = cardIcons[card.key as keyof typeof cardIcons]
+        return (
+          <li class="flex flex-col gap-4 rounded-3xl bg-gray-min p-7 shadow-sm md:p-8">
+            <span
+              class="grid size-12 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue"
+              aria-hidden="true"
+            >
+              <CardIcon class="size-6" />
+            </span>
+            <h3 class="text-heading-2">{card.title}</h3>
+            <p class="text-typo-medium">
+              <InlineText text={card.prototype} />
+            </p>
+            <p class="mt-auto flex gap-3 border-t border-gray-low pt-4 text-typo-high">
+              <span
+                class="mt-[0.45em] size-2.5 shrink-0 rounded-full bg-brand-green-high"
+                aria-hidden="true"
+              />
+              {card.product}
+            </p>
+          </li>
+        )
+      })
+    }
+  </ul>
+
+  <p class="mt-8 max-w-[72ch] ec-reveal text-sm text-typo-medium">
+    <InlineText text={t.sources} />
+  </p>
+</Section>

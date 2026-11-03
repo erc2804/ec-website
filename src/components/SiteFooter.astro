@@ -1,7 +1,7 @@
 ---
 // --- Kept to one quiet row: the contact section above it is the close of the
-// page, and a heavy footer would compete with it. A chat zone for Pixel-Ercan,
-// who raises an eyebrow at the imprint and the privacy policy.
+// page, and a heavy footer would compete with it. No chat zone: Pixel-Ercan
+// following the cursor down here only got in the way.
 import { IconBrandLinkedin } from "@tabler/icons-astro"
 import { siteConfig } from "../config/site"
 import { footerRoutes, localisedPath, useTranslations, type Locale } from "../i18n"
@@ -12,13 +12,10 @@ const t = useTranslations(currentLocale)
 // --- Frozen at build time, which is what a static site can honestly claim
 const year = new Date().getFullYear()
 
-const legalKeys = new Set(["imprint", "privacy"])
-
 const links = footerRoutes.map((key) => ({
   key,
   href: localisedPath(key, currentLocale),
   label: t.routeLabels[key],
-  chat: legalKeys.has(key) ? t.chatBubble.legal : undefined,
 }))
 
 // --- Platform picks the mark; the link carries the name, the icon is decoration
@@ -32,7 +29,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
 
 <footer
   class="ec-layout-visual-content flex flex-col gap-6 py-10 text-typo-medium nav:flex-row nav:items-center nav:justify-between"
-  data-chat-zone
 >
   <p>© {year} {siteConfig.name}. {t.footer.rights}</p>
 
@@ -45,7 +41,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
               class="ec-footer-link"
               href={link.href}
               aria-current={currentPath === link.href ? "page" : undefined}
-              data-chat={link.chat}
             >
               {link.label}
             </a>

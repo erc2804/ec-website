@@ -8,7 +8,9 @@
 // the cursor is outside the window, he steps aside too. Pointer only: on touch
 // there is no cursor to follow, and a bubble parked in a corner would cost
 // screen space for a gimmick. Decorative throughout, so hidden from assistive
-// technology.
+// technology. Escape sends him away for the rest of the visit (WCAG 1.4.13:
+// content on hover can be dismissed without moving the pointer): one last
+// line, then he leaves.
 import { useTranslations } from "../i18n"
 
 const t = useTranslations(Astro.currentLocale).chatBubble
@@ -17,6 +19,7 @@ const t = useTranslations(Astro.currentLocale).chatBubble
 <div
   class="ec-chat-bubble group pointer-events-none fixed z-50 hidden w-max flex-col items-end gap-1"
   data-starter={t.starter}
+  data-dismissed={t.dismissed}
   data-is-on-dark="true"
   aria-hidden="true"
   inert
@@ -57,8 +60,20 @@ const t = useTranslations(Astro.currentLocale).chatBubble
   // while the page is open.
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
 
+  // --- Dismissed once, gone for the visit; storage can be blocked, then he
+  // only stays away on this page
+  const dismissedKey = "ec-chat-bubble-dismissed"
+  const isDismissedForVisit = () => {
+    try {
+      return sessionStorage.getItem(dismissedKey) === "true"
+    } catch {
+      return false
+    }
+  }
+
   const start = () => {
     if (!bubble || reducedMotion.matches || bubble.dataset.isActive === "true") return
+    if (isDismissedForVisit()) return
     bubble.dataset.isActive = "true"
     bubble.classList.remove("hidden")
     bubble.classList.add("flex")
@@ -80,6 +95,7 @@ const t = useTranslations(Astro.currentLocale).chatBubble
     let hasMoved = false
     let lineZone: HTMLElement | null = null
     let hasElementLine = false
+    let isDismissed = false
 
     message.textContent = shownMessage
 
@@ -150,7 +166,7 @@ const t = useTranslations(Astro.currentLocale).chatBubble
     // so no earlier event can leave him in a stale state. He shows only
     // inside a zone, and says the nearest data-chat above the cursor.
     const react = (target: Element | null) => {
-      if (!target) return
+      if (!target || isDismissed) return
 
       const zone = target.closest<HTMLElement>("[data-chat-zone]")
       const isMuted =
@@ -200,6 +216,22 @@ const t = useTranslations(Astro.currentLocale).chatBubble
         window.setTimeout(() => (phase = "live"), 1500)
       }, 2000)
     }
+
+    // --- Escape while he is visible and nothing else is open (a dialog or the
+    // menu closes on Escape itself): his last line, a moment to read it, gone
+    document.addEventListener("keydown", (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || !isShown || isDismissed) return
+      if (document.querySelector("dialog[open], :popover-open")) return
+      isDismissed = true
+      try {
+        sessionStorage.setItem(dismissedKey, "true")
+      } catch {
+        // --- Storage blocked: he stays away on this page only
+      }
+      wantedMessage = bubble.dataset.dismissed ?? ""
+      showWantedMessage()
+      window.setTimeout(() => setShown(false), 1500)
+    })
 
     document.addEventListener("mousemove", (event: MouseEvent) => {
       pointer = { x: event.clientX, y: event.clientY }

@@ -8,7 +8,16 @@ export const en: Translations = {
   common: {
     close: "Close",
     opensInNewTab: "(opens in a new tab)",
+    // --- The copy button on the email tile (ui/ContactCard.astro)
+    copyEmail: "Copy email address",
+    copied: "Email address copied",
+    copyFailed: "Couldn't copy",
+    // --- The default preview image when a page is shared (public/og-default-en.png)
+    shareImageAlt:
+      "Portrait of Ercan Cicek. Next to it his name and: Design, code and accessibility. All from one person.",
     contactCta: "Start a project",
+    // --- Under a card whose title is the link: shown, and handed to the link as its description
+    more: "Read more",
     // --- Under "LinkedIn" on the contact cards: what the click brings, not the profile slug
     linkedinInvite: "Let's connect",
   },
@@ -25,6 +34,8 @@ export const en: Translations = {
     imprint: "Legal notice",
     privacy: "Privacy",
     accessibilityStatement: "Accessibility statement",
+    casualvocabPrivacy: "CasualVocab privacy",
+    startWithWaiAriaPrivacy: "Start with WAI-ARIA privacy",
   },
 
   footer: {
@@ -66,25 +77,143 @@ export const en: Translations = {
 
     privacy: {
       meta: {
-        title: "Privacy | Ercan Cicek",
-        description: "This site collects no personal data, sets no cookies and evaluates nothing.",
+        title: "Privacy policy | Ercan Cicek",
+        description:
+          "What data a visit to this site creates, who receives it and what your rights are. No cookies, no tracking.",
       },
-      title: "Privacy",
-      lead: "I take the protection of your personal data seriously. This website collects and processes no personal data. It sets no cookies, and no user data is gathered or evaluated.",
+      title: "Privacy policy",
+      lead: "This page explains what data a visit to this site creates, who receives it and what your rights are. In short: no cookies, no tracking, no ads. Data only comes up so the page can reach you, and when you write to me: through the form, by email or in a chat with Pixel-Ercan.",
       sections: [
         {
-          heading: "External content",
+          heading: "Controller",
           body: [
-            "The site may contain external content such as embedded photos and videos, which could transmit data to third parties. You can control the use of such external services through your browser settings.",
+            "The controller responsible for data processing on this site is:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}", "Germany"] },
+            "You can reach me at {email} or {phone}.",
           ],
         },
         {
-          heading: "Contact",
+          heading: "Hosting by Netlify",
           body: [
-            "If you have questions about this privacy statement, feel free to get in touch: {email}",
+            "This site is hosted by:",
+            { address: ["Netlify, Inc.", "101 2nd Street", "San Francisco, CA 94105, USA"] },
+            "When you open a page, Netlify processes what is technically needed to deliver it:",
+            {
+              list: [
+                "your IP address",
+                "the date and time of the request",
+                "the address you requested",
+                "details about your browser and operating system",
+              ],
+            },
+            "The legal basis is Art. 6(1)(f) GDPR. My legitimate interest is delivering the site securely and reliably.",
+            "Netlify processes this data on my behalf (Art. 28 GDPR). The data processing agreement is part of Netlify's terms. The data may be processed in the USA. This is safeguarded by the European Commission's Standard Contractual Clauses (Art. 46(2)(c) GDPR), which are part of that agreement. Netlify keeps the logs only as long as operation and security require. More in [Netlify's privacy policy](https://www.netlify.com/privacy/).",
+          ],
+        },
+        {
+          heading: "Cookies and browser storage",
+          body: [
+            "This site sets no cookies and uses no analytics or tracking services. Fonts and images come from this site itself; nothing is loaded from other providers.",
+            "One exception: when you close Pixel-Ercan's speech bubble with Escape, your browser remembers that in session storage (sessionStorage), so the bubble doesn't come back on the next page. The entry only says that it is hidden, never leaves your browser and is gone as soon as you close the tab. Because it is strictly necessary for a function you asked for, it needs no consent (Section 25(2) No. 2 of the German TDDDG).",
+          ],
+        },
+        {
+          heading: "Project requests through the form",
+          body: [
+            "When you send me a request through the form, I process what you enter:",
+            {
+              list: [
+                "what it's about and your description",
+                "your email address",
+                "if you provide them: your name, your phone number and whether I should call you",
+              ],
+            },
+            "I need the description and the email address to reply to you. Without them the form can't be sent.",
+            "I use this information to answer your request and discuss a possible project with you. The legal basis is Art. 6(1)(b) GDPR, because these are steps before a possible contract that you start yourself.",
+            "The form runs on Netlify Forms. Netlify stores the request for me and checks it with the Akismet spam filter by Automattic, Inc. (USA). Processing on my behalf and the transfer to the USA work the same way as for hosting.",
+            "I delete the request at Netlify once I've handled it. If it leads to a project, I keep the records as long as legal retention duties require, for example under Section 147 of the German Fiscal Code (AO).",
+          ],
+        },
+        {
+          heading: "Email and phone",
+          body: [
+            "When you write to me or call me, I process your details to reply. If it's about a project, the legal basis is Art. 6(1)(b) GDPR; otherwise it is Art. 6(1)(f) GDPR, my legitimate interest in answering questions. Deletion and retention work the same way as for the form.",
+            "My mailbox is hosted by:",
+            {
+              address: [
+                "STRATO GmbH",
+                "[Otto-Ostrowski-Straße 7]{lang=de}",
+                "10249 Berlin, Germany",
+              ],
+            },
+            "STRATO processes the emails on my behalf (Art. 28 GDPR) within the EU and deletes the mail server logs after six months at the latest.",
+          ],
+        },
+        {
+          heading: "Pixel-Ercan, the AI assistant",
+          body: [
+            "On the pages [Start a project](/en/start-a-project) and [About me](/en/about-me) you can chat with Pixel-Ercan. He is an AI. So he can reply, the site sends your messages and the chat so far to the AI service Anthropic. On the project form, what is already in the form goes along too, so he can add to it. The chat only starts when you send a message yourself.",
+            "The provider is:",
+            {
+              address: [
+                "Anthropic Ireland, Limited",
+                "6th Floor, South Bank House",
+                "Barrow Street",
+                "Dublin 4, D04 TR29, Ireland",
+              ],
+            },
+            "Anthropic processes the data on my behalf (Art. 28 GDPR); the data processing agreement is part of Anthropic's terms. The data is also processed in the USA. This is safeguarded by the European Commission's Standard Contractual Clauses, which are part of that agreement.",
+            "Anthropic does not use the content to train its models and deletes it within 30 days at the latest. It is kept longer, up to two years, only if Anthropic's automated safety systems flag a message as violating its usage policy, or if the law requires it. Details are in [Anthropic's Privacy Center](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-personal-data).",
+            "I don't store the chats myself. The conversation only lives in your open tab and is gone when you leave the page. So nobody can flood the chats with automated requests, Netlify counts requests per IP address and lets through at most twelve per minute.",
+            "On the project form the legal basis is Art. 6(1)(b) GDPR, because Pixel-Ercan helps you make your request. On the About me page it is Art. 6(1)(f) GDPR: my legitimate interest in answering your questions about me and my work.",
+            "Pixel-Ercan makes no decisions about you. You can change whatever he fills into the form, and only what you send yourself gets sent.",
+          ],
+        },
+        {
+          heading: "Your rights",
+          body: [
+            "You have the right to:",
+            {
+              list: [
+                "access to your data (Art. 15 GDPR)",
+                "rectification (Art. 16 GDPR)",
+                "erasure (Art. 17 GDPR)",
+                "restriction of processing (Art. 18 GDPR)",
+                "data portability, meaning your data in a common format (Art. 20 GDPR)",
+              ],
+            },
+            "Just write to me at {email}.",
+          ],
+        },
+        {
+          heading: "Right to object",
+          body: [
+            "Where I process data based on Art. 6(1)(f) GDPR, you can object at any time on grounds relating to your particular situation (Art. 21 GDPR). I will then stop processing that data, unless there are compelling legitimate grounds that override your interests, or the processing serves to establish, exercise or defend legal claims.",
+          ],
+        },
+        {
+          heading: "Complaints to a supervisory authority",
+          body: [
+            "You can lodge a complaint with a data protection supervisory authority (Art. 77 GDPR). The authority responsible for me is:",
+            {
+              address: [
+                "[Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen]{lang=de}",
+                "[Postfach 20 04 44]{lang=de}",
+                "40102 Düsseldorf, Germany",
+                "[ldi.nrw.de](https://www.ldi.nrw.de)",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Links to other sites",
+          body: [
+            "Links to other sites, such as LinkedIn, are plain links. Only when you open one do you leave this site, and the other provider's privacy policy applies.",
           ],
         },
       ],
+      statusHeading: "Last updated",
+      statusDate: "November 3, 2026",
     },
 
     accessibilityStatement: {
@@ -103,32 +232,179 @@ export const en: Translations = {
           ],
         },
         {
-          heading: "Conformance status",
+          heading: "How this statement was prepared",
           body: [
-            "The site is built to WCAG 2.2 level AA and tested against it, using a keyboard and a screen reader, supported by automated tooling.",
+            "I prepared this statement on August 18, 2026, and last reviewed it on November 3, 2026. It is based on a self-assessment following the test steps of the German [BITV-Test]{lang=de} for WCAG 2.2. I tested with:",
+            {
+              list: [
+                "the keyboard, without a mouse",
+                "the VoiceOver screen reader",
+                "a screen width of 320 pixels and increased text spacing",
+                "measured contrast for text, borders and focus",
+                "automated tools such as Lighthouse",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "How accessible is this site?",
+          body: [
+            "The site is built to WCAG 2.2 level AA and largely meets its requirements. The known exceptions are listed in the next section.",
             "As a micro-enterprise I am not required to publish this statement. It is voluntary.",
           ],
         },
         {
-          heading: "Known limitations",
+          heading: "Parts that are not fully accessible yet",
           body: [
-            "The interactive demo on the accessibility page shows transcripts of screen reader announcements. So that a real screen reader does not read out what a screen reader would read out, those panels are hidden and the comparison is announced as one message through a live region instead.",
+            {
+              list: [
+                "On desktop, Pixel-Ercan's speech bubble follows the mouse pointer, so you can't reach it with the mouse (WCAG 1.4.13). Press Escape to hide it for the rest of your visit. It only shows short quips, so you don't miss anything.",
+                "Mel-Menu, a small game from 2018, is not accessible. It only works with a mouse or a finger. It leads to pages you can also reach through the navigation.",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Deliberate decisions",
+          body: [
+            "The green buttons stand out from the white and grey background with less than 3:1 contrast. WCAG does not require it here: a button needs no high-contrast fill or outline when something else identifies it as a button, such as its label, its position or its context ([W3C, Understanding 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)). The dark blue text on the green has 6.7:1, and the buttons sit where you expect them: at the end of a section or form, and at the top right of the navigation.",
+          ],
+        },
+        {
+          heading: "Content from other providers",
+          body: [
+            "Links to other sites, such as LinkedIn, GitHub or CodePen, lead to services whose accessibility I can't influence.",
           ],
         },
         {
           heading: "Report a barrier",
           body: [
-            "If something blocks you, write to me. I will answer and tell you when it is fixed.",
+            "If something blocks you, write to me at {email} or call me at {phone}. I will answer and tell you when it is fixed.",
           ],
         },
       ],
       statusHeading: "Status of this statement",
-      statusDate: "18 August 2026",
+      statusDate: "November 3, 2026",
+    },
+
+    // --- The apps' privacy policies, taken over from the previous site
+    casualvocabPrivacy: {
+      meta: {
+        title: "CasualVocab privacy policy | Ercan Cicek",
+        description:
+          "What data the CasualVocab Widget - Japanese app processes and who receives it.",
+      },
+      title: "CasualVocab privacy policy",
+      lead: "I built the CasualVocab Widget - Japanese app as a free service. This page explains what data comes up when you use it, what it is used for and who receives it.",
+      sections: [
+        {
+          heading: "Controller",
+          body: [
+            "The controller responsible for the app is:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}", "Germany"] },
+            "You can reach me at {email}.",
+          ],
+        },
+        {
+          heading: "Information collection and use",
+          body: [
+            "The app itself does not collect personal data. The services it uses, Firebase and AdMob, may process personal data to provide their services. I only use or share your data as described here.",
+          ],
+        },
+        {
+          heading: "Third-party services",
+          body: [
+            "The app uses these Google services:",
+            {
+              list: [
+                "Firebase collects device information and app usage data to improve performance and functionality. More in [Firebase's privacy policy](https://firebase.google.com/support/privacy).",
+                "AdMob shows ads, including personalized ones, and uses cookies and similar identifiers for that. More in [AdMob's privacy policy](https://support.google.com/admob/answer/6128543?hl=en).",
+              ],
+            },
+          ],
+        },
+        {
+          heading: "Log data",
+          body: [
+            "In case of an error, Firebase may collect log data: your device's IP address, device name, operating system version, app configuration, usage statistics, and the date and time of use.",
+          ],
+        },
+        {
+          heading: "Cookies",
+          body: [
+            "The app itself sets no cookies. Firebase and AdMob may use cookies for analytics, advertising and improving their services. You can limit this in your device settings. Some features of the app may then not work properly.",
+          ],
+        },
+        {
+          heading: "Security",
+          body: [
+            "I protect your data with common technical means. No transmission or storage on the internet is completely secure, though.",
+          ],
+        },
+        {
+          heading: "Links to other sites",
+          body: [
+            "The app may link to websites I don't operate. I'm not responsible for their content or privacy practices. Please read their privacy policies.",
+          ],
+        },
+        {
+          heading: "Children",
+          body: [
+            "The app is not meant for children under 13, and I don't collect data from children. If I learn that a child under 13 has provided personal data, I delete it right away.",
+          ],
+        },
+        {
+          heading: "Changes",
+          body: [
+            "I may update this privacy policy. Changes are posted on this page, together with the date of the last update.",
+          ],
+        },
+        {
+          heading: "Contact",
+          body: ["If you have questions about this privacy policy, write to me at {email}."],
+        },
+      ],
+      statusHeading: "Last updated",
+      statusDate: "November 3, 2026, in effect since June 22, 2022",
+    },
+
+    startWithWaiAriaPrivacy: {
+      meta: {
+        title: "Start with WAI-ARIA privacy policy | Ercan Cicek",
+        description: "The Start with WAI-ARIA browser extension collects no personal data.",
+      },
+      title: "Start with WAI-ARIA privacy policy",
+      lead: "The Start with WAI-ARIA browser extension collects no personal data. Everything runs locally in your browser.",
+      sections: [
+        {
+          heading: "Controller",
+          body: [
+            "The controller responsible for the extension is:",
+            { address: ["{legalName}", "{street}", "{postalCode} {city}", "Germany"] },
+            "You can reach me at {email}.",
+          ],
+        },
+        {
+          heading: "What is stored locally",
+          body: [
+            "The extension uses the “storage” permission only to save your settings in your browser, such as the color theme or hidden patterns.",
+            "No data is sent to servers or other providers.",
+          ],
+        },
+        {
+          heading: "Contact",
+          body: ["If you have questions about this privacy policy, write to me at {email}."],
+        },
+      ],
+      statusHeading: "Last updated",
+      statusDate: "November 3, 2026",
     },
   },
 
   chatBubble: {
     starter: "How are you doing?",
+    // --- His last line after Escape, before he leaves for the rest of the visit
+    dismissed: "Got it, I'm off.",
     firstName: "My name is pronounced Erjan (like in jungle).",
     mainLinks: "Where to next?",
     languageSwitch: "No worries, I speak both languages.",
@@ -136,7 +412,33 @@ export const en: Translations = {
     design: "Close to my heart.",
     development: "// TODO: Add a catchy line",
     contact: "Looking forward to your message!",
-    legal: "Really?",
+  },
+
+  // --- Pixel-Ercan's chat, the same on the request page and the about page.
+  // The page brings its own title, intro and the errors that end in a way out.
+  assistantChat: {
+    logLabel: "Conversation with Pixel-Ercan",
+    speakerYou: "You",
+    speakerAssistant: "Pixel-Ercan",
+    inputLabel: "Your message to Pixel-Ercan",
+    send: "Send",
+    working: "Pixel-Ercan is typing …",
+    privacyLink: "More in the privacy policy",
+    showEarlierOne: "Show 1 earlier message",
+    showEarlierMany: "Show {count} earlier messages",
+    hideEarlier: "Hide earlier messages",
+    toNewest: "Jump to the latest message",
+    reset: "Start the chat over",
+    errors: {
+      stillWorking: "Pixel-Ercan is still typing. Send your message once his reply is in.",
+      empty: "Write Pixel-Ercan a few words first, then he gets going.",
+      offline:
+        "You're offline right now. Once you're back online, send your message again. It's still in the field.",
+      timeout:
+        "Pixel-Ercan is taking unusually long. Send your message again in a moment, it's still in the field.",
+      tooFast: "Pixel-Ercan can barely keep up. Wait a moment, then send your message again.",
+      garbled: "Pixel-Ercan just got tangled up. Send your message again, it's still in the field.",
+    },
   },
 
   home: {
@@ -169,7 +471,6 @@ export const en: Translations = {
             "Whatever the technology: I direct the AI so it also builds what the concept doesn't show.",
         },
       },
-      more: "Read more",
       vignettes: {
         accessibilityCaption: "Next, button",
         designSizeBefore: "128 × 56",
@@ -249,7 +550,7 @@ export const en: Translations = {
     lead: "Selected projects since 2016.",
     elsewhere: {
       title: "Other things",
-      lead: "My code on GitHub, Mel-Menu as my first portfolio from 2018, and a few playgrounds.",
+      lead: "My code on GitHub, Mel-Menu as my first portfolio from 2016, and a few playgrounds.",
     },
     project: {
       back: "Back to portfolio",
@@ -263,12 +564,11 @@ export const en: Translations = {
         services: "Services",
         skills: "Skills",
       },
-      imageAlt: "{label} on a phone",
       metaTitle: "{label} | Portfolio | Ercan Cicek",
     },
     contact: {
-      title: "Want your project in here?",
-      body: "Tell me what you have in mind. A short call is enough, free, with no strings attached.",
+      title: "Get in touch.",
+      body: "Tell me briefly what it's about, with no strings attached, and we'll find the right solution together.",
     },
   },
 
@@ -279,37 +579,29 @@ export const en: Translations = {
         "Tell me what it's about: accessibility, design or development. Fill in the form yourself or let Pixel-Ercan help. I usually reply within two working days.",
     },
     title: "Start a project",
-    lead: "Tell me what it's about. A few sentences are enough. Fill in the form yourself, or just write it down and Pixel-Ercan fills it in for you.",
+    lead: "Tell me what I can help you with. A rough idea is enough. Fill in the form yourself, or let Pixel-Ercan (my AI assistant) help you.",
     assistant: {
       title: "Fill it in with Pixel-Ercan",
       intro: "Hi, I'm Pixel-Ercan. Tell me about your project and I'll fill in the form for you.",
       disclosure:
         "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic. Nothing is sent to Ercan until you send it yourself.",
-      privacyLink: "More in the privacy policy",
-      logLabel: "Conversation with Pixel-Ercan",
-      speakerYou: "You",
-      speakerAssistant: "Pixel-Ercan",
-      inputLabel: "Your message to Pixel-Ercan",
       placeholder:
         "Hi Ercan, we run an online shop for bike parts and need to be accessible by June. Can you check where we stand? I'm Lena, you can reach me at lena@example.com",
       replyPlaceholder: "Your reply …",
-      send: "Send",
       callbackYes: "Yes, please",
       callbackNo: "No, email is fine",
       callbackYesMessage: "Yes, please call me.",
       callbackNoMessage: "No, email is fine.",
-      working: "Pixel-Ercan is typing …",
-      empty: "Write Pixel-Ercan a few words first, then he gets going.",
       filled: "Filled in: {fields}",
       toForm: "Show",
-      showEarlierOne: "Show 1 earlier message",
-      showEarlierMany: "Show {count} earlier messages",
-      hideEarlier: "Hide earlier messages",
-      toNewest: "Jump to the latest message",
-      reset: "Start the chat over",
-      error: "That didn't work just now. Try again in a moment or fill in the form yourself.",
-      busy: "It's busy right now. Try again in a minute or fill in the form yourself.",
-      tooLong: "The chat is getting long. Please add the rest directly in the form.",
+      errors: {
+        busy: "Pixel-Ercan is very busy right now. Try again in a minute or fill in the form yourself.",
+        budget:
+          "So many people have chatted with Pixel-Ercan that he's calling it a day for this month. Thanks for your interest! Please fill in the form yourself, it's just as quick.",
+        tooLong: "The chat is getting long. Please add the rest directly in the form.",
+        error:
+          "That's an error not even Pixel-Ercan saw coming. Try again or fill in the form yourself.",
+      },
       tag: "by Pixel-Ercan",
       fieldNames: {
         topics: "Topic",
@@ -396,6 +688,77 @@ export const en: Translations = {
     },
   },
 
+  about: {
+    meta: {
+      title: "About Ercan Cicek | Product Engineer in Düsseldorf",
+      description:
+        "Ercan Cicek is a freelance product engineer in Düsseldorf. He designs digital products, builds their frontend and makes them accessible. Studied at FH Aachen, working in design and development ever since.",
+    },
+    title: "I'm Ercan, a product engineer from Düsseldorf.",
+    lead: "I design digital products, build their frontend and make sure everyone can use them.",
+    portraitAlt: "Portrait of Ercan Cicek",
+    story: [
+      "As a product engineer, I design digital products and build their frontend myself. Depending on the project, I do both or just one of them.",
+      "I've worked in design and development since 2016 and led teams in both. Because I know both sides from my own work, I can help in many places: with application tests for [AON](/en/portfolio/aon), with DIANA, the software [Deutsche Bahn](/en/portfolio/deutsche-bahn) uses to spot faults in track switches early, with [Welliba](/en/portfolio/welliba)'s product platform or with [Curanto](/en/portfolio/curanto)'s web shop, where I led design and frontend.",
+      "My second focus is [accessibility](/en/accessibility): building digital products everyone can use. I audit against WCAG and the BFSG, fix the issues myself in design and code, and train teams so they build accessibility in from the start.",
+      "Today I work with AI, in design, in code and in accessibility. The AI does the legwork, I make the decisions: what the product needs, who uses it and what happens when something goes wrong. That gets you a solution shaped by your users, at the pace of AI.",
+    ],
+    facts: {
+      title: "In short",
+      availability: "Available from {date}",
+      availableNow: "Available on request",
+      availabilityNote: "This can change at short notice, just ask.",
+      workplace: { term: "Works", value: "From Düsseldorf, remote, hybrid or on site" },
+      languages: {
+        term: "Speaks",
+        items: [
+          { name: "German and Turkish", level: "native" },
+          { name: "English", level: "full professional proficiency" },
+          { name: "Japanese", level: "limited working proficiency" },
+        ],
+      },
+      industries: {
+        term: "Experience in",
+        items: ["Manufacturing", "HR tech", "Banking", "Public sector", "E-commerce"],
+      },
+      background: {
+        term: "Background",
+        items: [
+          "Communication and Multimedia Design (B.Sc.), FH Aachen, until 2015",
+          "Self-employed since 2018",
+        ],
+      },
+    },
+    assistant: {
+      title: "Ask Pixel-Ercan.",
+      lead: "Pixel-Ercan knows my projects, how I work and a bit about me personally. Ask him whatever you want to know.",
+      intro: "Hi, I'm Pixel-Ercan. Ask me anything you want to know about Ercan.",
+      disclosure:
+        "Pixel-Ercan is an AI. To answer, your question is sent to the AI service Anthropic.",
+      placeholder: "For example: Has Ercan worked with startups?",
+      replyPlaceholder: "Your next question …",
+      suggestionsLabel: "Questions to tap",
+      noScript: "Pixel-Ercan needs JavaScript. Feel free to email me directly at {email}.",
+      suggestions: [
+        "When is Ercan available?",
+        "Does Ercan work remotely?",
+        "Why does accessibility matter so much to Ercan?",
+      ],
+      errors: {
+        busy: "Pixel-Ercan is very busy right now. Try again in a minute or email me directly at {email}.",
+        budget:
+          "So many people have chatted with Pixel-Ercan that he's calling it a day for this month. Thanks for your interest! Email me directly at {email}, I'll answer you personally.",
+        tooLong: "The chat is getting long. Start it over or email me directly at {email}.",
+        error:
+          "That's an error not even Pixel-Ercan saw coming. Try again or email me directly at {email}.",
+      },
+    },
+    contact: {
+      title: "Get to know me in person.",
+      body: "A short call says more than any page. Free, with no strings attached.",
+    },
+  },
+
   nav: {
     toHome: "To the home page",
     label: "Main navigation",
@@ -422,46 +785,12 @@ export const en: Translations = {
       lead: "User-friendly, distinctive design: for new features in existing products and for new products, with or without an AI-generated prototype.",
     },
 
-    compare: {
-      title: "AI gives you the usual, not the best solution.",
-      lead: "The result works and is a good start. But it's off the rack: the elements look like they do everywhere, the branding doesn't fit, and what makes it yours is missing.",
-      example:
-        "An example to make it clear: the top of my own home page, once built by an AI from the same content and once designed by me. I deliberately don't put client sites up against an AI version here. On a call I'm happy to show you examples closer to your project.",
-      before: "AI-generated",
-      after: "Designed by me",
-      beforeNote: "Looks sleek, but like any other generated site.",
-      afterNote: "One of a kind: the colors, type and image are mine.",
-      // --- For screen readers, who do not see the two pictures
-      description:
-        "AI-generated: a dark blue background with a grid, the initials “EC.” as the logo, the name in bold white, a blue gradient button and next to it the portrait in a glowing frame with the label “Focus: Accessible Web Products”. Designed by me: dark grey, the logo with the angle brackets, the name large in green and light grey, a green button and a cropped portrait that fills the right half.",
-      // --- The info button next to the AI side and its dialog: where the
-      // picture comes from, and the prompt as it was sent
-      originLabel: "How the AI result was made",
-      originTitle: "How the AI result was made",
-      originText: [
-        "Built by Gemini 3.1 Pro on November 2, 2026, from a single prompt with no other context and no design brief. It shows the result as delivered. For the English page, only the texts were swapped.",
-        "Other prompts and tools give better results too. Without good groundwork and the right prompts, though, they almost always look off the rack. I'm happy to help you with that.",
-      ],
-      promptTitle: "The prompt (sent in German)",
-      prompt: `Erstelle den Hero-Bereich (den ersten Bildschirm) der Startseite meiner persönlichen Website.
-
-Inhalte:
-- Navigation: Barrierefreiheit, Design, Entwicklung, Portfolio, Über mich
-- Sprachumschalter: DE | EN
-- Zeile über dem Namen: Product Engineer · Düsseldorf
-- Name: Ercan Cicek
-- Aussage: Design, Code und Barrierefreiheit. Aus einer Hand.
-- Button: Projekt anfragen
-- Hinweis zum Weiterscrollen: Weiter nach unten
-- Das angehängte Foto ist ein Porträt von mir.`,
-    },
-
     states: {
       title: "Every state belongs in the design.",
       lead: "Designs usually focus on the ideal case. But what about different text lengths, long loading times, empty or overlong lists and errors? I design each of these states too, so your team doesn't have to make anything up.",
       legend: "State",
-      commonLabel: "Not thought through",
-      designedLabel: "Thought through",
+      commonLabel: "Ideal case only",
+      designedLabel: "Every state",
       cardTitle: "Projects this week",
       rows: [
         { name: "Website relaunch", hours: "12.5 h" },
@@ -485,26 +814,43 @@ Inhalte:
         {
           key: "loading",
           label: "Loading time",
-          why: "Not thought through: one word on an empty surface. Thought through: it says what's loading, and if it takes too long, there's a way out.",
+          why: {
+            common: "An empty surface with just “Loading…” and no way out.",
+            designed: "A spinner, “Loading projects …” and, if it takes too long, “Reload”.",
+          },
         },
         {
           key: "empty",
           label: "Empty list",
-          why: "Not thought through: an empty box that looks like an error. Thought through: it says why there's nothing here, with the first step right below.",
+          why: {
+            common: "Under the title, an empty box that looks like an error.",
+            designed: "“No projects yet”, a sentence on why, and “Create project” right below.",
+          },
         },
         {
           key: "error",
           label: "Error",
-          why: "Not thought through: a message from the code that helps nobody. Thought through: it says what happened and what you can do.",
+          why: {
+            common: "Only the message from the code: “Error: Request failed with status 500”.",
+            designed: "“The projects couldn't be loaded”, what you can do, and “Try again”.",
+          },
         },
         {
           key: "long",
           label: "Long name",
-          why: "Not thought through: a long name pushes the hours out of view. Thought through: it wraps and gets cut after two lines. Real names are longer than the ones in the mockup.",
+          why: {
+            common: "The long name runs over the edge and pushes the hours out of view.",
+            designed:
+              "The name wraps and gets cut after two lines, the hours stay visible. Real names are longer than the ones in the mockup.",
+          },
         },
         {
           key: "normal",
           label: "Ideal case",
+          why: {
+            common: "Three projects with their hours, everything fits.",
+            designed: "Looks the same. The other states make the difference.",
+          },
         },
       ],
     },
@@ -560,11 +906,6 @@ Inhalte:
     faq: {
       title: "Frequently asked questions",
       items: [
-        {
-          question: "Why does a distinctive design matter?",
-          answer:
-            "Because people judge a site by its look first. In a [Stanford University study](https://doi.org/10.1145/997078.997097), almost half of all comments on the credibility of websites were about their design. An off-the-rack template looks like many others.",
-        },
         {
           question: "Can you work directly in our design system?",
           answer:
@@ -795,56 +1136,57 @@ Inhalte:
       lead: "With a prototype as the starting point, from scratch, or as part of your team. Also as the bridge between design and development, with accessibility in the bag if you like.",
       items: [
         {
-          title: "From prototype to product",
+          title: "Grow a prototype",
           text: "You have a prototype, often built with AI, and it should become a real product. I take over where it stands, tidy up where it sticks and keep building. No restart.",
         },
         {
-          title: "Build new",
+          title: "Build from scratch",
           text: "A new web app or website, from the design to launch. You get code your team can read and change later on its own.",
         },
         {
-          title: "Reinforce your team",
+          title: "Work in your team",
           text: "Your team needs one more pair of hands for a while. I work in your code and your routines, agree interfaces with the backend and hand over so it carries on without me.",
         },
       ],
     },
 
-    workingStyle: {
-      title: "What you can count on",
-      lead: "What gets built is up to your product. How I work stays the same.",
-      stack: ["React", "Vue", "Angular", "Next.js", "Astro", "Shopify", "Webflow"],
-      stackYours: "and yours",
-      items: [
+    // --- Why vibe coding alone is not enough, for people who don't write code:
+    // three things a prototype often lacks, each in plain words, once as it
+    // tends to go and once what a product needs. Only the security card holds
+    // a figure, and it links its source.
+    vibeCoding: {
+      title: "Why vibe coding alone isn't enough.",
+      lead: "Vibe coding means building software with AI without reading the code it writes. As a start that's great: anyone can try out right away what they have in mind, and design and development get the best brief they could wish for. It isn't a finished product yet, though.",
+      cards: [
         {
-          title: "Your stack, not mine.",
-          text: "Which framework, which language, which CMS: that is the smallest question today. I have built with React, Vue, Angular, Next.js, Astro, Shopify and Webflow, and I read my way into whatever runs at your place. You do not get a change of technology just because I had a favorite.",
+          key: "data",
+          title: "Protecting data",
+          prototype:
+            "In a prototype, often everyone sees everything. In 2025 [Matt Palmer checked](https://mattpalmer.io/posts/statement-on-CVE-2025-48757/) 1,645 apps built with the AI builder Lovable: in 170 of them, anyone could read other people's data.",
+          product: "A product shows everyone only their own data.",
         },
         {
-          title: "Precise down to the detail.",
-          text: "A spacing that is off, a missing focus ring, a loading state that jumps: I see it, and I do not let it stand. What the AI delivers, I read and check before it reaches you.",
+          key: "errors",
+          title: "Handling errors",
+          prototype:
+            "When something goes wrong, the page often just stays empty, and nobody knows why.",
+          product: "A product says what happened and helps you on.",
         },
         {
-          title: "Your own look, not a template.",
-          text: "AI-built interfaces all look alike. I set the direction, with components, tokens and motion of your own, so your product looks like yours. This site came about that way.",
-        },
-        {
-          title: "Built to scale from the start.",
-          text: "Components, variables, clear boundaries: I lay out the structure so the tenth feature comes as easily as the first. Even when the prototype grew fast and messy.",
-        },
-        {
-          title: "At home in your team.",
-          text: "I work in your repository and by your rules, agree interfaces with the backend and hand over so your team can carry on without me. If it helps, I train them.",
-        },
-        {
-          title: "Accessible on request.",
-          text: "Keyboard, screen reader, contrast and focus are planned in when you want them, and checked the way I check in audits.",
+          key: "growth",
+          title: "Growing with you",
+          prototype:
+            "With ten test customers everything runs. With thousands it gets sluggish, and every new feature takes longer.",
+          product: "A product stays fast and understandable as it grows.",
         },
       ],
+      sources:
+        "The definition of vibe coding is [Simon Willison's](https://simonwillison.net/2025/Mar/19/vibe-coding/); [Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383) coined the term in February 2025.",
     },
 
     oneHand: {
       title: "Why a developer, when AI writes the code?",
-      body: "Because building is no longer the hard part. The hard part is the **decisions before it**: Does this still scale when your idea grows? What happens on a bad connection or when something fails? Does a user see at once what to do? I ask those questions before the AI builds, and **check what it delivers** afterwards. Add what a model cannot know: everything that came out after its training.",
+      body: "Because building is no longer the hard part. The hard part is the **decisions before it**: Does this still scale when your idea grows? What happens on a bad connection or when something fails? Does a user see at once what to do? I ask those questions before the AI builds, and **check what it delivers** afterwards.",
       portraitAlt: "Ercan Cicek",
     },
 
@@ -852,30 +1194,35 @@ Inhalte:
       title: "Common questions",
       items: [
         {
-          question: "What does it cost?",
+          question: "Which frameworks do you work with?",
           answer:
-            "That depends on the scope: how many screens and flows there are and whether I build new or work in existing code. After a free, no-obligation first call you get a concrete offer.",
+            "With whatever you run. Which framework, which language, which CMS: that's the smallest question today. I read my way in, and you only switch technologies if it really helps you.",
         },
         {
-          question: "When can you start?",
+          question: "Do you write the code yourself, or does the AI?",
           answer:
-            "That depends on my workload. Just ask, and I will tell you honestly when it works.",
+            "Both. The AI brings the quantity, I bring the quality: I set the architecture and the rules, direct it and write it myself where it matters. I'm not a vibe coder. Nothing goes out that I haven't understood and checked.",
         },
         {
-          question: "We already have developers. Does that work?",
+          question: "Our prototype was built with AI. Can you build on it?",
           answer:
-            "Yes. I work in your repository, by your rules and with your tools. When I leave, there is no code left that only I understand.",
+            "Usually, yes. I look at the code first and tell you honestly what can stay and what should be rebuilt.",
         },
         {
-          question: "Do we own the code?",
+          question: "Do you do the backend too?",
           answer:
-            "Yes, from the first line. Everything lives in your repository, with no dependency on me.",
+            "The fundamentals, yes. With AI you can write anything today, but that doesn't mean you should: a backend belongs in experienced hands, just like a frontend. I coordinate the interfaces closely with your backend team and, if you like, set the endpoints the frontend needs, down to the shape of request and response.",
+        },
+        {
+          question: "What is your hourly rate?",
+          answer:
+            "It depends on how many hours you book. On a first call, free and with no strings attached, I'll give you a concrete rate.",
         },
       ],
     },
 
     contact: {
-      title: "Get in touch if I can help.",
+      title: "Let's talk.",
       body: "Whether the project is already running or still just an idea. A short call is enough, free, with no strings attached.",
     },
   },
