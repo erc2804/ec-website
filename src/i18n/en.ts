@@ -695,7 +695,7 @@ export const en: Translations = {
       "Today I work with AI, in design, in code and in accessibility. The AI does the legwork, I make the decisions: what the product needs, who uses it and what happens when something goes wrong. That gets you a solution shaped by your users, at the pace of AI.",
     ],
     facts: {
-      title: "In short",
+      title: "At a glance",
       availability: "Available from {date}",
       availableNow: "Available on request",
       availabilityNote: "This can change at short notice, just ask.",
@@ -716,7 +716,7 @@ export const en: Translations = {
         term: "Background",
         items: [
           "Communication and Multimedia Design (B.Sc.), FH Aachen, until 2015",
-          "Self-employed since 2018",
+          "Freelancing since 2018",
         ],
       },
     },

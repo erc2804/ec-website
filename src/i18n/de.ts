@@ -701,7 +701,7 @@ export const de = {
       "Heute arbeite ich KI-gestützt, im Design, im Code und bei der Barrierefreiheit. Die KI erledigt die Fleißarbeit, die Entscheidungen treffe ich: was das Produkt braucht, wer es benutzt und was passiert, wenn etwas schiefgeht. So bekommst du eine Lösung, die sich nach deinen Nutzern richtet, im Tempo der KI.",
     ],
     facts: {
-      title: "Kurz gesagt",
+      title: "Auf einen Blick",
       availability: "Verfügbar ab {date}",
       availableNow: "Verfügbar auf Anfrage",
       availabilityNote: "Kann sich kurzfristig ändern, frag einfach.",
@@ -722,7 +722,7 @@ export const de = {
         term: "Hintergrund",
         items: [
           "[Communication and Multimedia Design]{lang=en} (B.Sc.), FH Aachen, bis 2015",
-          "Selbstständig seit 2018",
+          "Freiberuflich seit 2018",
         ],
       },
     },

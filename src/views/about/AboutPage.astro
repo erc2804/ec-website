@@ -7,6 +7,14 @@
 // so they read like a profile, not a CV. Availability leads, with the online dot of
 // Pixel-Ercan's avatar. Then Pixel-Ercan, the chat from the request page,
 // answering questions about me; then the contact block.
+//
+// Below lg the column with portrait and facts would only follow the whole
+// story, so the page opens like a messenger profile instead: a small portrait
+// with the online dot, the availability beside it as the status, then the
+// heading. Portrait and availability are drawn there and in the column, one
+// of the two hidden at each width, so a screen reader meets them once. Both
+// pictures ask for the same file at every width (portraitWidths,
+// portraitSizes), so the hidden one costs no second download.
 import { Picture } from "astro:assets"
 import portrait from "../../assets/images/ercancicek.jpg"
 import AssistantChat from "../../components/AssistantChat.astro"
@@ -33,12 +41,38 @@ const availability = isAvailableNow()
   : fill(facts.availability, { date: availableFromMonth(currentLocale) })
 
 const termClasses = "text-sm text-typo-medium"
+const portraitWidths = [224, 448, portrait.width]
+// --- Chrome does not take the range syntax in sizes, so the old form
+const portraitSizes = "(min-width: 64rem) 14rem, 5rem"
 ---
 
 <main id="main" class="pt-header">
   <Section>
     <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-20">
       <div>
+        <div class="mb-8 flex ec-rise items-center gap-5 lg:hidden">
+          <span class="relative shrink-0">
+            <Picture
+              src={portrait}
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={portraitWidths}
+              sizes={portraitSizes}
+              alt={t.portraitAlt}
+              class="aspect-square size-20 rounded-full object-cover"
+            />
+            <span
+              class="absolute right-0 bottom-0 size-5 rounded-full border-3 border-gray-subtle bg-brand-green-medium"
+              aria-hidden="true"></span>
+          </span>
+          <p class="flex min-w-0 flex-col">
+            <span class="font-bold text-typo-high" data-available-now={facts.availableNow}
+              >{availability}</span
+            >
+            <span class="mt-0.5 text-sm text-typo-medium">{facts.availabilityNote}</span>
+          </p>
+        </div>
+
         <h1 class="max-w-[16ch] ec-rise text-display text-balance">
           <InlineText text={t.title} />
         </h1>
@@ -57,25 +91,31 @@ const termClasses = "text-sm text-typo-medium"
         </div>
       </div>
 
-      <div class="ec-rise [--ec-rise-delay:150ms] lg:self-start">
-        <Picture
-          src={portrait}
-          formats={["avif"]}
-          fallbackFormat="webp"
-          widths={[224, 448, portrait.width]}
-          sizes="14rem"
-          alt={t.portraitAlt}
-          class="aspect-square w-full max-w-56 rounded-full object-cover"
-        />
-        <h2 class="sr-only">{facts.title}</h2>
-        <p class="mt-8 flex items-center gap-2.5 font-bold text-typo-high">
-          <span class="size-2.5 shrink-0 rounded-full bg-brand-green-medium" aria-hidden="true"
-          ></span>
-          <span data-available-now={facts.availableNow}>{availability}</span>
-        </p>
-        <p class="mt-1 pl-5 text-sm text-typo-medium">{facts.availabilityNote}</p>
+      <!-- --- More room after the story below lg, where the facts follow it -->
+      <div class="ec-rise [--ec-rise-delay:150ms] max-lg:mt-8 lg:self-start">
+        <!-- --- Below lg the facts follow the story, so their heading shows, in
+             the size of the page's other h2; beside the story it is for screen
+             readers only -->
+        <h2 class="mb-6 text-heading-1 lg:sr-only">{facts.title}</h2>
+        <div class="mb-8 max-lg:hidden">
+          <Picture
+            src={portrait}
+            formats={["avif"]}
+            fallbackFormat="webp"
+            widths={portraitWidths}
+            sizes={portraitSizes}
+            alt={t.portraitAlt}
+            class="aspect-square w-full max-w-56 rounded-full object-cover"
+          />
+          <p class="mt-8 flex items-center gap-2.5 font-bold text-typo-high">
+            <span class="size-2.5 shrink-0 rounded-full bg-brand-green-medium" aria-hidden="true"
+            ></span>
+            <span data-available-now={facts.availableNow}>{availability}</span>
+          </p>
+          <p class="mt-1 pl-5 text-sm text-typo-medium">{facts.availabilityNote}</p>
+        </div>
 
-        <dl class="mt-8 flex flex-col gap-6">
+        <dl class="flex flex-col gap-6">
           <div>
             <dt class={termClasses}>{facts.workplace.term}</dt>
             <dd class="mt-1 text-typo-high">{facts.workplace.value}</dd>
@@ -180,9 +220,10 @@ const termClasses = "text-sm text-typo-medium"
   import { isAvailableNow } from "../../data/availability"
 
   // --- The availability, checked again against today's date
-  const availability = document.querySelector<HTMLElement>("[data-available-now]")
-  if (availability && isAvailableNow()) {
-    availability.textContent = availability.dataset.availableNow ?? ""
+  if (isAvailableNow()) {
+    for (const availability of document.querySelectorAll<HTMLElement>("[data-available-now]")) {
+      availability.textContent = availability.dataset.availableNow ?? ""
+    }
   }
 
   const assistant = document.querySelector<HTMLElement>(".ec-about-assistant")!
