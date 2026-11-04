@@ -1,13 +1,13 @@
 ---
-// --- The offer pages' "how it can go", told like the roles on the start
-// page: on desktop one scene travels down the left column and settles next to
-// the step being read, changing into it as it arrives. Below lg every step
-// carries its own scene, already in its state, so nothing has to move. The
-// steps are a plain ordered list; nothing is operated.
+// --- Four steps told like the roles on the start page: on desktop one scene
+// travels down the left column and settles next to the step being read,
+// changing into it as it arrives. Below lg every step carries its own scene,
+// already in its state, so nothing has to move. The steps are a plain
+// ordered list; nothing is operated. The design page tells its process with
+// it.
 //
-// The scene is the page's own component (DesignProcessScene,
-// DevelopmentProcessScene): it takes `step` (1 to 4), `isCompact` and
-// `class`, and reads data-step on its root.
+// The scene is the page's own component (DesignProcessScene): it takes
+// `step` (1 to 4), `isCompact` and `class`, and reads data-step on its root.
 import Section from "./ui/Section.astro"
 import { surfaceOnGroundClasses, type Ground } from "./ui/surfaceOnGround"
 
@@ -74,7 +74,9 @@ const stageClasses = [
      each step, as on the start page's roles, so the column is never empty.
      The scene is 20rem tall and lands with its top on the step's top, so the
      dot sits 10rem down; across the 4rem gap, in the middle of the left
-     column. The dot of the active step fades out under the scene. --- */
+     column. The dot of the active step fades out before the scene arrives,
+     and a dot fades back in only after 300ms, when the scene travelling for
+     600ms is off it, so a dot never shows on the scene. --- */
   @media (width >= 64rem) {
     .ec-process-snap-step::before {
       content: "";
@@ -86,36 +88,28 @@ const stageClasses = [
       translate: -50% -50%;
       border-radius: 50%;
       background: var(--color-gray-low);
-      transition: opacity 500ms;
+      transition: opacity 300ms ease 300ms;
     }
 
     .ec-process-snap-step[data-is-active="true"]::before {
       opacity: 0;
+      transition: opacity 200ms ease;
     }
   }
 </style>
 
 <script>
-  // --- Same logic as the roles on the start page: the active step is the last
-  // one whose top has passed the middle of the viewport, worked out from the
-  // positions on every frame of scrolling, so it is the same answer in both
-  // directions. The scene moves to it and changes as it lands; move and change
+  // --- Same logic as the roles on the start page (activeStep.ts): the scene
+  // moves to the step being read and changes as it lands; move and change
   // share duration and curve (600ms), so they read as one motion.
+  import { watchActiveStep } from "./activeStep"
+
   for (const process of document.querySelectorAll<HTMLElement>(".ec-process-snap")) {
     const scene = process.querySelector<HTMLElement>(".ec-process-snap-scene")!
     const steps = [...process.querySelectorAll<HTMLElement>(".ec-process-snap-step")]
     const desktop = window.matchMedia("(width >= 64rem)")
-    let activeIndex = -1
 
-    const update = (isInstant = false) => {
-      if (!desktop.matches) return
-      const centre = window.innerHeight / 2
-      let index = 0
-      steps.forEach((step, stepIndex) => {
-        if (step.getBoundingClientRect().top <= centre) index = stepIndex
-      })
-      if (index === activeIndex && !isInstant) return
-      activeIndex = index
+    watchActiveStep(steps, desktop, (index, isInstant) => {
       for (const [stepIndex, step] of steps.entries()) {
         step.dataset.isActive = stepIndex === index ? "true" : "false"
       }
@@ -132,20 +126,6 @@ const stageClasses = [
       }
       scene.style.translate = `0 ${offset}px`
       scene.dataset.step = steps[index].dataset.step!
-    }
-
-    let isFramePending = false
-    const requestUpdate = () => {
-      if (isFramePending) return
-      isFramePending = true
-      requestAnimationFrame(() => {
-        isFramePending = false
-        update()
-      })
-    }
-
-    update(true)
-    window.addEventListener("scroll", requestUpdate, { passive: true })
-    window.addEventListener("resize", () => update(true), { passive: true })
+    })
   }
 </script>

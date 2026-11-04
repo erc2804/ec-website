@@ -9,13 +9,14 @@
 // system status, empty states that explain and offer the first step, error
 // messages in plain words with a way forward.
 //
-// For a screen reader each card is one picture (role="img"): its label as the
-// name, its caption below as the description, so nobody has to read wireframe
-// text that is cut off or hidden on purpose. Cards and captions keep the
+// For a screen reader each wireframe is one picture (role="img"), so nobody
+// has to read wireframe text that is cut off or hidden on purpose. The label
+// above it stays outside, real text, and names it; the caption below
+// describes it. Inside role="img" the label would be presentational too. Cards and captions keep the
 // height of their tallest state, so switching never moves the page. Both
-// captions are announced when the visitor changes the state. On phones the control is a native select
-// (five pills do not fit in a row), from md up the pill group.
-import { IconAlertTriangle, IconChevronDown } from "@tabler/icons-astro"
+// captions are announced when the visitor changes the state. The control is
+// SegmentedControl: a native select on phones, the pill group from md up.
+import { IconAlertTriangle } from "@tabler/icons-astro"
 import SegmentedControl from "../../components/ui/SegmentedControl.astro"
 import Section from "../../components/ui/Section.astro"
 import InlineText from "../../components/ui/InlineText.astro"
@@ -36,45 +37,28 @@ const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state
     <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
     <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
 
-    <div class="mt-10 ec-reveal ec-reveal-late md:hidden">
-      <label for="designStateSelect" class="mb-2 block pl-1 text-sm text-typo-medium"
-        >{t.legend}</label
-      >
-      <div class="relative w-fit">
-        <select
-          id="designStateSelect"
-          class="ec-states-select min-h-11 cursor-pointer appearance-none rounded-full bg-brand-blue py-2 pr-11 pl-5 font-medium text-typo-min"
-        >
-          {t.items.map((item) => <option value={item.key}>{item.label}</option>)}
-        </select>
-        <IconChevronDown
-          class="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-typo-min"
-          aria-hidden="true"
-        />
-      </div>
-    </div>
     <SegmentedControl
       name="designState"
       legend={t.legend}
       options={t.items.map((item) => ({ value: item.key, label: item.label }))}
-      class="mt-10 ec-reveal ec-reveal-late max-md:hidden"
+      class="mt-10 ec-reveal ec-reveal-late"
     />
 
     <div class="mt-8 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-2">
       <!-- --- Only the ideal case designed -->
       <div class="flex flex-col gap-3">
-        <div
-          class="flex flex-col"
-          role="img"
-          aria-labelledby="statesCommonLabel"
-          aria-describedby={whyId(initialState, "common")}
-          data-card="common"
-        >
+        <div class="flex flex-col">
           <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
             <span class="size-2.5 rounded-full border-2 border-typo-medium"></span>
             <span id="statesCommonLabel">{t.commonLabel}</span>
           </p>
-          <div class="ec-wireframe mt-4 flex-1 overflow-hidden">
+          <div
+            class="ec-wireframe mt-4 flex-1 overflow-hidden"
+            role="img"
+            aria-labelledby="statesCommonLabel"
+            aria-describedby={whyId(initialState, "common")}
+            data-card="common"
+          >
             <p class="text-xs text-typo-medium">{t.cardTitle}</p>
 
             <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
@@ -136,18 +120,18 @@ const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state
       </div>
       <!-- --- Every state designed -->
       <div class="flex flex-col gap-3">
-        <div
-          class="flex flex-col"
-          role="img"
-          aria-labelledby="statesDesignedLabel"
-          aria-describedby={whyId(initialState, "designed")}
-          data-card="designed"
-        >
+        <div class="flex flex-col">
           <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
             <span class="size-2.5 rounded-full bg-brand-green-high"></span>
             <span id="statesDesignedLabel">{t.designedLabel}</span>
           </p>
-          <div class="ec-wireframe mt-4 flex-1">
+          <div
+            class="ec-wireframe mt-4 flex-1"
+            role="img"
+            aria-labelledby="statesDesignedLabel"
+            aria-describedby={whyId(initialState, "designed")}
+            data-card="designed"
+          >
             <p class="text-xs text-typo-medium">{t.cardTitle}</p>
 
             <ul data-state="normal" class="ec-state mt-2" hidden={isHidden("normal")}>
@@ -254,7 +238,7 @@ const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state
   // updates the cards and the other control.
   for (const states of document.querySelectorAll<HTMLElement>(".ec-states")) {
     const blocks = [...states.querySelectorAll<HTMLElement>(".ec-state")]
-    const select = states.querySelector<HTMLSelectElement>(".ec-states-select")!
+    const select = states.querySelector<HTMLSelectElement>(".ec-segmented-select")!
     const inputs = [...states.querySelectorAll<HTMLInputElement>("input[name='designState']")]
     let current = select.value
     const cards = [...states.querySelectorAll<HTMLElement>("[data-card]")]

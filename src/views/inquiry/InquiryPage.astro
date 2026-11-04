@@ -8,13 +8,13 @@ import {
   IconArrowRight,
   IconBrandLinkedin,
   IconCheck,
+  IconClipboardCheck,
   IconMail,
+  IconMailOpened,
 } from "@tabler/icons-astro"
 import AssistantChat from "../../components/AssistantChat.astro"
 import Button from "../../components/ui/Button.astro"
 import ContactCard from "../../components/ui/ContactCard.astro"
-import ReadPersonallyIcon from "./ReadPersonallyIcon.astro"
-import RouteIcon from "./RouteIcon.astro"
 import { fieldClasses } from "../../components/ui/fieldClasses"
 import { siteConfig } from "../../config/site"
 import { topicKeys } from "../../data/inquiry"
@@ -26,7 +26,7 @@ const tCommon = useTranslations(currentLocale).common
 
 const offerKeys = ["accessibility", "design", "development"] as const
 // --- One per step in "Was danach passiert": reading, then the assessment
-const stepIcons = [ReadPersonallyIcon, RouteIcon]
+const stepIcons = [IconMailOpened, IconClipboardCheck]
 const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
 
 // --- Netlify Forms reads the form from the built HTML; the name ties the
@@ -84,10 +84,10 @@ const aiTagClasses =
     >
       <div slot="choices" class="ec-assistant-choices hidden flex-wrap justify-end gap-2">
         <button type="button" class="ec-choice" data-choice="yes">
-          {t.assistant.callbackYes}
+          <span class="block translate-y-px">{t.assistant.callbackYes}</span>
         </button>
         <button type="button" class="ec-choice" data-choice="no">
-          {t.assistant.callbackNo}
+          <span class="block translate-y-px">{t.assistant.callbackNo}</span>
         </button>
       </div>
     </AssistantChat>

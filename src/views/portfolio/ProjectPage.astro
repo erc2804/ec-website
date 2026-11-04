@@ -6,11 +6,13 @@
 // mockup and facts together are taller than a laptop window. The mockup's alt
 // text comes with the project.
 import { IconArrowLeft, IconWorld } from "@tabler/icons-astro"
+import { Picture } from "astro:assets"
 import ContactSection from "../../components/ContactSection.astro"
 import ExternalLinkButton from "../../components/ui/ExternalLinkButton.astro"
 import InlineText from "../../components/ui/InlineText.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
+import { projectMockup } from "../../data/projectMockup"
 import { localised, type Project } from "../../data/projects"
 import { localisedPath, useTranslations, type Locale } from "../../i18n"
 import { fill } from "../../i18n/fill"
@@ -96,11 +98,13 @@ const facts: { term: string; value: string }[] = [
         {
           project.image && (
             <div class="rounded-3xl bg-brand-green-low p-8">
-              <img
-                src={project.image.src}
+              <Picture
+                src={projectMockup(project.image.file)}
+                formats={["avif"]}
+                fallbackFormat="webp"
+                widths={[208, 416, 624]}
+                sizes="13rem"
                 alt={project.image.alt[currentLocale]}
-                width="1413"
-                height="2916"
                 class="mx-auto h-auto w-full max-w-[13rem] drop-shadow-xl"
               />
             </div>

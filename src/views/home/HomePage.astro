@@ -1,5 +1,8 @@
 ---
 import { IconArrowRight, IconChevronRight, IconExternalLink } from "@tabler/icons-astro"
+import { getImage } from "astro:assets"
+import heroLandscape from "../../assets/images/home/hero-landscape.png"
+import heroPortrait from "../../assets/images/home/hero-portrait.png"
 import ContactSection from "../../components/ContactSection.astro"
 import MouseChatBubble from "../../components/MouseChatBubble.astro"
 import RoleScene from "../../components/RoleScene.astro"
@@ -10,6 +13,7 @@ import Quote from "../../components/ui/Quote.astro"
 import ScrollCue from "../../components/ui/ScrollCue.astro"
 import Section from "../../components/ui/Section.astro"
 import { siteConfig } from "../../config/site"
+import { projectMockup } from "../../data/projectMockup"
 import { featuredProjects, localised } from "../../data/projects"
 import { localisedPath, useTranslations, type Locale, inquiryPath } from "../../i18n"
 import { offerSurfaceClasses } from "./offerSurfaceClasses"
@@ -22,6 +26,17 @@ const tBubble = t.chatBubble
 const linkedInUrl = siteConfig.profiles.find((profile) => profile.platform === "linkedin")!.url
 
 const offerKeys = ["accessibility", "design", "development"] as const
+
+// --- Two crops of the hero photo, one per screen width. <Picture> takes a single
+// source, so the sources are written by hand. Each crop is exported at about
+// the size it is shown: one file per format, no srcset.
+const [heroLandscapeAvif, heroLandscapeWebp, heroPortraitAvif, heroPortraitWebp] =
+  await Promise.all([
+    getImage({ src: heroLandscape, format: "avif" }),
+    getImage({ src: heroLandscape, format: "webp" }),
+    getImage({ src: heroPortrait, format: "avif" }),
+    getImage({ src: heroPortrait, format: "webp" }),
+  ])
 
 // --- Each offer surface quotes the tool of its subject instead of showing a
 // pictogram: an icon-only button that still announces its name, a selection frame
@@ -104,9 +119,11 @@ const offerKeys = ["accessibility", "design", "development"] as const
     </div>
     <!-- --- Photo at the right edge of the screen, never cropped (contain) -->
     <picture>
-      <source media="(min-width: 920px)" srcset="/images/home/hero-landscape.png" />
+      <source media="(min-width: 920px)" srcset={heroLandscapeAvif.src} type="image/avif" />
+      <source media="(min-width: 920px)" srcset={heroLandscapeWebp.src} type="image/webp" />
+      <source srcset={heroPortraitAvif.src} type="image/avif" />
       <img
-        src="/images/home/hero-portrait.png"
+        src={heroPortraitWebp.src}
         alt=""
         fetchpriority="high"
         class="ec-hero-photo absolute inset-0 z-10 size-full object-contain object-right-bottom min-[920px]:object-right"
@@ -327,7 +344,7 @@ const offerKeys = ["accessibility", "design", "development"] as const
             <ProjectCard
               href={localisedPath("portfolio", currentLocale, `/${project.slug}`)}
               label={localised(project.label, currentLocale)}
-              image={project.image?.src}
+              image={project.image && projectMockup(project.image.file)}
               summary={project.summary[currentLocale]}
             />
           </li>
@@ -349,81 +366,59 @@ const offerKeys = ["accessibility", "design", "development"] as const
 
 <script>
   // --- Desktop roles: the scene travels down to the role being read and
-  // settles beside it, changing into it on the way. The active role is the last one
-  // whose top has passed the middle of the viewport. Worked out from the
-  // positions on every frame of scrolling rather than from intersection
-  // events, so it is the same answer in both directions and at any speed.
+  // settles beside it, changing into it on the way (activeStep.ts says which
+  // role is being read).
   //
   // When the change starts is a share of the move: 0 runs both together, 0.7
   // lets the scene arrive first and turn as it lands. Move and change share
   // duration and curve (600ms, see RoleScene), so either reads as one motion.
+  import { watchActiveStep } from "../../components/activeStep"
+
   const scene = document.querySelector<HTMLElement>(".ec-roles-scene")
   const steps = [...document.querySelectorAll<HTMLElement>(".ec-roles-step")]
   const desktop = window.matchMedia("(width >= 64rem)")
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
   const moveDuration = 600
   const morphDelayShare = 0
-  let activeIndex = -1
   let morphTimeout = 0
 
-  const update = (isInstant = false) => {
-    if (!scene || !steps.length || !desktop.matches) return
+  if (scene) {
+    watchActiveStep(steps, desktop, (index, isInstant) => {
+      for (const [stepIndex, step] of steps.entries()) {
+        step.dataset.isActive = stepIndex === index ? "true" : "false"
+      }
 
-    const centre = window.innerHeight / 2
-    let index = 0
-    steps.forEach((step, stepIndex) => {
-      if (step.getBoundingClientRect().top <= centre) index = stepIndex
-    })
-    if (index === activeIndex && !isInstant) return
+      const offset = steps[index].getBoundingClientRect().top - steps[0].getBoundingClientRect().top
+      const role = steps[index].dataset.role ?? "1"
+      window.clearTimeout(morphTimeout)
 
-    activeIndex = index
-    for (const [stepIndex, step] of steps.entries()) {
-      step.dataset.isActive = stepIndex === index ? "true" : "false"
-    }
+      if (isInstant) {
+        // --- No travel on load and after a resize: the scene just is there
+        scene.style.transition = "none"
+        scene.style.translate = `0 ${offset}px`
+        scene.dataset.role = role
+        void scene.offsetHeight
+        scene.style.transition = ""
+        return
+      }
 
-    const offset = steps[index].getBoundingClientRect().top - steps[0].getBoundingClientRect().top
-    const role = steps[index].dataset.role ?? "1"
-    window.clearTimeout(morphTimeout)
-
-    if (isInstant) {
-      // --- No travel on load and after a resize: the scene just is there
-      scene.style.transition = "none"
       scene.style.translate = `0 ${offset}px`
-      scene.dataset.role = role
-      void scene.offsetHeight
-      scene.style.transition = ""
-      return
-    }
-
-    scene.style.translate = `0 ${offset}px`
-    // --- Under reduced motion the move is instant, so there is nothing to wait for
-    const delay = reducedMotion.matches ? 0 : moveDuration * morphDelayShare
-    morphTimeout = window.setTimeout(() => {
-      scene.dataset.role = role
-    }, delay)
-  }
-
-  let isFramePending = false
-  const requestUpdate = () => {
-    if (isFramePending) return
-    isFramePending = true
-    requestAnimationFrame(() => {
-      isFramePending = false
-      update()
+      // --- Under reduced motion the move is instant, so there is nothing to wait for
+      const delay = reducedMotion.matches ? 0 : moveDuration * morphDelayShare
+      morphTimeout = window.setTimeout(() => {
+        scene.dataset.role = role
+      }, delay)
     })
   }
-
-  update(true)
-  window.addEventListener("scroll", requestUpdate, { passive: true })
-  // --- Sizes change with the layout, so the position is measured afresh
-  window.addEventListener("resize", () => update(true), { passive: true })
 </script>
 
 <style>
   /* --- Desktop: a dot in the left column where the scene will land next to
      each role, in the scene's own colour, so the column is never empty. The
      scene is translucent and would show the dot through, so the dot of the
-     active role fades out while the scene sits on it. --- */
+     active role fades out while the scene sits on it. The scene travels for
+     600ms and is off a dot about halfway, so a dot fades back in only after
+     300ms; it fades out at once, before the scene arrives. --- */
   @media (width >= 64rem) {
     .ec-roles-step::before {
       content: "";
@@ -435,11 +430,12 @@ const offerKeys = ["accessibility", "design", "development"] as const
       translate: -50% -50%;
       border-radius: 50%;
       background: --alpha(var(--color-typo-min) / 10%);
-      transition: opacity 500ms;
+      transition: opacity 300ms ease 300ms;
     }
 
     .ec-roles-step[data-is-active="true"]::before {
       opacity: 0;
+      transition: opacity 200ms ease;
     }
   }
 

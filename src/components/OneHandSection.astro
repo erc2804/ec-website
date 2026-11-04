@@ -4,6 +4,8 @@
 // page: strong for the emphasis, a tinted box so it does not rest on colour
 // alone, regular weight because the font has no bold cut. Green on the blue
 // clears 4.9:1 even on the tint.
+import { Picture } from "astro:assets"
+import portrait from "../assets/images/ercancicek.jpg"
 import Section from "./ui/Section.astro"
 
 interface Props {
@@ -17,11 +19,13 @@ const { title, body, portraitAlt } = Astro.props
 
 <Section tone="dark">
   <div class="grid items-center gap-12 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-20">
-    <img
-      src="/images/ercancicek.jpg"
+    <Picture
+      src={portrait}
+      formats={["avif"]}
+      fallbackFormat="webp"
+      widths={[256, 512, portrait.width]}
+      sizes="(min-width: 768px) 16rem, 14rem"
       alt={portraitAlt}
-      width="573"
-      height="573"
       loading="lazy"
       class="aspect-square w-full max-w-56 ec-reveal rounded-full object-cover max-md:mx-auto md:max-w-64"
     />

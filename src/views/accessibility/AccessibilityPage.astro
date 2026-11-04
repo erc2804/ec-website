@@ -117,11 +117,13 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
        it. Below lg every step carries its own scene, already in its state. The visual "01" is hidden from screen readers, the list numbers them. -->
   <Section>
     <div class="ec-process grid gap-12 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-20">
-      <div class="lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:self-start">
+      <!-- --- Only the scene sticks; the heading and the lead scroll away, so
+           the column fits any viewport height -->
+      <div>
         <h2 class="ec-reveal text-heading-1 text-balance">{t.process.title}</h2>
         <p class="mt-5 ec-reveal text-lead text-typo-medium ec-reveal-late">{t.process.lead}</p>
         <ProcessScene
-          class="ec-process-scene mt-10 hidden h-80 rounded-3xl bg-gray-min shadow-sm lg:block"
+          class="ec-process-scene mt-10 hidden h-80 rounded-3xl bg-gray-min shadow-sm lg:sticky lg:top-[calc(var(--spacing-header)+2rem)] lg:block"
         />
       </div>
 
@@ -167,30 +169,18 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
 </main>
 
 <script>
-  // --- The step whose top has passed the middle of the viewport is the one
-  // being read: the frame moves onto it. Worked out per frame from positions,
-  // like the roles on the start page, so it is the same answer scrolling up or
-  // down.
+  // --- The step being read (activeStep.ts, like the roles on the start page):
+  // the frame moves onto it and the scene changes into it. On load and after a
+  // resize the frame is just there instead of gliding.
+  import { watchActiveStep } from "../../components/activeStep"
+
   const process = document.querySelector<HTMLElement>(".ec-process")
   if (process) {
     const steps = [...process.querySelectorAll<HTMLElement>(".ec-process-step")]
     const cursor = process.querySelector<HTMLElement>(".ec-process-cursor")!
     const scene = process.querySelector<HTMLElement>(".ec-process-scene")!
-    const desktop = window.matchMedia("(width >= 64rem)")
-    let activeIndex = -1
-    let isTicking = false
 
-    const update = (isInstant = false) => {
-      isTicking = false
-      if (!desktop.matches) return
-      const centre = window.innerHeight / 2
-      let index = 0
-      steps.forEach((step, stepIndex) => {
-        if (step.getBoundingClientRect().top <= centre) index = stepIndex
-      })
-      if (index === activeIndex && !isInstant) return
-      activeIndex = index
-
+    watchActiveStep(steps, window.matchMedia("(width >= 64rem)"), (index, isInstant) => {
       steps.forEach((step, stepIndex) => {
         step.dataset.isActive = String(stepIndex === index)
       })
@@ -200,19 +190,7 @@ const serviceIcons = [IconZoomCheck, IconTool, IconSchool]
       cursor.style.transform = `translateY(${step.offsetTop}px)`
       cursor.style.height = `${step.offsetHeight}px`
       if (isInstant) requestAnimationFrame(() => delete process.dataset.isPlacing)
-    }
-
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (isTicking) return
-        isTicking = true
-        requestAnimationFrame(() => update())
-      },
-      { passive: true }
-    )
-    window.addEventListener("resize", () => update(true))
-    update(true)
+    })
   }
 </script>
 

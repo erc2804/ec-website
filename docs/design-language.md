@@ -34,8 +34,14 @@ has it.
 - Below `lg` the process scenes stand still: every step carries its own picture, already in
   its state. The tool quotes in the heroes play at every width.
 - A process section only where the steps say something the page does not say elsewhere.
-  The development page has none: how I work with AI next to vibe coding
-  (`AiWorkflowSection`) says how the work goes, moment by moment.
+  The development page has no process; it tells why vibe coding alone is not enough on a
+  phone (`VibeCodingSection`, `VibeStage`): the steps on the left quote the real prompts,
+  the phone on the right fills, ships, breaks in everyday use and holds once someone wrote
+  what cannot be seen. The phone is the frame of the portfolio's mockups; its changes fade
+  in place, nothing pushes the list around. Deliberately not the
+  scenes' picture language: each offer page's story looks its own way. Two columns only
+  from the nav breakpoint, where the header is one row. Below it every step is a card like
+  the project cards, its phone whole and centred on a green panel, so phone and text visibly belong together.
 
 ## Decoration is never a control
 
@@ -54,8 +60,9 @@ with a badge for what he is doing (magnifier, brush, code). Pieces move between 
 
 ## Examples
 
-A demo product is generic and fictional, never a bank or an insurer. The one real
-exception is the design page's before/after: the top of my own home page, once as an AI
+A demo product is fictional, and as concrete as the argument needs: a banking app where
+a real EU rule carries the example, a generic product where the rule does not matter. The
+one real example is the design page's before/after: the top of my own home page, once as an AI
 model built it from the content alone (model, date and prompt shown under it), once as
 designed. A "designed" example must not look like the AI version next to it: no gradient
 hero, no three icon cards, no two buttons side by side.

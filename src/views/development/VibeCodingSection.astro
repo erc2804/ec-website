@@ -1,52 +1,136 @@
 ---
-// --- Why vibe coding alone is not enough, written for people who don't write
-// code: three cards, each one thing a prototype often lacks. The upper line
-// says how it tends to go, the line with the filled dot what a product needs;
-// the dot is the one of the design page's states demo for the designed side.
-// Only the security card holds a figure, and its source is linked in the text.
-import { IconAlertTriangle, IconLock, IconTrendingUp } from "@tabler/icons-astro"
-import InlineText from "../../components/ui/InlineText.astro"
+// --- Why vibe coding alone is not enough: five moments around one small
+// feature, told on a phone. Where the client prompted, the moment quotes the
+// prompt under its text. From the nav breakpoint, where the header is one
+// row, the moments stand on the left, the one being read on a white surface,
+// and the phone (VibeStage) sticks on the right and changes into it. Below
+// nav every moment is a card of its own, built like the project cards: its
+// phone whole and centred on a green panel, above the text on a phone and
+// beside it on a tablet. The card holds phone and text together, so it
+// is clear which belongs to which. Everything that matters is text in the
+// moments; the phone is decoration.
 import Section from "../../components/ui/Section.astro"
+import { surfaceOnGroundClasses } from "../../components/ui/surfaceOnGround"
 import { useTranslations } from "../../i18n"
+import VibeStage from "./VibeStage.astro"
 
 const t = useTranslations(Astro.currentLocale).development.vibeCoding
-const cardIcons = { data: IconLock, errors: IconAlertTriangle, growth: IconTrendingUp }
 ---
 
 <Section>
   <h2 class="ec-reveal text-heading-1 text-balance">{t.title}</h2>
   <p class="mt-5 max-w-[56ch] ec-reveal text-lead text-typo-medium ec-reveal-late">{t.lead}</p>
 
-  <ul role="list" class="mt-12 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-3">
-    {
-      t.cards.map((card) => {
-        const CardIcon = cardIcons[card.key as keyof typeof cardIcons]
-        return (
-          <li class="flex flex-col gap-4 rounded-3xl bg-gray-min p-7 shadow-sm md:p-8">
-            <span
-              class="grid size-12 place-items-center rounded-full bg-brand-green-low/70 text-brand-blue"
-              aria-hidden="true"
-            >
-              <CardIcon class="size-6" />
-            </span>
-            <h3 class="text-heading-2">{card.title}</h3>
-            <p class="text-typo-medium">
-              <InlineText text={card.prototype} />
-            </p>
-            <p class="mt-auto flex gap-3 border-t border-gray-low pt-4 text-typo-high">
+  <div
+    class="ec-vibe mt-12 grid ec-reveal gap-10 ec-reveal-late nav:mt-20 nav:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] nav:gap-16"
+  >
+    <!-- --- Room below the last moment, so the phone still stands beside it
+         instead of leaving with the end of the column -->
+    <ol role="list" class="flex flex-col gap-6 md:gap-8 nav:gap-4 nav:pb-20">
+      {
+        t.steps.map((step, index) => (
+          <li
+            class:list={[
+              "ec-vibe-step group/step grid overflow-hidden rounded-2xl transition-[background-color,box-shadow] duration-300 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]",
+              surfaceOnGroundClasses.page,
+              "nav:flex nav:flex-col nav:justify-center nav:overflow-visible nav:bg-transparent nav:p-8 nav:shadow-none nav:data-[is-active=true]:bg-gray-min nav:data-[is-active=true]:shadow-sm",
+            ]}
+            data-is-active={index === 0 ? "true" : "false"}
+          >
+            <div class="ec-vibe-text p-6 md:self-center md:p-8 nav:p-0">
               <span
-                class="mt-[0.45em] size-2.5 shrink-0 rounded-full bg-brand-green-high"
+                class="text-sm font-bold tracking-[0.12em] text-typo-medium transition-colors duration-300 nav:group-data-[is-active=true]/step:text-brand-green-deep"
                 aria-hidden="true"
-              />
-              {card.product}
-            </p>
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 class="mt-1 text-heading-2 text-balance">{step.title}</h3>
+              <p class="mt-3 max-w-[46ch] text-typo-medium">{step.text}</p>
+              {step.prompt && (
+                /* --- The prompt as typed: a terminal sign before each line, a
+                   plus before the lines experience adds, so the difference
+                   does not rest on the green alone. Screen readers hear it
+                   as a word, since the signs are hidden from them. */
+                <>
+                  <p class="mt-5 text-sm text-typo-medium">
+                    {step.prompt.lines.length + (step.prompt.addedLines?.length ?? 0) > 1
+                      ? t.promptLabel.other
+                      : t.promptLabel.one}
+                    :
+                  </p>
+                  <ul role="list" class="mt-2 flex max-w-[46ch] flex-col gap-1.5 font-mono text-sm">
+                    {step.prompt.lines.map((line) => (
+                      <li class="flex gap-2.5 text-typo-high">
+                        <span class="shrink-0 text-brand-green-deep" aria-hidden="true">
+                          ›
+                        </span>
+                        {line}
+                      </li>
+                    ))}
+                    {step.prompt.addedLines?.map((line) => (
+                      <li class="flex gap-2.5 text-brand-green-deep">
+                        <span class="shrink-0" aria-hidden="true">
+                          +
+                        </span>
+                        <span>
+                          <span class="sr-only">{t.addedLabel} </span>
+                          {line}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+            <VibeStage
+              step={(index + 1) as 1 | 2 | 3 | 4 | 5}
+              isCompact
+              class="order-first items-center bg-brand-green-low p-8 md:order-none nav:hidden"
+            />
           </li>
-        )
-      })
-    }
-  </ul>
+        ))
+      }
+    </ol>
 
-  <p class="mt-8 max-w-[72ch] ec-reveal text-sm text-typo-medium">
-    <InlineText text={t.sources} />
-  </p>
+    <div class="hidden nav:block">
+      <VibeStage class="ec-vibe-stage nav:sticky nav:top-[calc(var(--spacing-header)+2rem)]" />
+    </div>
+  </div>
 </Section>
+
+<script>
+  // --- The moment being read is the last one whose text has passed the
+  // middle of the viewport (activeStep.ts). The text, not the card: the card
+  // is taller than its text and centres it, so the card's top would switch
+  // too early. The card lights up and the phone changes into it. On load and
+  // after a resize the phone is just there instead of playing. From the nav
+  // breakpoint only; below it every moment has its own phone.
+  import { watchActiveStep } from "../../components/activeStep"
+
+  for (const section of document.querySelectorAll<HTMLElement>(".ec-vibe")) {
+    const steps = [...section.querySelectorAll<HTMLElement>(".ec-vibe-step")]
+    const texts = steps.map((step) => step.querySelector<HTMLElement>(".ec-vibe-text")!)
+    const stage = section.querySelector<HTMLElement>(".ec-vibe-stage")!
+
+    watchActiveStep(texts, window.matchMedia("(width >= 72rem)"), (index, isInstant) => {
+      for (const [stepIndex, step] of steps.entries()) {
+        step.dataset.isActive = String(stepIndex === index)
+      }
+      if (isInstant) section.dataset.isPlacing = "true"
+      stage.dataset.step = String(index + 1)
+      if (isInstant) {
+        void stage.offsetHeight
+        requestAnimationFrame(() => delete section.dataset.isPlacing)
+      }
+    })
+  }
+</script>
+
+<style>
+  /* --- Placed on load or after a resize: no transition anywhere on the stage.
+     The attribute sits on this component's own wrapper, so the scoped
+     selector matches; the stage's children are another component's. --- */
+  .ec-vibe[data-is-placing="true"] :global(*) {
+    transition: none;
+  }
+</style>

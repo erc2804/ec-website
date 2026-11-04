@@ -57,6 +57,8 @@ that is the cause, not the code.
 
 ```
 src/
+  assets/       Photos, served through astro:assets as AVIF with WebP fallback.
+                public/ keeps only files that need a fixed URL (share images, logo)
   layouts/      BaseLayout — document shell, language, global styles
   components/   Shared sections (Services, OneHand, Faq, Contact, ProcessSnap) and
     ui/         atomic building blocks that know nothing about any page

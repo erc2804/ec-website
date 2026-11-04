@@ -17,10 +17,12 @@ export type Project = {
   isFeatured: boolean
   /** --- The live product, if there is one to link to --- */
   url?: string
-  /** --- The phone mockup. alt says what the phone shows: the product, only the
-   * logo, or a blurred sketch when the client stays unnamed. The card shows it
-   * without alt, next to its own text --- */
-  image?: { src: string; alt: Localised<string> }
+  /** --- The phone mockup, a file name in src/assets/images/projects resolved by
+   * projectMockup.ts. A name, not an import: the about chat's Netlify function
+   * reads this file, and its bundler loads no images. alt says what the phone
+   * shows: the product, only the logo, or a blurred sketch when the client stays
+   * unnamed. The card shows it without alt, next to its own text --- */
+  image?: { file: string; alt: Localised<string> }
   /** --- What I did there, in the order the card lists them --- */
   services: Service[]
   period: Localised<string>
@@ -59,7 +61,7 @@ export const projects: Project[] = [
     label: { de: "Industrial-AI-Startup", en: "Industrial AI startup" },
     isFeatured: false,
     image: {
-      src: "/images/projects/industrial-ai.png",
+      file: "industrial-ai.png",
       alt: confidentialImageAlt,
     },
     services: ["development", "design"],
@@ -109,7 +111,7 @@ export const projects: Project[] = [
     label: { de: "HR-Tech-Startup", en: "HR tech startup" },
     isFeatured: true,
     image: {
-      src: "/images/projects/hr-tech.png",
+      file: "hr-tech.png",
       alt: confidentialImageAlt,
     },
     services: ["development", "design"],
@@ -161,7 +163,7 @@ export const projects: Project[] = [
     isFeatured: true,
     url: "https://konux.com/",
     image: {
-      src: "/images/projects/konux.png",
+      file: "konux.png",
       alt: {
         de: "Das Logo von KONUX auf einem Handy.",
         en: "The KONUX logo on a phone.",
@@ -212,7 +214,7 @@ export const projects: Project[] = [
     label: { de: "Banken und Behörden", en: "Banks and public bodies" },
     isFeatured: true,
     image: {
-      src: "/images/projects/accessibility-audits.png",
+      file: "accessibility-audits.png",
       alt: confidentialImageAlt,
     },
     services: ["accessibility"],
@@ -259,7 +261,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://www.curanto.de/",
     image: {
-      src: "/images/projects/curanto.png",
+      file: "curanto.png",
       alt: {
         de: "Die Startseite von Curanto auf dem Handy: Container bestellen in drei Schritten, Wo, Was und Wann.",
         en: "Curanto's home page on a phone: ordering a container in three steps, where, what and when.",
@@ -313,7 +315,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://www.hit.de/",
     image: {
-      src: "/images/projects/hit.png",
+      file: "hit.png",
       alt: {
         de: "Die Wochenangebote von HIT auf dem Handy, als Produktkarten mit Aktionspreis.",
         en: "HIT's weekly offers on a phone, as product cards with sale prices.",
@@ -370,7 +372,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://www.pyur.com/",
     image: {
-      src: "/images/projects/pyur.png",
+      file: "pyur.png",
       alt: {
         de: "Die Startseite von PŸUR auf dem Handy: ein Internet-Tarif mit großem Preis und einem WLAN-Router.",
         en: "PŸUR's home page on a phone: an internet plan with a large price and a Wi-Fi router.",
@@ -413,7 +415,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://www.welliba.com/",
     image: {
-      src: "/images/projects/welliba_app.png",
+      file: "welliba_app.png",
       alt: {
         de: "Der Startbildschirm der Welliba-App: der Welliba-Index als Zahl und auf einer Skala, darunter Aktivitäten.",
         en: "The Welliba app's home screen: the Welliba Index as a number and on a scale, activities below.",
@@ -464,7 +466,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://mueller-oswald.shop/",
     image: {
-      src: "/images/projects/pvoswald.png",
+      file: "pvoswald.png",
       alt: {
         de: "Der Webshop des Weinguts Müller-Oswald auf dem Handy, mit einem Banner für Wein-Gutscheine.",
         en: "The Müller-Oswald winery's web shop on a phone, with a banner for wine vouchers.",
@@ -509,7 +511,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://kindeskinder.biz/",
     image: {
-      src: "/images/projects/kindeskinder.png",
+      file: "kindeskinder.png",
       alt: {
         de: "Die Startseite von kindeskinder auf dem Handy, mit einer Bildergalerie der Gewürzmischungen.",
         en: "The kindeskinder home page on a phone, with an image carousel of the spice blends.",
@@ -554,7 +556,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://db-engineering-consulting.com/de/news/vorausschauende-instandhaltung/",
     image: {
-      src: "/images/projects/db.png",
+      file: "db.png",
       alt: {
         de: "Das Logo der Deutschen Bahn auf einem Handy.",
         en: "The Deutsche Bahn logo on a phone.",
@@ -603,7 +605,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://edp.eckelmann.de/edp/maa/object?id=14462",
     image: {
-      src: "/images/projects/eckelmann.png",
+      file: "eckelmann.png",
       alt: {
         de: "Das Logo von Eckelmann auf einem Handy.",
         en: "The Eckelmann logo on a phone.",
@@ -646,7 +648,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://www.pgcareers.com/global/en/interactive-assessments",
     image: {
-      src: "/images/projects/pg.png",
+      file: "pg.png",
       alt: {
         de: "Das Logo von P&G auf einem Handy.",
         en: "The P&G logo on a phone.",
@@ -693,7 +695,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://assessment.aon.com/",
     image: {
-      src: "/images/projects/aon.png",
+      file: "aon.png",
       alt: {
         de: "Das Logo von Aon auf einem Handy.",
         en: "The Aon logo on a phone.",
@@ -738,7 +740,7 @@ export const projects: Project[] = [
     isFeatured: false,
     url: "https://apps.apple.com/de/app/casualvocab-widget-japanese/id1622203836?l=en",
     image: {
-      src: "/images/projects/casualvocab.png",
+      file: "casualvocab.png",
       alt: {
         de: "Die Übungsseite von CasualVocab: Ein Ring zeigt, dass 24 von 27 Wörtern gelernt sind.",
         en: "CasualVocab's practice screen: a ring shows 24 of 27 words learned.",

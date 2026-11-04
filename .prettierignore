@@ -1,6 +1,6 @@
 .netlify
 
-# --- Mel-Menu, the 2018 game page, taken over as it was; not this code base
+# --- Mel-Menu, the 2016 game page, taken over as it was; not this code base
 public/mel-menu.html
 public/melContent
 public/melScripts

@@ -1,0 +1,498 @@
+---
+// --- The stage of "Why vibe coding alone is not enough": a phone with one
+// small feature on it. data-step on the root (1 to 5) sets what the screen
+// shows; the prompts stand in the steps' text.
+//
+// 1 Prompt:      three invoices of test data, names and buttons.
+// 2 Live:        amount and due date appear under every name.
+// 3 Bug reports: everyday use: a count in the thousands and the rows behind
+//                it, a long name running into its button, a foreign
+//                currency.
+// 4 Bug fixing:  the long name is cut off hard, a failed approval lies
+//                over the list.
+// 5 Experience:  a search in place of the count, which moves into a bar of
+//                pages at the bottom; every button under its text, so a long
+//                name has two lines; the amount with its currency.
+//
+// Every piece has its place from the start, so nothing pushes the list
+// around: a change is a fade in place. What leaves fades out first, then what
+// comes fades in, so two texts never lie on top of each other. The phone is
+// the frame of the portfolio's mockups. Decoration: the steps say all of this
+// in text, so it is hidden from assistive technology. Under reduced motion
+// every state is just there.
+import { IconSearch } from "@tabler/icons-astro"
+import { useTranslations } from "../../i18n"
+
+interface Props {
+  step?: 1 | 2 | 3 | 4 | 5
+  /** --- The phone smaller, for the cards below the nav breakpoint --- */
+  isCompact?: boolean
+  class?: string
+}
+
+const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
+const { app } = useTranslations(Astro.currentLocale).development.vibeCoding
+// --- The list built with experience: every name in full, every amount in
+// its currency
+const roomyInvoices = [
+  ...app.invoices.map((invoice) => ({
+    name: invoice.supplierLong ?? invoice.supplier,
+    amount: invoice.amountFixed ?? invoice.amount,
+    dueLong: invoice.dueLong,
+  })),
+  ...app.moreInvoices.map(({ supplier, amount, dueLong }) => ({ name: supplier, amount, dueLong })),
+]
+---
+
+<div
+  class:list={["ec-stage flex justify-center", additionalClasses]}
+  data-step={step}
+  aria-hidden="true"
+  inert
+>
+  <div class:list={["ec-phone shrink-0", isCompact && "ec-phone-compact drop-shadow-xl"]}>
+    <div class="ec-screen">
+      <span class="ec-status">
+        <span class="ec-time" data-current-time>9:41</span>
+      </span>
+      <span class="ec-island"></span>
+
+      <div class="ec-app">
+        <p class="ec-title">{app.title}</p>
+
+        <!-- --- One slot under the title: empty, then the count, then the
+             search; the count moves into the pages at the bottom -->
+        <div class="ec-stack ec-top">
+          <p class="ec-swap ec-count" data-shown="3 4">{app.count}</p>
+          <span class="ec-swap ec-search" data-shown="5">
+            <IconSearch class="size-[1.1em]" />
+            {app.search}
+          </span>
+        </div>
+
+        <!-- --- Two lists in one place: the one vibe coding built, row by
+             row, and the one built with experience, where the button moves
+             under the text and long names get two lines -->
+        <div class="ec-stack ec-lists">
+          <ul class="ec-swap" data-shown="1 2 3 4">
+            {
+              app.invoices.map((invoice) => (
+                <li class="ec-row">
+                  <span class="ec-row-text">
+                    {invoice.supplierLong ? (
+                      /* --- The name everyday use breaks: short, then long and
+                         running into the button, then cut off hard by a fix */
+                      <span class="ec-stack">
+                        <b class="ec-swap ec-name" data-shown="1 2">
+                          {invoice.supplier}
+                        </b>
+                        <b class="ec-swap ec-name ec-name-overflowing" data-shown="3">
+                          {invoice.supplierLong}
+                        </b>
+                        <b class="ec-swap ec-name" data-shown="4">
+                          {invoice.supplierLong}
+                        </b>
+                      </span>
+                    ) : (
+                      <b class="ec-name">{invoice.supplier}</b>
+                    )}
+                    <span class="ec-swap ec-details" data-shown="2 3 4">
+                      {invoice.amountForeign ? (
+                        /* --- The amount everyday use breaks: euro, then a
+                           foreign currency raw */
+                        <span class="ec-stack">
+                          <span class="ec-swap" data-shown="1 2">
+                            {invoice.amount}
+                          </span>
+                          <span class="ec-swap" data-shown="3 4">
+                            {invoice.amountForeign}
+                          </span>
+                        </span>
+                      ) : (
+                        invoice.amount
+                      )}{" "}
+                      · {invoice.due}
+                    </span>
+                  </span>
+                  <span class="ec-button">{app.approve}</span>
+                </li>
+              ))
+            }
+            {
+              app.moreInvoices.map((invoice, index) => (
+                <li
+                  class="ec-swap ec-row"
+                  data-shown="3 4"
+                  style={`--ec-delay: ${(index + 1) * 70}ms`}
+                >
+                  <span class="ec-row-text">
+                    <b class="ec-name">{invoice.supplier}</b>
+                    <span class="ec-details">
+                      {invoice.amount} · {invoice.due}
+                    </span>
+                  </span>
+                  <span class="ec-button">{app.approve}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <ul class="ec-swap ec-list-scrolling" data-shown="5">
+            {
+              roomyInvoices.map((invoice) => (
+                <li class="ec-row ec-row-roomy">
+                  <b class="ec-name-wrapping">{invoice.name}</b>
+                  <span class="ec-amount">{invoice.amount}</span>
+                  <span class="ec-due">
+                    {app.dueLabel} {invoice.dueLong}
+                  </span>
+                  <span class="ec-button ec-button-quiet">{app.approve}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <span class="ec-swap ec-range" data-shown="5">{app.range}</span>
+
+      <span class="ec-swap ec-toast" data-shown="4">{app.failed}</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- The visitor's own time in the status bar, set once on load: a clock
+  // that keeps ticking would be content that updates on its own (WCAG 2.2.2).
+  // Without the script it stays 9:41, the time of Apple's mockups. Like a
+  // phone's status bar: hours and minutes, no AM or PM.
+  const timeParts = new Intl.DateTimeFormat(document.documentElement.lang || undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  }).formatToParts(new Date())
+  const time = timeParts
+    .filter((part) => part.type !== "dayPeriod")
+    .map((part) => part.value)
+    .join("")
+    .trim()
+
+  for (const element of document.querySelectorAll<HTMLElement>("[data-current-time]")) {
+    element.textContent = time
+  }
+</script>
+
+<style>
+  /* --- The phone of the portfolio's mockups: a black bezel, round it a
+     light metal band with a dark hairline outside and a grey reflection
+     inside, the black camera pill. Measures from the Figma frame (173px
+     wide), in em, so the compact phone scales with its font size. --- */
+  .ec-phone {
+    --ec-phone-radius: 2.46em;
+    --ec-bezel: 0.645em;
+    width: 16.5em;
+    aspect-ratio: 173 / 357;
+    border: 0.06em solid #b3b3b3;
+    border-radius: var(--ec-phone-radius);
+    background: #000;
+    padding: var(--ec-bezel);
+    font-size: 1rem;
+    box-shadow:
+      inset 0 0 0 0.15em #f0f2f1,
+      inset 0 0 0 0.27em #000,
+      inset 0 0 0 0.29em rgb(100 100 100 / 0.8);
+  }
+
+  /* --- Beside the steps it sticks under the header, so on a low window
+     (a laptop with its browser bars) it narrows, and on a lower one it
+     shrinks as a whole, to stay whole --- */
+  @media (width >= 72rem) and (height < 47rem) {
+    .ec-phone {
+      width: 15em;
+    }
+  }
+
+  @media (width >= 72rem) and (height < 44rem) {
+    .ec-phone {
+      font-size: 0.86rem;
+    }
+  }
+
+  .ec-phone-compact {
+    font-size: 0.85rem;
+  }
+
+  .ec-screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: calc(var(--ec-phone-radius) - var(--ec-bezel));
+    background: var(--color-gray-min);
+    color: var(--color-typo-high);
+  }
+
+  /* --- The time left of the pill, centred on its height. The status icons
+     stay out: at this size they only blur. --- */
+  .ec-status {
+    position: absolute;
+    top: 0.47em;
+    left: 1.79em;
+    display: flex;
+    height: 1.27em;
+    align-items: center;
+    color: #000;
+  }
+
+  .ec-time {
+    font-size: 0.65em;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .ec-island {
+    position: absolute;
+    top: 0.47em;
+    left: 50%;
+    width: 4.34em;
+    height: 1.27em;
+    translate: -50% 0;
+    border-radius: 9999px;
+    background: #000;
+  }
+
+  /* --- The camera lens at the right end of the pill --- */
+  .ec-island::after {
+    position: absolute;
+    top: 50%;
+    right: 0.33em;
+    width: 0.6em;
+    height: 0.6em;
+    translate: 0 -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #2a2d3a, #111 70%);
+    content: "";
+  }
+
+  /* --- The screen's content is set smaller; the status bar keeps the
+     phone's measures --- */
+  .ec-app,
+  .ec-toast {
+    font-size: 0.8em;
+  }
+
+  .ec-app {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    padding: 3.4em 1em 0;
+  }
+
+  .ec-title {
+    font-size: 1.7em;
+    line-height: 1.2;
+  }
+
+  /* --- Pieces that take turns in one place lie on top of each other --- */
+  .ec-stack {
+    display: grid;
+  }
+
+  .ec-stack > * {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  /* --- The amounts take turns inside the line, before the due date --- */
+  .ec-details .ec-stack {
+    display: inline-grid;
+    vertical-align: bottom;
+  }
+
+  .ec-top {
+    height: 2.4em;
+    margin-top: 0.5em;
+  }
+
+  .ec-count {
+    color: var(--color-typo-medium);
+  }
+
+  .ec-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    border: 0.14em solid var(--color-gray-low);
+    border-radius: 9999px;
+    padding-inline: 0.9em;
+    color: var(--color-typo-placeholder);
+  }
+
+  /* --- The lists take the rest of the screen and end at its bottom --- */
+  .ec-lists {
+    min-height: 0;
+    flex: 1;
+    grid-template-rows: minmax(0, 1fr);
+    margin-top: 0.6em;
+  }
+
+  .ec-lists > * {
+    overflow: hidden;
+  }
+
+  /* --- Built with experience the list reads as one that scrolls: it fades
+     out above the bar of pages, so nothing lies under the bar --- */
+  .ec-list-scrolling {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 8em), transparent calc(100% - 4em));
+  }
+
+  /* --- A row: name and details left, the button right, a thin line under
+     it. The list runs on past the bottom of the screen. --- */
+  .ec-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    border-bottom: 1px solid var(--color-gray-low);
+    padding-block: 0.9em;
+  }
+
+  .ec-row-text {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    transition: translate 600ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* --- Before the details arrive the name sits half their line lower, on
+     the button's middle, and rises as they fade in --- */
+  .ec-stage[data-step="1"] .ec-row-text {
+    translate: 0 0.68em;
+  }
+
+  .ec-name {
+    display: block;
+    overflow: hidden;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* --- In step 4 the long name runs out of its cell and under the button --- */
+  .ec-name-overflowing {
+    overflow: visible;
+  }
+
+  /* --- Built with experience: the name free to take two lines, the amount
+     on the right beside it, the due date written out under both, the
+     button last on the right and quiet --- */
+  .ec-row-roomy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.25em 0.8em;
+  }
+
+  .ec-name-wrapping {
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .ec-amount {
+    line-height: 1.3;
+  }
+
+  .ec-due {
+    grid-column: 1 / -1;
+    font-size: 0.9em;
+    color: var(--color-typo-medium);
+  }
+
+  /* --- The button last, on the right and quiet. Two classes, so it
+     outranks the plain button below. --- */
+  .ec-button.ec-button-quiet {
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: 0.2em;
+    border-width: 1px;
+    font-size: 0.9em;
+    font-weight: 400;
+  }
+
+  .ec-details {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.8em;
+    color: var(--color-typo-medium);
+  }
+
+  /* --- The button: a wireframe pill, like the rest of the app --- */
+  .ec-button {
+    flex-shrink: 0;
+    border: 0.12em solid var(--color-gray-medium);
+    border-radius: 9999px;
+    padding: 0.25em 0.55em;
+    color: var(--color-typo-high);
+    font-weight: 700;
+  }
+
+  /* --- The pages: a bar over the bottom of the list, as an app pins it.
+     No line of its own: its top meets the line under a row. --- */
+  .ec-range {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--color-gray-min);
+    padding: 0.8em 1.2em 1.6em;
+    color: var(--color-typo-medium);
+    font-size: 0.8em;
+    text-align: center;
+  }
+
+  /* --- The failed approval: a message over the bottom of the screen --- */
+  .ec-toast {
+    position: absolute;
+    right: 1em;
+    bottom: 1.6em;
+    left: 1em;
+    border-radius: 0.8em;
+    background: var(--color-status-error-bg);
+    padding: 0.7em 0.9em;
+    color: var(--color-status-error-text);
+    line-height: 1.4;
+  }
+
+  /* --- A piece shown in the steps listed in data-shown. Leaving is short
+     and starts at once; arriving waits for it, so the two never overlap.
+     The curve is the scenes' one, so all pages move alike. --- */
+  .ec-swap {
+    --ec-rise: 0.3em;
+    opacity: 0;
+    translate: 0 var(--ec-rise);
+    transition-property: opacity, translate;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .ec-toast {
+    --ec-rise: 1.5em;
+  }
+
+  .ec-stage[data-step="1"] [data-shown~="1"],
+  .ec-stage[data-step="2"] [data-shown~="2"],
+  .ec-stage[data-step="3"] [data-shown~="3"],
+  .ec-stage[data-step="4"] [data-shown~="4"],
+  .ec-stage[data-step="5"] [data-shown~="5"] {
+    opacity: 1;
+    translate: 0 0;
+    transition-duration: 450ms;
+    transition-delay: calc(200ms + var(--ec-delay, 0ms));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ec-swap,
+    .ec-row-text {
+      transition: none;
+    }
+  }
+</style>

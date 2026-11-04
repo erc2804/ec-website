@@ -14,7 +14,6 @@ import {
   IconArrowRight,
   IconCheck,
   IconChevronRight,
-  IconEyeOff,
   IconInfoCircle,
   IconShieldLock,
   IconVolume,
@@ -49,34 +48,13 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     <!-- --- How to use the demo: a different job from the lead, so smaller and apart -->
     <p class="mt-4 max-w-[56ch] ec-reveal text-sm text-typo-medium ec-reveal-late">
       {t.instruction}
-      <span class="max-lg:hidden">{" "}{t.instructionCurtain}</span>
     </p>
 
-    <!-- --- One grid, arranged in ec-demo-layout below. DOM order: curtain,
-         picture, controls, then the panel they change, so a screen reader reaches
-         the result right after the button. -->
-    <div class="ec-demo-layout mt-12 ec-reveal ec-reveal-late" data-is-blind="false">
-      <!-- --- Desktop only: on a phone the curtain would black out the one
-           picture the buttons are about -->
-      <div class="ec-demo-settings hidden lg:mt-10 lg:block lg:pt-8">
-        <button
-          type="button"
-          role="switch"
-          aria-checked="false"
-          class="ec-demo-blind group inline-flex min-h-11 items-center gap-3 text-typo-high"
-        >
-          {t.blind}
-          <span
-            class="relative h-7 w-12 rounded-full border-2 border-typo-medium transition-colors duration-200 group-aria-checked:border-brand-blue group-aria-checked:bg-brand-blue"
-            aria-hidden="true"
-          >
-            <span
-              class="absolute top-1 left-1 size-4 rounded-full bg-typo-medium transition-[translate,background-color] duration-200 group-aria-checked:translate-x-5 group-aria-checked:bg-gray-min"
-            ></span>
-          </span>
-        </button>
-      </div>
-
+    <!-- --- One grid, arranged in ec-demo-layout below. DOM order: picture,
+         controls, then the panel they change. A screen reader
+         reaches the result right after the button, and the focus order follows
+         the layout at every width (WCAG 2.4.3, technique C27). -->
+    <div class="ec-demo-layout mt-12 ec-reveal ec-reveal-late">
       <!-- --- The picture: nothing in it is focusable, so aria-hidden is
            enough. A click on an element selects it (see the script). -->
       <div class="ec-demo-stage relative" aria-hidden="true">
@@ -126,25 +104,16 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
         <span class="ec-vo-cursor"></span>
       </div>
 
-      <div class="ec-curtain" aria-hidden="true">
-        <div class="flex flex-col items-center gap-4 text-center">
-          <IconEyeOff class="size-8 text-brand-green-medium" />
-          <p class="max-w-[18rem] text-lead text-typo-min">{t.curtainText}</p>
-        </div>
-      </div>
-
       <!-- --- Phones: buttons and the pill under them form one group. Once the
            picture is a third in view, it docks to the bottom of the screen,
            each part a floating island with the shadow of the header; scrolled
            down, it rests under the picture. The pill never covers the buttons
            and nothing appears or disappears, so the focus order stays the same.
-           Desktop: the group dissolves, the buttons sit in the row below the
-           rule and the pill is not needed. -->
+           Desktop: the group dissolves, the buttons sit under the picture like
+           the keys under a screen, and the pill is not needed. -->
       <div class="ec-demo-controls" data-is-docked="false">
-        <div class="ec-demo-nav flex items-center justify-center gap-3 lg:mt-10 lg:pt-8">
-          <!-- --- The quiet partner of "Next": the grey button variant, not the
-             secondary one, whose green text does not reach 4.5:1 yet (see
-             docs/open-points.md). -->
+        <div class="ec-demo-nav flex items-center justify-center gap-3 lg:mt-6">
+          <!-- --- The quiet partner of "Next": the grey button variant -->
           <Button type="button" variant="quiet" class="ec-demo-previous">
             <IconArrowLeft slot="icon-start" class="size-5" />
             {t.previous}
@@ -214,21 +183,19 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
         </div>
 
         <!-- --- The why is extra reading, so it opens in a dialog: unfolding it
-             here would push the buttons below down -->
+             here would push the next section down. Under both announcements,
+             the last thing in the right column; on the desktop the focus comes
+             here after Back and Next, left column first, then the right. -->
         <button
           type="button"
-          class="ec-demo-why mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg font-bold text-brand-blue underline-offset-4 hover:underline"
+          class="ec-demo-why ec-link mt-6 inline-flex min-h-11 items-center gap-2 font-bold text-brand-blue"
           aria-haspopup="dialog"
           data-dialog-open="demoDialog"
         >
-          <IconInfoCircle class="size-5 -translate-y-0.5" aria-hidden="true" />
+          <IconInfoCircle class="size-5 shrink-0" aria-hidden="true" />
           {t.whyButton}
         </button>
       </div>
-
-      <span
-        class="ec-demo-rule hidden border-t border-gray-low lg:mt-10 lg:block"
-        aria-hidden="true"></span>
     </div>
 
     <p class="sr-only" id="demoAnnouncement" aria-live="polite"></p>
@@ -277,33 +244,14 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     transition: opacity 200ms ease;
   }
 
-  /* --- Same cell as the picture, painted above it --- */
-  .ec-curtain {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    border-radius: 1.5rem;
-    background: #0b0c0e;
-    padding: 1.5rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 450ms ease;
-  }
-
-  .ec-demo-layout[data-is-blind="true"] .ec-curtain {
-    opacity: 1;
-  }
-
-  /* --- Phones: curtain, picture, the two buttons right below it, then what is
-     heard. Desktop: what is seen on the left, what is heard on the right, the
-     curtain and the buttons in one row below the rule. The panel keeps the
-     height of its longest element, so that row never jumps. --- */
+  /* --- Phones: the picture, the two buttons right below it, then what is
+     heard. Desktop: what is seen and the buttons that move through it on the
+     left, what is heard on the right; the two columns keep them apart. The panel keeps the
+     height of its longest element, so nothing below it jumps. --- */
   .ec-demo-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "settings"
       "screen"
       "nav"
       "panel";
@@ -312,13 +260,10 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
       grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
       grid-template-areas:
         "screen panel"
-        "settings nav";
+        "nav panel";
+      grid-template-rows: auto 1fr;
       column-gap: 4rem;
     }
-  }
-
-  .ec-demo-settings {
-    grid-area: settings;
   }
 
   .ec-demo-stage {
@@ -326,13 +271,9 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
   }
 
   /* --- The hand only over the elements themselves, the way a page shows what
-     can be clicked. Behind the curtain there is nothing to aim at. --- */
-  .ec-demo-layout[data-is-blind="false"] [data-target] {
+     can be clicked. --- */
+  .ec-demo-stage [data-target] {
     cursor: pointer;
-  }
-
-  .ec-curtain {
-    grid-area: screen;
   }
 
   .ec-demo-controls {
@@ -365,18 +306,12 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     grid-area: nav;
 
     @media (width >= 64rem) {
-      justify-self: end;
+      justify-self: start;
     }
   }
 
   .ec-demo-panel {
     grid-area: panel;
-  }
-
-  .ec-demo-rule {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    align-self: start;
   }
 
   .ec-demo-jump {
@@ -415,7 +350,6 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
   if (demo) {
     const text = JSON.parse(demo.dataset.text ?? "{}")
     const cases: Omit<DemoCase, "details">[] = text.cases
-    const layout = demo.querySelector<HTMLElement>(".ec-demo-layout")!
     const stage = demo.querySelector<HTMLElement>(".ec-demo-stage")!
     const cursor = stage.querySelector<HTMLElement>(".ec-vo-cursor")!
     const targets = [...stage.querySelectorAll<HTMLElement>("[data-target]")]
@@ -423,7 +357,6 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     const position = panel.querySelector<HTMLElement>(".ec-demo-position")!
     const caseName = panel.querySelector<HTMLElement>(".ec-demo-name")!
     const announcement = demo.querySelector<HTMLElement>("#demoAnnouncement")!
-    const blindSwitch = demo.querySelector<HTMLButtonElement>(".ec-demo-blind")!
     const variants = (["common", "correct"] as const).map((variant) => ({
       variant,
       caption: demo.querySelector<HTMLElement>(`#demo-${variant}`)!,
@@ -534,9 +467,9 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     demo.querySelector(".ec-demo-previous")!.addEventListener("click", () => select(index - 1))
 
     // --- A click or tap on an element of the picture selects it; a click
-    // beside one does nothing. Ignored behind the curtain.
+    // beside one does nothing.
     stage.addEventListener("click", (event) => {
-      if (layout.dataset.isBlind === "true" || !(event.target instanceof Element)) return
+      if (!(event.target instanceof Element)) return
       const target = event.target.closest<HTMLElement>("[data-target]")
       if (target) select(targets.indexOf(target))
     })
@@ -546,12 +479,6 @@ const firstPosition = fill(t.position, { number: "1", total: String(t.cases.leng
     demo.querySelector(".ec-demo-why")!.addEventListener("click", () => {
       dialogTitle.textContent = cases[index].name
       dialogBody.replaceChildren(detailTemplates[index].content.cloneNode(true))
-    })
-
-    blindSwitch.addEventListener("click", () => {
-      const isBlind = blindSwitch.getAttribute("aria-checked") !== "true"
-      blindSwitch.setAttribute("aria-checked", String(isBlind))
-      layout.dataset.isBlind = String(isBlind)
     })
 
     // --- First element framed from the start, without flying in from the corner

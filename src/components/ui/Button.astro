@@ -44,9 +44,12 @@ const tagProps = href
 const baseClasses =
   "ec-button group inline-flex items-center justify-center gap-2.5 rounded-full border-2 text-center font-bold no-underline transition-colors hyphens-auto"
 
+// --- Whole-pixel line heights: with the body's 1.6 (25.6px) the browser floors
+// the fractional half-leading and the label sits 1.5px above the middle; at
+// 24px and 20px the capitals sit centred, measured against the icons
 const sizeClasses = {
-  regular: "min-h-12 px-6 py-2.5",
-  compact: "min-h-11 px-5 py-2 text-sm",
+  regular: "min-h-12 px-6 py-2.5 leading-6",
+  compact: "min-h-11 px-5 py-2 text-sm leading-5",
 }
 
 const variantClasses = {

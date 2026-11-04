@@ -7,6 +7,8 @@
 // so they read like a profile, not a CV. Availability leads, with the online dot of
 // Pixel-Ercan's avatar. Then Pixel-Ercan, the chat from the request page,
 // answering questions about me; then the contact block.
+import { Picture } from "astro:assets"
+import portrait from "../../assets/images/ercancicek.jpg"
 import AssistantChat from "../../components/AssistantChat.astro"
 import ContactSection from "../../components/ContactSection.astro"
 import InlineText from "../../components/ui/InlineText.astro"
@@ -56,11 +58,13 @@ const termClasses = "text-sm text-typo-medium"
       </div>
 
       <div class="ec-rise [--ec-rise-delay:150ms] lg:self-start">
-        <img
-          src="/images/ercancicek.jpg"
+        <Picture
+          src={portrait}
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[224, 448, portrait.width]}
+          sizes="14rem"
           alt={t.portraitAlt}
-          width="573"
-          height="573"
           class="aspect-square w-full max-w-56 rounded-full object-cover"
         />
         <h2 class="sr-only">{facts.title}</h2>
@@ -148,7 +152,7 @@ const termClasses = "text-sm text-typo-medium"
             t.assistant.suggestions.map((question) => (
               <li>
                 <button type="button" class="ec-choice" data-question={question}>
-                  {question}
+                  <span class="block translate-y-px">{question}</span>
                 </button>
               </li>
             ))

@@ -4,11 +4,13 @@
 // https) opens in a new tab and says so to screen readers; a page of this site,
 // a mailto: or a tel: link opens in place. A part in another language gets its
 // lang, and the plain text around it gets the page's lang back: VoiceOver
-// otherwise keeps the foreign voice for the rest of the line.
+// otherwise keeps the foreign voice for the rest of the line. A quotation
+// becomes a q element; the browser adds the quotation marks of the page's
+// language, so the copy carries none.
 // Everything else stays plain text, so a string without marks renders as
 // plain text.
 import { useTranslations } from "../../i18n"
-import { inlineMarkPattern, languageMark, linkMark } from "../../i18n/marks"
+import { inlineMarkPattern, languageMark, linkMark, quoteMark } from "../../i18n/marks"
 
 interface Props {
   text: string
@@ -27,6 +29,8 @@ const parts = text
     if (link) return { kind: "link" as const, text: link[1], href: link[2] }
     const language = part.match(languageMark)
     if (language) return { kind: "language" as const, text: language[1], lang: language[2] }
+    const quote = part.match(quoteMark)
+    if (quote) return { kind: "quote" as const, text: quote[1] }
     return { kind: "text" as const, text: part }
   })
 const hasLanguagePart = parts.some((part) => part.kind === "language")
@@ -40,6 +44,8 @@ const hasLanguagePart = parts.some((part) => part.kind === "language")
       </code>
     ) : part.kind === "language" ? (
       <span lang={part.lang}>{part.text}</span>
+    ) : part.kind === "quote" ? (
+      <q>{part.text}</q>
     ) : part.kind === "link" && !/^https?:/.test(part.href) ? (
       <a href={part.href}>{part.text}</a>
     ) : part.kind === "link" ? (

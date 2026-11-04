@@ -37,10 +37,6 @@ region onto it, then check each with VoiceOver and NVDA.
 of address needed, the domain stays). Bing Webmaster Tools: import from Search Console,
 submit the sitemap. Watch rankings for the first weeks.
 
-**Focus order in the screen reader demo** (accessibility page) feels off: from
-"Weiter" the next stop is "Warum ist das ein Problem?". Check the order against the
-visual layout (WCAG 2.4.3, Focus Order) and decide where the button belongs.
-
 ## Not built yet
 
 - Easter egg.

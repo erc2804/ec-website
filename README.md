@@ -1,81 +1,73 @@
-# ec-website
+# ercancicek.com
 
-Personal website of [Ercan Cicek](https://www.ercancicek.com) — frontend development,
-design and accessibility. Static, bilingual (German and English), built with Astro.
+Hi, I'm Ercan. This is the code behind [my website](https://ercancicek.com), where I offer
+frontend development, design and accessibility. If you came here to see how it's built:
+nice, have a look around. Here's the short tour, the details are in [`docs/`](docs/).
 
-## Why this repo is public
+## What I cared about
 
-The interesting part of a site like this is not the markup, it is the reasoning: why this
-framework, why no component library, why these accessibility guarantees. Those decisions
-are written down in [`docs/adr/`](docs/adr/) — context, alternatives and consequences for
-each one.
+**Accessibility is the work sample.** I sell accessibility, so the site has to hold up
+itself: built to WCAG 2.2 AA, one visible focus style everywhere, real buttons and links,
+reduced motion respected, decoration hidden from screen readers and never carrying
+anything the text doesn't say. What isn't there yet is written down openly in the
+[accessibility statement](https://ercancicek.com/barrierefreiheitserklaerung).
 
-## Stack
+**As little JavaScript as possible.** Astro renders plain HTML. What moves is a few small
+scripts, no UI framework, no component library. Even the navigation works without
+JavaScript, thanks to the Popover API.
 
-|                 |                                                                                          |
-| --------------- | ---------------------------------------------------------------------------------------- |
-| Framework       | [Astro 7](https://astro.build) — zero JS by default, islands, built-in i18n routing      |
-| Styling         | [Tailwind 4](https://tailwindcss.com) via `@tailwindcss/vite`, design tokens in `@theme` |
-| Language        | TypeScript, strict                                                                       |
-| Interactivity   | Vanilla JS in `<script>` blocks — no UI framework, no component library                  |
-| Package manager | pnpm 11, pinned via `packageManager`                                                     |
-| Runtime         | Node >= 22.12                                                                            |
+**Every page shows the tool of its topic.** Instead of decoration, each page quotes the
+tool it talks about: the VoiceOver caption panel on the accessibility page, a Figma
+selection frame on the design page, the terminal and the browser inspector on the
+development page. On the development page a small invoice app on a phone shows why vibe
+coding alone isn't enough.
 
-## Getting started
+**Pixel-Ercan.** My pixel version helps on two pages. On the request page he fills the
+form from what you tell him, and you still send it yourself. On the about page he answers
+questions about me from the same data the pages are built from, so he can't tell a
+different story than the site. Both run as Netlify Functions with the Anthropic API.
+
+**Built with AI, steered by me.** A lot of the code was written with Claude Code, along
+rules I set and checked. Those rules are in [`AGENTS.md`](AGENTS.md), and they are a
+good read if you want to know how I work.
+
+## Built with
+
+Astro 7, TypeScript in strict mode, Tailwind 4, Tabler icons, pnpm, hosted on Netlify.
+Photos go through `astro:assets` and arrive as AVIF.
+
+## Where the details are
+
+| If you want to know                         | Read                                                           |
+| ------------------------------------------- | -------------------------------------------------------------- |
+| why I chose what I chose                    | [`docs/adr/`](docs/adr/README.md), one page per decision       |
+| how the site looks and moves, and why       | [`docs/design-language.md`](docs/design-language.md)           |
+| how the CSS is organised                    | [`docs/styling.md`](docs/styling.md)                           |
+| how the copy is written                     | [`docs/copy.md`](docs/copy.md)                                 |
+| how German and English live side by side    | [`docs/internationalisation.md`](docs/internationalisation.md) |
+| what I check before a change counts as done | [`docs/page-review.md`](docs/page-review.md)                   |
+| what's still open                           | [`docs/open-points.md`](docs/open-points.md)                   |
+| the conventions and how I work with AI      | [`AGENTS.md`](AGENTS.md)                                       |
+
+## Run it yourself
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-| Command             | Description                       |
-| ------------------- | --------------------------------- |
-| `pnpm dev`          | `netlify dev` on :8888            |
-| `pnpm build`        | Production build to `dist/`       |
-| `pnpm preview`      | Serve the build locally           |
-| `pnpm format`       | Format everything with Prettier   |
-| `pnpm format:check` | Verify formatting without writing |
+`pnpm dev` starts `netlify dev` on port 8888, with the site and Pixel-Ercan's two
+functions. He needs an `ANTHROPIC_API_KEY` in a `.env` file; everything else runs
+without one. You'll need Node 22.12 or newer.
 
-Build scripts are blocked by default in pnpm 10+. Approvals live in `pnpm-workspace.yaml`
-under `allowBuilds:`.
-
-## Structure
-
-```
-src/
-  layouts/      Document shell
-  components/
-    ui/         Atomic, reusable building blocks
-  views/
-    <page>/     Page specific sections
-  pages/        Routes
-  styles/       Design tokens, base layer, ec- utilities
-```
-
-Dependencies point one way: `pages` → `views` → `ui`. A `ui` component never knows which
-page it renders on.
-
-## Accessibility
-
-The site is built to WCAG 2.2 AA and largely meets it. Its status, how it was tested and
-the known exceptions are in the
-[accessibility statement](https://ercancicek.com/barrierefreiheitserklaerung). A few
-things are structural rather than incidental:
-
-- One focus style, defined in the base layer. Components may move it (drawn inside an
-  element, a lighter colour on dark ground) but never remove it
-- `prefers-reduced-motion` is respected: animations end in their final state, and the
-  speech bubble that follows the pointer stays off
-- Controls are native elements (`<button>`, `<a>`, form fields, `<summary>`), so mouse,
-  touch and keyboard share one path. Pointer extras only repeat what a control already
-  does: a click on the screen reader demo's picture selects what Back and Next select,
-  a click beside an open dialog closes it like Escape. The exception is Mel-Menu, a game
-  from 2018, named in the statement
-- Decorative elements are hidden from assistive technology and carry nothing the
-  surrounding text does not say
-
-Conventions and working practices are documented in [`AGENTS.md`](AGENTS.md).
+| Command       | What it does                  |
+| ------------- | ----------------------------- |
+| `pnpm build`  | Production build into `dist/` |
+| `pnpm check`  | Type check with `astro check` |
+| `pnpm lint`   | ESLint                        |
+| `pnpm format` | Prettier over everything      |
 
 ## Licence
 
-Code is MIT. Content, images and branding are not — please do not reuse those.
+The code is MIT. The content, the images and my branding are not, so please don't reuse
+those.

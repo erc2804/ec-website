@@ -99,8 +99,10 @@
      on the light sections and the blue ones without a variant, and from
      text-decoration rather than a background, so it survives a line break.
      Controls that are not running text (buttons, the wordmark, icon links) opt
-     out with no-underline. --- */
-  a {
+     out with no-underline. A button that reads as a link (it opens a dialog
+     instead of a page) opts in with ec-link. --- */
+  a,
+  .ec-link {
     text-decoration-line: underline;
     text-decoration-color: color-mix(in oklab, currentColor 28%, transparent);
     text-decoration-thickness: 0.075em;
@@ -111,10 +113,18 @@
       text-underline-offset 220ms ease;
   }
 
-  a:hover {
+  a:hover,
+  .ec-link:hover {
     text-decoration-color: currentColor;
     text-decoration-thickness: 0.14em;
     text-underline-offset: 0.16em;
+  }
+
+  /* --- A quotation in running text is set in italics. The typeface has no
+     italic cut, so the browser slants the regular one; the quotation marks
+     come from the browser, in the page's language. --- */
+  q {
+    font-style: italic;
   }
 
   /* --- Tailwind's preflight resets buttons to the default cursor. Anything
@@ -220,12 +230,12 @@
    On dark ground the ring switches to the light green, which clears it with
    room to spare. --ec-indicator-color is the bar under the current page and
    the current language: it shows a state, so it needs 3:1 against its ground
-   (WCAG 1.4.11). Blue on light ground (11.8:1 on white), sand on dark, the
-   colours of the logo's slash on each. Set on the surface; everything inside
+   (WCAG 1.4.11). green-high on light ground (3.59:1 on white, 3.26:1 on
+   grey), the light green on dark. Set on the surface; everything inside
    inherits it. --- */
 @utility ec-on-dark {
   --ec-focus-color: var(--color-brand-green-medium);
-  --ec-indicator-color: var(--color-brand-sand);
+  --ec-indicator-color: var(--color-brand-green-medium);
 }
 
 /* --- Focus ring drawn inside the element instead of around it. For controls

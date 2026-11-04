@@ -233,16 +233,7 @@ export const de = {
         {
           heading: "Erstellung dieser Erklärung",
           body: [
-            "Ich habe die Erklärung am 18. August 2026 erstellt und zuletzt am 3. November 2026 überprüft. Grundlage ist eine Selbstbewertung nach den Prüfschritten des BITV-Tests für WCAG 2.2. Geprüft habe ich mit:",
-            {
-              list: [
-                "der Tastatur, ohne Maus",
-                "dem Screenreader VoiceOver",
-                "einer Bildschirmbreite von 320 Pixeln und vergrößerten Textabständen",
-                "gemessenen Kontrasten für Texte, Rahmen und Fokus",
-                "automatischen Werkzeugen wie Lighthouse",
-              ],
-            },
+            "Ich habe die Erklärung am 18. August 2026 erstellt und zuletzt am 3. November 2026 überprüft. Grundlage ist eine Selbstbewertung nach WCAG 2.2.",
           ],
         },
         {
@@ -258,7 +249,7 @@ export const de = {
             {
               list: [
                 "Die Sprechblase von Pixel-Ercan folgt auf dem Desktop dem Mauszeiger. Deshalb lässt sie sich mit der Maus nicht erreichen (WCAG 1.4.13). Mit Escape blendest du sie für den Rest des Besuchs aus. Sie zeigt nur kurze Sprüche, du verpasst also nichts.",
-                "Mel-Menu, ein kleines Spiel von 2018, ist nicht barrierefrei. Es lässt sich nur mit Maus oder Finger bedienen. Es führt zu Seiten, die du auch über die Navigation erreichst.",
+                "Mel-Menu, mein verspieltes Portfolio von 2016, ist nicht barrierefrei. Es lässt sich nur mit Maus oder Finger bedienen. Es führt zu Seiten, die du auch über die Navigation erreichst.",
               ],
             },
           ],
@@ -266,7 +257,7 @@ export const de = {
         {
           heading: "Bewusste Entscheidungen",
           body: [
-            "Die grünen Buttons heben sich vom weißen und grauen Hintergrund mit weniger als 3:1 Kontrast ab. WCAG verlangt das hier nicht: Ein Button braucht keine kontrastreiche Fläche oder Umrandung, wenn ihn etwas anderes als Button erkennbar macht, zum Beispiel seine Beschriftung, seine Position oder der Zusammenhang ([W3C, Understanding 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)). Die dunkelblaue Schrift auf dem Grün hat 6,7:1, und die Buttons stehen dort, wo man sie erwartet: am Ende eines Abschnitts oder Formulars und oben rechts in der Navigation.",
+            "Die grünen Buttons heben sich vom weißen und grauen Hintergrund mit weniger als 3:1 Kontrast ab. WCAG verlangt das hier nicht. Das W3C schreibt dazu: _Hat ein Bedienelement sichtbaren Inhalt, etwa Text, ist eine Umrandung seiner Klickfläche nicht erforderlich_ (übersetzt aus [Understanding 1.4.11, Boundaries](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html#boundaries)).",
           ],
         },
         {
@@ -278,7 +269,7 @@ export const de = {
         {
           heading: "Barriere melden",
           body: [
-            "Wenn dir etwas auffällt, das dich blockiert, schreib mir an {email} oder ruf mich an unter {phone}. Ich antworte und sage dir, wann es behoben ist.",
+            "Wenn dir etwas auffällt, das dich blockiert, schreib mir an {email}. Ich antworte und sage dir, wann es behoben ist.",
           ],
         },
       ],
@@ -590,7 +581,7 @@ export const de = {
       disclosure:
         "Pixel-Ercan ist eine KI. Damit er eintragen kann, geht dein Text an den KI-Dienst Anthropic. Abgeschickt wird nur, was du selbst abschickst.",
       placeholder:
-        "Hi Ercan, wir sind ein Onlineshop für Fahrradteile und müssen bis Juni barrierefrei sein. Kannst du prüfen, wo wir stehen? Ich bin Lena, erreichbar unter lena@beispiel.de",
+        "Hi Ercan, wir sind ein Onlineshop für Fahrradteile und müssen bis Juni barrierefrei sein. Kannst du prüfen, wo wir stehen? Ich bin Peter, erreichbar unter peter@beispiel.de",
       replyPlaceholder: "Deine Antwort …",
       callbackYes: "Ja, gern",
       callbackNo: "Nein, E-Mail reicht",
@@ -737,7 +728,7 @@ export const de = {
     },
     assistant: {
       title: "Frag Pixel-Ercan.",
-      lead: "Pixel-Ercan kennt meine Projekte, meine Arbeitsweise und auch ein bisschen Persönliches. Frag ihn, was du wissen willst.",
+      lead: "Pixel-Ercan kennt meine Projekte, meine Arbeitsweise und relevante persönliche Informationen. Frag ihn, was du wissen willst.",
       intro: "Hi, ich bin Pixel-Ercan. Frag mich, was du über Ercan wissen willst.",
       disclosure:
         "Pixel-Ercan ist eine KI. Damit er antworten kann, geht deine Frage an den KI-Dienst Anthropic.",
@@ -748,7 +739,7 @@ export const de = {
       suggestions: [
         "Ab wann hat Ercan Zeit?",
         "Arbeitet Ercan auch remote?",
-        "Warum ist Ercan Barrierefreiheit so wichtig?",
+        "Macht Ercan auch nur Design oder nur Code?",
       ],
       errors: {
         busy: "Bei Pixel-Ercan ist gerade viel los. Versuch es in einer Minute noch mal oder schreib mir direkt an {email}.",
@@ -964,8 +955,6 @@ export const de = {
       lead: "In diesem Fall nutzen viele einen Screenreader, der Inhalte vorliest. Damit er alles richtig ansagt, braucht er klare Strukturen im Code und manchmal zusätzliche Angaben, etwa ob ein Feld Pflicht ist oder eine Eingabe falsch.",
       instruction:
         "Geh mit „Zurück“ und „Weiter“ durch das Formular oder wähl ein Element direkt darin aus. Zu jedem Element siehst du, was ein Screenreader ansagt: einmal mit einem typischen Fehler, einmal richtig gebaut. Warum der Fehler stört, erklärt „Warum ist das ein Problem?“.",
-      // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "Mit „Formular unsichtbar“ erlebst du es ohne Bild.",
       commonLabel: "Häufiger Fehler",
       correctLabel: "Richtig gebaut",
       previous: "Zurück",
@@ -973,8 +962,6 @@ export const de = {
       whyButton: "Warum ist das ein Problem?",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "Zur Ansage",
-      blind: "Formular unsichtbar",
-      curtainText: "Jetzt bleibt dir nur noch, was der Screenreader sagt.",
       silent: "Keine Ansage",
       position: "Element {number} von {total}",
       liveTemplate: "{position}: {name}",
@@ -1155,7 +1142,7 @@ export const de = {
       items: [
         {
           title: "Prototyp ausbauen",
-          text: "Du hast einen Prototyp, oft mit KI gebaut, und er soll ein richtiges Produkt werden. Ich übernehme den Stand, räume auf, wo es klemmt, und baue weiter. Ohne Neustart.",
+          text: "Du hast einen Prototyp, oft mit KI gebaut, und er soll ein richtiges Produkt werden. Ich mache da weiter, wo du stehst, und bringe Ordnung rein. Ohne Neustart.",
         },
         {
           title: "Neu entwickeln",
@@ -1163,43 +1150,107 @@ export const de = {
         },
         {
           title: "Im Team mitarbeiten",
-          text: "Dein Team braucht eine Zeit lang eine Hand mehr. Ich arbeite in eurem Code und euren Abläufen mit, stimme Schnittstellen mit dem Backend ab und übergebe so, dass es ohne mich weitergeht.",
+          text: "Deinem Team fehlt für eine Weile jemand im Frontend. Ich arbeite in eurem Code und euren Abläufen mit, stimme Schnittstellen mit dem Backend ab und übergebe so, dass es ohne mich weitergeht.",
         },
       ],
     },
 
-    // --- Why vibe coding alone is not enough, for people who don't write code:
-    // three things a prototype often lacks, each in plain words, once as it
-    // tends to go and once what a product needs. Only the security card holds
-    // a figure, and it links its source.
+    // --- Why vibe coding alone is not enough: five moments around one small
+    // feature, told on a phone (VibeStage). The prompts are real sentences,
+    // quoted in the steps they belong to; the screen fills, ships clean, breaks
+    // in the users' bug reports, gets patched, and holds once someone wrote
+    // what cannot be seen.
     vibeCoding: {
       title: "Warum Vibe-Coding allein nicht reicht.",
-      lead: "Vibe-Coding heißt: Software mit KI bauen, ohne den Code zu lesen, den sie schreibt. Für den Anfang ist das großartig: Jeder kann sofort ausprobieren, was er sich vorstellt, und Design und Entwicklung bekommen die beste Vorlage, die man sich wünschen kann. Ein fertiges Produkt ist es aber noch nicht.",
-      cards: [
+      lead: "Beim Vibe-Coding baut die KI genau das, was du beschreibst, und das schnell. Was nicht im Prompt stand, gibt es nicht. Das fällt erst auf, wenn die App im Alltag ankommt.",
+      promptLabel: { one: "Beispielprompt", other: "Beispielprompts" },
+      addedLabel: "Ergänzt:",
+      // --- The phone: the feature in every state. The second invoice is the
+      // one the bug reports are about: a long name, a foreign currency.
+      app: {
+        title: "Rechnungen",
+        approve: "Freigeben",
+        dueLabel: "Fällig am",
+        invoices: [
+          {
+            supplier: "Krüger GmbH",
+            amount: "12.480 €",
+            due: "14.11.",
+            dueLong: "14. November 2026",
+          },
+          {
+            supplier: "Optima",
+            supplierLong: "Optima Logistics International Ltd.",
+            amount: "3.920 €",
+            amountForeign: "$3,920",
+            amountFixed: "3.920 $",
+            due: "18.11.",
+            dueLong: "18. November 2026",
+          },
+          { supplier: "Nordlicht", amount: "760 €", due: "21.11.", dueLong: "21. November 2026" },
+        ],
+        // --- Everyday use: the rows behind the count, from the bug reports on
+        moreInvoices: [
+          {
+            supplier: "Hansa Druck",
+            amount: "1.240 €",
+            due: "24.11.",
+            dueLong: "24. November 2026",
+          },
+          { supplier: "Weber AG", amount: "8.315 €", due: "26.11.", dueLong: "26. November 2026" },
+          { supplier: "Brandt IT", amount: "2.099 €", due: "28.11.", dueLong: "28. November 2026" },
+          {
+            supplier: "Lindner Bau",
+            amount: "15.600 €",
+            due: "02.12.",
+            dueLong: "2. Dezember 2026",
+          },
+        ],
+        count: "4.812 Rechnungen",
+        failed: "Freigabe fehlgeschlagen. Nochmal versuchen.",
+        search: "Suchen",
+        range: "1–20 von 4.812",
+      },
+      steps: [
         {
-          key: "data",
-          title: "Daten schützen",
-          prototype:
-            "Im Prototyp sieht oft jeder alles. [Matt Palmer hat 2025](https://mattpalmer.io/posts/statement-on-CVE-2025-48757/) 1.645 Apps aus dem KI-Baukasten Lovable geprüft: Bei 170 konnte jeder fremde Daten lesen.",
-          product: "Ein Produkt zeigt jedem nur seine eigenen Daten.",
+          title: "Der schnelle Prompt",
+          text: "Ein paar Sätze an die KI, aus Sicht des Ergebnisses. Ein paar Minuten später steht es da, und man sieht den Weg, auf dem alles klappt.",
+          prompt: { lines: ["Bau eine Seite, auf der mein Team Rechnungen freigeben kann."] },
         },
         {
-          key: "errors",
-          title: "Fehler abfangen",
-          prototype:
-            "Geht etwas schief, bleibt die Seite oft einfach leer, und niemand weiß, warum.",
-          product: "Ein Produkt sagt, was los ist, und hilft weiter.",
+          title: "Sieht gut aus, kann live.",
+          text: "Änderungen gehen genauso schnell. Die KI baut immer das, was man ihr mitgibt. Manchmal schlägt sie etwas Sinnvolles dazu vor, meistens nicht: Es gibt zu viele Dinge, die man bedenken könnte. Dann geht das Ergebnis raus. Mit den Testdaten läuft alles, und auf den ersten Blick auch bei den ersten Nutzern.",
+          prompt: { lines: ["Zeig Betrag und Fälligkeit dazu.", "Sortier nach Fälligkeit."] },
         },
         {
-          key: "growth",
-          title: "Mitwachsen",
-          prototype:
-            "Mit zehn Testkunden läuft alles. Mit tausenden wird es zäh, und jede neue Funktion dauert länger.",
-          product: "Ein Produkt bleibt schnell und verständlich, auch wenn es wächst.",
+          title: "Die ersten Bugmeldungen",
+          text: "Nutzer sind verschieden und bleiben selten auf dem geplanten Weg: ein langer Firmenname läuft in den Button, ein Betrag steht in der falschen Währung, mit tausenden Einträgen lädt die Liste ewig. Schlechtes Internet, andere Sprachen, längere Texte: nichts davon stand im Prompt.",
+        },
+        {
+          title: "Weitere Prompts fürs Bugfixing",
+          text: "Die gemeldeten Fehler lassen sich fixen, die ungemeldeten nicht. Bis dahin sind vielleicht Kunden abgesprungen. Und jede Korrektur ist ein Umweg: Aus Code wird mehr Code, schlechter lesbar, und nach kurzer Zeit trägt er nicht mehr.",
+          prompt: {
+            lines: [
+              "Der lange Name läuft in den Button, fix das.",
+              "Dollar-Beträge richtig anzeigen.",
+              "Die Liste lädt ewig, mach sie schneller.",
+            ],
+          },
+        },
+        {
+          title: "Mit Erfahrung gepromptet",
+          text: "Wer seit Jahren entwickelt, weiß, worauf es ankommt: welche Grundlagen tragen, wo es hängen wird. Hundert Prozent sicher gibt es nicht. Aber die guten 80 Prozent müssen drin sein, und dafür braucht es jemanden, der mitdenkt und vorwegnimmt. Und das hier ist ein sehr einfaches Beispiel. Bei Sicherheit, Zugriffsrechten oder Zahlungen steht noch viel mehr nicht im Prompt.",
+          prompt: {
+            lines: ["Bau eine Seite, auf der mein Team Rechnungen freigeben kann."],
+            addedLines: [
+              "Lade 20 auf einmal, mit Suche.",
+              "Lange Namen umbrechen, jede Währung richtig zeigen.",
+              "Zeig, wenn es lädt und wenn nichts da ist.",
+              "Bricht die Verbindung ab, nichts doppelt senden.",
+            ],
+          },
         },
       ],
-      sources:
-        "Die Definition von Vibe-Coding stammt von [Simon Willison](https://simonwillison.net/2025/Mar/19/vibe-coding/), den Begriff hat [Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383) im Februar 2025 geprägt.",
     },
 
     oneHand: {
@@ -1222,7 +1273,7 @@ export const de = {
             "Beides. Die KI sorgt für die Menge, ich für die Qualität: Ich gebe Architektur und Regeln vor, dirigiere sie und schreibe selbst, wo es darauf ankommt. Ein Vibe-Coder bin ich nicht. Es geht nichts raus, was ich nicht verstanden und geprüft habe.",
         },
         {
-          question: "Unser Prototyp ist mit KI gebaut. Kannst du darauf aufbauen?",
+          question: "Kannst du auf unserem KI-Prototyp aufbauen, oder musst du neu anfangen?",
           answer:
             "Meistens ja. Ich schaue mir zuerst den Code an und sage dir ehrlich, was bleiben kann und was neu gebaut werden sollte.",
         },

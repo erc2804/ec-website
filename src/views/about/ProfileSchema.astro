@@ -3,6 +3,7 @@
 // one person: developers.google.com/search/docs/appearance/structured-data/profile-page).
 // Every value is also visible on the page; structured data that claims more
 // than the page shows breaks Google's guidelines.
+import portrait from "../../assets/images/ercancicek.jpg"
 import { siteConfig } from "../../config/site"
 import { localisedPath, useTranslations, type Locale } from "../../i18n"
 
@@ -19,7 +20,7 @@ const schema = {
     "@type": "Person",
     name: siteConfig.name,
     url: siteConfig.url,
-    image: new URL("/images/ercancicek.jpg", siteConfig.url).href,
+    image: new URL(portrait.src, siteConfig.url).href,
     jobTitle: "Product Engineer",
     description: t.lead,
     email: siteConfig.contact.email,

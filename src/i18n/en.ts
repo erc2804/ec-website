@@ -234,16 +234,7 @@ export const en: Translations = {
         {
           heading: "How this statement was prepared",
           body: [
-            "I prepared this statement on August 18, 2026, and last reviewed it on November 3, 2026. It is based on a self-assessment following the test steps of the German [BITV-Test]{lang=de} for WCAG 2.2. I tested with:",
-            {
-              list: [
-                "the keyboard, without a mouse",
-                "the VoiceOver screen reader",
-                "a screen width of 320 pixels and increased text spacing",
-                "measured contrast for text, borders and focus",
-                "automated tools such as Lighthouse",
-              ],
-            },
+            "I prepared this statement on August 18, 2026, and last reviewed it on November 3, 2026. It is based on a self-assessment against WCAG 2.2.",
           ],
         },
         {
@@ -259,7 +250,7 @@ export const en: Translations = {
             {
               list: [
                 "On desktop, Pixel-Ercan's speech bubble follows the mouse pointer, so you can't reach it with the mouse (WCAG 1.4.13). Press Escape to hide it for the rest of your visit. It only shows short quips, so you don't miss anything.",
-                "Mel-Menu, a small game from 2018, is not accessible. It only works with a mouse or a finger. It leads to pages you can also reach through the navigation.",
+                "Mel-Menu, my playful portfolio from 2016, is not accessible. It only works with a mouse or a finger. It leads to pages you can also reach through the navigation.",
               ],
             },
           ],
@@ -267,7 +258,7 @@ export const en: Translations = {
         {
           heading: "Deliberate decisions",
           body: [
-            "The green buttons stand out from the white and grey background with less than 3:1 contrast. WCAG does not require it here: a button needs no high-contrast fill or outline when something else identifies it as a button, such as its label, its position or its context ([W3C, Understanding 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)). The dark blue text on the green has 6.7:1, and the buttons sit where you expect them: at the end of a section or form, and at the top right of the navigation.",
+            "The green buttons stand out from the white and grey background with less than 3:1 contrast. WCAG does not require it here. The W3C says: _If a control has visible content (such as text …), a border … is not required_ ([Understanding 1.4.11, Boundaries](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html#boundaries)).",
           ],
         },
         {
@@ -279,7 +270,7 @@ export const en: Translations = {
         {
           heading: "Report a barrier",
           body: [
-            "If something blocks you, write to me at {email} or call me at {phone}. I will answer and tell you when it is fixed.",
+            "If something blocks you, write to me at {email}. I will answer and tell you when it is fixed.",
           ],
         },
       ],
@@ -586,7 +577,7 @@ export const en: Translations = {
       disclosure:
         "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic. Nothing is sent to Ercan until you send it yourself.",
       placeholder:
-        "Hi Ercan, we run an online shop for bike parts and need to be accessible by June. Can you check where we stand? I'm Lena, you can reach me at lena@example.com",
+        "Hi Ercan, we run an online shop for bike parts and need to be accessible by June. Can you check where we stand? I'm Peter, you can reach me at peter@example.com",
       replyPlaceholder: "Your reply …",
       callbackYes: "Yes, please",
       callbackNo: "No, email is fine",
@@ -731,7 +722,7 @@ export const en: Translations = {
     },
     assistant: {
       title: "Ask Pixel-Ercan.",
-      lead: "Pixel-Ercan knows my projects, how I work and a bit about me personally. Ask him whatever you want to know.",
+      lead: "Pixel-Ercan knows my projects, how I work and relevant personal details. Ask him whatever you want to know.",
       intro: "Hi, I'm Pixel-Ercan. Ask me anything you want to know about Ercan.",
       disclosure:
         "Pixel-Ercan is an AI. To answer, your question is sent to the AI service Anthropic.",
@@ -742,7 +733,7 @@ export const en: Translations = {
       suggestions: [
         "When is Ercan available?",
         "Does Ercan work remotely?",
-        "Why does accessibility matter so much to Ercan?",
+        "Does Ercan also do just design or just code?",
       ],
       errors: {
         busy: "Pixel-Ercan is very busy right now. Try again in a minute or email me directly at {email}.",
@@ -949,8 +940,6 @@ export const en: Translations = {
       lead: "In that case, many people use a screen reader that reads content out loud. To announce everything correctly, it needs clear structure in the code and sometimes extra information, such as whether a field is required or an entry is invalid.",
       instruction:
         "Use “Back” and “Next” to step through the form, or pick an element right in it. For each element you see what a screen reader announces: once with a common mistake, once built right. “Why is this a problem?” explains why the mistake matters.",
-      // --- Desktop only, where the curtain switch is shown
-      instructionCurtain: "With “Hide form” you try it without the picture.",
       commonLabel: "Common mistake",
       correctLabel: "Built right",
       previous: "Back",
@@ -958,8 +947,6 @@ export const en: Translations = {
       whyButton: "Why is this a problem?",
       // --- Phones: the pill that leads from the picture down to the announcements
       jump: "To the announcement",
-      blind: "Hide form",
-      curtainText: "Now all you have is what the screen reader says.",
       silent: "Nothing announced",
       position: "Element {number} of {total}",
       liveTemplate: "{position}: {name}",
@@ -1137,7 +1124,7 @@ export const en: Translations = {
       items: [
         {
           title: "Grow a prototype",
-          text: "You have a prototype, often built with AI, and it should become a real product. I take over where it stands, tidy up where it sticks and keep building. No restart.",
+          text: "You have a prototype, often built with AI, and it should become a real product. I pick up where you are and bring order to it. No restart.",
         },
         {
           title: "Build from scratch",
@@ -1145,43 +1132,102 @@ export const en: Translations = {
         },
         {
           title: "Work in your team",
-          text: "Your team needs one more pair of hands for a while. I work in your code and your routines, agree interfaces with the backend and hand over so it carries on without me.",
+          text: "Your team is short a frontend developer for a while. I work in your code and your routines, agree interfaces with the backend and hand over so it carries on without me.",
         },
       ],
     },
 
-    // --- Why vibe coding alone is not enough, for people who don't write code:
-    // three things a prototype often lacks, each in plain words, once as it
-    // tends to go and once what a product needs. Only the security card holds
-    // a figure, and it links its source.
+    // --- Why vibe coding alone is not enough: five moments around one small
+    // feature, told on a phone (VibeStage). The prompts are real sentences,
+    // quoted in the steps they belong to; the screen fills, ships clean, breaks
+    // in the users' bug reports, gets patched, and holds once someone wrote
+    // what cannot be seen.
     vibeCoding: {
       title: "Why vibe coding alone isn't enough.",
-      lead: "Vibe coding means building software with AI without reading the code it writes. As a start that's great: anyone can try out right away what they have in mind, and design and development get the best brief they could wish for. It isn't a finished product yet, though.",
-      cards: [
+      lead: "With vibe coding, the AI builds exactly what you describe, and it builds it fast. Whatever wasn't in the prompt doesn't exist. That only shows once the app meets everyday use.",
+      promptLabel: { one: "Example prompt", other: "Example prompts" },
+      addedLabel: "Added:",
+      // --- The phone: the feature in every state. The second invoice is the
+      // one the bug reports are about: a long name, a foreign currency.
+      app: {
+        title: "Invoices",
+        approve: "Approve",
+        dueLabel: "Due",
+        invoices: [
+          {
+            supplier: "Krüger GmbH",
+            amount: "€12,480",
+            due: "Nov 14",
+            dueLong: "November 14, 2026",
+          },
+          {
+            supplier: "Optima",
+            supplierLong: "Optima Logistics International Ltd.",
+            amount: "€3,920",
+            amountForeign: "3.920 $",
+            amountFixed: "$3,920",
+            due: "Nov 18",
+            dueLong: "November 18, 2026",
+          },
+          { supplier: "Nordlicht", amount: "€760", due: "Nov 21", dueLong: "November 21, 2026" },
+        ],
+        // --- Everyday use: the rows behind the count, from the bug reports on
+        moreInvoices: [
+          {
+            supplier: "Hansa Druck",
+            amount: "€1,240",
+            due: "Nov 24",
+            dueLong: "November 24, 2026",
+          },
+          { supplier: "Weber AG", amount: "€8,315", due: "Nov 26", dueLong: "November 26, 2026" },
+          { supplier: "Brandt IT", amount: "€2,099", due: "Nov 28", dueLong: "November 28, 2026" },
+          { supplier: "Lindner Bau", amount: "€15,600", due: "Dec 2", dueLong: "December 2, 2026" },
+        ],
+        count: "4,812 invoices",
+        failed: "Approval failed. Try again.",
+        search: "Search",
+        range: "1–20 of 4,812",
+      },
+      steps: [
         {
-          key: "data",
-          title: "Protecting data",
-          prototype:
-            "In a prototype, often everyone sees everything. In 2025 [Matt Palmer checked](https://mattpalmer.io/posts/statement-on-CVE-2025-48757/) 1,645 apps built with the AI builder Lovable: in 170 of them, anyone could read other people's data.",
-          product: "A product shows everyone only their own data.",
+          title: "The quick prompt",
+          text: "A few sentences to the AI, written from the result. A few minutes later it's there, and you see the path where everything works.",
+          prompt: { lines: ["Build a page where my team can approve invoices."] },
         },
         {
-          key: "errors",
-          title: "Handling errors",
-          prototype:
-            "When something goes wrong, the page often just stays empty, and nobody knows why.",
-          product: "A product says what happened and helps you on.",
+          title: "Looks good, ship it.",
+          text: "Changes are just as quick. The AI always builds what you give it. Sometimes it suggests something useful on top, mostly it doesn't: there are too many things one could consider. Then the result goes out. With the test data everything runs, and at first glance it does for the first users too.",
+          prompt: { lines: ["Show the amount and due date too.", "Sort by due date."] },
         },
         {
-          key: "growth",
-          title: "Growing with you",
-          prototype:
-            "With ten test customers everything runs. With thousands it gets sluggish, and every new feature takes longer.",
-          product: "A product stays fast and understandable as it grows.",
+          title: "The first bug reports",
+          text: "Users are different and rarely stay on the planned path: a long company name runs into the button, an amount shows in the wrong currency, with thousands of entries the list takes forever. Bad connections, other languages, longer texts: none of it was in the prompt.",
+        },
+        {
+          title: "More prompts for bug fixing",
+          text: "The reported bugs can be fixed, the unreported ones can't. By then, customers may have left. And every fix is a detour: code becomes more code, harder to read, and soon it no longer holds.",
+          prompt: {
+            lines: [
+              "The long name runs into the button, fix that.",
+              "Show dollar amounts properly.",
+              "The list takes forever to load, make it faster.",
+            ],
+          },
+        },
+        {
+          title: "Prompted with experience",
+          text: "Someone who has developed for years knows what matters: which foundations hold, where it will get stuck. A hundred percent safe doesn't exist. But the good 80 percent have to be in, and that takes someone who thinks ahead. And this is a very simple example. With security, access rights or payments, a lot more is missing from the prompt.",
+          prompt: {
+            lines: ["Build a page where my team can approve invoices."],
+            addedLines: [
+              "Load 20 at a time, with search.",
+              "Wrap long names, show every currency properly.",
+              "Show when it's loading and when there's nothing.",
+              "Never send twice if the connection drops.",
+            ],
+          },
         },
       ],
-      sources:
-        "The definition of vibe coding is [Simon Willison's](https://simonwillison.net/2025/Mar/19/vibe-coding/); [Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383) coined the term in February 2025.",
     },
 
     oneHand: {
@@ -1204,7 +1250,7 @@ export const en: Translations = {
             "Both. The AI brings the quantity, I bring the quality: I set the architecture and the rules, direct it and write it myself where it matters. I'm not a vibe coder. Nothing goes out that I haven't understood and checked.",
         },
         {
-          question: "Our prototype was built with AI. Can you build on it?",
+          question: "Can you build on our AI prototype, or do you have to start over?",
           answer:
             "Usually, yes. I look at the code first and tell you honestly what can stay and what should be rebuilt.",
         },
