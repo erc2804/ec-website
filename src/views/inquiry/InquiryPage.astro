@@ -354,7 +354,9 @@ const aiTagClasses =
 
   <section class="ec-layout-visual-content pt-20 pb-24 md:pt-24 md:pb-32">
     <h2 class="ec-reveal text-heading-1">{t.next.directTitle}</h2>
-    <div class="mt-8 grid ec-reveal gap-4 ec-reveal-late md:grid-cols-2 md:gap-6">
+    <!-- --- Side by side only from lg: in two columns at md the tiles are too
+         narrow for the email address at the lead size -->
+    <div class="mt-8 grid ec-reveal gap-4 ec-reveal-late lg:grid-cols-2 lg:gap-6">
       <ContactCard
         href={`mailto:${siteConfig.contact.email}`}
         label={t.next.email}
@@ -405,6 +407,7 @@ const aiTagClasses =
   const topicInputs = [...form.querySelectorAll<HTMLInputElement>("[data-topic]")]
   const aiHelpInput = form.querySelector<HTMLInputElement>("[name='ki-hilfe']")!
   const errorSummary = root.querySelector<HTMLElement>(".ec-error-summary")!
+  const submitButton = root.querySelector<HTMLElement>(".ec-submit")!
   const submitLabel = root.querySelector<HTMLElement>(".ec-submit-label")!
   const submitStatus = root.querySelector<HTMLElement>(".ec-submit-status")!
   const textControls = { goal, name, email, phone } as const
@@ -568,6 +571,11 @@ const aiTagClasses =
 
     isSending = true
     submitLabel.textContent = text.form.sending
+    // --- On a phone Enter in a field sends too, with the button below the
+    // keyboard: it comes into sight, so "Sending" is seen where it happens
+    if (!desktop.matches) {
+      submitButton.scrollIntoView({ block: "nearest", behavior: scrollBehavior() })
+    }
     const data = new FormData(form)
     const topics = data.getAll("thema").join(", ")
     data.delete("thema")
@@ -590,7 +598,14 @@ const aiTagClasses =
       root.querySelector(".ec-request-body")!.classList.add("hidden")
       root.querySelector(".ec-assistant")!.classList.add("hidden")
       sent.classList.remove("hidden")
-      sent.focus()
+      // --- On a phone the chat above folds away and the page would land
+      // somewhere in the middle of the thanks; it starts at its top instead
+      if (desktop.matches) {
+        sent.focus()
+      } else {
+        sent.focus({ preventScroll: true })
+        scrollToForm()
+      }
     } catch {
       submitStatus.textContent = fill(text.form.sendError, { email: text.email })
     } finally {
@@ -729,7 +744,7 @@ const aiTagClasses =
           ? text.assistant.callbackYesMessage
           : text.assistant.callbackNoMessage
       )
-      chat.input.focus()
+      chat.focusAfterChoice()
     })
   )
 

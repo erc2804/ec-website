@@ -16,6 +16,12 @@
 // The edit is simulated: the heading is an h1 the whole time, the tooltip
 // shows "div" until the answer comes. Under reduced motion there is no
 // pointer and no typing, only the final state.
+//
+// The instruction is typed at every width. The whole sentence is in the line
+// from the start, the part not typed yet in transparent ink, so the line
+// breaks where it will end up and nothing reflows while it is typed. The
+// caret is the next character itself, filled: it stays at the text, also
+// across a line break.
 interface Props {
   /** --- My instruction, as it is typed into the terminal --- */
   prompt: string
@@ -49,7 +55,10 @@ const { prompt, working, class: additionalClasses } = Astro.props
     <span class="ec-terminal-bar"><i></i><i></i><i></i></span>
     <span class="ec-terminal-line ec-terminal-prompt">
       <span class="ec-terminal-sign">›</span>
-      <span class="ec-terminal-typed">{prompt}</span><span class="ec-terminal-caret"></span>
+      <span class="ec-terminal-text"
+        ><span class="ec-terminal-typed">{prompt}</span><span class="ec-terminal-caret"></span><span
+          class="ec-terminal-rest"></span></span
+      >
     </span>
     <span class="ec-terminal-output">
       <span class="ec-terminal-line ec-terminal-working">
@@ -59,7 +68,7 @@ const { prompt, working, class: additionalClasses } = Astro.props
       <span class="ec-terminal-line ec-terminal-answer">
         <span class="ec-terminal-check">✓</span>
         <span
-          ><s>div</s>.text-display <span class="ec-terminal-arrow">→</span>
+          ><s>div</s>.text-display <span class="ec-terminal-arrow">→</span>{" "}
           <b>h1</b>.text-display</span
         >
       </span>
@@ -224,36 +233,19 @@ const { prompt, working, class: additionalClasses } = Astro.props
     color: #5cdb95;
   }
 
-  /* --- The instruction: hidden, then typed in --- */
-  .ec-terminal-typed {
-    display: inline-block;
-    overflow: hidden;
-    max-width: 0;
-    white-space: nowrap;
-    vertical-align: bottom;
-    animation: ec-terminal-type var(--ec-type-duration) steps(42, jump-start) var(--ec-type)
-      forwards;
+  /* --- The instruction: what is not typed yet keeps its place, unseen --- */
+  .ec-terminal-text {
+    min-width: 0;
   }
 
-  /* --- On the narrowest screens the instruction wraps and appears at once;
-     the typing needs one line --- */
-  @media (width < 30rem) {
-    .ec-terminal-typed {
-      max-width: none;
-      white-space: normal;
-      opacity: 0;
-      animation-name: ec-terminal-appear;
-      animation-timing-function: ease;
-      animation-duration: 150ms;
-    }
-  }
-
-  /* --- The caret: blinks from the start of the typing until Enter --- */
+  .ec-terminal-rest,
   .ec-terminal-caret {
-    display: inline-block;
-    width: 0.55em;
-    height: 1.1em;
-    translate: 0 0.2em;
+    color: transparent;
+  }
+
+  /* --- The caret: blinks from the start of the typing until Enter. The script
+     starts the typing when this animation starts. --- */
+  .ec-terminal-caret {
     background: #f3efe6;
     opacity: 0;
     animation:
@@ -340,12 +332,6 @@ const { prompt, working, class: additionalClasses } = Astro.props
     }
   }
 
-  @keyframes ec-terminal-type {
-    to {
-      max-width: 42ch;
-    }
-  }
-
   @keyframes ec-terminal-caret {
     from {
       opacity: 1;
@@ -412,7 +398,6 @@ const { prompt, working, class: additionalClasses } = Astro.props
     .ec-inspect-box,
     .ec-inspect-tag-before,
     .ec-inspect-tag-after,
-    .ec-terminal-typed,
     .ec-terminal-caret,
     .ec-terminal-working,
     .ec-terminal-answer,
@@ -432,10 +417,6 @@ const { prompt, working, class: additionalClasses } = Astro.props
     .ec-terminal-working {
       display: none;
     }
-
-    .ec-terminal-typed {
-      max-width: none;
-    }
   }
 </style>
 
@@ -443,6 +424,8 @@ const { prompt, working, class: additionalClasses } = Astro.props
   // --- Measures what the tooltip shows (the content's size) and where the
   // pointer stops: below the heading, on the heading. Everything is relative
   // to the wrapper's top left corner.
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+
   for (const inspect of document.querySelectorAll<HTMLElement>(".ec-inspect")) {
     const element = inspect.querySelector<HTMLElement>(".ec-inspect-content")!
       .firstElementChild as HTMLElement
@@ -469,6 +452,33 @@ const { prompt, working, class: additionalClasses } = Astro.props
       place()
       inspect.dataset.isReady = "true"
     }
+    // --- The typing: typed, caret and rest always hold the whole sentence.
+    // Under reduced motion it stays as written in the markup, typed in full.
+    const typed = inspect.querySelector<HTMLElement>(".ec-terminal-typed")!
+    const caret = inspect.querySelector<HTMLElement>(".ec-terminal-caret")!
+    const rest = inspect.querySelector<HTMLElement>(".ec-terminal-rest")!
+    const characters = Array.from(typed.textContent ?? "")
+    const showTyped = (count: number) => {
+      typed.textContent = characters.slice(0, count).join("")
+      // --- After the last character the caret needs a character of its own
+      caret.textContent = characters[count] ?? "\u00a0"
+      rest.textContent = characters.slice(count + 1).join("")
+    }
+    if (!reducedMotion.matches) showTyped(0)
+    caret.addEventListener("animationstart", (event) => {
+      if (!event.animationName.includes("ec-terminal-caret")) return
+      // --- The build may write the duration in seconds
+      const durationValue = getComputedStyle(inspect).getPropertyValue("--ec-type-duration").trim()
+      const duration = parseFloat(durationValue) * (durationValue.endsWith("ms") ? 1 : 1000)
+      const startTime = performance.now()
+      const type = (now: number) => {
+        const share = Math.min(1, (now - startTime) / duration)
+        showTyped(Math.round(share * characters.length))
+        if (share < 1) requestAnimationFrame(type)
+      }
+      requestAnimationFrame(type)
+    })
+
     measure()
     // Fonts change the line breaks, so wait for them, but not forever.
     Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]).then(

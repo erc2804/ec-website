@@ -212,7 +212,7 @@ const termClasses = "text-sm text-typo-medium"
   suggestions.querySelectorAll<HTMLButtonElement>("[data-question]").forEach((button) =>
     button.addEventListener("click", () => {
       chat.ask(button.dataset.question!)
-      chat.input.focus()
+      chat.focusAfterChoice()
     })
   )
 </script>

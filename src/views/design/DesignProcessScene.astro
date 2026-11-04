@@ -25,6 +25,16 @@ interface Props {
 
 const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
 
+// --- The pieces are placed for the tall stage on desktop. The low stage
+// below lg shows one step that stands still, so it is moved up or down until
+// its pieces sit in the middle (measured at 393px, in screen pixels)
+const compactOffsets = {
+  1: "-translate-y-[6px]",
+  2: "-translate-y-[18px]",
+  3: "",
+  4: "-translate-y-[12px]",
+}
+
 // --- Same duration and curve as RoleScene, so all pages move alike
 const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
 
@@ -59,12 +69,20 @@ const codeLines = [
 ---
 
 <div
-  class:list={["group relative overflow-hidden", additionalClasses]}
+  class:list={["group @container relative overflow-hidden", additionalClasses]}
   data-step={step}
   aria-hidden="true"
   inert
 >
-  <div class:list={["absolute inset-0", isCompact ? "scale-[0.62]" : "scale-[0.85]"]}>
+  <!-- --- Beside the steps the scene is drawn at full size once its stage is
+       32rem wide; in the narrower column at 1024px step 3 would touch the
+       edge, so it stays at 0.85 there -->
+  <div
+    class:list={[
+      "absolute inset-0",
+      isCompact ? ["scale-[0.62]", compactOffsets[step]] : "scale-[0.85] @min-[32rem]:scale-100",
+    ]}
+  >
     <!-- --- Step 1: the conversation, in the bubble shape of the inquiry chat -->
     <span
       class:list={[

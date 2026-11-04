@@ -18,6 +18,16 @@ interface Props {
 }
 
 const { role = 1, isCompact = false, class: additionalClasses } = Astro.props
+
+// --- The pieces are placed for the tall stage on desktop. The low stage
+// below lg shows one role that stands still, so it is moved up or down until
+// its pieces sit in the middle (measured at 393px, in screen pixels)
+const compactOffsets = {
+  1: "-translate-y-[18px]",
+  2: "translate-y-[2px]",
+  3: "-translate-y-[31px]",
+  4: "-translate-y-[10px]",
+}
 ---
 
 <div
@@ -26,7 +36,7 @@ const { role = 1, isCompact = false, class: additionalClasses } = Astro.props
   aria-hidden="true"
   inert
 >
-  <div class:list={["absolute inset-0", isCompact && "scale-75"]}>
+  <div class:list={["absolute inset-0", isCompact && ["scale-75", compactOffsets[role]]]}>
     <!-- --- The product: a card with three skeleton lines -->
     <span
       class="absolute top-1/2 left-1/2 -mt-14 -ml-22 flex h-28 w-44 flex-col gap-2.5 rounded-2xl bg-typo-min/10 p-4 outline outline-1 outline-typo-min/30 transition-[translate,scale,opacity] duration-600 ease-[cubic-bezier(0.65,0,0.35,1)] group-data-[role=1]:scale-110 group-data-[role=2]:translate-y-[-3.5rem] group-data-[role=2]:scale-90 group-data-[role=3]:translate-x-[-2.5rem] group-data-[role=4]:translate-y-[-4.5rem] group-data-[role=4]:scale-75 group-data-[role=4]:opacity-40"

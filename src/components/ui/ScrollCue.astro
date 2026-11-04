@@ -5,7 +5,8 @@
 // Decoration: the page visibly goes on below the hero, so the cue adds nothing
 // a screen reader needs and is hidden from it. It runs twice and then rests,
 // under the five seconds after which WCAG 2.2.2 would ask for a pause control,
-// and not at all under prefers-reduced-motion.
+// and not at all under prefers-reduced-motion. On a phone it is a little
+// smaller, so it does not compete with the hero's button.
 interface Props {
   label: string
   class?: string
@@ -14,21 +15,25 @@ interface Props {
 const { label, class: additionalClasses } = Astro.props
 ---
 
-<div class:list={["flex items-center gap-4", additionalClasses]} aria-hidden="true">
-  <span class="ec-scroll-cue relative block h-14 w-px overflow-hidden bg-current/30">
-    <span class="absolute inset-x-0 top-0 h-4 bg-brand-green-medium"></span>
+<div class:list={["flex items-center gap-3 sm:gap-4", additionalClasses]} aria-hidden="true">
+  <span class="ec-scroll-cue relative block h-11 w-px overflow-hidden bg-current/30 sm:h-14">
+    <span class="absolute inset-x-0 top-0 h-3.5 bg-brand-green-medium sm:h-4"></span>
   </span>
-  <span class="text-sm tracking-[0.08em] uppercase opacity-70">{label}</span>
+  <span class="text-[0.8125rem] tracking-[0.08em] uppercase opacity-70 sm:text-sm">{label}</span>
 </div>
 
 <style>
+  /* --- From just above the line to just below it, whatever its height:
+     top runs over the line, the transform over the segment itself --- */
   @keyframes ec-scroll-cue-run {
     from {
+      top: 0;
       transform: translateY(-100%);
     }
 
     to {
-      transform: translateY(3.5rem);
+      top: 100%;
+      transform: translateY(0);
     }
   }
 

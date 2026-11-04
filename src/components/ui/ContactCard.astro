@@ -1,12 +1,20 @@
 ---
 // --- Contact tile from the previous site: icon on the left, label and address
 // stacked on the right. The icon comes in through the slot.
-// With copyText the tile gets a copy button at its right end: a mailto: link
-// does nothing when no mail program is set up. A button cannot sit inside a
-// link, so the tile becomes a wrapper holding the link and the button side by
-// side. After a click a check replaces the icon and "Email address copied"
-// shows above the button for two seconds, in a status region that screen
-// readers announce.
+// With copyText the tile gets a copy button: a mailto: link does nothing when
+// no mail program is set up. A button cannot sit inside a link, so the tile
+// becomes a wrapper holding the link and the button. In a wide tile the button
+// is a round icon at its right end, and after a click "Email address copied"
+// shows above it for two seconds. In a narrow one the icon would take the
+// width the address needs, so the button is a labelled row under it, a target
+// as wide as the tile, and the row itself says it worked. Either way a check
+// replaces the icon and a status region tells screen readers.
+//
+// The tile decides by its own width, not the window's: the same tile sits in
+// a full-width column and in a grid cell. The address is never split with
+// markup, since a break hint ends up as a space in the link's name; in the
+// narrowest tiles the decorative icon gives up its width instead, the label
+// says the same.
 import { IconCheck, IconCopy } from "@tabler/icons-astro"
 import { useTranslations } from "../../i18n"
 
@@ -23,56 +31,81 @@ interface Props {
 const { href, label, address, isExternal = false, copyText, class: additionalClasses } = Astro.props
 const t = useTranslations(Astro.currentLocale).common
 
-const surfaceClasses = "rounded-3xl bg-gray-min shadow-sm transition-shadow lg:hover:shadow-lg"
-const linkClasses = "flex items-center gap-4 rounded-3xl px-6 py-4 text-typo-medium no-underline"
+// --- 28.5rem: wide enough for the address and the round button in one row,
+// at the lead size from md on. 21rem: the row layout still has room for the
+// icon at 20px. Both measured with the email address.
+const surfaceClasses =
+  "@container rounded-3xl bg-gray-min shadow-sm transition-shadow lg:hover:shadow-lg"
+const linkClasses =
+  "flex items-center gap-4 rounded-3xl px-5 py-4 text-typo-medium no-underline @min-[28.5rem]:px-6"
+const iconClasses =
+  "grid size-10 shrink-0 place-items-center text-brand-green-medium @max-[21rem]:hidden [&>svg]:size-full"
 ---
 
 {
   copyText ? (
-    <div class:list={["ec-copy relative flex items-center", surfaceClasses, additionalClasses]}>
-      <a href={href} class:list={[linkClasses, "min-w-0 flex-1 pr-2"]}>
-        <span class="grid size-10 shrink-0 place-items-center text-brand-green-medium [&>svg]:size-full">
-          <slot />
-        </span>
-        <span class="flex min-w-0 flex-col">
-          <span>{label}</span>
-          <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
-        </span>
-      </a>
-      <button
-        type="button"
-        class="ec-copy-button mr-4 grid size-11 shrink-0 place-items-center rounded-full text-typo-medium transition-colors hover:bg-gray-subtle hover:text-typo-high"
-        data-copy-text={copyText}
-        data-copied={t.copied}
-        data-copy-failed={t.copyFailed}
-        aria-label={t.copyEmail}
-      >
-        <IconCopy class="ec-copy-idle size-5" aria-hidden="true" />
-        <IconCheck class="ec-copy-done hidden size-5 text-brand-green-deep" aria-hidden="true" />
-      </button>
-      {/* --- Shown above the button and read by screen readers; it stays in
-           the page while empty, so a screen reader knows the region before
-           its text arrives */}
+    <div class:list={["ec-copy relative", surfaceClasses, additionalClasses]}>
+      <div class="flex flex-col @min-[28.5rem]:flex-row @min-[28.5rem]:items-center">
+        <a href={href} class:list={[linkClasses, "min-w-0 flex-1 @min-[28.5rem]:pr-2"]}>
+          <span class={iconClasses}>
+            <slot />
+          </span>
+          <span class="flex min-w-0 flex-col">
+            <span>{label}</span>
+            <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
+          </span>
+        </a>
+        <button
+          type="button"
+          class="ec-copy-button mx-5 flex min-h-13 items-center gap-4 border-t border-gray-low font-bold text-typo-medium transition-colors hover:text-typo-high @min-[28.5rem]:mx-0 @min-[28.5rem]:mr-4 @min-[28.5rem]:grid @min-[28.5rem]:size-11 @min-[28.5rem]:min-h-0 @min-[28.5rem]:shrink-0 @min-[28.5rem]:place-items-center @min-[28.5rem]:rounded-full @min-[28.5rem]:border-0 @min-[28.5rem]:hover:bg-gray-subtle"
+          data-copy-text={copyText}
+          data-copied={t.copied}
+          data-copy-failed={t.copyFailed}
+        >
+          <span
+            class="grid shrink-0 place-items-center @min-[21rem]:w-10 @min-[28.5rem]:w-auto"
+            aria-hidden="true"
+          >
+            <IconCopy class="ec-copy-idle size-5" />
+            <IconCheck class="ec-copy-done hidden size-5 text-brand-green-deep" />
+          </span>
+          <span class="sr-only">{t.copyEmail}</span>
+          {/* --- The row's visible words; the name above stays the same, so it
+               is not read out a second time when the words change */}
+          <span
+            class="ec-copy-row-label @min-[28.5rem]:hidden"
+            aria-hidden="true"
+            data-idle={t.copyEmail}
+          >
+            {t.copyEmail}
+          </span>
+        </button>
+      </div>
+      {/* --- Read by screen readers, and in a wide tile shown above the
+           button. It stays in the page while empty, so a screen reader knows
+           the region before its text arrives. */}
       <span
-        class="ec-copy-status pointer-events-none absolute -top-4 right-2 rounded-full bg-gray-max px-3 py-1 text-xs font-bold whitespace-nowrap text-gray-min empty:opacity-0"
+        class="ec-copy-status pointer-events-none absolute -top-4 right-2 rounded-full bg-gray-max px-3 py-1 text-xs font-bold whitespace-nowrap text-gray-min empty:opacity-0 @max-[28.5rem]:sr-only"
         role="status"
       />
     </div>
   ) : (
-    <a
-      href={href}
-      class:list={[linkClasses, surfaceClasses, additionalClasses]}
-      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
-      <span class="grid size-10 shrink-0 place-items-center text-brand-green-medium [&>svg]:size-full">
-        <slot />
-      </span>
-      <span class="flex flex-col">
-        <span>{label}</span>
-        <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
-        {isExternal && <span class="sr-only">{t.opensInNewTab}</span>}
-      </span>
-    </a>
+    <div class:list={[surfaceClasses, additionalClasses]}>
+      <a
+        href={href}
+        class={linkClasses}
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
+        <span class={iconClasses}>
+          <slot />
+        </span>
+        <span class="flex flex-col">
+          <span>{label}</span>
+          <span class="text-lead [overflow-wrap:anywhere] text-typo-high">{address}</span>
+          {isExternal && <span class="sr-only">{t.opensInNewTab}</span>}
+        </span>
+      </a>
+    </div>
   )
 }
 
@@ -81,9 +114,10 @@ const linkClasses = "flex items-center gap-4 rounded-3xl px-6 py-4 text-typo-med
   // context; where it refuses, the status says it did not work, and the address
   // stays readable on the tile.
   for (const button of document.querySelectorAll<HTMLButtonElement>(".ec-copy-button")) {
-    const status = button.parentElement!.querySelector<HTMLElement>(".ec-copy-status")!
+    const status = button.closest(".ec-copy")!.querySelector<HTMLElement>(".ec-copy-status")!
     const idleIcon = button.querySelector(".ec-copy-idle")!
     const doneIcon = button.querySelector(".ec-copy-done")!
+    const rowLabel = button.querySelector<HTMLElement>(".ec-copy-row-label")!
     let resetTimer: number | undefined
 
     button.addEventListener("click", async () => {
@@ -97,8 +131,10 @@ const linkClasses = "flex items-center gap-4 rounded-3xl px-6 py-4 text-typo-med
       idleIcon.classList.toggle("hidden", isCopied)
       doneIcon.classList.toggle("hidden", !isCopied)
       status.textContent = isCopied ? button.dataset.copied! : button.dataset.copyFailed!
+      rowLabel.textContent = status.textContent
       resetTimer = window.setTimeout(() => {
         status.textContent = ""
+        rowLabel.textContent = rowLabel.dataset.idle!
         idleIcon.classList.remove("hidden")
         doneIcon.classList.add("hidden")
       }, 2000)

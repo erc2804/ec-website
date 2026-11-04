@@ -24,9 +24,9 @@ const t = useTranslations(Astro.currentLocale).development.vibeCoding
   <div
     class="ec-vibe mt-12 grid ec-reveal gap-10 ec-reveal-late nav:mt-20 nav:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] nav:gap-16"
   >
-    <!-- --- Room below the last moment, so the phone still stands beside it
-         instead of leaving with the end of the column -->
-    <ol role="list" class="flex flex-col gap-6 md:gap-8 nav:gap-4 nav:pb-20">
+    <!-- --- No room below the last moment: the sticky phone stops where the
+         column ends, so its bottom lines up with the last card's -->
+    <ol role="list" class="flex flex-col gap-6 md:gap-8 nav:gap-4">
       {
         t.steps.map((step, index) => (
           <li

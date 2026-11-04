@@ -139,6 +139,8 @@ export function createAssistantChat(assistant: HTMLElement, options: Options) {
   const text: ChatText = JSON.parse(assistant.dataset.text ?? "{}")
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
   const scrollBehavior = (): ScrollBehavior => (reducedMotion.matches ? "auto" : "smooth")
+  // --- Below lg the conversation is part of the page, not an area of its own
+  const narrow = window.matchMedia("(width < 64rem)")
 
   const log = assistant.querySelector<HTMLElement>(".ec-assistant-log")!
   const logFrame = assistant.querySelector<HTMLElement>(".ec-log-frame")!
@@ -226,6 +228,45 @@ export function createAssistantChat(assistant: HTMLElement, options: Options) {
     updateEarlier()
   })
 
+  // --- Narrow screens: the page itself follows the conversation. Sending
+  // folds the earlier messages away, which would pull the page up under the
+  // reader (Safari keeps no scroll anchor), so the input is held in place
+  // first; then the conversation, from the button for the earlier messages
+  // to the new one, glides to the top, below the header, and the answer has
+  // the room under it, the keyboard's share of the screen included. Once the
+  // reader scrolls on their own, the answer no longer moves the page.
+  let isFollowing = false
+  const stopFollowing = () => {
+    isFollowing = false
+  }
+  window.addEventListener("touchmove", stopFollowing, { passive: true })
+  window.addEventListener("wheel", stopFollowing, { passive: true })
+
+  const holdInputInPlace = (change: () => void) => {
+    const inputTop = form.getBoundingClientRect().top
+    change()
+    if (!narrow.matches) return
+    const shift = form.getBoundingClientRect().top - inputTop
+    if (shift) window.scrollBy({ top: shift, behavior: "instant" })
+  }
+
+  const bringToTop = (element: Element) => {
+    if (!narrow.matches) return
+    element.scrollIntoView({ block: "start", behavior: scrollBehavior() })
+  }
+
+  // --- After a tap the keyboard would cover what just changed, so on touch
+  // focus goes to the conversation instead of the field
+  let lastPointerType = ""
+  assistant.addEventListener("pointerdown", (event) => (lastPointerType = event.pointerType), {
+    capture: true,
+  })
+  assistant.addEventListener("keydown", () => (lastPointerType = ""), { capture: true })
+  const focusAfterChoice = () => {
+    if (lastPointerType === "touch" || lastPointerType === "pen") log.focus({ preventScroll: true })
+    else input.focus()
+  }
+
   const scrollToNewest = (isSmooth = true) => {
     log.scrollTo({ top: log.scrollHeight, behavior: isSmooth ? scrollBehavior() : "auto" })
     updateScrollHints()
@@ -293,11 +334,17 @@ export function createAssistantChat(assistant: HTMLElement, options: Options) {
   const ask = async (content: string) => {
     if (isWorking) return
     isWorking = true
-    options.onAsk?.()
     messages.push({ role: "user", content })
-    const userEntry = addEntry("user", content)
+    let userEntry!: HTMLElement
+    let typing!: HTMLElement
+    holdInputInPlace(() => {
+      options.onAsk?.()
+      userEntry = addEntry("user", content)
+      typing = addEntry("assistant")
+    })
+    isFollowing = true
+    bringToTop(logFrame)
     setStatus(text.working, false)
-    const typing = addEntry("assistant")
 
     try {
       const answer = await options.respond(messages)
@@ -306,6 +353,7 @@ export function createAssistantChat(assistant: HTMLElement, options: Options) {
       answer.before?.()
       messages.push({ role: "assistant", content: answer.reply })
       addEntry("assistant", answer.reply)
+      if (isFollowing) bringToTop(logFrame)
       resetButton.classList.remove("hidden")
       input.placeholder = text.replyPlaceholder
       resizeInput()
@@ -375,15 +423,16 @@ export function createAssistantChat(assistant: HTMLElement, options: Options) {
   resetButton.addEventListener("click", () => {
     if (isWorking) return
     reset()
-    input.focus()
+    focusAfterChoice()
+    bringToTop(assistant)
   })
 
   return {
     ask,
     reset,
     appendLine,
-    input,
     isWorking: () => isWorking,
+    focusAfterChoice,
     hasConversation: () => messages.length > 0,
     // --- After the chat was hidden: measure again
     refresh: () => {

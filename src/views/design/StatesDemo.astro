@@ -44,9 +44,11 @@ const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state
       class="mt-10 ec-reveal ec-reveal-late"
     />
 
+    <!-- --- The columns may shrink below their content: the long name runs
+         on in one line and the card cuts it off, it must not widen the page -->
     <div class="mt-8 grid ec-reveal gap-6 ec-reveal-late md:grid-cols-2">
       <!-- --- Only the ideal case designed -->
-      <div class="flex flex-col gap-3">
+      <div class="flex min-w-0 flex-col gap-3">
         <div class="flex flex-col">
           <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
             <span class="size-2.5 rounded-full border-2 border-typo-medium"></span>
@@ -119,7 +121,7 @@ const whyId = (state: string, card: "common" | "designed") => `statesWhy-${state
         </p>
       </div>
       <!-- --- Every state designed -->
-      <div class="flex flex-col gap-3">
+      <div class="flex min-w-0 flex-col gap-3">
         <div class="flex flex-col">
           <p class="flex items-center gap-2.5 text-sm font-bold text-typo-high">
             <span class="size-2.5 rounded-full bg-brand-green-high"></span>

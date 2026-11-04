@@ -23,6 +23,16 @@ interface Props {
 
 const { step = 1, isCompact = false, class: additionalClasses } = Astro.props
 
+// --- The pieces are placed for the tall stage on desktop. The low stage
+// below lg shows one step that stands still, so it is moved up or down until
+// its pieces sit in the middle (measured at 393px, in screen pixels)
+const compactOffsets = {
+  1: "-translate-y-[8px]",
+  2: "-translate-y-[23px]",
+  3: "",
+  4: "-translate-y-[23px]",
+}
+
 // --- Same duration and curve as RoleScene, so both pages move alike
 const motion = "duration-600 ease-[cubic-bezier(0.65,0,0.35,1)]"
 
@@ -65,7 +75,7 @@ const groupSlots = ["translate-x-[-100px]", "translate-x-0", "translate-x-[100px
   aria-hidden="true"
   inert
 >
-  <div class:list={["absolute inset-0", isCompact && "scale-75"]}>
+  <div class:list={["absolute inset-0", isCompact && ["scale-75", compactOffsets[step]]]}>
     <!-- --- Step 1: the conversation, in the bubble shape of the inquiry chat -->
     <span
       class:list={[
