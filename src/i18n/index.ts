@@ -78,6 +78,14 @@ export function localisedPath(route: RouteKey, locale: Locale, subPath = "") {
   return `${routes[route][locale]}${subPath}`
 }
 
+// --- The address a page is served at, from Astro.url.pathname. The build
+// writes files (build.format "file"), so at build time the path is the file:
+// "/barrierefreiheit.html", "/index.html". The dev server already has the
+// address. Either way the result matches the route table.
+export function servedPath(pathname: string) {
+  return pathname.replace(/(\/index)?\.html$/, "").replace(/\/+$/, "") || "/"
+}
+
 // --- "Projekt anfragen" from an offer page arrives with that topic preselected
 const inquiryTopics = {
   de: { accessibility: "barrierefreiheit", design: "design", development: "entwicklung" },

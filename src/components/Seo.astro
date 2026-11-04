@@ -1,6 +1,6 @@
 ---
 import { siteConfig } from "../config/site"
-import { routes, useTranslations, type RouteKey } from "../i18n"
+import { routes, servedPath, useTranslations, type RouteKey } from "../i18n"
 
 interface Props {
   title: string
@@ -29,7 +29,6 @@ const {
 
 const currentLocale = Astro.currentLocale ?? siteConfig.defaultLocale
 
-const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).href
 const { src: shareImageSrc, alt: shareImageAlt } = shareImage ?? {
   src: siteConfig.defaultShareImage[currentLocale === "en" ? "en" : "de"],
   alt: useTranslations(currentLocale).common.shareImageAlt,
@@ -45,6 +44,12 @@ const germanUrl = alternates
 const englishUrl = alternates
   ? new URL(`${alternates.en}${subPath}`, siteConfig.url).href
   : undefined
+
+// --- The page's own address from the route table too, else from servedPath:
+// Astro.url alone is the built file, "/barrierefreiheit.html"
+const canonicalUrl =
+  (currentLocale === "en" ? englishUrl : germanUrl) ??
+  new URL(servedPath(Astro.url.pathname), siteConfig.url).href
 
 const personSchema = {
   "@context": "https://schema.org",

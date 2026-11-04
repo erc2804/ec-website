@@ -18,6 +18,7 @@ import {
   inquiryPath,
   localisedPath,
   mainNavRoutes,
+  servedPath,
   useTranslations,
   type Locale,
   type RouteKey,
@@ -44,8 +45,8 @@ const navItems = mainNavRoutes.map((key) => ({
 // --- Not on the request page itself, where it would point at the page you are on
 const hasInquiryCta = routeKey !== "inquiry" && routeKey !== "inquirySent"
 
-// --- trailingSlash is "never", so a bare comparison is enough
-const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
+// --- Compared with the route table, so it has to be the served address
+const currentPath = servedPath(Astro.url.pathname)
 
 // --- Once scrolled, the logo and the menu capsule are white islands that may
 // float over the dark hero. A ring around them would land on that dark ground,

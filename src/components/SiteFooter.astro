@@ -4,7 +4,7 @@
 // following the cursor down here only got in the way.
 import { IconBrandLinkedin } from "@tabler/icons-astro"
 import { siteConfig } from "../config/site"
-import { footerRoutes, localisedPath, useTranslations, type Locale } from "../i18n"
+import { footerRoutes, localisedPath, servedPath, useTranslations, type Locale } from "../i18n"
 
 const currentLocale = (Astro.currentLocale ?? siteConfig.defaultLocale) as Locale
 const t = useTranslations(currentLocale)
@@ -24,7 +24,7 @@ const profileIcons = {
 }
 
 // --- trailingSlash is "never", so a bare comparison is enough
-const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/"
+const currentPath = servedPath(Astro.url.pathname)
 ---
 
 <footer
