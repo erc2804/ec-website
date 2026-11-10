@@ -903,7 +903,7 @@ export const de = {
     },
 
     oneHand: {
-      title: "Design, das sich bauen lässt",
+      title: "Kreativ bis an die Grenze des Machbaren",
       body: "Ich entwickle seit über zehn Jahren selbst Frontends. Deshalb weiß ich, **wie weit ein Entwurf gehen darf**: so weit, dass Entwickler ins Schwitzen kommen, aber **nie so weit, dass er im Code nicht hält**. Und wenn beim Bauen jemand fehlt, bin ich da.",
       portraitAlt: "Ercan Cicek",
     },

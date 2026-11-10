@@ -889,7 +889,7 @@ export const en: Translations = {
     },
 
     oneHand: {
-      title: "Design that can be built",
+      title: "Creative to the edge of what's buildable",
       body: "I've been building frontends myself for more than ten years. So I know **how far a design can go**: far enough to make developers sweat, but **never so far that it won't hold up in code**. And if someone's missing for the build, I'm there.",
       portraitAlt: "Ercan Cicek",
     },
