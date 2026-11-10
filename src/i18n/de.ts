@@ -161,7 +161,7 @@ export const de = {
             "Anthropic nutzt die Inhalte nicht, um seine Modelle zu trainieren, und löscht sie nach spätestens 30 Tagen. Länger, bis zu zwei Jahre, bleiben sie nur, wenn die automatischen Sicherheitssysteme von Anthropic eine Nachricht als Verstoß gegen die Nutzungsrichtlinien markieren, oder wenn ein Gesetz es verlangt. Details stehen im [Privacy Center von Anthropic](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-personal-data).",
             "Ich selbst speichere die Chats nicht. Der Verlauf liegt nur in deinem geöffneten Tab und ist weg, wenn du die Seite verlässt. Damit niemand die Chats mit automatisierten Anfragen überlastet, zählt Netlify die Anfragen pro IP-Adresse und lässt höchstens zwölf pro Minute durch.",
             "Rechtsgrundlage ist beim Projektformular Art. 6 Abs. 1 lit. b DSGVO, weil Pixel-Ercan dir hilft, deine Anfrage zu stellen. Auf der Seite Über mich ist es Art. 6 Abs. 1 lit. f DSGVO: mein berechtigtes Interesse, deine Fragen zu mir und meiner Arbeit zu beantworten.",
-            "Pixel-Ercan entscheidet nichts über dich. Was er ins Formular einträgt, kannst du ändern, und abgeschickt wird nur, was du selbst abschickst.",
+            "Pixel-Ercan entscheidet nichts über dich. Was er ins Formular einträgt, kannst du ändern.",
           ],
         },
         {
@@ -579,7 +579,7 @@ export const de = {
       intro:
         "Hi, ich bin Pixel-Ercan. Erzähl mir von deinem Projekt, und ich trage alles für dich ins Formular ein.",
       disclosure:
-        "Pixel-Ercan ist eine KI. Damit er eintragen kann, geht dein Text an den KI-Dienst Anthropic. Abgeschickt wird nur, was du selbst abschickst.",
+        "Pixel-Ercan ist eine KI. Damit er etwas eintragen kann, geht dein Text an den KI-Dienst Anthropic.",
       placeholder:
         "Hi Ercan, wir sind ein Onlineshop für Fahrradteile und müssen bis Juni barrierefrei sein. Kannst du prüfen, wo wir stehen? Ich bin Peter, erreichbar unter peter@beispiel.de",
       replyPlaceholder: "Deine Antwort …",

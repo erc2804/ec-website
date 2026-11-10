@@ -166,7 +166,7 @@ export const en: Translations = {
             "Anthropic does not use the content to train its models and deletes it within 30 days at the latest. It is kept longer, up to two years, only if Anthropic's automated safety systems flag a message as violating its usage policy, or if the law requires it. Details are in [Anthropic's Privacy Center](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-personal-data).",
             "I don't store the chats myself. The conversation only lives in your open tab and is gone when you leave the page. So nobody can flood the chats with automated requests, Netlify counts requests per IP address and lets through at most twelve per minute.",
             "On the project form the legal basis is Art. 6(1)(b) GDPR, because Pixel-Ercan helps you make your request. On the About me page it is Art. 6(1)(f) GDPR: my legitimate interest in answering your questions about me and my work.",
-            "Pixel-Ercan makes no decisions about you. You can change whatever he fills into the form, and only what you send yourself gets sent.",
+            "Pixel-Ercan makes no decisions about you. You can change whatever he fills into the form.",
           ],
         },
         {
@@ -575,7 +575,7 @@ export const en: Translations = {
       title: "Fill it in with Pixel-Ercan",
       intro: "Hi, I'm Pixel-Ercan. Tell me about your project and I'll fill in the form for you.",
       disclosure:
-        "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic. Nothing is sent to Ercan until you send it yourself.",
+        "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic.",
       placeholder:
         "Hi Ercan, we run an online shop for bike parts and need to be accessible by June. Can you check where we stand? I'm Peter, you can reach me at peter@example.com",
       replyPlaceholder: "Your reply …",
