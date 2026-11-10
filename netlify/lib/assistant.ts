@@ -120,6 +120,8 @@ export async function callModel(
 
   if (!response.ok) {
     const data: AnthropicError = await response.json().catch(() => ({}))
+    // --- Only in the function log on Netlify, never sent to the visitor
+    console.error("Anthropic", response.status, data.error?.type, data.error?.message)
     if (isBudgetError(response.status, data)) return json({ error: "budget" }, 503)
     if (response.status === 429 || response.status === 529) return json({ error: "busy" }, 503)
     return json({ error: "upstream" }, 502)
