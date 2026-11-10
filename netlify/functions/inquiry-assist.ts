@@ -157,8 +157,14 @@ const stepTask = (context: ReplyContext) => {
       return "They want a call back but gave no phone number. Ask for the number."
     case "callback":
       return "They gave a phone number but did not say whether they want a call back. Ask whether Ercan should call them back. Yes and no buttons appear below your message, so don't spell out the options."
-    case "done":
-      return `Everything Ercan needs is in the form. Ask no question. Say it is all filled in, that they should take a quick look and then send it with the button "${submitLabel(locale)}".`
+    case "done": {
+      // --- Name and phone are optional. Left empty, he offers them once
+      // instead of calling the form complete.
+      const optionalEmpty = [!form.name && "name", !form.phone && "phone number"].filter(Boolean)
+      return optionalEmpty.length
+        ? `Everything Ercan needs is in the form, but the optional ${optionalEmpty.join(" and ")} ${optionalEmpty.length > 1 ? "are" : "is"} still empty. Don't call the form complete. Say they can add ${optionalEmpty.length > 1 ? "them" : "it"} if they like, otherwise take a quick look and send the request with the button "${submitLabel(locale)}". No question mark.`
+        : `Everything Ercan needs is in the form. Ask no question. Say it is all filled in, that they should take a quick look and then send it with the button "${submitLabel(locale)}".`
+    }
   }
 }
 
@@ -178,6 +184,7 @@ const exampleMessages: Record<Locale, string> = {
     "Geht es um eine bestehende Website oder baut ihr eine neue?",
     "Die Prüfung für euren Shop steht drin. Unter welcher E-Mail-Adresse erreicht Ercan dich?",
     `Alles drin. Schau kurz drüber und schick es dann über „${submitLabel("de")}“ ab.`,
+    `Wenn du magst, kannst du noch deine Telefonnummer ergänzen. Sonst schau kurz drüber und schick es über „${submitLabel("de")}“ ab.`,
     "Nein, ich bin Pixel-Ercan, eine KI. Ercan liest deine Anfrage aber persönlich.",
     "Den Preis klärt Ercan im unverbindlichen und kostenlosen Erstgespräch. Worum geht es bei deinem Projekt?",
     "Betroffen ist meist, wer Privatkunden online etwas verkaufen oder buchen lässt. Ob das für euch gilt, schaut Ercan sich an. Für welche Website fragst du?",
@@ -188,6 +195,7 @@ const exampleMessages: Record<Locale, string> = {
     "Is this about an existing website, or are you building a new one?",
     "The audit for your shop is in. Which email address can Ercan reach you at?",
     `All set. Take a quick look, then send it with “${submitLabel("en")}”.`,
+    `You can add your phone number if you like. Otherwise take a quick look and send it with “${submitLabel("en")}”.`,
     "No, I'm Pixel-Ercan, an AI. Ercan reads your request himself, though.",
     "Ercan covers pricing in the first call, which is free with no strings attached. What's your project about?",
     "It usually applies if consumers can buy or book something from you online. Ercan looks at your case. Which website are you asking about?",
