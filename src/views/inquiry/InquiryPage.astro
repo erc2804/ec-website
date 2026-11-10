@@ -680,6 +680,13 @@ const aiTagClasses =
     for (const key of Object.keys(textControls) as (keyof typeof textControls)[]) {
       const value = fields[key]
       if (typeof value !== "string") continue
+      // --- Empty means he takes back what he entered, say a name that turned
+      // out to be the client's
+      if (!value) {
+        textControls[key].value = ""
+        markAiFilled(key, false)
+        continue
+      }
       markAiFilled(key, true)
       if (key in errorTargets) setError(key as ErrorKey)
       await typeInto(textControls[key], value)
