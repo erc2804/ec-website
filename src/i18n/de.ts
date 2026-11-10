@@ -732,7 +732,7 @@ export const de = {
       lead: "Pixel-Ercan kennt meine Projekte, meine Arbeitsweise und relevante persönliche Informationen. Frag ihn, was du wissen willst.",
       intro: "Hi, ich bin Pixel-Ercan. Frag mich, was du über Ercan wissen willst.",
       disclosure:
-        "Pixel-Ercan ist eine KI. Damit er antworten kann, geht deine Frage an den KI-Dienst Anthropic.",
+        "Pixel-Ercan ist eine KI und kann sich auch mal irren. Damit er antworten kann, geht deine Frage an den KI-Dienst Anthropic.",
       placeholder: "Zum Beispiel: Hat Ercan schon mit Startups gearbeitet?",
       replyPlaceholder: "Deine nächste Frage …",
       suggestionsLabel: "Fragen zum Antippen",

@@ -149,7 +149,7 @@ const stepTask = (context: ReplyContext) => {
       return `The project description still lacks this: ${missing[0]}. Ask one short question about exactly this point and nothing else, phrased for their project.${detailQuestionsAsked > 0 ? " Add in a few words that it is fine to leave it open." : ""}`
     case "contact":
       if (incompleteEmail)
-        return `The visitor wrote "${incompleteEmail}" as their email address, but something is missing, usually the ending like ".de". Say so kindly and ask for the full address.`
+        return `The visitor wrote "${incompleteEmail}" as their email address, but it is not a complete address. Say in a few words what exactly looks wrong, only what you actually see in it: a comma instead of a dot, a missing ending like ".de", a space. Don't guess anything else. Then ask them to write it again.`
       if (form.phone)
         return "Ask for their email address. Say kindly that Ercan always needs it, also when there is a phone number."
       return `Ask for their email address${form.name ? "" : ", and their name in the same question"}.`
@@ -177,7 +177,6 @@ const exampleMessages: Record<Locale, string> = {
   de: [
     "Geht es um eine bestehende Website oder baut ihr eine neue?",
     "Die Prüfung für euren Shop steht drin. Unter welcher E-Mail-Adresse erreicht Ercan dich?",
-    "Bei der Adresse fehlt noch das Ende, etwa „.de“. Schreib sie mir bitte noch mal ganz.",
     `Alles drin. Schau kurz drüber und schick es dann über „${submitLabel("de")}“ ab.`,
     "Nein, ich bin Pixel-Ercan, eine KI. Ercan liest deine Anfrage aber persönlich.",
     "Den Preis klärt Ercan im unverbindlichen und kostenlosen Erstgespräch. Worum geht es bei deinem Projekt?",
@@ -188,7 +187,6 @@ const exampleMessages: Record<Locale, string> = {
   en: [
     "Is this about an existing website, or are you building a new one?",
     "The audit for your shop is in. Which email address can Ercan reach you at?",
-    "The address is missing its ending, like “.com”. Could you write it out in full?",
     `All set. Take a quick look, then send it with “${submitLabel("en")}”.`,
     "No, I'm Pixel-Ercan, an AI. Ercan reads your request himself, though.",
     "Ercan covers pricing in the first call, which is free with no strings attached. What's your project about?",

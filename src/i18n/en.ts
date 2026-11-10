@@ -726,7 +726,7 @@ export const en: Translations = {
       lead: "Pixel-Ercan knows my projects, how I work and relevant personal details. Ask him whatever you want to know.",
       intro: "Hi, I'm Pixel-Ercan. Ask me anything you want to know about Ercan.",
       disclosure:
-        "Pixel-Ercan is an AI. To answer, your question is sent to the AI service Anthropic.",
+        "Pixel-Ercan is an AI and can get things wrong. To answer, your question is sent to the AI service Anthropic.",
       placeholder: "For example: Has Ercan worked with startups?",
       replyPlaceholder: "Your next question …",
       suggestionsLabel: "Questions to tap",
