@@ -573,7 +573,8 @@ export const en: Translations = {
     lead: "Tell me what I can help you with. A rough idea is enough. Fill in the form yourself, or let Pixel-Ercan (my AI assistant) help you.",
     assistant: {
       title: "Fill it in with Pixel-Ercan",
-      intro: "Hi, I'm Pixel-Ercan. Tell me about your project and I'll fill in the form for you.",
+      intro:
+        "Hi, I'm Pixel-Ercan. Tell me in your own words what you have in mind. I'll ask what Ercan needs for a good first assessment and fill in the form for you.",
       disclosure:
         "Pixel-Ercan is an AI. To fill in the form, your text is sent to the AI service Anthropic.",
       placeholder:
@@ -632,7 +633,7 @@ export const en: Translations = {
       errorSummary: "Your request hasn't been sent yet. Please check the following:",
       errors: {
         goal: "Tell me about your project in a sentence or two. That's enough for a first assessment.",
-        email: "I can't reply without your email address. Add it here.",
+        email: "I always need your email address, even if you've added a phone number.",
         emailInvalid:
           "Something's missing in the email address. It should look like name@company.com",
         callbackPhone:

@@ -577,7 +577,7 @@ export const de = {
     assistant: {
       title: "Mit Pixel-Ercan ausfüllen",
       intro:
-        "Hi, ich bin Pixel-Ercan. Erzähl mir von deinem Projekt, und ich trage alles für dich ins Formular ein.",
+        "Hi, ich bin Pixel-Ercan. Erzähl mir in deinen Worten, was du vorhast. Ich frage nach, was Ercan für eine gute erste Einschätzung braucht, und trage alles ein.",
       disclosure:
         "Pixel-Ercan ist eine KI. Damit er etwas eintragen kann, geht dein Text an den KI-Dienst Anthropic.",
       placeholder:
@@ -638,7 +638,8 @@ export const de = {
       errorSummary: "Deine Anfrage ist noch nicht gesendet. Bitte prüf diese Angaben:",
       errors: {
         goal: "Erzähl mir in ein, zwei Sätzen von deinem Projekt. Das reicht mir für eine erste Einschätzung.",
-        email: "Ohne E-Mail-Adresse kann ich dir leider nicht antworten. Trag sie hier ein.",
+        email:
+          "Deine E-Mail-Adresse brauche ich immer, auch falls du eine Telefonnummer angegeben hast.",
         emailInvalid:
           "An der E-Mail-Adresse fehlt noch etwas. So sieht sie zum Beispiel aus: name@firma.de",
         callbackPhone:

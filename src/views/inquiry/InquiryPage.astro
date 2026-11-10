@@ -385,6 +385,7 @@ const aiTagClasses =
     fields: Partial<FormState>
     reply: string
     step: string
+    callbackAnswered: boolean
     askCallback: boolean
     isComplete: boolean
   }
@@ -458,8 +459,9 @@ const aiTagClasses =
   // --- Whether the call back is settled: an unticked box alone may only mean
   // nobody has asked yet
   let isCallbackAnswered = false
-  // --- What Pixel-Ercan has asked so far, so he asks for more detail only once
-  const askedSteps = new Set<string>()
+  // --- What Pixel-Ercan has asked so far, in order: he asks for more detail at
+  // most twice and never asks back twice in a row
+  const askedSteps: string[] = []
   const fieldWrapper = (key: FieldKey) => form.querySelector<HTMLElement>(`[data-field='${key}']`)!
 
   const markAiFilled = (key: FieldKey, isAiFilled: boolean) => {
@@ -701,10 +703,11 @@ const aiTagClasses =
         messages,
         form: readState(),
         callbackAnswered: isCallbackAnswered,
-        askedSteps: [...askedSteps],
+        askedSteps,
       })) as AssistantResult
       if (typeof result?.reply !== "string") throw new ChatError("garbled")
-      askedSteps.add(result.step)
+      askedSteps.push(result.step)
+      if (result.callbackAnswered) isCallbackAnswered = true
 
       // --- The dots keep going while the fields fill in; then what went in,
       // and his next question last, where the eye ends up
@@ -729,7 +732,7 @@ const aiTagClasses =
     // --- Starting over clears the conversation, not the form: what is in the
     // fields stays, it just no longer counts as Pixel-Ercan's
     onReset: () => {
-      askedSteps.clear()
+      askedSteps.length = 0
       isCallbackAnswered = callback.checked
       ;[...aiFilled].forEach((key) => markAiFilled(key, false))
       setChoicesVisible(false)
