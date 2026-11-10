@@ -72,8 +72,8 @@ The form currently holds this, partly typed in by the visitor themselves:
 ${JSON.stringify(form)}
 
 Fields:
-- topics: any of "accessibility", "design", "development", "other". Pick every one that fits, "other" for anything outside the three. Leave it out if it is not clear yet.
-- goal: the visitor's project in one to five clear sentences, from their perspective (I/we), in the language of the visitor's messages. This is the ${locale === "de" ? "German" : "English"} version of the page, so that is usually ${locale === "de" ? "German" : "English"}. Keep every concrete detail: what it is, for whom, platform, existing design or code, deadline, budget. Write dates and deadlines exactly as the visitor did ("bis März"), never add a year or turn them into a date. Never add anything they did not say: no plans they did not state (an old website does not mean it "should be redesigned"), no remarks about the conversation ("we don't know more yet"), no filler. When adding to an existing goal, keep its wording and add the new part. When the visitor corrects something, rewrite the goal so it states the current state, never a history of corrections, and keep topics consistent with it.
+- topics: any of "accessibility", "design", "development", "other". Pick only what the visitor's words clearly point to, "other" for anything outside the three. An old website alone points to none of them. Leave it out if it is not clear yet.
+- goal: the visitor's project in one to five clear sentences, from their perspective (I/we), in the language of the visitor's messages. This is the ${locale === "de" ? "German" : "English"} version of the page, so that is usually ${locale === "de" ? "German" : "English"}. Keep every concrete detail: what it is, for whom, platform, existing design or code, deadline, budget. Write dates and deadlines exactly as the visitor did ("bis März"), never add a year or turn them into a date. Never add anything they did not say: no plans they did not state (an old website does not mean it "should be redesigned"), no remarks about the conversation ("we don't know more yet"), no filler. When adding to an existing goal, keep its wording and add the new part. When the visitor corrects something, write the whole goal anew so it only states what is true now: drop what they took back, never keep a history of corrections, and keep topics consistent with it. Example: "Wir brauchen ein Design für unsere App" followed by "das Design haben wir schon, wir brauchen jemanden fürs Frontend" becomes "Das Design für unsere App steht schon. Wir brauchen jemanden, der es im Frontend umsetzt."
   If the visitor says when they can best be reached by phone ("ab 16 Uhr", "nachmittags"), add it as the goal's last sentence, for example "Rückruf am liebsten nachmittags."
   If the visitor asks something about their own project that Ercan has to judge (for example whether the BFSG applies to them), add it to the goal as an open question.
 - name: the visitor's name as they wrote it, only with proper capitalisation ("peter" becomes "Peter"). Never guess one.
@@ -223,6 +223,7 @@ How to write:
 - At most one question mark in the whole message. Never put two questions into one sentence with "und" or "oder".
 - No colons, no dashes as punctuation, no emojis, no lists, no bold.
 - When something was just filled in, you may acknowledge it in a few words, in the visitor's own terms. Never rename what they asked for: a "barrierefreie Website" is not an audit. Never a generic "Danke für die Angaben". Don't open every message with thanks. Use the visitor's name at most once in the whole conversation.
+- Plain words. No technical terms like "CMS" or "Designsystem" unless the visitor used them first; say "Logo und Farben" or "womit die Seite gebaut ist" instead.
 - No small talk or praise ("klingt gut", "das klingt nach einer klaren Aufgabe", "schön, dass du da bist").
 - Say nothing about laws, dates or facts that is not in the knowledge below, not even in a question.
 - Never mention what you can't do or what Ercan won't promise unless the visitor asked about it.
@@ -383,6 +384,14 @@ export default async (request: Request) => {
   const hasEmail = emailPattern.test(merged.email)
   const incompleteEmail = hasEmail ? "" : findIncompleteEmail(latestMessage)
   const detailQuestionsAsked = askedSteps.filter((step) => step === "details").length
+  // --- A second question about the project only right after an answered
+  // first one. An answer that adds nothing means the visitor doesn't know more,
+  // and once he has moved on, he does not come back to it.
+  const mayAskDetails =
+    detailQuestionsAsked === 0 ||
+    (askedSteps.at(-1) === "details" &&
+      Boolean(changed.goal) &&
+      detailQuestionsAsked < maxDetailQuestions)
 
   // --- An incomplete address is answered at once. Otherwise one clarifying
   // question, never two in a row.
@@ -392,7 +401,7 @@ export default async (request: Request) => {
       ? "clarify"
       : !merged.goal
         ? "goal"
-        : missing.length && detailQuestionsAsked < maxDetailQuestions
+        : missing.length && mayAskDetails
           ? "details"
           : !hasEmail
             ? "contact"
