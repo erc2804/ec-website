@@ -254,7 +254,7 @@ ${offersKnowledge}
 # Nach der Anfrage
 ${de.inquiry.next.steps.map((item) => `- ${item.title}: ${item.text}`).join("\n")}
 
-# Verfügbarkeit
+# Verfügbarkeit (use the line in the visitor's language)
 ${availability()}`
 
 // --- Structured output, not free text: what goes out is only the message

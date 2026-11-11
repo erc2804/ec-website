@@ -1,9 +1,10 @@
 // --- What both of Pixel-Ercan's chats know about Ercan's offers and his
 // availability, built from the same data as the pages so it cannot drift from
-// them. In German, the language the site is written in; he answers in the
-// visitor's language anyway.
+// them. The offers in German, the language the site is written in; he answers
+// in the visitor's language anyway.
 
 import { availableFromMonth, isAvailableNow } from "../../src/data/availability"
+import { useTranslations } from "../../src/i18n"
 import { de } from "../../src/i18n/de"
 
 export const offersKnowledge = `# Angebote
@@ -19,11 +20,17 @@ ${page.faq.items.map((item) => `- ${item.question} ${item.answer}`).join("\n")}`
   })
   .join("\n\n")}`
 
-// --- Once the month in site.ts has begun, the date says nothing any more:
-// "on request", as on the page
-export const availability = () => {
-  const change = "Das kann sich auch kurzfristig ändern, Genaues klärt Ercan persönlich."
-  return isAvailableNow()
-    ? `Verfügbarkeit für neue Projekte: auf Anfrage. ${change}`
-    : `Ercan hat ab ${availableFromMonth("de")} wieder Zeit für neue Projekte. ${change}`
-}
+// --- In the words of the about page, in both languages. Given only in German,
+// the model copied it word for word into English answers. Once the month in
+// site.ts has begun, the date says nothing any more: "on request", as on the
+// page.
+export const availability = () =>
+  (["de", "en"] as const)
+    .map((locale) => {
+      const facts = useTranslations(locale).about.facts
+      const status = isAvailableNow()
+        ? facts.availableNow
+        : facts.availability.replace("{date}", availableFromMonth(locale))
+      return `- ${locale === "de" ? "Deutsch" : "English"}: ${status}. ${facts.availabilityNote}`
+    })
+    .join("\n")
