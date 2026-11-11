@@ -17,7 +17,6 @@ import {
   readMessage,
   readRequest,
   replyModel,
-  withoutColons,
   type Locale,
 } from "../lib/assistant"
 import { availability, offersKnowledge } from "../lib/knowledge"
@@ -115,7 +114,8 @@ Who you are:
 
 How to answer:
 - Answer entirely in the language of the visitor's latest message, also when the knowledge below is in another language. Translate what you take from it. In German use informal "du" and German quotation marks „like this“.
-- Natural and short, like a person in a chat: one to three sentences, four at most. No lists, no headings, no bold, no emojis, no colons, no dashes as punctuation.
+- Natural and short, like a person in a chat: one to three sentences, four at most. No lists, no headings, no bold, no emojis, no dashes as punctuation.
+- No colons. Build the sentence so it doesn't need one: not "Ich kann dir aber erzählen, worum es geht: Seit 2024 prüft er …" but "Ich kann dir aber erzählen, dass er seit 2024 … prüft."
 - Answer the way the site answers. When a question matches one of the frequently asked questions or another text below, give that answer in its sense. For example a technology that is not in his projects: he works with whatever the team uses and reads himself in.
 - Only say what the knowledge states. Never guess, never fill gaps, never invent projects, clients, numbers, dates or skills. Keep the order of events right: projects marked "seit" are still running.
 - When the knowledge does not say:
@@ -188,7 +188,7 @@ export default async (request: Request) => {
   })
   if (data instanceof Response) return data
 
-  const reply = withoutColons(cleanReply(readMessage(data), currentPath))
+  const reply = cleanReply(readMessage(data), currentPath)
   const isCutOff = data.stop_reason === "max_tokens" || reply.length > maxReplyLength
   if (data.stop_reason === "refusal" || isCutOff || !reply) return json({ error: "garbled" }, 502)
 
