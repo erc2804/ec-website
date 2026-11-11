@@ -18,18 +18,22 @@ import {
 } from "../../src/data/inquiry"
 import { useTranslations } from "../../src/i18n"
 import { de } from "../../src/i18n/de"
-import { callModel, cleanText, json, readRequest, type Locale } from "../lib/assistant"
+import {
+  callModel,
+  cleanText,
+  json,
+  messageFormat,
+  readMessage,
+  readRequest,
+  replyModel,
+  type Locale,
+} from "../lib/assistant"
 import { availability, offersKnowledge } from "../lib/knowledge"
 
 const limits = { maxMessages: 24, maxMessageLength: 2000, maxConversationLength: 12000 }
 
 const stepKeys = ["clarify", "goal", "details", "contact", "phone", "callback", "done"] as const
 type Step = (typeof stepKeys)[number]
-
-// --- Reading into the form is plain extraction and stays on the default model
-// (netlify/lib/assistant.ts). The reply is where tone and rules show, so it gets
-// the stronger one.
-const replyModel = "claude-sonnet-5-5"
 
 // --- How often he asks for more about the project before he moves on. The
 // second time he says it is fine to leave it open.
@@ -257,27 +261,6 @@ ${de.inquiry.next.steps.map((item) => `- ${item.title}: ${item.text}`).join("\n"
 # Verfügbarkeit (use the line in the visitor's language)
 ${availability()}`
 
-// --- Structured output, not free text: what goes out is only the message
-// itself, never the model thinking aloud about whether it follows the rules.
-// Sonnet does not take a forced tool call, so this is a JSON schema.
-const replyFormat = {
-  type: "json_schema",
-  schema: {
-    type: "object",
-    properties: { message: { type: "string" } },
-    required: ["message"],
-    additionalProperties: false,
-  },
-}
-
-const readMessage = (text: string) => {
-  try {
-    return cleanText((JSON.parse(text) as Record<string, unknown>).message, 2000)
-  } catch {
-    return ""
-  }
-}
-
 // --- Form helpers -------------------------------------------------------------
 
 const cleanTopics = (value: unknown) =>
@@ -423,7 +406,7 @@ export default async (request: Request) => {
     model: replyModel,
     // --- Thinking counts against this too; a reply cut off here is not shown
     max_tokens: 2000,
-    output_config: { effort: "low", format: replyFormat },
+    output_config: { effort: "low", format: messageFormat },
     system: replyPrompt({
       locale,
       step,
@@ -442,14 +425,7 @@ export default async (request: Request) => {
     !(replyData instanceof Response) &&
     replyData.stop_reason !== "max_tokens" &&
     replyData.stop_reason !== "refusal"
-  const modelReply = isReplyWhole
-    ? readMessage(
-        (Array.isArray(replyData.content) ? replyData.content : [])
-          .filter((block: { type?: string }) => block.type === "text")
-          .map((block: { text?: string }) => block.text ?? "")
-          .join("")
-      )
-    : ""
+  const modelReply = isReplyWhole ? readMessage(replyData) : ""
   // --- A reply longer than this is not a chat message any more
   const isUsable = Boolean(modelReply) && modelReply.length <= 600
   const reply = isUsable ? withoutColons(modelReply) : fallbackReplies[locale][step]

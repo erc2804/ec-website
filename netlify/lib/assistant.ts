@@ -28,6 +28,37 @@ export const json = (body: unknown, status = 200) =>
 export const cleanText = (value: unknown, maxLength: number) =>
   typeof value === "string" ? value.trim().slice(0, maxLength) : ""
 
+// --- What a visitor reads is written by the stronger model; reading into a
+// form stays on the default one above
+export const replyModel = "claude-sonnet-5-5"
+
+// --- Structured output, not free text: what goes out is only the message
+// itself, never the model thinking aloud about whether it follows the rules.
+// Sonnet does not take a forced tool call, so this is a JSON schema.
+export const messageFormat = {
+  type: "json_schema",
+  schema: {
+    type: "object",
+    properties: { message: { type: "string" } },
+    required: ["message"],
+    additionalProperties: false,
+  },
+}
+
+// --- The message from a reply in that format, or "" if there is none
+export const readMessage = (data: unknown) => {
+  const content = (data as { content?: { type?: string; text?: string }[] })?.content
+  const text = (Array.isArray(content) ? content : [])
+    .filter((block) => block.type === "text")
+    .map((block) => block.text ?? "")
+    .join("")
+  try {
+    return cleanText((JSON.parse(text) as Record<string, unknown>).message, 4000)
+  } catch {
+    return ""
+  }
+}
+
 type Limits = { maxMessages: number; maxMessageLength: number; maxConversationLength: number }
 
 type AssistantRequest = {
