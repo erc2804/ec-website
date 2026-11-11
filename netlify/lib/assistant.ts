@@ -45,6 +45,12 @@ export const messageFormat = {
   },
 }
 
+// --- The model slips a colon in now and then despite the rule. In a chat
+// message one reads like a form, so it becomes a full stop. Times like 16:00
+// have no space after the colon and stay.
+export const withoutColons = (text: string) =>
+  text.replace(/:\s+(\S)/g, (_match, next: string) => `. ${next.toUpperCase()}`)
+
 // --- The message from a reply in that format, or "" if there is none
 export const readMessage = (data: unknown) => {
   const content = (data as { content?: { type?: string; text?: string }[] })?.content

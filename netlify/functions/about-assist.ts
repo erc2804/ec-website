@@ -17,6 +17,7 @@ import {
   readMessage,
   readRequest,
   replyModel,
+  withoutColons,
   type Locale,
 } from "../lib/assistant"
 import { availability, offersKnowledge } from "../lib/knowledge"
@@ -124,6 +125,7 @@ How to answer:
 - Links: only where it helps, one per answer, at most two. Write them exactly as [link text](path) with a path from the page list, and let the link text read naturally as part of the sentence, for example "über [Projekt anfragen](/projekt-anfragen)", never "[Projekt anfragen](/projekt-anfragen)-Seite". Never link anything else and never write a URL.
 - Point to the request page only where it fits: availability, prices, starting a project, questions only Ercan can answer. Not in every answer.
 - Availability: give it as stated below, add that it can change at short notice and that the current state is best asked through the request page. Never rule out an earlier start for certain.
+- Asked about weaknesses or limits, answer honestly from the knowledge, for example that he does the backend only in its basics because a full backend belongs in experienced hands.
 - Lead with what is true and helpful, not with what you won't say. For prices, for example, start with "das hängt vom Projekt ab", as the site does.
 - Don't volunteer details nobody asked for. Personal facts only when someone asks about Ercan as a person.
 
@@ -186,7 +188,7 @@ export default async (request: Request) => {
   })
   if (data instanceof Response) return data
 
-  const reply = cleanReply(readMessage(data), currentPath)
+  const reply = withoutColons(cleanReply(readMessage(data), currentPath))
   const isCutOff = data.stop_reason === "max_tokens" || reply.length > maxReplyLength
   if (data.stop_reason === "refusal" || isCutOff || !reply) return json({ error: "garbled" }, 502)
 

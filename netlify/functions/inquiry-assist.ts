@@ -26,6 +26,7 @@ import {
   readMessage,
   readRequest,
   replyModel,
+  withoutColons,
   type Locale,
 } from "../lib/assistant"
 import { availability, offersKnowledge } from "../lib/knowledge"
@@ -284,12 +285,6 @@ const readForm = (value: unknown): FormState => {
 }
 
 const digitsOf = (value: string) => value.replace(/\D/g, "")
-
-// --- The model slips a colon in now and then despite the rule. In a chat
-// message one reads like a form, so it becomes a full stop. Times like 16:00
-// have no space after the colon and stay.
-const withoutColons = (text: string) =>
-  text.replace(/:\s+(\S)/g, (_match, next: string) => `. ${next.toUpperCase()}`)
 
 // --- Something with an @ that is no address yet, like "name@mail"
 const findIncompleteEmail = (text: string) =>
