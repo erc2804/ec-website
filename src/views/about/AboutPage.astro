@@ -237,7 +237,12 @@ const portraitSizes = "(min-width: 64rem) 14rem, 5rem"
 
   const chat = createAssistantChat(assistant, {
     respond: async (messages) => {
-      const result = (await postToAssistant("/api/about-assist", { locale, messages })) as {
+      // --- The page he sits on, so he never sends the visitor to it
+      const result = (await postToAssistant("/api/about-assist", {
+        locale,
+        messages,
+        page: location.pathname,
+      })) as {
         reply?: unknown
       }
       if (typeof result?.reply !== "string" || !result.reply) throw new ChatError("garbled")
